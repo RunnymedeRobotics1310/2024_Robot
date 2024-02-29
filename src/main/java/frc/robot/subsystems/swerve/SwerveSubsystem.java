@@ -11,11 +11,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.VisionPositionInfo;
@@ -58,12 +60,12 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         ChassisSpeeds safeVelocity = new ChassisSpeeds(x, y, w);
 
         SmartDashboard.putString("Drive/Swerve/chassis_robot", String.format("%.2f,%.2f m/s %.0f deg/s)",
-            safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond,
-            Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
+                safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond,
+                Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
 
         SmartDashboard.putString("Drive/Swerve/velocity_robot", String.format("%.2f m/s %.0f deg/s)",
-            Math.hypot(safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond),
-            Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
+                Math.hypot(safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond),
+                Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
 
         driveRawRobotOriented(safeVelocity);
     }
@@ -118,6 +120,13 @@ public abstract class SwerveSubsystem extends SubsystemBase {
     public abstract void zeroGyro();
 
     /**
+     * Stop all motors as fast as possible
+     */
+    public void stop() {
+        driveRobotOriented(new ChassisSpeeds(0, 0, 0));
+    }
+
+    /**
      * Lock the swerve drive to prevent it from moving.
      */
     public abstract void lock();
@@ -148,7 +157,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
 
         // convert camera pose to robot pose
         Pose2d         robotPose = new Pose2d(visPose.pose().getTranslation().minus(CAMERA_LOC_REL_TO_ROBOT_CENTER),
-            visPose.pose().getRotation());
+                visPose.pose().getRotation());
 
         // how different is vision data from estimated data?
         double         delta_m   = getPose().getTranslation().getDistance(robotPose.getTranslation());
@@ -167,6 +176,15 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         this.addVisionMeasurement(visPose.pose(), timeInSeconds, stds);
     }
 
+    /**
+     * Set the swerve module state for the specified module. This is intended to be used ONLY in
+     * test mode!
+     *
+     * @param module the module configuration object - used to identify the module only.
+     * @param desiredState the desired state of the swerve module
+     */
+    public abstract void setModuleStateForTestMode(Constants.Swerve.Module module, SwerveModuleState desiredState);
+
     public abstract void resetOdometry(Pose2d replacementPose);
 
     @Override
@@ -176,7 +194,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         updateOdometryWithVisionInfo();
         Pose2d pose = getPose();
         SmartDashboard.putString("Drive/Swerve/location",
-            String.format("%.2f,%.2f m", pose.getTranslation().getX(), pose.getTranslation().getY()));
+                String.format("%.2f,%.2f m", pose.getTranslation().getX(), pose.getTranslation().getY()));
         SmartDashboard.putString("Drive/Swerve/heading", String.format("%.0f deg", pose.getRotation().getDegrees()));
     }
 

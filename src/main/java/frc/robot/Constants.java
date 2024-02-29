@@ -49,7 +49,7 @@ public final class Constants {
              * The SDS
              * <a href="https://www.swervedrivespecialties.com/products/mk4i-swerve-module">MK4i</a>
              * module with L2 gear ratio supports a maximum drive motor speed of 15.7ft/s (4.79m/s).
-             * 
+             *
              * Do not use this value in software to cap how fast the robot drives on the field.
              * For that, use {@link #MAX_TRANSLATION_SPEED_MPS}.
              */
@@ -151,6 +151,13 @@ public final class Constants {
         }
 
         public static final class Module {
+            /**
+             * The name of the module is used in debugging, but it is also used to
+             * reference modules in the YAGSL config (if that implementation is used).
+             * Be sure to give this name the same name as the yagsl config file (e.g.
+             * src/main/deploy/swerve/neo/modules/backleft.json) --> "backleft"
+             */
+            public String              name;
             public double              wheelRadiusMetres;
             public Translation2d       locationMetres;
             public int                 driveCANID;
@@ -160,6 +167,7 @@ public final class Constants {
             public static final Module BACK_LEFT = new Module();
 
             static {
+                BACK_LEFT.name                         = "backleft";
                 BACK_LEFT.wheelRadiusMetres            = Chassis.SDS_MK4I_WHEEL_RADIUS_METRES;
                 BACK_LEFT.locationMetres               = new Translation2d(inchesToMeters(-11.375), inchesToMeters(10.875));
                 BACK_LEFT.driveCANID                   = 35;
@@ -171,6 +179,7 @@ public final class Constants {
             public static final Module BACK_RIGHT = new Module();
 
             static {
+                BACK_RIGHT.name                         = "backright";
                 BACK_RIGHT.wheelRadiusMetres            = Chassis.SDS_MK4I_WHEEL_RADIUS_METRES;
                 BACK_RIGHT.locationMetres               = new Translation2d(inchesToMeters(-11.375), inchesToMeters(-10.875));
                 BACK_RIGHT.driveCANID                   = 30;
@@ -182,6 +191,7 @@ public final class Constants {
             public static final Module FRONT_LEFT = new Module();
 
             static {
+                FRONT_LEFT.name                         = "frontleft";
                 FRONT_LEFT.wheelRadiusMetres            = Chassis.SDS_MK4I_WHEEL_RADIUS_METRES;
                 FRONT_LEFT.locationMetres               = new Translation2d(inchesToMeters(11.375), inchesToMeters(10.875));
                 FRONT_LEFT.driveCANID                   = 10;
@@ -193,6 +203,7 @@ public final class Constants {
             public static final Module FRONT_RIGHT = new Module();
 
             static {
+                FRONT_RIGHT.name                         = "frontright";
                 FRONT_RIGHT.wheelRadiusMetres            = Chassis.SDS_MK4I_WHEEL_RADIUS_METRES;
                 FRONT_RIGHT.locationMetres               = new Translation2d(inchesToMeters(11.375), inchesToMeters(-10.875));
                 FRONT_RIGHT.driveCANID                   = 20;
@@ -260,9 +271,9 @@ public final class Constants {
     public static final class UsefulPoses {
 
         public static final Pose2d SCORE_BLUE_AMP = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.8,
-            Rotation2d.fromDegrees(90)));
+                Rotation2d.fromDegrees(90)));
         public static final Pose2d SCORE_RED_AMP  = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.8,
-            Rotation2d.fromDegrees(90)));
+                Rotation2d.fromDegrees(90)));
 
         public static final Pose2d BLUE_2_2_20    = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
         public static final Pose2d RED_2_2_20     = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));

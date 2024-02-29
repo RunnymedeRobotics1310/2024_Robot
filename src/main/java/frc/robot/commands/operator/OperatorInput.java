@@ -1,5 +1,6 @@
 package frc.robot.commands.operator;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -31,6 +32,15 @@ public class OperatorInput {
         driverController   = new RunnymedeGameController(driverControllerPort);
         operatorController = new RunnymedeGameController(operatorControllerPort);
     }
+
+    public boolean isToggleTestMode() {
+        return !DriverStation.isFMSAttached() && driverController.getBackButton() && driverController.getStartButton();
+    }
+
+    public XboxController getRawDriverController() {
+        return driverController;
+    }
+
 
     public boolean isDriverLeftBumper() {
         return driverController.getLeftBumper();
@@ -77,21 +87,21 @@ public class OperatorInput {
 
         switch (stick) {
 
-        case LEFT:
-            switch (axis) {
-            case X:
-                return driverController.getLeftX();
-            case Y:
-                return driverController.getLeftY();
-            }
-            break;
+            case LEFT:
+                switch (axis) {
+                    case X:
+                        return driverController.getLeftX();
+                    case Y:
+                        return driverController.getLeftY();
+                }
+                break;
 
-        case RIGHT:
-            switch (axis) {
-            case X:
-                return driverController.getRightX();
-            }
-            break;
+            case RIGHT:
+                switch (axis) {
+                    case X:
+                        return driverController.getRightX();
+                }
+                break;
         }
 
         return 0;
