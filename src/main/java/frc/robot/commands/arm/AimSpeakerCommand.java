@@ -163,7 +163,7 @@ public class AimSpeakerCommand extends ArmBaseCommand {
             break;
 
         case SET_SHOOTER_SPEED:
-            armSubsystem.setShooterSpeed(ArmConstants.SHOOTER_SPEED);
+            armSubsystem.setShooterSpeed(ArmConstants.SHOOTER_SPEAKER_SPEED);
 
             break;
 

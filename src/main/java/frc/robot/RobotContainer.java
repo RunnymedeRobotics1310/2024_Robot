@@ -14,10 +14,8 @@ import frc.robot.Constants.AutoConstants.AutoPattern;
 import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.commands.arm.DefaultArmCommand;
 import frc.robot.commands.auto.AutonomousCommand;
-import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.JackmanVisionSubsystem;
 import frc.robot.subsystems.LightsSubsystem;
 
@@ -34,7 +32,6 @@ public class RobotContainer {
     private final OperatorInput          operatorInput   = new OperatorInput();
 
     // The robot's subsystems and commands are defined here...
-    private final DriveSubsystem         driveSubsystem  = new DriveSubsystem();
     private final LightsSubsystem        lightsSubsystem = new LightsSubsystem();
     private final JackmanVisionSubsystem visionSubsystem = new JackmanVisionSubsystem();
     private final ArmSubsystem           armSubsystem    = new ArmSubsystem(lightsSubsystem);
@@ -50,12 +47,6 @@ public class RobotContainer {
      */
     public RobotContainer() {
 
-        // Initialize all Subsystem default commands.
-        driveSubsystem.setDefaultCommand(
-            new DefaultDriveCommand(
-                operatorInput.driverController, driveModeChooser,
-                driveSubsystem));
-
         armSubsystem.setDefaultCommand(
             new DefaultArmCommand(
                 operatorInput.operatorController, armSubsystem));
@@ -64,7 +55,7 @@ public class RobotContainer {
         initDashboardChoosers();
 
         // Configure the button bindings
-        operatorInput.configureButtonBindings(driveSubsystem, armSubsystem, visionSubsystem);
+        operatorInput.configureButtonBindings(armSubsystem, visionSubsystem);
 
         // Add a trigger for the robot enabled
         new Trigger(() -> RobotController.isSysActive())
@@ -94,7 +85,6 @@ public class RobotContainer {
 
         // Pass in all of the subsystems and all of the choosers to the auto command.
         return new AutonomousCommand(
-            driveSubsystem,
             autoPatternChooser);
     }
 }

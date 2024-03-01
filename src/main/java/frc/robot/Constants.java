@@ -80,6 +80,17 @@ public final class Constants {
 
     public static final class ArmConstants {
 
+        public static final int         LINK_MOTOR_CAN_ADDRESS     = 40;
+        public static final int         AIM_MOTOR_CAN_ADDRESS      = 41;
+
+        public static final int         INTAKE_MOTOR_CAN_ADDRESS   = 50;
+        public static final int         SHOOTER_MOTOR_CAN_ADDRESS  = 51;
+
+        public static final int         LINK_ENCODER_ANALOG_PORT   = 3;
+
+        /*
+         * Key Arm Positions
+         */
         public static final ArmPosition COMPACT_ARM_POSITION       = new ArmPosition(100.0, 75.0);
         public static final ArmPosition OVER_BUMPER_POSITION       = new ArmPosition(60.0, 125.0);
         public static final ArmPosition INTAKE_ARM_POSITION        = new ArmPosition(20.0, 160.0);
@@ -94,30 +105,26 @@ public final class Constants {
         public static final double      SLOW_LINK_SPEED            = .1;
 
         public static final double      SLOW_ARM_ZONE_DEG          = 20.0;
-        public static final double      AT_TARGET_DEG              = 1;
-        public static final double      AT_TARGET_SPEED            = 0.05;
+        public static final double      AT_TARGET_DEG              = 2;
 
-        public static final double      INTAKE_SPEED               = 1;
-        public static final double      SHOOTER_SPEED              = 0.05;                         // TODO:Is
-                                                                                                   // this
-                                                                                                   // the
-                                                                                                   // right
-                                                                                                   // value?
+        public static final double      INTAKE_INTAKE_SPEED        = .3;
+        public static final double      INTAKE_REVERSE_SPEED       = -.3;
 
-        public static final double      LINK_MAX                   = 125;
-        public static final double      LINK_MIN                   = 20;
-        public static final double      AIM_MAX                    = 200;
-        public static final double      AIM_MIN                    = 60;
+        public static final double      SHOOTER_SPEAKER_SPEED      = 0.5;
+        public static final double      SHOOTER_AMP_SPEED          = 0.2;
 
-        public static final double      MIN_ANGLE_SUM              = 180;
-        public static final double      MAX_ANGLE_SUM              = 1310;                         // TODO:find
-                                                                                                   // actual
-                                                                                                   // value
-                                                                                                   // of
-                                                                                                   // MAX_ANGLE_SUM
+        public static final double      LINK_MAX_DEGREES           = 125;
+        public static final double      LINK_MIN_DEGREES           = 20;
+        public static final double      AIM_MAX_DEGREES            = 200;
+        public static final double      AIM_MIN_DEGREES            = 60;
+
+        public static final double      ARM_MIN_ANGLE_SUM          = 180;
+        public static final double      ARM_MAX_ANGLE_SUM          = 1310;
+
         /** Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground */
-        public static final double      MAX_AIM_HOLD               = .2;
+        public static final double      MAX_AIM_HOLD               = .1;
 
-
+        /** Amount of output required to hold the Link Pivot when the Link and Aim are parallel to the ground */
+        public static final double      MAX_LINK_HOLD              = .3;
     }
 }

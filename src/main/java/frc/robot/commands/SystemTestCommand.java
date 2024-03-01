@@ -14,7 +14,7 @@ public class SystemTestCommand extends LoggingCommand {
     private enum Motor {
         NONE,
         // Arm Motors
-        LINK, AIM, INTAKE, SHOOTER
+        LINK, AIM, AIM_AND_LINK, INTAKE, SHOOTER
     }
 
     private final OperatorInput  operatorInput;
@@ -24,6 +24,7 @@ public class SystemTestCommand extends LoggingCommand {
     private long                 startTime           = 0;
     private Motor                selectedMotor       = Motor.NONE;
     private double               povMotorSpeed       = 0;
+    private double               povMotorSpeed2      = 0;
 
     private boolean              previousLeftBumper  = false;
     private boolean              previousRightBumper = false;
@@ -72,6 +73,7 @@ public class SystemTestCommand extends LoggingCommand {
         SmartDashboard.putBoolean("Test Mode", true);
         SmartDashboard.putString("Test Motor", selectedMotor.toString());
         SmartDashboard.putNumber("Test Motor Speed", povMotorSpeed);
+        SmartDashboard.putNumber("Test Motor Speed 2", povMotorSpeed2);
 
         clearMotorIndicators();
     }
@@ -135,6 +137,7 @@ public class SystemTestCommand extends LoggingCommand {
         double rightTrigger = controller.getRightTriggerAxis();
 
         double motorSpeed   = 0;
+        double motorSpeed2  = 0;
 
         if (leftTrigger > 0 && rightTrigger > 0) {
 
@@ -176,15 +179,40 @@ public class SystemTestCommand extends LoggingCommand {
             motorSpeed = povMotorSpeed;
         }
 
+        // Use the POV left right to control the second motor speed
+        if (pov == 90) {
+
+            povMotorSpeed2 += 0.004;
+
+            if (povMotorSpeed2 > 1.0) {
+                povMotorSpeed2 = 1.0;
+            }
+        }
+
+        if (pov == 270) {
+
+            povMotorSpeed2 -= 0.004;
+
+            if (povMotorSpeed2 < -1.0) {
+                povMotorSpeed2 = -1.0;
+            }
+        }
+
+        motorSpeed  = povMotorSpeed;
+        motorSpeed2 = povMotorSpeed2;
+
         SmartDashboard.putNumber("Test Motor Speed", motorSpeed);
+        SmartDashboard.putNumber("Test Motor Speed 2", motorSpeed2);
 
         /*
          * If the X button is pressed, reset the motor speed to zero
          */
 
         if (controller.getXButton()) {
-            motorSpeed    = 0;
-            povMotorSpeed = 0;
+            motorSpeed     = 0;
+            motorSpeed2    = 0;
+            povMotorSpeed  = 0;
+            povMotorSpeed2 = 0;
         }
 
         /*
@@ -205,6 +233,12 @@ public class SystemTestCommand extends LoggingCommand {
 
         case AIM:
             armSubsystem.setAimPivotSpeed(motorSpeed);
+            SmartDashboard.putBoolean("Test Aim", true);
+            break;
+
+        case AIM_AND_LINK:
+            armSubsystem.setArmSpeeds(motorSpeed, motorSpeed2);
+            SmartDashboard.putBoolean("Test Link", true);
             SmartDashboard.putBoolean("Test Aim", true);
             break;
 

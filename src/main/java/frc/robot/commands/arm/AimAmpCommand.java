@@ -160,7 +160,7 @@ public class AimAmpCommand extends ArmBaseCommand {
             break;
 
         case SET_SHOOTER_SPEED:
-            armSubsystem.setShooterSpeed(ArmConstants.SHOOTER_SPEED);
+            armSubsystem.setShooterSpeed(ArmConstants.SHOOTER_AMP_SPEED);
 
             break;
         }

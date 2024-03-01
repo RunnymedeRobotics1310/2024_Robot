@@ -40,7 +40,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
         }
 
         // Start the intake wheels
-        armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_SPEED);
+        armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
     }
 
     @Override

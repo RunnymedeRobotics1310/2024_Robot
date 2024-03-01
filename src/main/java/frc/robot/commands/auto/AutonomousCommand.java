@@ -8,21 +8,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants.AutoPattern;
-import frc.robot.commands.drive.DriveOnHeadingCommand;
-import frc.robot.subsystems.DriveSubsystem;
 
 public class AutonomousCommand extends SequentialCommandGroup {
 
-    private AutoPattern          autoPattern = null;
+    private AutoPattern        autoPattern = null;
 
-    private final DriveSubsystem driveSubsystem;
+    private Optional<Alliance> alliance    = null;
 
-    private Optional<Alliance>   alliance    = null;
-
-    public AutonomousCommand(DriveSubsystem driveSubsystem,
+    public AutonomousCommand(
         SendableChooser<AutoPattern> autoPatternChooser) {
-
-        this.driveSubsystem = driveSubsystem;
 
         // Default is to do nothing.
         // If more commands are added, the instant command will end and
@@ -65,10 +59,6 @@ public class AutonomousCommand extends SequentialCommandGroup {
         // addCommands(new DriveForwardCommand(1, driveSubsystem));
         case THREE_NOTE:
             addCommands(
-
-                new DriveOnHeadingCommand(0, 1, 0.5, driveSubsystem)
-                    .andThen(
-                        new DriveOnHeadingCommand(90, 1, -0.5, driveSubsystem))
 
             );
         }

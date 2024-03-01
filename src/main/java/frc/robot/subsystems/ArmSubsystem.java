@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -9,14 +13,23 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final LightsSubsystem lightsSubsystem;
 
+    private final CANSparkMax     linkMotor           = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
+        MotorType.kBrushless);
+    private final CANSparkMax     aimMotor            = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS, MotorType.kBrushless);
+
+    private final CANSparkMax     intakeMotor         = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS, MotorType.kBrushless);
+    private final CANSparkMax     shooterBottomMotor  = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
+        MotorType.kBrushless);
+    private final CANSparkMax     shooterTopMotor     = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
+        MotorType.kBrushless);
+
+    private AnalogInput           linkAbsoluteEncoder = new AnalogInput(ArmConstants.LINK_ENCODER_ANALOG_PORT);
+
     private double                linkPivotSpeed      = 0;
     private double                aimPivotSpeed       = 0;
     private double                intakeSpeed         = 0;
     private double                shooterSpeed        = 0;
 
-    private double                intakeSpeedEncoder  = 0;
-    private double                shooterSpeedEncoder = 0;
-    private double                linkAngleEncoder    = 0;
     private double                aimAngleEncoder     = 0;
 
     private DigitalInput          noteDetector        = new DigitalInput(1);
@@ -24,29 +37,36 @@ public class ArmSubsystem extends SubsystemBase {
     private boolean               safetyEnabled       = false;
     private long                  safetyStartTime     = 0;
 
+    private double                linkEncoderOffset   = 0;
+
     public ArmSubsystem(LightsSubsystem lightsSubsystem) {
 
-        this.lightsSubsystem  = lightsSubsystem;
+        this.lightsSubsystem = lightsSubsystem;
 
         // This is faking an angle encoder
-        this.aimAngleEncoder  = ArmConstants.COMPACT_ARM_POSITION.aimAngle;
-        this.linkAngleEncoder = ArmConstants.COMPACT_ARM_POSITION.linkAngle;
+        this.aimAngleEncoder = ArmConstants.COMPACT_ARM_POSITION.aimAngle;
     }
 
     public double getAimAngle() {
         return aimAngleEncoder;
     }
 
+    public double getLinkEncoderVoltage() {
+        // 0-5V range = 0-360 deg
+        return linkAbsoluteEncoder.getVoltage();
+    }
+
     public double getLinkAngle() {
-        return linkAngleEncoder;
+        // 0-5V range = 0-360 deg
+        return (getLinkEncoderVoltage() * 360.0 / 5.0 + linkEncoderOffset) % 360;
     }
 
-    public double getShooterSpeed() {
-        return shooterSpeedEncoder;
+    public double getShooterEncoderSpeed() {
+        return shooterBottomMotor.getEncoder().getVelocity();
     }
 
-    public double getIntakeSpeed() {
-        return intakeSpeedEncoder;
+    public double getIntakeEncoderSpeed() {
+        return intakeMotor.getEncoder().getVelocity();
     }
 
     public boolean isNoteDetected() {
@@ -72,10 +92,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void setIntakeSpeed(double intakeSpeed) {
         this.intakeSpeed = intakeSpeed;
+        intakeMotor.set(intakeSpeed);
     }
 
     public void setShooterSpeed(double shooterSpeed) {
         this.shooterSpeed = shooterSpeed;
+        shooterTopMotor.set(shooterSpeed);
+        shooterBottomMotor.set(shooterSpeed);
     }
 
     public void stop() {
@@ -83,8 +106,6 @@ public class ArmSubsystem extends SubsystemBase {
         setAimPivotSpeed(0);
         setIntakeSpeed(0);
         setShooterSpeed(0);
-        intakeSpeedEncoder  = 0;
-        shooterSpeedEncoder = 0;
     }
 
     @Override
@@ -94,26 +115,8 @@ public class ArmSubsystem extends SubsystemBase {
 
         // FAKE THE MOTOR ACTION
 
-        // Fake some momentum in the motors by having them
-        // slowly ramp towards the set speed. In reality,
-        // this will happen much faster.
-        if (intakeSpeed > intakeSpeedEncoder) {
-            intakeSpeedEncoder += .002;
-        }
-        else if (intakeSpeed < intakeSpeedEncoder) {
-            intakeSpeedEncoder -= .002;
-        }
-
-        if (shooterSpeed > shooterSpeedEncoder) {
-            shooterSpeedEncoder += .002;
-        }
-        else if (shooterSpeed < shooterSpeedEncoder) {
-            shooterSpeedEncoder -= .002;
-        }
-
         // Move the aim and link angles based on the speed.
-        aimAngleEncoder  = Math.min(200, Math.max(0, aimAngleEncoder + aimPivotSpeed));
-        linkAngleEncoder = Math.min(200, Math.max(0, linkAngleEncoder + linkPivotSpeed));
+        aimAngleEncoder = Math.min(200, Math.max(0, aimAngleEncoder + aimPivotSpeed));
 
         // END TODO Code removal
 
@@ -140,14 +143,15 @@ public class ArmSubsystem extends SubsystemBase {
          * Update the SmartDashboard
          */
 
-        SmartDashboard.putNumber("Intake Speed", intakeSpeed);
-        SmartDashboard.putNumber("Encoder Intake Speed", intakeSpeedEncoder);
+        SmartDashboard.putNumber("Intake Motor", intakeSpeed);
+        SmartDashboard.putNumber("Intake Encoder Speed", getIntakeEncoderSpeed());
 
-        SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
-        SmartDashboard.putNumber("Encoder Shooter Speed", shooterSpeedEncoder);
+        SmartDashboard.putNumber("Shooter Motor", shooterSpeed);
+        SmartDashboard.putNumber("Shooter Encoder Speed", getShooterEncoderSpeed());
 
         SmartDashboard.putNumber("Link Speed", linkPivotSpeed);
         SmartDashboard.putNumber("Link Angle", getLinkAngle());
+        SmartDashboard.putNumber("Link Absolute Encoder Voltage", getLinkEncoderVoltage());
 
         SmartDashboard.putNumber("Aim Speed", aimPivotSpeed);
         SmartDashboard.putNumber("Aim Angle", getAimAngle());
@@ -168,8 +172,8 @@ public class ArmSubsystem extends SubsystemBase {
         sb.append(this.getClass().getSimpleName()).append(" : ")
             .append("Link ").append(getLinkAngle()).append("deg (").append(linkPivotSpeed).append(") ")
             .append("Aim ").append(getAimAngle()).append("deg (").append(aimPivotSpeed).append(") ")
-            .append("Intake ").append(intakeSpeed).append(", ").append(intakeSpeedEncoder).append(' ')
-            .append("Shooter ").append(shooterSpeed).append(", ").append(shooterSpeedEncoder).append(' ')
+            .append("Intake ").append(intakeSpeed).append(", ").append(getIntakeEncoderSpeed()).append(' ')
+            .append("Shooter ").append(shooterSpeed).append(", ").append(getShooterEncoderSpeed()).append(' ')
             .append("Game Piece ").append(isNoteDetected());
 
         return sb.toString();
@@ -181,19 +185,20 @@ public class ArmSubsystem extends SubsystemBase {
      */
     private void updateLights() {
 
-        boolean intakeAtTargetSpeed = Math.abs(shooterSpeed - intakeSpeedEncoder) < .05;
-
-        lightsSubsystem.setIntakeSpeed(intakeSpeedEncoder, intakeAtTargetSpeed);
-
-        boolean shooterAtTargetSpeed = Math.abs(shooterSpeed - shooterSpeedEncoder) < .05;
-
-        lightsSubsystem.setShooterSpeed(shooterSpeedEncoder, shooterAtTargetSpeed);
-
-        lightsSubsystem.setLinkAngle(getLinkAngle());
-
-        lightsSubsystem.setAimAngle(getAimAngle());
-
-        lightsSubsystem.setNoteHeld(isNoteDetected());
+        /*
+         * lightsSubsystem.setIntakeSpeed(intakeSpeedEncoder, intakeAtTargetSpeed);
+         * 
+         * boolean shooterAtTargetSpeed = Math.abs(shooterSpeed - shooterSpeedEncoder) < .05;
+         * 
+         * lightsSubsystem.setShooterSpeed(shooterSpeedEncoder, shooterAtTargetSpeed);
+         * 
+         * lightsSubsystem.setLinkAngle(getLinkAngle());
+         * 
+         * lightsSubsystem.setAimAngle(getAimAngle());
+         * 
+         * lightsSubsystem.setNoteHeld(isNoteDetected());
+         * 
+         */
     }
 
     private void checkArmSafety() {
@@ -212,7 +217,7 @@ public class ArmSubsystem extends SubsystemBase {
          * If the link lower limit switch is active, then stop lowering
          * the link.
          */
-        if (linkPivotSpeed < 0 && linkAngleEncoder <= ArmConstants.LINK_MIN) {
+        if (linkPivotSpeed < 0 && getLinkAngle() <= ArmConstants.LINK_MIN_DEGREES) {
             linkPivotSpeed  = 0;
             safetyEnabled   = true;
             safetyStartTime = System.currentTimeMillis();
@@ -223,7 +228,7 @@ public class ArmSubsystem extends SubsystemBase {
          *
          * The arm never needs to be that high.
          */
-        if (linkPivotSpeed > 0 && linkAngleEncoder >= ArmConstants.LINK_MAX) {
+        if (linkPivotSpeed > 0 && getLinkAngle() >= ArmConstants.LINK_MAX_DEGREES) {
             linkPivotSpeed  = 0;
             safetyEnabled   = true;
             safetyStartTime = System.currentTimeMillis();
@@ -237,7 +242,7 @@ public class ArmSubsystem extends SubsystemBase {
          *
          * The aim never needs to be that high.
          */
-        if (aimPivotSpeed > 0 && aimAngleEncoder >= ArmConstants.AIM_MAX) {
+        if (aimPivotSpeed > 0 && aimAngleEncoder >= ArmConstants.AIM_MAX_DEGREES) {
             aimPivotSpeed   = 0;
             safetyEnabled   = true;
             safetyStartTime = System.currentTimeMillis();
@@ -248,7 +253,7 @@ public class ArmSubsystem extends SubsystemBase {
          *
          * The aim never needs to be that low.
          */
-        if (aimPivotSpeed < 0 && aimAngleEncoder <= ArmConstants.AIM_MIN) {
+        if (aimPivotSpeed < 0 && aimAngleEncoder <= ArmConstants.AIM_MIN_DEGREES) {
             aimPivotSpeed   = 0;
             safetyEnabled   = true;
             safetyStartTime = System.currentTimeMillis();
@@ -265,7 +270,7 @@ public class ArmSubsystem extends SubsystemBase {
          * Turn off the motor that is lowering the total arm angle.
          * Allow any positive movements to continue.
          */
-        if (aimAngleEncoder + linkAngleEncoder <= ArmConstants.MIN_ANGLE_SUM) {
+        if (aimAngleEncoder + getLinkAngle() <= ArmConstants.ARM_MIN_ANGLE_SUM) {
             if (aimPivotSpeed < 0) {
                 aimPivotSpeed   = 0;
                 safetyEnabled   = true;
@@ -289,7 +294,7 @@ public class ArmSubsystem extends SubsystemBase {
          * Allow any negative movements to continue.
          */
 
-        if (aimAngleEncoder + linkAngleEncoder >= ArmConstants.MAX_ANGLE_SUM) {
+        if (aimAngleEncoder + getLinkAngle() >= ArmConstants.ARM_MAX_ANGLE_SUM) {
             if (aimPivotSpeed > 0) {
                 aimPivotSpeed   = 0;
                 safetyEnabled   = true;
@@ -302,5 +307,12 @@ public class ArmSubsystem extends SubsystemBase {
             }
         }
         return;
+    }
+
+    public void setArmSpeeds(double linkSpeed, double aimSpeed) {
+
+        setLinkPivotSpeed(linkSpeed);
+        setAimPivotSpeed(aimSpeed);
+
     }
 }

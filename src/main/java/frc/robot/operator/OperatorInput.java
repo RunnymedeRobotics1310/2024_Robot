@@ -13,7 +13,6 @@ import frc.robot.commands.arm.CompactPoseCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.JackmanVisionSubsystem;
 
 /**
@@ -93,11 +92,11 @@ public class OperatorInput extends SubsystemBase {
      *
      * NOTE: all subsystems should be passed into this method.
      */
-    public void configureButtonBindings(DriveSubsystem driveSubsystem, ArmSubsystem armSubsystem,
+    public void configureButtonBindings(ArmSubsystem armSubsystem,
         JackmanVisionSubsystem visionSubsystem) {
 
         new Trigger(() -> isCancelPressed())
-            .onTrue(new CancelCommand(this, driveSubsystem, armSubsystem));
+            .onTrue(new CancelCommand(this, armSubsystem));
 
         new Trigger(() -> isSystemTestPressed() && !DriverStation.isFMSAttached())
             .onTrue(new SystemTestCommand(this, armSubsystem));
