@@ -49,11 +49,11 @@ public final class Constants {
             /**
              * Front to back from the middle of the wheels
              */
-            public static final double     WHEEL_BASE_METRES                      = inchesToMeters(21);
+            public static final double     WHEEL_BASE_METRES                      = inchesToMeters(24.75);
             /**
              * Side to side from the middle of the wheels
              */
-            public static final double     TRACK_WIDTH_METRES                     = inchesToMeters(21.75);
+            public static final double     TRACK_WIDTH_METRES                     = inchesToMeters(22.75);
 
             public static final double     SDS_MK4I_WHEEL_RADIUS_METRES           = 0.0051;
             /**
@@ -185,7 +185,7 @@ public final class Constants {
                 BACK_LEFT.driveCANID                   = 35;
                 BACK_LEFT.angleCANID                   = 36;
                 BACK_LEFT.encoderCANID                 = 37;
-                BACK_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.503418).getDegrees();
+                BACK_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.424316).getDegrees();
             }
 
             public static final Module BACK_RIGHT = new Module();
@@ -197,7 +197,7 @@ public final class Constants {
                 BACK_RIGHT.driveCANID                   = 30;
                 BACK_RIGHT.angleCANID                   = 31;
                 BACK_RIGHT.encoderCANID                 = 32;
-                BACK_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.359131).getDegrees();
+                BACK_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.414551).getDegrees();
             }
 
             public static final Module FRONT_LEFT = new Module();
@@ -209,7 +209,7 @@ public final class Constants {
                 FRONT_LEFT.driveCANID                   = 10;
                 FRONT_LEFT.angleCANID                   = 11;
                 FRONT_LEFT.encoderCANID                 = 12;
-                FRONT_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.281494).getDegrees();
+                FRONT_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.094238).getDegrees();
 
             }
 
@@ -222,7 +222,7 @@ public final class Constants {
                 FRONT_RIGHT.driveCANID                   = 20;
                 FRONT_RIGHT.angleCANID                   = 21;
                 FRONT_RIGHT.encoderCANID                 = 22;
-                FRONT_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.407959).getDegrees();
+                FRONT_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.533203).getDegrees();
             }
         }
     }
