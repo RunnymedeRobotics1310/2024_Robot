@@ -19,19 +19,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.LoggingCommand;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceHigh;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceLow;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceMedium;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.VisionPositionInfo;
 
 public abstract class SwerveSubsystem extends SubsystemBase {
 
     private final HughVisionSubsystem visionSubsystem;
-
+    LightingSubsystem                 lightingSubsystem;
     private final SlewRateLimiter     xLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
     private final SlewRateLimiter     yLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
     private final SlewRateLimiter     omegaLimiter = new SlewRateLimiter(MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
 
-    public SwerveSubsystem(HughVisionSubsystem visionSubsystem) {
-        this.visionSubsystem = visionSubsystem;
+    public SwerveSubsystem(HughVisionSubsystem visionSubsystem, LightingSubsystem lightingSubsystem) {
+        this.visionSubsystem   = visionSubsystem;
+        this.lightingSubsystem = lightingSubsystem;
     }
 
     /**
@@ -60,12 +66,12 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         ChassisSpeeds safeVelocity = new ChassisSpeeds(x, y, w);
 
         SmartDashboard.putString("Drive/Swerve/chassis_robot", String.format("%.2f,%.2f m/s %.0f deg/s)",
-                safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond,
-                Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
+            safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond,
+            Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
 
         SmartDashboard.putString("Drive/Swerve/velocity_robot", String.format("%.2f m/s %.0f deg/s)",
-                Math.hypot(safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond),
-                Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
+            Math.hypot(safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond),
+            Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
 
         driveRawRobotOriented(safeVelocity);
     }
@@ -152,12 +158,29 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         // ignore unreliable info from vision subsystem
         if (visPose == null) {
             SmartDashboard.putString("Drive/Swerve/vispose", "");
+            lightingSubsystem.setVisionPattern(VisionConfidenceNone.INSTANCE);
             return;
         }
 
+        switch (visPose.poseConfidence()) {
+        case HIGH:
+            lightingSubsystem.setVisionPattern(VisionConfidenceHigh.INSTANCE);
+            break;
+        case MEDIUM:
+            lightingSubsystem.setVisionPattern(VisionConfidenceMedium.INSTANCE);
+            break;
+        case LOW:
+            lightingSubsystem.setVisionPattern(VisionConfidenceLow.INSTANCE);
+            break;
+        case NONE:
+            lightingSubsystem.setVisionPattern(VisionConfidenceNone.INSTANCE);
+            break;
+        }
+
+
         // convert camera pose to robot pose
         Pose2d         robotPose = new Pose2d(visPose.pose().getTranslation().minus(CAMERA_LOC_REL_TO_ROBOT_CENTER),
-                visPose.pose().getRotation());
+            visPose.pose().getRotation());
 
         // how different is vision data from estimated data?
         double         delta_m   = getPose().getTranslation().getDistance(robotPose.getTranslation());
@@ -167,6 +190,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         // ignore drastically different data
         if (stds == null) {
             SmartDashboard.putString("Drive/Swerve/vispose", "");
+            lightingSubsystem.setVisionPattern(VisionConfidenceNone.INSTANCE);
             return;
         }
 
@@ -197,7 +221,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         updateTelemetry();
         Pose2d pose = getPose();
         SmartDashboard.putString("Drive/Swerve/location",
-                String.format("%.2f,%.2f m", pose.getTranslation().getX(), pose.getTranslation().getY()));
+            String.format("%.2f,%.2f m", pose.getTranslation().getX(), pose.getTranslation().getY()));
         SmartDashboard.putString("Drive/Swerve/heading", String.format("%.0f deg", pose.getRotation().getDegrees()));
     }
 

@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.Constants;
+import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import swervelib.SwerveDrive;
@@ -26,13 +27,14 @@ public class YagslSubsystem extends SwerveSubsystem {
      */
     private final SwerveDrive swerveDrive;
 
+
     /**
      * Initialize {@link SwerveDrive} with the directory provided.
      *
      * @param configDirectory Directory of swerve drive config files.
      */
-    public YagslSubsystem(File configDirectory, HughVisionSubsystem visionSubsystem) {
-        super(visionSubsystem);
+    public YagslSubsystem(File configDirectory, HughVisionSubsystem visionSubsystem, LightingSubsystem lightingSubsystem) {
+        super(visionSubsystem, lightingSubsystem);
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
         SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH;

@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,6 +36,8 @@ import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.commands.swervedrive.TeleopDriveCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.Enabled;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.swerve.yagsl.YagslSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
@@ -49,13 +52,17 @@ import frc.robot.subsystems.vision.HughVisionSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+    private final LightingSubsystem   lightingSubsystem    = new LightingSubsystem();
+
     // The robot's subsystems and commands are defined here...
     private final File                yagslConfig          = new File(Filesystem.getDeployDirectory(), "swerve/neo");
 
     private final HughVisionSubsystem hughVisionSubsystem  = new HughVisionSubsystem();
 
     // todo: set up sendable chooser for this to toggle implementation for testing
-    private final SwerveSubsystem     swerveDriveSubsystem = new YagslSubsystem(yagslConfig, hughVisionSubsystem);
+    private final SwerveSubsystem     swerveDriveSubsystem = new YagslSubsystem(yagslConfig, hughVisionSubsystem,
+        lightingSubsystem);
     // private final SwerveSubsystem swerveDriveSubsystem = new
     // RunnymedeSwerveSubsystem(hughVisionSubsystem);
 
@@ -103,10 +110,16 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        // Enter Test Mode (Start and Back pressed at the same time)
-        new Trigger(operatorInput::isToggleTestMode)
-                .onTrue(
-                        new SystemTestCommand(operatorInput, swerveDriveSubsystem));
+        /**
+         * This is a trigger that will run the command when the robot is enabled.
+         */
+        new Trigger(RobotController::isSysActive)
+            .onTrue(new InstantCommand(() -> lightingSubsystem.setSignalPattern(new Enabled())));
+
+        /**
+         * This is a trigger that will activate test mode (start & back at the same time)
+         */
+        new Trigger(operatorInput::isToggleTestMode).onTrue(new SystemTestCommand(operatorInput, swerveDriveSubsystem));
 
         new Trigger(operatorInput::isZeroGyro).onTrue(new ZeroGyroCommand(swerveDriveSubsystem));
         new Trigger(operatorInput::isCancel).whileTrue(new CancelCommand(swerveDriveSubsystem));

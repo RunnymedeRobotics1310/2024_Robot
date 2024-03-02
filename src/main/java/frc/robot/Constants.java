@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.lighting.LightStripRegion;
 import frc.robot.subsystems.vision.PoseConfidence;
 
 /**
@@ -283,9 +284,9 @@ public final class Constants {
     public static final class UsefulPoses {
 
         public static final Pose2d SCORE_BLUE_AMP = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.8,
-                Rotation2d.fromDegrees(90)));
+            Rotation2d.fromDegrees(90)));
         public static final Pose2d SCORE_RED_AMP  = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.8,
-                Rotation2d.fromDegrees(90)));
+            Rotation2d.fromDegrees(90)));
 
         public static final Pose2d BLUE_2_2_20    = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
         public static final Pose2d RED_2_2_20     = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
@@ -340,5 +341,13 @@ public final class Constants {
         public static enum AutoPattern {
             SCORE_1_AMP, SCORE_2_AMP, SCORE_1_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER
         }
+    }
+
+    public static final class LightingConstants {
+        public static final int        LIGHT_STRING_PWM_PORT = 1;
+        public static final int        LIGHT_STRING_LENGTH   = 60;
+
+        public static LightStripRegion VISPOSE               = new LightStripRegion(0, 24);
+        public static LightStripRegion SIGNAL                = new LightStripRegion(24, LIGHT_STRING_LENGTH);
     }
 }

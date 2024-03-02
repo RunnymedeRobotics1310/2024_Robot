@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 
@@ -53,8 +54,8 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
 
     public final SwerveDrivePoseEstimator swerveDrivePoseEstimator;
 
-    public RunnymedeSwerveSubsystem(HughVisionSubsystem visionSubsystem) {
-        super(visionSubsystem);
+    public RunnymedeSwerveSubsystem(HughVisionSubsystem visionSubsystem, LightingSubsystem lightingSubsystem) {
+        super(visionSubsystem, lightingSubsystem);
 
         modules      = new SwerveModule[4];
         modules[0]   = new SwerveModule(FRONT_LEFT, DRIVE, ANGLE);
@@ -63,7 +64,7 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
         modules[3]   = new SwerveModule(BACK_RIGHT, DRIVE, ANGLE);
 
         kinematics   = new SwerveDriveKinematics(
-                Arrays.stream(modules).map(SwerveModule::getLocation).toArray(Translation2d[]::new));
+            Arrays.stream(modules).map(SwerveModule::getLocation).toArray(Translation2d[]::new));
 
         gyro         = new AHRS(SerialPort.Port.kMXP);
         gyroOffset   = gyro.getRotation3d();
@@ -88,10 +89,10 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
 
 
         this.swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(
-                this.kinematics,
-                gyro.getRotation3d().minus(gyroOffset).toRotation2d(),
-                Arrays.stream(modules).map(SwerveModule::getPosition).toArray(SwerveModulePosition[]::new),
-                new Pose2d(new Translation2d(0.0, 0.0), Rotation2d.fromDegrees(0.0)));
+            this.kinematics,
+            gyro.getRotation3d().minus(gyroOffset).toRotation2d(),
+            Arrays.stream(modules).map(SwerveModule::getPosition).toArray(SwerveModulePosition[]::new),
+            new Pose2d(new Translation2d(0.0, 0.0), Rotation2d.fromDegrees(0.0)));
     }
 
     @Override
@@ -140,8 +141,8 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
         Translation2d       centerOfRotation   = new Translation2d();
         SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(discretized, centerOfRotation);
         SwerveDriveKinematics.desaturateWheelSpeeds(
-                swerveModuleStates, velocity,
-                MAX_MODULE_SPEED_MPS, MAX_TRANSLATION_SPEED_MPS, MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians());
+            swerveModuleStates, velocity,
+            MAX_MODULE_SPEED_MPS, MAX_TRANSLATION_SPEED_MPS, MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians());
 
         Telemetry.desiredChassisSpeeds[1] = velocity.vyMetersPerSecond;
         Telemetry.desiredChassisSpeeds[0] = velocity.vxMetersPerSecond;
@@ -159,8 +160,8 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
     @Override
     public void updateOdometryWithStates() {
         swerveDrivePoseEstimator.update(
-                gyro.getRotation3d().minus(gyroOffset).toRotation2d(),
-                Arrays.stream(modules).map(SwerveModule::getPosition).toArray(SwerveModulePosition[]::new));
+            gyro.getRotation3d().minus(gyroOffset).toRotation2d(),
+            Arrays.stream(modules).map(SwerveModule::getPosition).toArray(SwerveModulePosition[]::new));
 
         Pose2d robotPose = swerveDrivePoseEstimator.getEstimatedPosition();
 
@@ -216,7 +217,7 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
     @Override
     public void resetOdometry(Pose2d pose) {
         this.swerveDrivePoseEstimator.resetPosition(gyro.getRotation3d().minus(gyroOffset).toRotation2d(),
-                Arrays.stream(modules).map(SwerveModule::getPosition).toArray(SwerveModulePosition[]::new), pose);
+            Arrays.stream(modules).map(SwerveModule::getPosition).toArray(SwerveModulePosition[]::new), pose);
     }
 
     @Override
