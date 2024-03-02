@@ -49,7 +49,7 @@ public class SystemTestCommand extends LoggingCommand {
 
     @Override
     public boolean runsWhenDisabled() {
-        return false;
+        return true;
     }
 
     @Override
