@@ -10,6 +10,8 @@ public class StartIntakeCommand extends LoggingCommand {
 
     private long               noteDetectTime = Long.MAX_VALUE;
 
+    private boolean            noteDetected   = false;
+
     public StartIntakeCommand(ArmSubsystem armSubsystem) {
 
         this.armSubsystem = armSubsystem;
@@ -20,6 +22,8 @@ public class StartIntakeCommand extends LoggingCommand {
     @Override
     public void initialize() {
 
+        noteDetected = false;
+
         logCommandStart();
     }
 
@@ -29,8 +33,9 @@ public class StartIntakeCommand extends LoggingCommand {
         armSubsystem.setShooterSpeed(-.2);
         armSubsystem.setIntakeSpeed(0);
 
-        if (armSubsystem.isNoteDetected()) {
+        if (armSubsystem.isNoteDetected() && !noteDetected) {
             noteDetectTime = System.currentTimeMillis();
+            noteDetected   = true;
             armSubsystem.setIntakeSpeed(-.15);
             armSubsystem.setShooterSpeed(0);
         }
@@ -40,7 +45,7 @@ public class StartIntakeCommand extends LoggingCommand {
     @Override
     public boolean isFinished() {
 
-        if (System.currentTimeMillis() - noteDetectTime > 1000) {
+        if (System.currentTimeMillis() - noteDetectTime > 400) {
             return true;
         }
 

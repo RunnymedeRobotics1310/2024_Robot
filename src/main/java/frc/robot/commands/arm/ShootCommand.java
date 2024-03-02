@@ -27,7 +27,7 @@ public class ShootCommand extends LoggingCommand {
         armSubsystem.setShooterSpeed(.5);
 
         if (isTimeoutExceeded(1.5)) {
-            armSubsystem.setIntakeSpeed(.7);
+            armSubsystem.setIntakeSpeed(.5);
         }
     }
 
