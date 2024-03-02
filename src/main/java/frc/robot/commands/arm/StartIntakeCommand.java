@@ -35,15 +35,12 @@ public class StartIntakeCommand extends LoggingCommand {
             armSubsystem.setShooterSpeed(0);
         }
 
-        if (isTimeoutExceeded(1.5)) {
-            armSubsystem.setIntakeSpeed(.3);
-        }
     }
 
     @Override
     public boolean isFinished() {
 
-        if (System.currentTimeMillis() - noteDetectTime > 250) {
+        if (System.currentTimeMillis() - noteDetectTime > 1000) {
             return true;
         }
 
