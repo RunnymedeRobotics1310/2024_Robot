@@ -2,6 +2,10 @@ package frc.robot.commands.operator;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.arm.ShootCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.subsystems.ArmSubsystem;
 
 /**
  * The DriverController exposes all driver functions
@@ -64,7 +68,7 @@ public class OperatorInput {
     }
 
     public boolean isB() {
-        return driverController.getBButton();
+        return false;
     }
 
     public boolean isLock() {
@@ -87,24 +91,45 @@ public class OperatorInput {
 
         switch (stick) {
 
-            case LEFT:
-                switch (axis) {
-                    case X:
-                        return driverController.getLeftX();
-                    case Y:
-                        return driverController.getLeftY();
-                }
-                break;
+        case LEFT:
+            switch (axis) {
+            case X:
+                return driverController.getLeftX();
+            case Y:
+                return driverController.getLeftY();
+            }
+            break;
 
-            case RIGHT:
-                switch (axis) {
-                    case X:
-                        return driverController.getRightX();
-                }
-                break;
+        case RIGHT:
+            switch (axis) {
+            case X:
+                return driverController.getRightX();
+            }
+            break;
         }
 
         return 0;
+    }
+
+    private boolean isIntakePressed() {
+        return driverController.getYButton();
+    }
+
+    private boolean isShootPressed() {
+        return driverController.getBButton();
+    }
+
+    /**
+     * Set all of the robot button bindings to commands in one place
+     */
+    public void setButtonBindings(ArmSubsystem armSubsystem) {
+
+        new Trigger(() -> isShootPressed())
+            .onTrue(new ShootCommand(armSubsystem));
+
+        new Trigger(() -> isIntakePressed())
+            .onTrue(new StartIntakeCommand(armSubsystem));
+
     }
 
 }

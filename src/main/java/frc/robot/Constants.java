@@ -341,4 +341,15 @@ public final class Constants {
             SCORE_1_AMP, SCORE_2_AMP, SCORE_1_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER
         }
     }
+    
+    public static final class ArmConstants {
+
+        public static final int         INTAKE_MOTOR_CAN_ADDRESS         = 50;
+        public static final int         SHOOTER_MOTOR_CAN_ADDRESS        = 51;
+
+        public static final int         AIM_ENCODER_ANALOG_PORT          = 2;
+        public static final int         LINK_ENCODER_ANALOG_PORT         = 3;
+
+        public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT    = 1;
+    }
 }

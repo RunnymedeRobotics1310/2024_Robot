@@ -31,10 +31,10 @@ import frc.robot.commands.operator.OperatorInput;
 import frc.robot.commands.swervedrive.DriveDistanceCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.ResetOdometryCommand;
-import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.commands.swervedrive.TeleopDriveCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.swerve.yagsl.YagslSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
@@ -58,6 +58,8 @@ public class RobotContainer {
     private final SwerveSubsystem     swerveDriveSubsystem = new YagslSubsystem(yagslConfig, hughVisionSubsystem);
     // private final SwerveSubsystem swerveDriveSubsystem = new
     // RunnymedeSwerveSubsystem(hughVisionSubsystem);
+
+    private final ArmSubsystem        armSubsystem         = new ArmSubsystem();
 
     SendableChooser<AutoPattern>      autoPatternChooser   = new SendableChooser<>();
 
@@ -105,11 +107,11 @@ public class RobotContainer {
     private void configureBindings() {
         // Enter Test Mode (Start and Back pressed at the same time)
         new Trigger(operatorInput::isToggleTestMode)
-                .onTrue(
-                        new SystemTestCommand(operatorInput, swerveDriveSubsystem));
+            .onTrue(
+                new SystemTestCommand(operatorInput, swerveDriveSubsystem));
 
         new Trigger(operatorInput::isZeroGyro).onTrue(new ZeroGyroCommand(swerveDriveSubsystem));
-        new Trigger(operatorInput::isCancel).whileTrue(new CancelCommand(swerveDriveSubsystem));
+        new Trigger(operatorInput::isCancel).whileTrue(new CancelCommand(swerveDriveSubsystem, armSubsystem));
         new Trigger(operatorInput::isX)
             .whileTrue(new ResetOdometryCommand(swerveDriveSubsystem, new Pose2d(1.83, 0.40, Rotation2d.fromDegrees(0))));
 
@@ -138,8 +140,10 @@ public class RobotContainer {
         // new Trigger(operatorInput::isA).onTrue(new RotateToSpeakerCommand(swerveDriveSubsystem,
         // hughVisionSubsystem));
 
-        new Trigger(operatorInput::isB)
-            .onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(swerveDriveSubsystem, hughVisionSubsystem));
+        // new Trigger(operatorInput::isB)
+        // .onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(swerveDriveSubsystem, hughVisionSubsystem));
+
+        operatorInput.setButtonBindings(armSubsystem);
 
     }
 
