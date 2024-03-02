@@ -40,6 +40,8 @@ public class ArmSubsystem extends SubsystemBase {
     private boolean               safetyEnabled        = false;
     private long                  safetyStartTime      = 0;
 
+    private boolean               armSafetyMode        = true;
+
     public ArmSubsystem(LightsSubsystem lightsSubsystem) {
 
         this.lightsSubsystem = lightsSubsystem;
@@ -94,6 +96,17 @@ public class ArmSubsystem extends SubsystemBase {
         return noteDetector.get();
     }
 
+    public void setArmPivotTestSpeeds(double linkSpeed, double aimSpeed) {
+
+        armSafetyMode       = false;
+
+        this.linkPivotSpeed = linkSpeed;
+        this.aimPivotSpeed  = aimSpeed;
+
+        linkMotor.set(linkSpeed);
+        aimMotor.set(aimSpeed);
+    }
+
     public void setLinkPivotSpeed(double speed) {
 
         this.linkPivotSpeed = speed;
@@ -140,15 +153,20 @@ public class ArmSubsystem extends SubsystemBase {
          * This is required because a command may set the motor speed
          * at the beginning and may not ever set it again. The periodic
          * loop checks the limits every loop.
+         *
+         * Safety can be bypassed by the test mode commands
          */
-        setLinkPivotSpeed(linkPivotSpeed);
-        setAimPivotSpeed(aimPivotSpeed);
+        if (armSafetyMode) {
 
-        // Latch the arm safety for 2 seconds when a safety condition
-        // is activated.
-        if (safetyEnabled) {
-            if ((System.currentTimeMillis() - safetyStartTime) > 2000) {
-                safetyEnabled = false;
+            setLinkPivotSpeed(linkPivotSpeed);
+            setAimPivotSpeed(aimPivotSpeed);
+
+            // Latch the arm safety for 2 seconds when a safety condition
+            // is activated.
+            if (safetyEnabled) {
+                if ((System.currentTimeMillis() - safetyStartTime) > 2000) {
+                    safetyEnabled = false;
+                }
             }
         }
 
@@ -218,10 +236,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     private void checkArmSafety() {
 
+        armSafetyMode = true;
+
         // NOTE: Set safetyEnabled = true if a safety condition
         // is encountered
-
-        // TODO:
 
         /*
          * LINK RANGE
@@ -299,7 +317,6 @@ public class ArmSubsystem extends SubsystemBase {
             }
         }
 
-
         /*
          * Never drive the motors to a total of more xxx degrees when
          * the arm is near the 4ft limit (arm angle > xxx).
@@ -325,9 +342,4 @@ public class ArmSubsystem extends SubsystemBase {
         return;
     }
 
-    public void setArmSpeeds(double linkSpeed, double aimSpeed) {
-
-        setLinkPivotSpeed(linkSpeed);
-        setAimPivotSpeed(aimSpeed);
-    }
 }
