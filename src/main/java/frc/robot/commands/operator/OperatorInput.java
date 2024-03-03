@@ -112,7 +112,7 @@ public class OperatorInput {
     }
 
     private boolean isIntakePressed() {
-        return driverController.getYButton();
+        return driverController.getAButton();
     }
 
     private boolean isShootPressed() {
