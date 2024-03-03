@@ -103,7 +103,7 @@ public final class Constants {
             public static final double     SLOW_SPEED_FACTOR                      = .1;
 
             public static final class HeadingPIDConfig {
-                public static final double P = 0.4;
+                public static final double P = 0.05;
                 // .002 is too low but stable
                 public static final double I = 0;
                 public static final double D = 0;
@@ -323,10 +323,14 @@ public final class Constants {
             else if (confidence == MEDIUM || poseDifferenceMetres < 0.5) {
                 xyMetresStds = 0.15;
                 degreesStds  = 6;
+                // temporarily disable
+                return null;
             }
             else if (confidence == LOW || poseDifferenceMetres < 0.8) {
                 xyMetresStds = 0.30;
                 degreesStds  = 12;
+                // temporarily disable
+                return null;
             }
             else { // Covers the Confidence.NONE case
                 return null;

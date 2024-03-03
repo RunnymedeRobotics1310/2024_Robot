@@ -123,8 +123,12 @@ public class RobotContainer {
 
         new Trigger(operatorInput::isZeroGyro).onTrue(new ZeroGyroCommand(swerveDriveSubsystem));
         new Trigger(operatorInput::isCancel).whileTrue(new CancelCommand(swerveDriveSubsystem));
-        new Trigger(operatorInput::isX)
-            .whileTrue(new ResetOdometryCommand(swerveDriveSubsystem, new Pose2d(1.83, 0.40, Rotation2d.fromDegrees(0))));
+
+        new Trigger(operatorInput::isB)
+            .onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(swerveDriveSubsystem, hughVisionSubsystem));
+
+//        new Trigger(operatorInput::isX)
+//            .whileTrue(new ResetOdometryCommand(swerveDriveSubsystem, new Pose2d(1.83, 0.40, Rotation2d.fromDegrees(0))));
 
         // drive forward
         Translation2d          fwd         = new Translation2d(0, 7);
@@ -151,8 +155,6 @@ public class RobotContainer {
         // new Trigger(operatorInput::isA).onTrue(new RotateToSpeakerCommand(swerveDriveSubsystem,
         // hughVisionSubsystem));
 
-        new Trigger(operatorInput::isB)
-            .onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(swerveDriveSubsystem, hughVisionSubsystem));
 
     }
 
