@@ -1142,7 +1142,7 @@
               "Visuals/Major tick spacing": 45.0,
               "Visuals/Starting angle": 180.0,
               "Visuals/Show tick mark ring": true,
-              "Visuals/Counter clockwise": false
+              "Visuals/Counter clockwise": true
             }
           },
           "16,0": {
@@ -1153,7 +1153,33 @@
             "content": {
               "_type": "ComboBox Chooser",
               "_source0": "network_table:///SmartDashboard/Auto Pattern",
-              "_title": "/SmartDashboard/Auto Pattern",
+              "_title": "SmartDashboard/Auto Pattern",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "16,10": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lighting/SignalPattern",
+              "_title": "SmartDashboard/Lighting/SignalPattern",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "16,9": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lighting/VisionPattern",
+              "_title": "SmartDashboard/Lighting/VisionPattern",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -1262,7 +1288,33 @@
             "content": {
               "_type": "ComboBox Chooser",
               "_source0": "network_table:///SmartDashboard/Auto Pattern",
-              "_title": "/SmartDashboard/Auto Pattern",
+              "_title": "SmartDashboard/Auto Pattern",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,6": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lighting/VisionPattern",
+              "_title": "SmartDashboard/Lighting/VisionPattern",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,7": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lighting/SignalPattern",
+              "_title": "SmartDashboard/Lighting/SignalPattern",
               "_glyph": 148,
               "_showGlyph": false
             }
