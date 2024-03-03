@@ -10,7 +10,11 @@ import static frc.robot.Constants.LightingConstants.VISPOSE;
  */
 public class VisionConfidenceHigh extends LightingPattern {
 
-    public static LightingPattern      INSTANCE = new VisionConfidenceHigh();
+    private static final LightingPattern INSTANCE = new VisionConfidenceHigh();
+
+    public static LightingPattern getInstance() {
+        return INSTANCE;
+    }
 
     private final AddressableLEDBuffer buffer;
 

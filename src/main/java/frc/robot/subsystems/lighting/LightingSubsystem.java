@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.lighting.pattern.Default;
 import frc.robot.subsystems.lighting.pattern.LightingPattern;
-import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
 
 public class LightingSubsystem extends SubsystemBase {
 
@@ -16,28 +14,25 @@ public class LightingSubsystem extends SubsystemBase {
     /*
      * Lighting Signals
      * - Intake in progress -> orange flash
-     * - within shooting range -> orange pulse
+     * * within shooting range -> orange pulse
      * - climb in progress -> alliance flash
      * - default -> alliance pulse
      * - shooting -> rainbow
-     * - vision confidence -> green, blue, purple
-     * - test mode -> purple
+     * * vision confidence -> green, blue, purple
+     * * test mode -> purple
      */
 
 
     private final AddressableLED       ledStrip;
     private final AddressableLEDBuffer ledBuffer;
 
-    private LightingPattern            visionPattern = VisionConfidenceNone.INSTANCE;
+    private final LightstripRegion[]   regions;
 
-    private LightingPattern            signalPattern = new Default();
+    public LightingSubsystem(LightstripRegion... regions) {
 
-
-
-    public LightingSubsystem() {
-
-        ledStrip  = new AddressableLED(Constants.LightingConstants.LIGHT_STRING_PWM_PORT);
-        ledBuffer = new AddressableLEDBuffer(Constants.LightingConstants.LIGHT_STRING_LENGTH);
+        this.regions = regions;
+        ledStrip     = new AddressableLED(Constants.LightingConstants.LIGHT_STRING_PWM_PORT);
+        ledBuffer    = new AddressableLEDBuffer(Constants.LightingConstants.LIGHT_STRIP_LENGTH);
 
         ledStrip.setLength(ledBuffer.getLength());
         ledStrip.setData(ledBuffer);
@@ -45,43 +40,55 @@ public class LightingSubsystem extends SubsystemBase {
         ledStrip.start();
     }
 
-    public void setVisionPattern(LightingPattern pattern) {
-        if (pattern == null) {
-            pattern = VisionConfidenceNone.INSTANCE;
+    /**
+     * Set the specified pattern as the only active pattern in its region
+     */
+    public void setPattern(LightingPattern pattern) {
+        for (LightstripRegion region : regions) {
+            if (pattern.getRegion() == region) {
+                region.setPattern(pattern);
+                break;
+            }
         }
-        visionPattern = pattern;
     }
 
-    public void setSignalPattern(LightingPattern pattern) {
-        if (pattern == null) {
-            pattern = new Default();
+    /**
+     * Add a pattern to its region
+     */
+    public void addPattern(LightingPattern pattern) {
+        for (LightstripRegion region : regions) {
+            if (pattern.getRegion() == region) {
+                region.addPattern(pattern);
+                break;
+            }
         }
-        signalPattern = pattern;
     }
+
+    /**
+     * Remove the specified pattern from its region.
+     */
+    public void removePattern(Class<? extends LightingPattern> patternClass) {
+        for (LightstripRegion region : regions) {
+            region.removePattern(patternClass);
+        }
+    }
+
 
     @Override
     public void periodic() {
+        // set the lights in each region
+        for (LightstripRegion region : regions) {
 
-        // apply vision pattern
-        AddressableLEDBuffer visionBuffer = visionPattern.periodic();
-        for (int i = 0; i < visionBuffer.getLength(); i++) {
-            int idx = visionPattern.getRegion().start + i;
-            if (idx < ledBuffer.getLength()) {
-                ledBuffer.setLED(idx, visionBuffer.getLED(i));
+            LightingPattern      pattern = region.getPattern();
+            AddressableLEDBuffer buffer  = pattern.periodic();
+            for (int i = 0; i < buffer.getLength(); i++) {
+                int idx = region.start + i;
+                if (idx < ledBuffer.getLength()) {
+                    ledBuffer.setLED(idx, buffer.getLED(i));
+                }
             }
+            SmartDashboard.putString("Lighting/" + region.name, pattern.getClass().getSimpleName());
         }
-
-        // apply signal pattern
-        AddressableLEDBuffer signalBuffer = signalPattern.periodic();
-        for (int i = 0; i < signalBuffer.getLength(); i++) {
-            int idx = signalPattern.getRegion().start + i;
-            if (idx < ledBuffer.getLength()) {
-                ledBuffer.setLED(idx, signalBuffer.getLED(i));
-            }
-        }
-
-        SmartDashboard.putString("Lighting/VisionPattern", visionPattern.getClass().getSimpleName());
-        SmartDashboard.putString("Lighting/SignalPattern", signalPattern.getClass().getSimpleName());
 
         safelySetLights();
     }

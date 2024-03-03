@@ -7,7 +7,12 @@ import static frc.robot.Constants.LightingConstants.SIGNAL;
  * climb in progress -> alliance flash
  */
 public class Climbing extends LightingPattern {
-    public Climbing() {
+
+    public static LightingPattern getInstance() {
+        return new Climbing();
+    }
+
+    private Climbing() {
         super(SIGNAL);
     }
 

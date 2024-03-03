@@ -6,7 +6,12 @@ import edu.wpi.first.wpilibj.util.Color;
 import static frc.robot.Constants.LightingConstants.VISPOSE;
 
 public class VisionConfidenceNone extends LightingPattern {
-    public static LightingPattern      INSTANCE = new VisionConfidenceNone();
+
+    private static final LightingPattern INSTANCE = new VisionConfidenceNone();
+
+    public static LightingPattern getInstance() {
+        return INSTANCE;
+    }
 
     private final AddressableLEDBuffer buffer;
 

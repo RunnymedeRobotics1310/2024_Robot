@@ -7,7 +7,12 @@ import static frc.robot.Constants.LightingConstants.SIGNAL;
  * Intake in progress -> orange flash
  */
 public class Intaking extends LightingPattern {
-    public Intaking() {
+
+    public static LightingPattern getInstance() {
+        return new Intaking();
+    }
+
+    private Intaking() {
         super(SIGNAL);
     }
 

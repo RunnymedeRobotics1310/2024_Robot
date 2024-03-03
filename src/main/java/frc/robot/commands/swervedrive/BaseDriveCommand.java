@@ -184,6 +184,13 @@ public abstract class BaseDriveCommand extends LoggingCommand {
     }
 
     /**
+     * Return the distance in metres to the specified field position
+     */
+    protected final double distanceToFieldPosition(Translation2d target) {
+        return swerve.getPose().getTranslation().getDistance(target);
+    }
+
+    /**
      * Returns true when the robot is located within TRANSLATION_TOLERANCE_METRES of the desired
      * location
      */

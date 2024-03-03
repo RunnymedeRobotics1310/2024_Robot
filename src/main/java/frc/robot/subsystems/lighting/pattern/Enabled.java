@@ -15,21 +15,23 @@ public class Enabled extends LightingPattern {
     static {
 
         // Static initializer for the RSL flash buffer
-        RSL_ON  = new AddressableLEDBuffer(Constants.LightingConstants.LIGHT_STRING_LENGTH);
-        RSL_OFF = new AddressableLEDBuffer(Constants.LightingConstants.LIGHT_STRING_LENGTH);
+        RSL_ON  = new AddressableLEDBuffer(Constants.LightingConstants.LIGHT_STRIP_LENGTH);
+        RSL_OFF = new AddressableLEDBuffer(Constants.LightingConstants.LIGHT_STRIP_LENGTH);
 
-        for (int i = 0; i < Constants.LightingConstants.LIGHT_STRING_LENGTH; i++) {
+        for (int i = 0; i < Constants.LightingConstants.LIGHT_STRIP_LENGTH; i++) {
             RSL_ON.setLED(i, RSL_COLOR);
             RSL_OFF.setLED(i, Color.kBlack);
         }
     }
 
-
+    public static LightingPattern getInstance() {
+        return new Enabled();
+    }
 
     private int     rslFlashCount;
     private boolean prevRslState = false;
 
-    public Enabled() {
+    private Enabled() {
         super(SIGNAL);
         rslFlashCount = 5;
     }

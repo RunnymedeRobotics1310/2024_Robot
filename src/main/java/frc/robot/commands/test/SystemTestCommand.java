@@ -69,7 +69,7 @@ public class SystemTestCommand extends LoggingCommand {
         stopAllMotors();
         enabled = true;
         updateDashboard();
-        lighting.setSignalPattern(TestMode.INSTANCE);
+        lighting.addPattern(TestMode.getInstance());
     }
 
 
@@ -265,7 +265,7 @@ public class SystemTestCommand extends LoggingCommand {
     public void end(boolean interrupted) {
         stopAllMotors();
         enabled = false;
-        lighting.setSignalPattern(null);
+        lighting.removePattern(TestMode.class);
         updateDashboard();
         super.end(interrupted);
     }

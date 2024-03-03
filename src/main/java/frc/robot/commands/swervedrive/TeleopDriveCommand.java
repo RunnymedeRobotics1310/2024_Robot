@@ -1,5 +1,6 @@
 package frc.robot.commands.swervedrive;
 
+import static frc.robot.Constants.ShooterConstants.SPEAKER_SHOT_RANGE_METRES;
 import static frc.robot.Constants.Swerve.Chassis.GENERAL_SPEED_FACTOR;
 import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATIONAL_VELOCITY_PER_SEC;
 import static frc.robot.Constants.Swerve.Chassis.MAX_SPEED_FACTOR;
@@ -19,22 +20,26 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.commands.operator.OperatorInput;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.InShootingRange;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class TeleopDriveCommand extends BaseDriveCommand {
 
-    private final OperatorInput   oi;
-    private final SlewRateLimiter inputOmegaLimiter = new SlewRateLimiter(4.42);
-    private Rotation2d            headingSetpoint   = Rotation2d.fromDegrees(0);
+    private final LightingSubsystem lighting;
+    private final OperatorInput     oi;
+    private final SlewRateLimiter   inputOmegaLimiter = new SlewRateLimiter(4.42);
+    private Rotation2d              headingSetpoint   = Rotation2d.fromDegrees(0);
 
-    private boolean               lockOnSpeaker     = false;
+    private boolean                 lockOnSpeaker     = false;
 
     /**
      * Used to drive a swerve robot in full field-centric mode.
      */
-    public TeleopDriveCommand(SwerveSubsystem swerve, OperatorInput operatorInput) {
+    public TeleopDriveCommand(SwerveSubsystem swerve, LightingSubsystem lighting, OperatorInput operatorInput) {
         super(swerve);
-        this.oi = operatorInput;
+        this.lighting = lighting;
+        this.oi       = operatorInput;
     }
 
     @Override
@@ -143,6 +148,14 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             omega = computeOmega(headingSetpoint);
         }
 
+        if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < SPEAKER_SHOT_RANGE_METRES) {
+            lighting.setPattern(InShootingRange.getInstance());
+        }
+        else {
+            lighting.removePattern(InShootingRange.class);
+        }
+
+
         // write to dashboard
         SmartDashboard.putString("Drive/Teleop/Alliance", alliance.name());
         SmartDashboard.putNumber("Drive/Teleop/vX", vX);
@@ -150,12 +163,14 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         SmartDashboard.putNumber("Drive/Teleop/ccwRotAngularVelPct", ccwRotAngularVelPct);
         SmartDashboard.putNumber("Drive/Teleop/rawDesiredHeadingDeg", rawDesiredHeadingDeg);
         SmartDashboard.putNumber("Drive/Teleop/boostFactor", boostFactor);
+        SmartDashboard.putBoolean("Drive/Teleop/lockOnSpeaker", lockOnSpeaker);
 
         SmartDashboard.putString("Drive/Teleop/velocity",
             format(velocity.getNorm()) + "m/s at " + format(velocity.getAngle()));
         SmartDashboard.putString("Drive/Teleop/theta ", format(headingSetpoint));
         SmartDashboard.putString("Drive/Teleop/omega", format(omega) + "/s");
         swerve.driveFieldOriented(velocity, omega);
+
 
     }
 

@@ -10,9 +10,13 @@ import static frc.robot.Constants.LightingConstants.SIGNAL;
  */
 public class TestMode extends LightingPattern {
 
-    public static final LightingPattern INSTANCE = new TestMode();
+    private static final LightingPattern INSTANCE = new TestMode();
 
-    private final AddressableLEDBuffer  buffer   = SIGNAL.createBuffer();
+    public static LightingPattern getInstance() {
+        return INSTANCE;
+    }
+
+    private final AddressableLEDBuffer buffer = SIGNAL.createBuffer();
 
     private TestMode() {
         super(SIGNAL);

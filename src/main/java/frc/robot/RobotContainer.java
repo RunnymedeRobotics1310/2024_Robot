@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.LightingConstants.VISPOSE;
+import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.Constants.UsefulPoses.BLUE_2_2_20;
 import static frc.robot.Constants.UsefulPoses.RED_2_2_20;
 
@@ -31,7 +33,6 @@ import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.commands.swervedrive.DriveDistanceCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
-import frc.robot.commands.swervedrive.ResetOdometryCommand;
 import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.commands.swervedrive.TeleopDriveCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
@@ -53,7 +54,7 @@ import frc.robot.subsystems.vision.HughVisionSubsystem;
  */
 public class RobotContainer {
 
-    private final LightingSubsystem   lightingSubsystem    = new LightingSubsystem();
+    private final LightingSubsystem   lightingSubsystem    = new LightingSubsystem(SIGNAL, VISPOSE);
 
     // The robot's subsystems and commands are defined here...
     private final File                yagslConfig          = new File(Filesystem.getDeployDirectory(), "swerve/neo");
@@ -77,7 +78,7 @@ public class RobotContainer {
     public RobotContainer() {
 
         // Initialize all Subsystem default commands
-        swerveDriveSubsystem.setDefaultCommand(new TeleopDriveCommand(swerveDriveSubsystem, operatorInput));
+        swerveDriveSubsystem.setDefaultCommand(new TeleopDriveCommand(swerveDriveSubsystem, lightingSubsystem, operatorInput));
         // Configure the trigger bindings
         configureBindings();
         // Initialize the autonomous choosers
@@ -110,13 +111,13 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        /**
+        /*
          * This is a trigger that will run the command when the robot is enabled.
          */
         new Trigger(RobotController::isSysActive)
-            .onTrue(new InstantCommand(() -> lightingSubsystem.setSignalPattern(new Enabled())));
+            .onTrue(new InstantCommand(() -> lightingSubsystem.addPattern(Enabled.getInstance())));
 
-        /**
+        /*
          * This is a trigger that will activate test mode (start & back at the same time)
          */
         new Trigger(operatorInput::isToggleTestMode)

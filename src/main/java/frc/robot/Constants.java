@@ -21,6 +21,8 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.lighting.LightstripRegion;
+import frc.robot.subsystems.lighting.pattern.Default;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
 import frc.robot.subsystems.vision.PoseConfidence;
 
 /**
@@ -342,16 +344,31 @@ public final class Constants {
 
     public static final class AutoConstants {
 
-        public static enum AutoPattern {
+        public enum AutoPattern {
             SCORE_1_AMP, SCORE_2_AMP, SCORE_1_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER
         }
     }
 
     public static final class LightingConstants {
         public static final int        LIGHT_STRING_PWM_PORT = 1;
-        public static final int        LIGHT_STRING_LENGTH   = 60;
+        public static final int        LIGHT_STRIP_LENGTH    = 60;
 
-        public static LightstripRegion VISPOSE               = new LightstripRegion(0, 24);
-        public static LightstripRegion SIGNAL                = new LightstripRegion(24, LIGHT_STRING_LENGTH - 1);
+        public static LightstripRegion VISPOSE               = new LightstripRegion(
+            "Vision",
+            0, 24,
+            VisionConfidenceNone.class);
+        public static LightstripRegion SIGNAL                = new LightstripRegion(
+            "Signal",
+            24, LIGHT_STRIP_LENGTH - 1,
+            Default.class);
+    }
+
+    public static final class ShooterConstants {
+        /**
+         * The distance (metres) from which the shooter is likely to shoot and score on the speaker.
+         * It may be possible to shoot from beyond this distance, but it would be with considerably
+         * less reliability.
+         */
+        public static final double SPEAKER_SHOT_RANGE_METRES = 4.0;
     }
 }

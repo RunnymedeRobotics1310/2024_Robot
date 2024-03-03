@@ -158,22 +158,22 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         // ignore unreliable info from vision subsystem
         if (visPose == null) {
             SmartDashboard.putString("Drive/Swerve/vispose", "");
-            lightingSubsystem.setVisionPattern(VisionConfidenceNone.INSTANCE);
+            lightingSubsystem.setPattern(VisionConfidenceNone.getInstance());
             return;
         }
 
         switch (visPose.poseConfidence()) {
         case HIGH:
-            lightingSubsystem.setVisionPattern(VisionConfidenceHigh.INSTANCE);
+            lightingSubsystem.setPattern(VisionConfidenceHigh.getInstance());
             break;
         case MEDIUM:
-            lightingSubsystem.setVisionPattern(VisionConfidenceMedium.INSTANCE);
+            lightingSubsystem.setPattern(VisionConfidenceMedium.getInstance());
             break;
         case LOW:
-            lightingSubsystem.setVisionPattern(VisionConfidenceLow.INSTANCE);
+            lightingSubsystem.setPattern(VisionConfidenceLow.getInstance());
             break;
         case NONE:
-            lightingSubsystem.setVisionPattern(VisionConfidenceNone.INSTANCE);
+            lightingSubsystem.setPattern(VisionConfidenceNone.getInstance());
             break;
         }
 
@@ -190,7 +190,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         // ignore drastically different data
         if (stds == null) {
             SmartDashboard.putString("Drive/Swerve/vispose", "");
-            lightingSubsystem.setVisionPattern(VisionConfidenceNone.INSTANCE);
+            lightingSubsystem.setPattern(VisionConfidenceNone.getInstance());
             return;
         }
 

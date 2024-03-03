@@ -7,7 +7,12 @@ import static frc.robot.Constants.LightingConstants.SIGNAL;
  * shooting -> rainbow
  */
 public class Shooting extends LightingPattern {
-    public Shooting() {
+
+    public static LightingPattern getInstance() {
+        return new Shooting();
+    }
+
+    private Shooting() {
         super(SIGNAL);
     }
 

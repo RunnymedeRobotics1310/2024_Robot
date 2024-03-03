@@ -7,7 +7,14 @@ import static frc.robot.Constants.LightingConstants.SIGNAL;
  * default -> alliance pulse
  */
 public class Default extends LightingPattern {
-    public Default() {
+
+    private static final LightingPattern INSTANCE = new Default();
+
+    public static LightingPattern getInstance() {
+        return INSTANCE;
+    }
+
+    private Default() {
         super(SIGNAL);
     }
 

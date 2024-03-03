@@ -9,7 +9,12 @@ import static frc.robot.Constants.LightingConstants.VISPOSE;
  * vision confidence -> green, blue, purple
  */
 public class VisionConfidenceLow extends LightingPattern {
-    public static LightingPattern      INSTANCE = new VisionConfidenceLow();
+
+    private static final LightingPattern INSTANCE = new VisionConfidenceLow();
+
+    public static LightingPattern getInstance() {
+        return INSTANCE;
+    }
 
     private final AddressableLEDBuffer buffer;
 
