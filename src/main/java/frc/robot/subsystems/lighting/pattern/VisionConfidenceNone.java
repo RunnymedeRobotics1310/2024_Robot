@@ -24,7 +24,7 @@ public class VisionConfidenceNone extends LightingPattern {
     private VisionConfidenceNone() {
         super(VISPOSE);
         for (int i = 0; i < buffer.getLength(); i++) {
-            buffer.setLED(i, Color.kBlack);
+            buffer.setLED(i, Color.kViolet);
         }
     }
 }

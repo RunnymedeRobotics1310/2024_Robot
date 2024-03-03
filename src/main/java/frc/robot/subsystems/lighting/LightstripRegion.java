@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.lighting.pattern.LightingPattern;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LightstripRegion {
@@ -21,7 +21,7 @@ public class LightstripRegion {
         this.start               = start;
         this.end                 = end;
         this.defaultPatternClass = defaultPatternClass;
-        this.activePatterns      = new HashMap<>();
+        this.activePatterns      = new LinkedHashMap<>();
     }
 
     /**
@@ -54,7 +54,16 @@ public class LightstripRegion {
         if (key.equals(getDefaultPattern().getClass().getName())) {
             return;
         }
-        activePatterns.put(key, pattern);
+        // reuse previous pattern if already there, to preserve state of an
+        // active pattern
+        if (activePatterns.containsKey(key)) {
+            LightingPattern p = activePatterns.get(key);
+            // reorder in map to end.
+            activePatterns.put(key, p);
+        }
+        else {
+            activePatterns.put(key, pattern);
+        }
     }
 
     public void removePattern(Class<? extends LightingPattern> patternClass) {
@@ -83,13 +92,14 @@ public class LightstripRegion {
         StringBuilder   errmsg = new StringBuilder("More than one active pattern for region ").append(name).append(": ");
         for (LightingPattern pattern : activePatterns.values()) {
             if (result == null) {
-                result = pattern;
                 errmsg.append(pattern.getClass().getSimpleName());
             }
             else {
                 errmsg.append(", ").append(pattern.getClass().getSimpleName());
             }
+            result = pattern;
         }
+        errmsg.append(". Using the last version.");
         SmartDashboard.putString("Lighting/Warning", errmsg.toString());
         return result;
 

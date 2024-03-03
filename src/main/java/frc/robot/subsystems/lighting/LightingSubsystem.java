@@ -69,10 +69,7 @@ public class LightingSubsystem extends SubsystemBase {
             LightingPattern      pattern = region.getPattern();
             AddressableLEDBuffer buffer  = pattern.periodic();
             for (int i = 0; i < buffer.getLength(); i++) {
-                int idx = region.start + i;
-                if (idx < ledBuffer.getLength()) {
-                    ledBuffer.setLED(idx, buffer.getLED(i));
-                }
+                ledBuffer.setLED(region.start + i, buffer.getLED(i));
             }
             SmartDashboard.putString("Lighting/" + region.name, pattern.getClass().getSimpleName());
         }

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.lighting.pattern;
 
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
