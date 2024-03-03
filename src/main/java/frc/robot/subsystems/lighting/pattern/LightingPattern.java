@@ -2,16 +2,16 @@ package frc.robot.subsystems.lighting.pattern;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.subsystems.lighting.LightStripRegion;
+import frc.robot.subsystems.lighting.LightstripRegion;
 
 public abstract class LightingPattern {
-    protected final LightStripRegion region;
+    protected final LightstripRegion region;
 
-    public LightingPattern(LightStripRegion region) {
+    public LightingPattern(LightstripRegion region) {
         this.region = region;
     }
 
-    public LightStripRegion getRegion() {
+    public LightstripRegion getRegion() {
         return region;
     }
 

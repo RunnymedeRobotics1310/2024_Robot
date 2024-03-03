@@ -20,7 +20,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.lighting.LightStripRegion;
+import frc.robot.subsystems.lighting.LightstripRegion;
 import frc.robot.subsystems.vision.PoseConfidence;
 
 /**
@@ -351,7 +351,7 @@ public final class Constants {
         public static final int        LIGHT_STRING_PWM_PORT = 1;
         public static final int        LIGHT_STRING_LENGTH   = 60;
 
-        public static LightStripRegion VISPOSE               = new LightStripRegion(0, 24);
-        public static LightStripRegion SIGNAL                = new LightStripRegion(24, LIGHT_STRING_LENGTH - 1);
+        public static LightstripRegion VISPOSE               = new LightstripRegion(0, 24);
+        public static LightstripRegion SIGNAL                = new LightstripRegion(24, LIGHT_STRING_LENGTH - 1);
     }
 }

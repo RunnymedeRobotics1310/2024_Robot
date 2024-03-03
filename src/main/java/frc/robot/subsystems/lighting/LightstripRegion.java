@@ -2,11 +2,11 @@ package frc.robot.subsystems.lighting;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
-public class LightStripRegion {
+public class LightstripRegion {
     public int start;
     public int end;
 
-    public LightStripRegion(int start, int end) {
+    public LightstripRegion(int start, int end) {
         this.start = start;
         this.end   = end;
     }
