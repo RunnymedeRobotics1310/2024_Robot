@@ -6,7 +6,9 @@ import edu.wpi.first.wpilibj.util.Color;
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 
 /**
- * Test mode active - alternating red and white lights
+ * Light signal to display while the robot is in test mode.
+ *
+ * This pattern displays the lights in ana alternating red and white pattern, without motion.
  */
 public class TestMode extends LightingPattern {
 
@@ -15,8 +17,6 @@ public class TestMode extends LightingPattern {
     public static LightingPattern getInstance() {
         return INSTANCE;
     }
-
-    private final AddressableLEDBuffer buffer = SIGNAL.createBuffer();
 
     private TestMode() {
         super(SIGNAL);
@@ -28,11 +28,6 @@ public class TestMode extends LightingPattern {
                 buffer.setLED(i, Color.kWhite);
             }
         }
-    }
-
-    @Override
-    public AddressableLEDBuffer periodic() {
-        return buffer;
     }
 
 }

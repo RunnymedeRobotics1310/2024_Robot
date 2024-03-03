@@ -1,34 +1,32 @@
 package frc.robot.subsystems.lighting.pattern;
 
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.util.Color;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.Constants.LightingConstants.NOTE_ORANGE;
 
 /**
- * within shooting range -> orange pulse
+ * Light signal to display when the robot is within shooting range of a target.
+ *
+ * If performance permits, this will pulse the orange note colour.
+ *
+ * If this is not possible due to heavy demands on performance, a solid orange pattern will be
+ * shown instead.
+ *
+ * TODO: Check to see if we can pulse the orange note colour - watch loop overruns.
  */
 public class InShootingRange extends LightingPattern {
 
+    private static final LightingPattern INSTANCE = new InShootingRange();
+
     public static LightingPattern getInstance() {
-        return new InShootingRange();
+        return INSTANCE;
     }
 
-    // todo: add pulse effect
-    private static final Color         NOTE_COLOR = new Color(255, 20, 0);
-
-    private final AddressableLEDBuffer buffer     = SIGNAL.createBuffer();
 
     private InShootingRange() {
         super(SIGNAL);
         for (int i = 0; i < buffer.getLength(); i++) {
-            buffer.setLED(i, NOTE_COLOR);
+            buffer.setLED(i, NOTE_ORANGE);
         }
     }
-
-    @Override
-    public AddressableLEDBuffer periodic() {
-        return buffer;
-    }
-
 }

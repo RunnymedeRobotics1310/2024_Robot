@@ -10,19 +10,6 @@ import frc.robot.subsystems.lighting.pattern.LightingPattern;
 
 public class LightingSubsystem extends SubsystemBase {
 
-
-    /*
-     * Lighting Signals
-     * - Intake in progress -> orange flash
-     * * within shooting range -> orange pulse
-     * - climb in progress -> alliance flash
-     * - default -> alliance pulse
-     * - shooting -> rainbow
-     * * vision confidence -> green, blue, purple
-     * * test mode -> purple
-     */
-
-
     private final AddressableLED       ledStrip;
     private final AddressableLEDBuffer ledBuffer;
 

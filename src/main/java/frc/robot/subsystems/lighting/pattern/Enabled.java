@@ -3,10 +3,13 @@ package frc.robot.subsystems.lighting.pattern;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.Constants;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 
+/**
+ * Light signal to display for a few seconds when the robot is enabled. This pattern
+ * will flash a fixed number of times once the RSL turns on for the first time.
+ */
 public class Enabled extends LightingPattern {
 
     private static final Color                RSL_COLOR = new Color(255, 20, 0);
@@ -15,10 +18,10 @@ public class Enabled extends LightingPattern {
     static {
 
         // Static initializer for the RSL flash buffer
-        RSL_ON  = new AddressableLEDBuffer(Constants.LightingConstants.LIGHT_STRIP_LENGTH);
-        RSL_OFF = new AddressableLEDBuffer(Constants.LightingConstants.LIGHT_STRIP_LENGTH);
+        RSL_ON  = SIGNAL.createBuffer();
+        RSL_OFF = SIGNAL.createBuffer();
 
-        for (int i = 0; i < Constants.LightingConstants.LIGHT_STRIP_LENGTH; i++) {
+        for (int i = 0; i < RSL_ON.getLength(); i++) {
             RSL_ON.setLED(i, RSL_COLOR);
             RSL_OFF.setLED(i, Color.kBlack);
         }
@@ -47,7 +50,7 @@ public class Enabled extends LightingPattern {
     }
 
     /**
-     * Flash all LEDs in the buffer in time with the RSL light for a set number of flashes
+     * Flash all LEDs in the region in time with the RSL light for a set number of flashes
      */
     private AddressableLEDBuffer flashRSL() {
 

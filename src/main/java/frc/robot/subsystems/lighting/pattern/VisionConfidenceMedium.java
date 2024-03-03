@@ -1,12 +1,17 @@
 package frc.robot.subsystems.lighting.pattern;
 
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 
 import static frc.robot.Constants.LightingConstants.VISPOSE;
 
 /**
- * vision confidence -> green, blue, purple
+ * Light signal to display when robot vision pose measurements have a medium confidence.
+ *
+ * This pattern displays the lights in a solid cyan pattern.
+ *
+ * @see VisionConfidenceHigh
+ * @see VisionConfidenceLow
+ * @see VisionConfidenceNone
  */
 public class VisionConfidenceMedium extends LightingPattern {
 
@@ -16,18 +21,10 @@ public class VisionConfidenceMedium extends LightingPattern {
         return INSTANCE;
     }
 
-    private final AddressableLEDBuffer buffer;
-
     private VisionConfidenceMedium() {
         super(VISPOSE);
-        buffer = VISPOSE.createBuffer();
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setLED(i, Color.kCyan);
         }
-    }
-
-    @Override
-    public AddressableLEDBuffer periodic() {
-        return buffer;
     }
 }

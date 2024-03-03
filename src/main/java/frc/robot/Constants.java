@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.lighting.LightstripRegion;
 import frc.robot.subsystems.lighting.pattern.Default;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
@@ -352,6 +353,8 @@ public final class Constants {
     public static final class LightingConstants {
         public static final int        LIGHT_STRING_PWM_PORT = 1;
         public static final int        LIGHT_STRIP_LENGTH    = 60;
+
+        public static final Color      NOTE_ORANGE           = new Color(255, 20, 0);
 
         public static LightstripRegion VISPOSE               = new LightstripRegion(
             "Vision",
