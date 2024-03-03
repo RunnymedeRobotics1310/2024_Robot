@@ -119,7 +119,8 @@ public class RobotContainer {
         /**
          * This is a trigger that will activate test mode (start & back at the same time)
          */
-        new Trigger(operatorInput::isToggleTestMode).onTrue(new SystemTestCommand(operatorInput, swerveDriveSubsystem));
+        new Trigger(operatorInput::isToggleTestMode)
+            .onTrue(new SystemTestCommand(operatorInput, swerveDriveSubsystem, lightingSubsystem));
 
         new Trigger(operatorInput::isZeroGyro).onTrue(new ZeroGyroCommand(swerveDriveSubsystem));
         new Trigger(operatorInput::isCancel).whileTrue(new CancelCommand(swerveDriveSubsystem));

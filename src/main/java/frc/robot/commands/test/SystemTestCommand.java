@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.TestMode;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 import static frc.robot.commands.test.SystemTestCommand.Motor.*;
@@ -25,23 +27,25 @@ public class SystemTestCommand extends LoggingCommand {
         CLIMB_LEFT, CLIMB_RIGHT
     }
 
-    private final OperatorInput   oi;
-    private final XboxController  controller;
-    private final SwerveSubsystem drive;
+    private final OperatorInput     oi;
+    private final XboxController    controller;
+    private final SwerveSubsystem   drive;
+    private final LightingSubsystem lighting;
 
 
-    private boolean               enabled             = false;
-    private Motor                 selectedMotor       = NONE;
-    private double                motorSpeed;
-    private Rotation2d            angle;
+    private boolean                 enabled             = false;
+    private Motor                   selectedMotor       = NONE;
+    private double                  motorSpeed;
+    private Rotation2d              angle;
 
-    private boolean               previousLeftBumper  = false;
-    private boolean               previousRightBumper = false;
+    private boolean                 previousLeftBumper  = false;
+    private boolean                 previousRightBumper = false;
 
-    public SystemTestCommand(OperatorInput oi, SwerveSubsystem drive) {
+    public SystemTestCommand(OperatorInput oi, SwerveSubsystem drive, LightingSubsystem lighting) {
         this.oi         = oi;
         this.controller = oi.getRawDriverController();
         this.drive      = drive;
+        this.lighting   = lighting;
         addRequirements(drive);
     }
 
@@ -65,6 +69,7 @@ public class SystemTestCommand extends LoggingCommand {
         stopAllMotors();
         enabled = true;
         updateDashboard();
+        lighting.setSignalPattern(TestMode.INSTANCE);
     }
 
 
@@ -182,56 +187,56 @@ public class SystemTestCommand extends LoggingCommand {
      */
     private void applyMotorSpeed() {
         switch (selectedMotor) {
-            case NONE:
-                break;
-            case FRONT_LEFT_DRIVE: {
-                double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
-                angle = Rotation2d.fromDegrees(0);
-                drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_LEFT, new SwerveModuleState(mps, angle));
-                break;
-            }
-            case FRONT_LEFT_TURN: {
-                motorSpeed = 0;
-                angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
-                drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_LEFT, new SwerveModuleState(0, angle));
-                break;
-            }
-            case BACK_LEFT_DRIVE: {
-                double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
-                angle = Rotation2d.fromDegrees(0);
-                drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_LEFT, new SwerveModuleState(mps, angle));
-                break;
-            }
-            case BACK_LEFT_TURN: {
-                motorSpeed = 0;
-                angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
-                drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_LEFT, new SwerveModuleState(0, angle));
-                break;
-            }
-            case BACK_RIGHT_DRIVE: {
-                double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
-                angle = Rotation2d.fromDegrees(0);
-                drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_RIGHT, new SwerveModuleState(mps, angle));
-                break;
-            }
-            case BACK_RIGHT_TURN: {
-                motorSpeed = 0;
-                angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
-                drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_RIGHT, new SwerveModuleState(0, angle));
-                break;
-            }
-            case FRONT_RIGHT_DRIVE: {
-                double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
-                angle = Rotation2d.fromDegrees(0);
-                drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_RIGHT, new SwerveModuleState(mps, angle));
-                break;
-            }
-            case FRONT_RIGHT_TURN: {
-                motorSpeed = 0;
-                angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
-                drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_RIGHT, new SwerveModuleState(0, angle));
-                break;
-            }
+        case NONE:
+            break;
+        case FRONT_LEFT_DRIVE: {
+            double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
+            angle = Rotation2d.fromDegrees(0);
+            drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_LEFT, new SwerveModuleState(mps, angle));
+            break;
+        }
+        case FRONT_LEFT_TURN: {
+            motorSpeed = 0;
+            angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
+            drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_LEFT, new SwerveModuleState(0, angle));
+            break;
+        }
+        case BACK_LEFT_DRIVE: {
+            double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
+            angle = Rotation2d.fromDegrees(0);
+            drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_LEFT, new SwerveModuleState(mps, angle));
+            break;
+        }
+        case BACK_LEFT_TURN: {
+            motorSpeed = 0;
+            angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
+            drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_LEFT, new SwerveModuleState(0, angle));
+            break;
+        }
+        case BACK_RIGHT_DRIVE: {
+            double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
+            angle = Rotation2d.fromDegrees(0);
+            drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_RIGHT, new SwerveModuleState(mps, angle));
+            break;
+        }
+        case BACK_RIGHT_TURN: {
+            motorSpeed = 0;
+            angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
+            drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_RIGHT, new SwerveModuleState(0, angle));
+            break;
+        }
+        case FRONT_RIGHT_DRIVE: {
+            double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
+            angle = Rotation2d.fromDegrees(0);
+            drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_RIGHT, new SwerveModuleState(mps, angle));
+            break;
+        }
+        case FRONT_RIGHT_TURN: {
+            motorSpeed = 0;
+            angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
+            drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_RIGHT, new SwerveModuleState(0, angle));
+            break;
+        }
         }
 
         // todo: implement
@@ -260,6 +265,7 @@ public class SystemTestCommand extends LoggingCommand {
     public void end(boolean interrupted) {
         stopAllMotors();
         enabled = false;
+        lighting.setSignalPattern(null);
         updateDashboard();
         super.end(interrupted);
     }
