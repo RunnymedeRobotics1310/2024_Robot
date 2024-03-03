@@ -103,7 +103,7 @@ public final class Constants {
             public static final double     SLOW_SPEED_FACTOR                      = .1;
 
             public static final class HeadingPIDConfig {
-                public static final double P = 0.8;
+                public static final double P = 0.4;
                 // .002 is too low but stable
                 public static final double I = 0;
                 public static final double D = 0;
@@ -348,6 +348,6 @@ public final class Constants {
         public static final int        LIGHT_STRING_LENGTH   = 60;
 
         public static LightStripRegion VISPOSE               = new LightStripRegion(0, 24);
-        public static LightStripRegion SIGNAL                = new LightStripRegion(24, LIGHT_STRING_LENGTH);
+        public static LightStripRegion SIGNAL                = new LightStripRegion(24, LIGHT_STRING_LENGTH - 1);
     }
 }

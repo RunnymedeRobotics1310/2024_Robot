@@ -65,14 +65,18 @@ public class LightingSubsystem extends SubsystemBase {
         AddressableLEDBuffer visionBuffer = visionPattern.periodic();
         for (int i = 0; i < visionBuffer.getLength(); i++) {
             int idx = visionPattern.getRegion().start + i;
-            ledBuffer.setLED(idx, visionBuffer.getLED(i));
+            if (idx < ledBuffer.getLength()) {
+                ledBuffer.setLED(idx, visionBuffer.getLED(i));
+            }
         }
 
         // apply signal pattern
         AddressableLEDBuffer signalBuffer = signalPattern.periodic();
         for (int i = 0; i < signalBuffer.getLength(); i++) {
             int idx = signalPattern.getRegion().start + i;
-            ledBuffer.setLED(idx, signalBuffer.getLED(i));
+            if (idx < ledBuffer.getLength()) {
+                ledBuffer.setLED(idx, signalBuffer.getLED(i));
+            }
         }
 
         safelySetLights();
