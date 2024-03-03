@@ -32,22 +32,20 @@ public class Intaking extends LightingPattern {
         }
     }
 
-    private final AddressableLEDBuffer onBuffer;
     private final AddressableLEDBuffer offBuffer;
 
     private Intaking(Color on, Color off) {
         super(SIGNAL);
-        onBuffer  = SIGNAL.createBuffer();
         offBuffer = SIGNAL.createBuffer();
-        for (int i = 0; i < onBuffer.getLength(); i++) {
-            onBuffer.setLED(i, on);
+        for (int i = 0; i < buffer.getLength(); i++) {
+            buffer.setLED(i, on);
             offBuffer.setLED(i, off);
         }
     }
 
     public AddressableLEDBuffer periodic() {
         if (RobotController.getRSLState()) {
-            return onBuffer;
+            return buffer;
         }
         else {
             return offBuffer;
