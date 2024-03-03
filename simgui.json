@@ -60,6 +60,14 @@
     }
   },
   "NetworkTables": {
+    "retained": {
+      "SmartDashboard": {
+        "Auto Pattern": {
+          "open": true
+        },
+        "open": true
+      }
+    },
     "transitory": {
       "FMSInfo": {
         "open": true
@@ -68,6 +76,11 @@
         "open": true
       },
       "SmartDashboard": {
+        "Auto Pattern": {
+          "string[]##v_/SmartDashboard/Auto Pattern/options": {
+            "open": true
+          }
+        },
         "Drive": {
           "Swerve": {
             "location": {
@@ -80,8 +93,7 @@
           },
           "ToPosition": {
             "open": true
-          },
-          "open": true
+          }
         },
         "DriveTo": {
           "Position": {
@@ -96,8 +108,7 @@
         "swerve": {
           "double[]##v_/SmartDashboard/swerve/desiredChassisSpeeds": {
             "open": true
-          },
-          "open": true
+          }
         }
       }
     }
@@ -114,8 +125,7 @@
         "open": true
       },
       "open": true
-    },
-    "visible": true
+    }
   },
   "Plot": {
     "Plot <0>": {
