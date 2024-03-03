@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 
 /**
- * Test mode active
+ * Test mode active - alternating red and white lights
  */
 public class TestMode extends LightingPattern {
 
