@@ -25,35 +25,6 @@ public final class Constants {
         };
     }
 
-    public static final class DriveConstants {
-
-        public static enum DriveMode {
-            TANK, SINGLE_STICK_ARCADE, DUAL_STICK_ARCADE;
-        }
-
-        public static enum Shifter {
-            HIGH, LOW
-        };
-
-        public static final int     LEFT_MOTOR_PORT               = 10;
-        public static final int     RIGHT_MOTOR_PORT              = 20;
-
-        public static final boolean LEFT_MOTOR_REVERSED           = true;
-        public static final boolean RIGHT_MOTOR_REVERSED          = false;
-
-        public static final boolean LEFT_ENCODER_REVERSED         = false;
-        public static final boolean RIGHT_ENCODER_REVERSED        = true;
-
-        public static final int     ENCODER_COUNTS_PER_REVOLUTION = 1024;
-        public static final double  ROBOT_WHEEL_DIAMETER_CMS      = 6 * 2.54;
-
-        public static final double  CMS_PER_ENCODER_COUNT         =
-            // Assumes the encoders are directly mounted on the wheel shafts
-            (ROBOT_WHEEL_DIAMETER_CMS * Math.PI) / ENCODER_COUNTS_PER_REVOLUTION;
-
-        public static final int     SHIFTER_PNEUMATIC_PORT        = 0;
-    }
-
     public static final class OperatorConstants {
 
         public static final int    DRIVER_CONTROLLER_PORT         = 0;
@@ -141,4 +112,19 @@ public final class Constants {
         /** Amount of output required to hold the Link Pivot when the Link and Aim are parallel to the ground */
         public static final double      MAX_LINK_HOLD                        = 0;
     }
+
+    public static final class ClimbConstants {
+
+        public static final int    RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 40;
+        public static final int    LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 41;
+
+        public static final double MAX_ROBOT_LIFT_SPEED          = .5;
+        public static final double RAISE_CLIMBERS_SPEED          = .3;
+
+        public static final double CLIMB_MAX                     = 240;// TODO: what are the min/max encoder
+                                                                       // values
+        public static final double CLIMB_MIN                     = 0;
+
+    }
+
 }

@@ -2,7 +2,7 @@ package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.LoggingCommand;
-import frc.robot.operator.GameController;
+import frc.robot.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class DefaultArmCommand extends LoggingCommand {
@@ -15,9 +15,9 @@ public class DefaultArmCommand extends LoggingCommand {
      *
      * @param driveSubsystem The subsystem used by this command.
      */
-    public DefaultArmCommand(GameController operatorController, ArmSubsystem armSubsystem) {
+    public DefaultArmCommand(OperatorInput operatorInput, ArmSubsystem armSubsystem) {
 
-        this.operatorController = operatorController;
+        this.operatorController = operatorInput.getOperatorController();
         this.armSubsystem       = armSubsystem;
 
         // Use addRequirements() here to declare subsystem dependencies.

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants.AutoPattern;
-import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.commands.arm.DefaultArmCommand;
 import frc.robot.commands.auto.AutonomousCommand;
 import frc.robot.operator.OperatorInput;
@@ -35,11 +34,11 @@ public class RobotContainer {
     private final LightsSubsystem        lightsSubsystem = new LightsSubsystem();
     private final JackmanVisionSubsystem visionSubsystem = new JackmanVisionSubsystem();
     private final ArmSubsystem           armSubsystem    = new ArmSubsystem(lightsSubsystem);
+//    private final ClimbSubsystem         climbSubsystem  = new ClimbSubsystem(lightsSubsystem);
 
 
 
     // All dashboard choosers are defined here...
-    private final SendableChooser<DriveMode>   driveModeChooser   = new SendableChooser<>();
     private final SendableChooser<AutoPattern> autoPatternChooser = new SendableChooser<>();
 
     /**
@@ -49,7 +48,11 @@ public class RobotContainer {
 
         armSubsystem.setDefaultCommand(
             new DefaultArmCommand(
-                operatorInput.operatorController, armSubsystem));
+                operatorInput, armSubsystem));
+
+//        climbSubsystem.setDefaultCommand(
+//            new DefaultClimbCommand(
+//                operatorInput, climbSubsystem));
 
         // Initialize the dashboard choosers
         initDashboardChoosers();
@@ -64,11 +67,6 @@ public class RobotContainer {
     }
 
     private void initDashboardChoosers() {
-
-        driveModeChooser.setDefaultOption("Tank", DriveMode.TANK);
-        SmartDashboard.putData("Drive Mode", driveModeChooser);
-        driveModeChooser.addOption("Dual Stick Arcade", DriveMode.DUAL_STICK_ARCADE);
-        driveModeChooser.addOption("Single Stick Arcade", DriveMode.SINGLE_STICK_ARCADE);
 
         autoPatternChooser.setDefaultOption("Do Nothing", AutoPattern.DO_NOTHING);
         SmartDashboard.putData("Auto Pattern", autoPatternChooser);
