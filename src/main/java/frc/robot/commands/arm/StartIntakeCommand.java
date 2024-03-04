@@ -9,10 +9,10 @@ import frc.robot.subsystems.ArmSubsystem;
 public class StartIntakeCommand extends ArmBaseCommand {
 
     private enum State {
-        MOVE_AIM_ABOVE_90, MOVE_TO_OVER_BUMPER, MOVE_TO_INTAKE
+        MOVE_TO_UNLOCK, MOVE_TO_OVER_BUMPER, MOVE_TO_INTAKE
     };
 
-    private State state = State.MOVE_AIM_ABOVE_90;
+    private State state = State.MOVE_TO_UNLOCK;
 
     public StartIntakeCommand(ArmSubsystem armSubsystem) {
         super(armSubsystem);
@@ -29,8 +29,11 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         logCommandStart();
 
+        // If the arm is at the resting position, go to the unlock position first
+        // If the aim is inside the bumper area, then move to over bumper first
+        // else just go to the intake position
         if (armSubsystem.getAimAngle() < 90) {
-            state = State.MOVE_AIM_ABOVE_90;
+            state = State.MOVE_TO_UNLOCK;
         }
         else if (armSubsystem.getAimAngle() < ArmConstants.OVER_BUMPER_POSITION.aimAngle) {
             state = State.MOVE_TO_OVER_BUMPER;
@@ -39,8 +42,6 @@ public class StartIntakeCommand extends ArmBaseCommand {
             state = State.MOVE_TO_INTAKE;
         }
 
-        // Start the intake wheels
-        armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
     }
 
     @Override
@@ -51,29 +52,17 @@ public class StartIntakeCommand extends ArmBaseCommand {
             return;
         }
 
-        // Get the current angles
-        double currentLinkAngle = armSubsystem.getLinkAngle();
-        double currentAimAngle  = armSubsystem.getAimAngle();
-
-        double linkAngleError   = 0;
-        double aimAngleError    = 0;
-
-        double linkSpeed        = 0;
-        double aimSpeed         = 0;
+        boolean atArmPosition = false;
 
         switch (state) {
 
-        case MOVE_AIM_ABOVE_90:
+        case MOVE_TO_UNLOCK:
 
-            // Run the aim motor to lift/extend the aim
-            // while holding the link angle fixed.
-            armSubsystem.setAimPivotSpeed(ArmConstants.FAST_AIM_SPEED);
+            // Move to the requested angle with a tolerance of 3 deg
+            atArmPosition = this.driveToArmPosition(ArmConstants.UNLOCK_POSITION, 3);
 
-            // TODO: Does this hold the link angle or is a PID required?
-            armSubsystem.setLinkPivotSpeed(0);
-
-            if (currentAimAngle > 90) {
-                logStateTransition("Move to over bumper", "Aim above 90 deg");
+            if (atArmPosition) {
+                logStateTransition("Move to over bumper", "Arm Unlocked");
                 state = State.MOVE_TO_OVER_BUMPER;
             }
 
@@ -81,49 +70,12 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         case MOVE_TO_OVER_BUMPER:
 
-            // Calculate the errors
-
-            linkAngleError = ArmConstants.OVER_BUMPER_POSITION.linkAngle - currentLinkAngle;
-            aimAngleError = ArmConstants.OVER_BUMPER_POSITION.aimAngle - currentAimAngle;
-
-            // Move the motor with the larger error at the appropriate speed (Fast or Slow)
-            // depending on the error
-            if (Math.abs(aimAngleError) >= Math.abs(linkAngleError)) {
-
-                aimSpeed = ArmConstants.FAST_AIM_SPEED;
-
-                // Set the link speed relative to the aim speed.
-                if (Math.abs(linkAngleError) > ArmConstants.AT_TARGET_DEG) {
-                    linkSpeed = Math.abs((linkAngleError / aimAngleError)) * aimSpeed;
-                }
-            }
-            else {
-
-                linkSpeed = ArmConstants.FAST_LINK_SPEED;
-
-                // Set the aim speed relative to the link speed.
-                if (Math.abs(aimAngleError) > ArmConstants.AT_TARGET_DEG) {
-                    aimSpeed = Math.abs((aimAngleError / linkAngleError)) * linkSpeed;
-                }
-            }
-
-            if (aimAngleError < 0) {
-                aimSpeed *= -1.0;
-            }
-
-            if (linkAngleError < 0) {
-                linkSpeed *= -1.0;
-            }
-
-            armSubsystem.setLinkPivotSpeed(linkSpeed);
-            armSubsystem.setAimPivotSpeed(aimSpeed);
+            // Move to the requested angle with a tolerance of 5 deg
+            atArmPosition = this.driveToArmPosition(ArmConstants.OVER_BUMPER_POSITION, 5);
 
             // If past the bumper danger, move to the intake position.
-
-            // If the aim is higher than the over-the-bumper angle, then it is safe to start
-            // lowering the link to the intake position.
-            if (aimAngleError < 0) {
-                logStateTransition("Move to intake", "Aim extended past over bumper position");
+            if (atArmPosition) {
+                logStateTransition("Move to intake", "Arm over bumper");
                 state = State.MOVE_TO_INTAKE;
             }
 
@@ -131,58 +83,11 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         case MOVE_TO_INTAKE:
 
-            // Calculate the errors
+            // Start the intake wheels
+            armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
 
-            linkAngleError = ArmConstants.INTAKE_ARM_POSITION.linkAngle - currentLinkAngle;
-            aimAngleError = ArmConstants.INTAKE_ARM_POSITION.aimAngle - currentAimAngle;
-
-            // Move the motor with the larger error at the appropriate speed (Fast or Slow)
-            // depending on the error
-            if (Math.abs(aimAngleError) >= Math.abs(linkAngleError)) {
-
-                aimSpeed = ArmConstants.FAST_AIM_SPEED;
-
-                if (Math.abs(aimAngleError) < ArmConstants.SLOW_ARM_ZONE_DEG) {
-                    aimSpeed = ArmConstants.SLOW_AIM_SPEED;
-                }
-
-                if (Math.abs(aimAngleError) < ArmConstants.AT_TARGET_DEG) {
-                    aimSpeed = 0;
-                }
-
-                // Set the link speed relative to the aim speed.
-                if (Math.abs(linkAngleError) > ArmConstants.AT_TARGET_DEG) {
-                    linkSpeed = Math.abs((linkAngleError / aimAngleError)) * aimSpeed;
-                }
-            }
-            else {
-
-                linkSpeed = ArmConstants.FAST_LINK_SPEED;
-
-                if (Math.abs(linkAngleError) < ArmConstants.SLOW_ARM_ZONE_DEG) {
-                    linkSpeed = ArmConstants.SLOW_LINK_SPEED;
-                }
-
-                if (Math.abs(linkAngleError) < ArmConstants.AT_TARGET_DEG) {
-                    linkSpeed = 0;
-                }
-
-                // Set the aim speed relative to the link speed.
-                if (Math.abs(aimAngleError) > ArmConstants.AT_TARGET_DEG) {
-                    aimSpeed = Math.abs((aimAngleError / linkAngleError)) * linkSpeed;
-                }
-            }
-
-            if (aimAngleError < 0) {
-                aimSpeed *= -1.0;
-            }
-
-            if (linkAngleError < 0) {
-                linkSpeed *= -1.0;
-            }
-
-            armSubsystem.setLinkPivotSpeed(linkSpeed);
-            armSubsystem.setAimPivotSpeed(aimSpeed);
+            // Move to the requested angle with a tolerance of 2 deg
+            this.driveToArmPosition(ArmConstants.INTAKE_ARM_POSITION, 2);
 
             break;
 

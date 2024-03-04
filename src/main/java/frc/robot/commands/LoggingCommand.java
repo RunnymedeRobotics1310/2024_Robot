@@ -16,6 +16,7 @@ public abstract class LoggingCommand extends Command {
     SimpleDateFormat START_TIMESTAMP_FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     protected long   initializeTime      = 0;
+    protected long   stateStartTime      = 0;
     private String   finishReason        = null;
 
     List<Subsystem>  subsystemList       = new ArrayList<>();
@@ -56,6 +57,23 @@ public abstract class LoggingCommand extends Command {
     }
 
     /**
+     * Check if the current state (time since last log of a state transition) is longer than the passed in timeout.
+     * <p>
+     * NOTE: The timeout is checked from the time that the logCommandStart or logStateTransition method was called,
+     * not from the time that the command was constructed. This method will only work if all state transitions
+     * are logged.
+     *
+     * @param timeout to check, in seconds
+     * @return {@code true} if the current state timeout has been exceeded, {@code false} otherwise
+     */
+    public boolean isStateTimeoutExceeded(double timeout) {
+        if ((System.currentTimeMillis() - stateStartTime) / 1000.0d > timeout) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * At command start, log the start time and the state of all subsystems required by this
      * command.
      */
@@ -82,6 +100,7 @@ public abstract class LoggingCommand extends Command {
 
         // Set the initialize time after logging of the start message.
         initializeTime = System.currentTimeMillis();
+        stateStartTime = System.currentTimeMillis();
     }
 
     /**
@@ -150,6 +169,7 @@ public abstract class LoggingCommand extends Command {
      */
     public void logStateTransition(String newState, String transitionReason, boolean logSubsystems) {
         logCommandState(newState, transitionReason, logSubsystems);
+        stateStartTime = System.currentTimeMillis();
     }
 
     /**

@@ -40,81 +40,49 @@ public class OperatorInput extends SubsystemBase {
         return operatorController;
     }
 
-    /*
-     * Map all functions to buttons.
-     *
-     * A function should be a description of the robot behavior it is triggering.
-     *
-     * This separation of concerns allows for remapping of the robot functions to different
-     * controller buttons without the need to change the command or the trigger. The mapping
-     * from controller button to function is done in the following methods.
-     */
-
-    // Cancel all commands when the driver presses the XBox controller three lines (aka. start)
-    // button
+    // Either controller should be able to cancel a command
+    // NOTE: When the back button is held, the cancel (start) button is used to start test mode.
     public boolean isCancelPressed() {
-        return driverController.getStartButton() && !driverController.getBackButton();
-    }
-
-    public boolean isShoot() {
-        double rightTrigger = driverController.getRightTriggerAxis();
-        if (rightTrigger == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-
-    }
-
-    public boolean isStartIntakePressed() {
-        return driverController.getAButton();
-    }
-
-    public boolean isCompactPressed() {
-        return driverController.getXButton();
-    }
-
-    public boolean isSystemTestPressed() {
-        return driverController.getStartButton() && driverController.getBackButton();
-    }
-
-    public boolean isAmpPressed() {
-        return driverController.getBButton();
-    }
-
-    public boolean isSpeakerPressed() {
-        return driverController.getYButton();
+        return driverController.getStartButton() && !driverController.getBackButton()
+            || operatorController.getStartButton() && !operatorController.getBackButton();
     }
 
     /**
-     * Use this method to define your robotFunction -> command mappings.
+     * Use this method to define your button -> command mappings.
      *
      * NOTE: all subsystems should be passed into this method.
      */
     public void configureButtonBindings(ArmSubsystem armSubsystem,
         JackmanVisionSubsystem visionSubsystem) {
 
+        // System Test - only when FMS is not attached!
+        new Trigger(() -> driverController.getStartButton() && driverController.getBackButton() && !DriverStation.isFMSAttached())
+            .onTrue(new SystemTestCommand(this, armSubsystem));
+
+        // Cancel
         new Trigger(() -> isCancelPressed())
             .onTrue(new CancelCommand(this, armSubsystem));
 
-        new Trigger(() -> isSystemTestPressed() && !DriverStation.isFMSAttached())
-            .onTrue(new SystemTestCommand(this, armSubsystem));
-
-        new Trigger(() -> isShoot())
-            .onTrue(new ShootCommand(armSubsystem));
-
-        new Trigger(() -> isStartIntakePressed())
-            .onTrue(new StartIntakeCommand(armSubsystem));
-
-        new Trigger(() -> isCompactPressed())
+        // Compact
+        new Trigger(() -> driverController.getXButton())
             .onTrue(new CompactPoseCommand(armSubsystem));
 
-        new Trigger(() -> isAmpPressed())
+        // Start Intake
+        new Trigger(() -> driverController.getAButton())
+            .onTrue(new StartIntakeCommand(armSubsystem));
+
+        // Aim Amp
+        new Trigger(() -> driverController.getBButton())
             .onTrue(new AimAmpCommand(armSubsystem));
 
-        new Trigger(() -> isSpeakerPressed())
+        // Aim Speaker
+        new Trigger(() -> driverController.getYButton())
             .onTrue(new AimSpeakerCommand(armSubsystem));
+
+        // Shoot
+        new Trigger(() -> driverController.getRightTriggerAxis() > .4)
+            .onTrue(new ShootCommand(armSubsystem));
+
     }
 
     @Override

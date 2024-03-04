@@ -29,8 +29,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     private DigitalInput          noteDetector         = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
 
-    private AnalogInput           linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ENCODER_ANALOG_PORT);
-    private AnalogInput           aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ENCODER_ANALOG_PORT);
+    private AnalogInput           linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private AnalogInput           aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
 
     private double                linkPivotSpeed       = 0;
     private double                aimPivotSpeed        = 0;
@@ -48,36 +48,48 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
 
-    public double getAimEncoderVoltage() {
+    public double getAimAbsoluteEncoderVoltage() {
         // 0-5V range = 0-360 deg
         return aimAbsoluteEncoder.getVoltage();
     }
 
     public double getAimAngle() {
 
-        double rawAngle     = getAimEncoderVoltage() * 360.0 / 5.0;
+        // Get the sensor angle
+        double rawAngle = getAimAbsoluteEncoderVoltage() * 360.0 / 5.0;
 
-        // Round to two decimal places
-        double roundedAngle = Math.round(rawAngle * 100) / 100.0;
+        // The aim angle is scaled by the gear ratio between the sensor and the shaft
+        // and the offset to measure the aim angle relative to the link
+        double hexShaftAngle = rawAngle * ArmConstants.AIM_ABSOLUTE_ENCODER_SCALING_FACTOR
+            + ArmConstants.AIM_ABSOLUTE_ENCODER_OFFSET;
 
-        // 0-5V range = 0-360 deg
-        return (roundedAngle + ArmConstants.AIM_ABSOLUTE_ENCODER_OFFSET) % 360;
+        // Adjust to 0-360 range
+        hexShaftAngle %= 360;
+
+        // round to 2 decimal places
+        return Math.round(hexShaftAngle * 100) / 100.0d;
     }
 
-    public double getLinkEncoderVoltage() {
+    public double getLinkAbsoluteEncoderVoltage() {
         // 0-5V range = 0-360 deg
         return linkAbsoluteEncoder.getVoltage();
     }
 
     public double getLinkAngle() {
 
-        double rawAngle     = getLinkEncoderVoltage() * 360.0 / 5.0;
+        double rawAngle      = getLinkAbsoluteEncoderVoltage() * 360.0 / 5.0;
 
-        // Round to two decimal places
-        double roundedAngle = Math.round(rawAngle * 100) / 100.0;
+        // The link angle is scaled by the gear ratio between the sensor and the shaft
+        // and the offset to measure the link angle relative to the vertical from ground
+        // (90deg = parallel to ground)
+        double hexShaftAngle = rawAngle * ArmConstants.LINK_ABSOLUTE_ENCODER_SCALING_FACTOR
+            + ArmConstants.LINK_ABSOLUTE_ENCODER_OFFSET;
 
-        // 0-5V range = 0-360 deg
-        return (roundedAngle + ArmConstants.LINK_ABSOLUTE_ENCODER_OFFSET) % 360;
+        // Adjust to 0-360 range
+        hexShaftAngle %= 360;
+
+        // round to 2 decimal places
+        return Math.round(hexShaftAngle * 100) / 100.0d;
     }
 
     public double getShooterEncoderSpeed() {
@@ -182,7 +194,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Link Speed", linkPivotSpeed);
         SmartDashboard.putNumber("Link Angle", getLinkAngle());
-        SmartDashboard.putNumber("Link Absolute Encoder Voltage", getLinkEncoderVoltage());
+        SmartDashboard.putNumber("Link Absolute Encoder Voltage", getLinkAbsoluteEncoderVoltage());
         SmartDashboard.putBoolean("Link Lower Limit", isLinkAtLowerLimit());
 
         SmartDashboard.putNumber("Aim Speed", aimPivotSpeed);
