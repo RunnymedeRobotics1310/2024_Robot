@@ -46,7 +46,7 @@ public class CompactPoseCommand extends ArmBaseCommand {
             // Move to the requested angle with a tolerance of 5 deg
             atArmAngle = this.driveToArmPosition(ArmConstants.OVER_BUMPER_POSITION, 5);
 
-            // If past the bumper danger, move to the intake position.
+            // If past the bumper danger, move to the compact position.
             if (atArmAngle) {
                 logStateTransition("Move to unlock", "Arm over bumper");
                 state = State.MOVE_TO_UNLOCK;
@@ -60,10 +60,10 @@ public class CompactPoseCommand extends ArmBaseCommand {
             // Move to the requested angle with a tolerance of 5 deg
             atArmAngle = this.driveToArmPosition(ArmConstants.UNLOCK_POSITION, 5);
 
-            // If past the bumper danger, move to the intake position.
+            // If past the bumper danger, move to the compact position.
             if (atArmAngle) {
                 logStateTransition("Move to compact", "Arm at unlock position");
-                state = State.MOVE_TO_UNLOCK;
+                state = State.MOVE_TO_COMPACT;
             }
 
             break;
