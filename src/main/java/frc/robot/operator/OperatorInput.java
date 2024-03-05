@@ -13,6 +13,7 @@ import frc.robot.commands.arm.CompactPoseCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.JackmanVisionSubsystem;
 
 /**
@@ -53,7 +54,7 @@ public class OperatorInput extends SubsystemBase {
      * NOTE: all subsystems should be passed into this method.
      */
     public void configureButtonBindings(ArmSubsystem armSubsystem,
-        JackmanVisionSubsystem visionSubsystem) {
+        JackmanVisionSubsystem visionSubsystem, ClimbSubsystem climbSubsystem) {
 
         // System Test - only when FMS is not attached!
         new Trigger(() -> driverController.getStartButton() && driverController.getBackButton() && !DriverStation.isFMSAttached())
@@ -61,7 +62,7 @@ public class OperatorInput extends SubsystemBase {
 
         // Cancel
         new Trigger(() -> isCancelPressed())
-            .onTrue(new CancelCommand(this, armSubsystem));
+            .onTrue(new CancelCommand(this, armSubsystem, climbSubsystem));
 
         // Compact
         new Trigger(() -> driverController.getXButton())

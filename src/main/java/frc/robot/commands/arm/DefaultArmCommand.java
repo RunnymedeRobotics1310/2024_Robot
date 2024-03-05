@@ -9,11 +9,12 @@ public class DefaultArmCommand extends LoggingCommand {
 
     private final ArmSubsystem   armSubsystem;
     private final XboxController operatorController;
+    private boolean shift;
 
     /**
      * Creates a new ExampleCommand.
      *
-     * @param driveSubsystem The subsystem used by this command.
+     * @param armSubsystem The subsystem used by this command.
      */
     public DefaultArmCommand(OperatorInput operatorInput, ArmSubsystem armSubsystem) {
 
@@ -34,8 +35,14 @@ public class DefaultArmCommand extends LoggingCommand {
     @Override
     public void execute() {
 
-        setLinkMotorSpeed(operatorController.getLeftY() * 0.5);
-        setAimMotorSpeed(operatorController.getRightY() * 0.5);
+        shift = operatorController.getRightBumper();
+        if (!shift) {
+            setLinkMotorSpeed(operatorController.getLeftY() * 0.5);
+            setAimMotorSpeed(operatorController.getRightY() * 0.5);
+        } else {
+            setLinkMotorSpeed(0);
+            setAimMotorSpeed(0);
+        }
 
     }
 
