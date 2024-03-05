@@ -29,7 +29,7 @@ public class AimAmpCommand extends ArmBaseCommand {
 
         logCommandStart();
 
-        if (armSubsystem.getAimAngle() > ArmConstants.OVER_BUMPER_POSITION.aimAngle) {
+        if (armSubsystem.getAimAngle() == ArmConstants.OVER_BUMPER_POSITION.aimAngle) {
             state = State.MOVE_TO_OVER_BUMPER;
         }
         else {
