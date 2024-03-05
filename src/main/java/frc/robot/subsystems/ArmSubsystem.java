@@ -55,8 +55,15 @@ public class ArmSubsystem extends SubsystemBase {
 
     public double getAimAngle() {
 
+        // The aim encoder should wrap at 4V.
+        double aimEncoderVoltage = getAimAbsoluteEncoderVoltage();
+
+        if (aimEncoderVoltage > 4) {
+            aimEncoderVoltage -= 5.0;
+        }
+
         // The conversion from volts to degrees
-        double angle = getAimAbsoluteEncoderVoltage()
+        double angle = aimEncoderVoltage
             * ArmConstants.AIM_ABSOLUTE_ENCODER_DEG_PER_VOLT
             + ArmConstants.AIM_ABSOLUTE_ENCODER_OFFSET_DEG;
 
