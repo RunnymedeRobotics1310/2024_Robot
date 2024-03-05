@@ -9,14 +9,13 @@ import frc.robot.commands.swervedrive.DriveRobotOrientedCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.ResetOdometryCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 
 import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
 import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
 
 public class PlanBAutoCommand extends SequentialCommandGroup {
 
-    public PlanBAutoCommand(SwerveSubsystem swerve, HughVisionSubsystem hugh) {
+    public PlanBAutoCommand(SwerveSubsystem swerve) {
 
         Pose2d blueFinishPose = new Pose2d(4, 7.7, new Rotation2d(90));
         Pose2d redFinishPose  = new Pose2d(12.54, 7.4, new Rotation2d());

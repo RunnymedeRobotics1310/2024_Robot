@@ -26,11 +26,7 @@ import frc.robot.Constants.AutoConstants.AutoPattern;
 import frc.robot.Constants.OiConstants;
 import frc.robot.commands.CancelCommand;
 import frc.robot.commands.arm.*;
-import frc.robot.commands.auto.Score1AmpAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerAutoCommand;
-import frc.robot.commands.auto.Score2AmpAutoCommand;
-import frc.robot.commands.auto.Score3SpeakerAutoCommand;
-import frc.robot.commands.auto.Score4SpeakerAutoCommand;
+import frc.robot.commands.auto.*;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.commands.swervedrive.DriveDistanceCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
@@ -112,6 +108,7 @@ public class RobotContainer {
         autoPatternChooser.addOption("1 Speaker", AutoPattern.SCORE_1_SPEAKER);
         autoPatternChooser.addOption("3 Speaker", AutoPattern.SCORE_3_SPEAKER);
         autoPatternChooser.addOption("4 Speaker", AutoPattern.SCORE_4_SPEAKER);
+        autoPatternChooser.addOption("Plan B", AutoPattern.PLAN_B);
         autoPatternChooser.setDefaultOption("Do Nothing", AutoPattern.DO_NOTHING);
         autoPatternChooser.addOption("Drive Forward", AutoPattern.DRIVE_FORWARD);
         autoPatternChooser.addOption("Three Note", AutoPattern.THREE_NOTE);
@@ -232,8 +229,10 @@ public class RobotContainer {
             return new Score3SpeakerAutoCommand(swerveDriveSubsystem, hughVisionSubsystem);
 
         case SCORE_4_SPEAKER:
-
             return new Score4SpeakerAutoCommand(swerveDriveSubsystem, hughVisionSubsystem);
+
+        case PLAN_B:
+            return new PlanBAutoCommand(swerveDriveSubsystem);
 
         default:
             // If the chooser did not work, then do nothing as the default auto.
