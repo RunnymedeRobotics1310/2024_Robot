@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Constants;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
@@ -17,6 +18,7 @@ public class DriveToPositionCommand extends BaseDriveCommand {
 
     private Translation2d       location;
     private Rotation2d          heading;
+    private double              speed;
 
     public DriveToPositionCommand(SwerveSubsystem swerve, Translation2d blueLocation, Translation2d redLocation) {
         super(swerve);
@@ -25,6 +27,7 @@ public class DriveToPositionCommand extends BaseDriveCommand {
         this.blueLocation = blueLocation;
         this.redLocation  = redLocation;
         this.heading      = null;
+        this.speed = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
     }
 
     /**
@@ -37,6 +40,17 @@ public class DriveToPositionCommand extends BaseDriveCommand {
         this.blueLocation = null;
         this.redLocation  = null;
         this.heading      = null;
+        this.speed = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
+    }
+
+    public DriveToPositionCommand(SwerveSubsystem swerve, Pose2d bluePose, Pose2d redPose, double speed) {
+        super(swerve);
+        this.bluePose     = bluePose;
+        this.redPose      = redPose;
+        this.blueLocation = null;
+        this.redLocation  = null;
+        this.heading      = null;
+        this.speed = speed;
     }
 
     @Override
@@ -67,7 +81,7 @@ public class DriveToPositionCommand extends BaseDriveCommand {
     @Override
     public void execute() {
         super.execute();
-        driveToFieldPose(new Pose2d(location, heading));
+        driveToFieldPose(new Pose2d(location, heading), speed);
     }
 
     @Override
