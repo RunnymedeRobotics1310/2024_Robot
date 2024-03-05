@@ -1,17 +1,15 @@
 package frc.robot.commands.swervedrive;
 
-import static frc.robot.Constants.Swerve.Chassis.DECEL_FROM_MAX_TO_STOP_DIST_METRES;
-import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATIONAL_VELOCITY_PER_SEC;
-import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
-import static frc.robot.Constants.Swerve.Chassis.MIN_ROTATIONAL_VELOCITY_PER_SEC;
-import static frc.robot.Constants.Swerve.Chassis.ROTATION_TOLERANCE;
-import static frc.robot.Constants.Swerve.Chassis.TRANSLATION_TOLERANCE_METRES;
-import static frc.robot.Constants.Swerve.Chassis.HeadingPIDConfig.P;
+import static frc.robot.Constants.Swerve.Chassis.*;
+import static frc.robot.Constants.Swerve.Chassis.HeadingPIDConfig.I;
+import static frc.robot.Constants.Swerve.Chassis.HeadingPIDConfig.*;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.Swerve.Chassis.VelocityPIDConfig;
 import frc.robot.RunnymedeUtils;
@@ -20,10 +18,15 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public abstract class BaseDriveCommand extends LoggingCommand {
     protected final SwerveSubsystem swerve;
+    private ProfiledPIDController headingPidRad = null;
 
     public BaseDriveCommand(SwerveSubsystem swerve) {
         this.swerve = swerve;
         addRequirements(swerve);
+
+        headingPidRad = new ProfiledPIDController(P, I, D, new TrapezoidProfile.Constraints(MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians(), MAX_ROTATION_ACCELERATION_RAD_PER_SEC2));
+        headingPidRad.setTolerance(ROTATION_TOLERANCE.getRadians());
+        headingPidRad.enableContinuousInput(-Math.PI, Math.PI);
 
         SmartDashboard.putString("Drive/ToFieldPosition/current", "");
         SmartDashboard.putString("Drive/ToFieldPosition/delta", "");
@@ -52,40 +55,51 @@ public abstract class BaseDriveCommand extends LoggingCommand {
      * @return The required rotation speed of the robot
      * @see frc.robot.Constants.Swerve.Chassis.HeadingPIDConfig
      */
-    private static Rotation2d computeOmega(Rotation2d target, Rotation2d current) {
+    private Rotation2d computeOmega(Rotation2d target, Rotation2d current) {
 
-        double targetRadians  = target.getRadians();
-        double currentRadians = current.getRadians();
-        return computeOmegaForOffset(Rotation2d.fromRadians(targetRadians - currentRadians));
+        double targetRad  = normalizeRotation(target).getRadians();
+        double currentRad = normalizeRotation(current).getRadians();
+
+
+
+//        return computeOmegaForOffset(Rotation2d.fromRadians(targetRadians - currentRadians));
+        double outputRad = headingPidRad.calculate(currentRad, targetRad);
+
+
+        if (outputRad == 0) {
+            outputRad = 0;
+        }
+        else if (Math.abs(outputRad) < MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians()) {
+            outputRad = Math.signum(outputRad) * MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
+        }
+
+        return Rotation2d.fromRadians(outputRad);
 
     }
 
-    public static Rotation2d computeOmegaForOffset(Rotation2d offset) {
+    /**
+     * Ensure that rotation error is between -pi and pi radians.
+     */
+    private static Rotation2d normalizeRotation(Rotation2d input) {
 
-        double error = offset.getRadians();
+        double errorRadians = input.getRadians();
 
-        error = error % (2 * Math.PI);
-        if (error > Math.PI) {
-            error -= (2 * Math.PI);
-        }
-        else if (error < -Math.PI) {
-            error += (2 * Math.PI);
-        }
+        errorRadians = errorRadians % (2 * Math.PI);
 
-        final Rotation2d result;
-        if (Math.abs(error) <= ROTATION_TOLERANCE.getRadians()) {
-            // close enough - done!
-            result = Rotation2d.fromRadians(0);
+        if (errorRadians > Math.PI) {
+            errorRadians -= (2 * Math.PI);
         }
-        else {
-            double omegaRadians = error * P * MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
-            if (Math.abs(omegaRadians) < MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians()) {
-                omegaRadians = Math.signum(omegaRadians) * MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
-            }
-            result = Rotation2d.fromRadians(omegaRadians);
+        else if (errorRadians < -Math.PI) {
+            errorRadians += (2 * Math.PI);
         }
 
-        return result;
+        return Rotation2d.fromRadians(errorRadians);
+
+    }
+
+    public Rotation2d computeOmegaForOffset(Rotation2d offset) {
+
+        return computeOmega(offset, new Rotation2d());
     }
 
 
