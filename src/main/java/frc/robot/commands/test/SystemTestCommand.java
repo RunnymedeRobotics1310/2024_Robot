@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.TestMode;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -21,8 +22,8 @@ public class SystemTestCommand extends LoggingCommand {
         BACK_LEFT_DRIVE, BACK_LEFT_TURN,
         BACK_RIGHT_DRIVE, BACK_RIGHT_TURN,
         FRONT_RIGHT_DRIVE, FRONT_RIGHT_TURN,
-        AIM, LINK,
-        SHOOTER_TOP, SHOOTER_BOTTOM,
+        AIM, LINK, LINK_AND_AIM,
+        SHOOTER, SHOOTER_TOP, SHOOTER_BOTTOM,
         INTAKE,
         CLIMB_LEFT, CLIMB_RIGHT
     }
@@ -30,23 +31,26 @@ public class SystemTestCommand extends LoggingCommand {
     private final OperatorInput     oi;
     private final XboxController    controller;
     private final SwerveSubsystem   drive;
+    private final ArmSubsystem      armSubsystem;
     private final LightingSubsystem lighting;
 
 
     private boolean                 enabled             = false;
     private Motor                   selectedMotor       = NONE;
     private double                  motorSpeed;
+    private double                  motor2Speed;
     private Rotation2d              angle;
 
     private boolean                 previousLeftBumper  = false;
     private boolean                 previousRightBumper = false;
 
-    public SystemTestCommand(OperatorInput oi, SwerveSubsystem drive, LightingSubsystem lighting) {
-        this.oi         = oi;
-        this.controller = oi.getRawDriverController();
-        this.drive      = drive;
-        this.lighting   = lighting;
-        addRequirements(drive);
+    public SystemTestCommand(OperatorInput oi, SwerveSubsystem drive, ArmSubsystem armSubsystem, LightingSubsystem lighting) {
+        this.oi           = oi;
+        this.controller   = oi.getRawDriverController();
+        this.drive        = drive;
+        this.armSubsystem = armSubsystem;
+        this.lighting     = lighting;
+        addRequirements(drive, armSubsystem);
     }
 
     @Override
@@ -142,20 +146,24 @@ public class SystemTestCommand extends LoggingCommand {
 
         if (controller.getXButton()) {
             // If the X button is pressed, reset the motor speed to zero
-            motorSpeed = 0;
+            motorSpeed  = 0;
+            motor2Speed = 0;
         }
         else if (leftTrigger > 0 && rightTrigger > 0) {
 
             // If both triggers are pressed, then stop the motor
-            motorSpeed = 0;
+            motorSpeed  = 0;
+            motor2Speed = 0;
         }
         else if (leftTrigger > 0) {
 
-            motorSpeed = -leftTrigger;
+            motorSpeed  = -leftTrigger;
+            motor2Speed = -leftTrigger;
         }
         else if (rightTrigger > 0) {
 
-            motorSpeed = rightTrigger;
+            motorSpeed  = rightTrigger;
+            motor2Speed = rightTrigger;
         }
         else {
 
@@ -178,6 +186,24 @@ public class SystemTestCommand extends LoggingCommand {
                 }
             }
 
+            // Use the POV left right to control the second motor speed
+            if (pov == 90) {
+
+                motor2Speed += 0.004;
+
+                if (motor2Speed > 1.0) {
+                    motor2Speed = 1.0;
+                }
+            }
+
+            if (pov == 270) {
+
+                motor2Speed -= 0.004;
+
+                if (motor2Speed < -1.0) {
+                    motor2Speed = -1.0;
+                }
+            }
         }
 
     }
@@ -237,9 +263,27 @@ public class SystemTestCommand extends LoggingCommand {
             drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_RIGHT, new SwerveModuleState(0, angle));
             break;
         }
+        case LINK: {
+            armSubsystem.setArmPivotTestSpeeds(motorSpeed, 0);
+            break;
         }
-
-        // todo: implement
+        case AIM: {
+            armSubsystem.setArmPivotTestSpeeds(0, motorSpeed);
+            break;
+        }
+        case LINK_AND_AIM: {
+            armSubsystem.setArmPivotTestSpeeds(motorSpeed, motor2Speed);
+            break;
+        }
+        case INTAKE: {
+            armSubsystem.setIntakeSpeed(motorSpeed);
+            break;
+        }
+        case SHOOTER: {
+            armSubsystem.setShooterSpeed(motorSpeed);
+            break;
+        }
+        }
     }
 
     public boolean isFinished() {
@@ -280,6 +324,7 @@ public class SystemTestCommand extends LoggingCommand {
         SmartDashboard.putBoolean("1310 Test Mode/Enabled", enabled);
         SmartDashboard.putString("1310 Test Mode/Motor", selectedMotor.toString());
         SmartDashboard.putString("1310 Test Mode/Motor Speed", String.format("%.1f", motorSpeed * 100) + " %");
+        SmartDashboard.putString("1310 Test Mode/Motor 2 Speed", String.format("%.1f", motor2Speed * 100) + " %");
         SmartDashboard.putString("1310 Test Mode/Angle", String.format("%.3f", angle.getDegrees()) + " degrees");
     }
 

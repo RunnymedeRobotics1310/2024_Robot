@@ -79,6 +79,30 @@ public class OperatorInput {
         return driverController.getStartButton();
     }
 
+    public boolean isCompactPressed() {
+        return driverController.getXButton() || operatorController.getXButton();
+    }
+
+    public boolean isStartIntake() {
+        return driverController.getAButton();
+    }
+
+    public boolean isAimAmp() {
+        return operatorController.getAButton();
+    }
+
+    public boolean isAimSpeaker() {
+        return operatorController.getYButton();
+    }
+
+    public boolean isShoot() {
+        return operatorController.getBButton();
+    }
+
+    public boolean isShift() {
+        return operatorController.getRightBumper();
+    }
+
     public int getPOV() {
         return driverController.getPOV();
     }
@@ -87,21 +111,47 @@ public class OperatorInput {
 
         switch (stick) {
 
-            case LEFT:
-                switch (axis) {
-                    case X:
-                        return driverController.getLeftX();
-                    case Y:
-                        return driverController.getLeftY();
-                }
-                break;
+        case LEFT:
+            switch (axis) {
+            case X:
+                return driverController.getLeftX();
+            case Y:
+                return driverController.getLeftY();
+            }
+            break;
 
-            case RIGHT:
-                switch (axis) {
-                    case X:
-                        return driverController.getRightX();
-                }
-                break;
+        case RIGHT:
+            switch (axis) {
+            case X:
+                return driverController.getRightX();
+            }
+            break;
+        }
+
+        return 0;
+    }
+
+    public double getOperatorControllerAxis(Stick stick, Axis axis) {
+
+        switch (stick) {
+
+        case LEFT:
+            switch (axis) {
+            case X:
+                return operatorController.getLeftX();
+            case Y:
+                return operatorController.getLeftY();
+            }
+            break;
+
+        case RIGHT:
+            switch (axis) {
+            case X:
+                return operatorController.getRightX();
+            case Y:
+                return operatorController.getRightX();
+            }
+            break;
         }
 
         return 0;

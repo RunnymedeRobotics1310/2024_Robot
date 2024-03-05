@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants.AutoPattern;
 import frc.robot.Constants.OiConstants;
 import frc.robot.commands.CancelCommand;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
 import frc.robot.commands.auto.Score2AmpAutoCommand;
@@ -42,6 +43,11 @@ import frc.robot.subsystems.lighting.pattern.Enabled;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.swerve.yagsl.YagslSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
+import frc.robot.commands.climb.DefaultClimbCommand;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.JackmanVisionSubsystem;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -54,22 +60,26 @@ import frc.robot.subsystems.vision.HughVisionSubsystem;
  */
 public class RobotContainer {
 
-    private final LightingSubsystem   lightingSubsystem    = new LightingSubsystem(SIGNAL, VISPOSE);
+    private final LightingSubsystem      lightingSubsystem    = new LightingSubsystem(SIGNAL, VISPOSE);
 
     // The robot's subsystems and commands are defined here...
-    private final File                yagslConfig          = new File(Filesystem.getDeployDirectory(), "swerve/neo");
+    private final File                   yagslConfig          = new File(Filesystem.getDeployDirectory(), "swerve/neo");
 
-    private final HughVisionSubsystem hughVisionSubsystem  = new HughVisionSubsystem();
+    private final HughVisionSubsystem    hughVisionSubsystem  = new HughVisionSubsystem();
 
     // todo: set up sendable chooser for this to toggle implementation for testing
-    private final SwerveSubsystem     swerveDriveSubsystem = new YagslSubsystem(yagslConfig, hughVisionSubsystem,
+    private final SwerveSubsystem        swerveDriveSubsystem = new YagslSubsystem(yagslConfig, hughVisionSubsystem,
         lightingSubsystem);
     // private final SwerveSubsystem swerveDriveSubsystem = new
     // RunnymedeSwerveSubsystem(hughVisionSubsystem);
+    private final JackmanVisionSubsystem visionSubsystem      = new JackmanVisionSubsystem();
+    private final ArmSubsystem           armSubsystem         = new ArmSubsystem(lightingSubsystem);
+    private final ClimbSubsystem         climbSubsystem       = new ClimbSubsystem(lightingSubsystem);
 
-    SendableChooser<AutoPattern>      autoPatternChooser   = new SendableChooser<>();
 
-    private final OperatorInput       operatorInput        = new OperatorInput(
+    SendableChooser<AutoPattern>         autoPatternChooser   = new SendableChooser<>();
+
+    private final OperatorInput          operatorInput        = new OperatorInput(
         OiConstants.DRIVER_CONTROLLER_PORT, OiConstants.OPERATOR_CONTROLLER_PORT);
 
     /**
@@ -79,6 +89,14 @@ public class RobotContainer {
 
         // Initialize all Subsystem default commands
         swerveDriveSubsystem.setDefaultCommand(new TeleopDriveCommand(swerveDriveSubsystem, lightingSubsystem, operatorInput));
+        armSubsystem.setDefaultCommand(
+            new DefaultArmCommand(
+                operatorInput, armSubsystem));
+
+        climbSubsystem.setDefaultCommand(
+            new DefaultClimbCommand(
+                operatorInput, climbSubsystem));
+
         // Configure the trigger bindings
         configureBindings();
         // Initialize the autonomous choosers
@@ -94,6 +112,9 @@ public class RobotContainer {
         autoPatternChooser.addOption("1 Speaker", AutoPattern.SCORE_1_SPEAKER);
         autoPatternChooser.addOption("3 Speaker", AutoPattern.SCORE_3_SPEAKER);
         autoPatternChooser.addOption("4 Speaker", AutoPattern.SCORE_4_SPEAKER);
+        autoPatternChooser.setDefaultOption("Do Nothing", AutoPattern.DO_NOTHING);
+        autoPatternChooser.addOption("Drive Forward", AutoPattern.DRIVE_FORWARD);
+        autoPatternChooser.addOption("Three Note", AutoPattern.THREE_NOTE);
     }
 
     /**
@@ -111,6 +132,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+
         /*
          * This is a trigger that will run the command when the robot is enabled.
          */
@@ -121,10 +143,11 @@ public class RobotContainer {
          * This is a trigger that will activate test mode (start & back at the same time)
          */
         new Trigger(operatorInput::isToggleTestMode)
-            .onTrue(new SystemTestCommand(operatorInput, swerveDriveSubsystem, lightingSubsystem));
+            .onTrue(new SystemTestCommand(operatorInput, swerveDriveSubsystem, armSubsystem, lightingSubsystem));
 
         new Trigger(operatorInput::isZeroGyro).onTrue(new ZeroGyroCommand(swerveDriveSubsystem));
-        new Trigger(operatorInput::isCancel).whileTrue(new CancelCommand(swerveDriveSubsystem));
+        new Trigger(operatorInput::isCancel)
+            .whileTrue(new CancelCommand(operatorInput, swerveDriveSubsystem, armSubsystem, climbSubsystem));
 
         new Trigger(operatorInput::isB)
             .onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(swerveDriveSubsystem, hughVisionSubsystem));
@@ -156,6 +179,33 @@ public class RobotContainer {
         // hughVisionSubsystem));
         // new Trigger(operatorInput::isA).onTrue(new RotateToSpeakerCommand(swerveDriveSubsystem,
         // hughVisionSubsystem));
+
+
+        // Compact
+        new Trigger(operatorInput::isCompactPressed)
+            .onTrue(new CompactPoseCommand(armSubsystem));
+
+        // Start Intake
+        new Trigger(operatorInput::isStartIntake)
+            .onTrue(new StartIntakeCommand(armSubsystem));
+
+        // Aim Amp
+        new Trigger(operatorInput::isAimAmp)
+            .onTrue(new AimAmpCommand(armSubsystem));
+
+        // Aim Speaker
+        new Trigger(operatorInput::isAimSpeaker)
+            .onTrue(new AimSpeakerCommand(armSubsystem));
+
+        // Shoot
+        new Trigger(operatorInput::isShoot)
+            .onTrue(new ShootCommand(armSubsystem));
+
+        // Climbs Up pov 0
+        // Climbs Down pov 180
+        // Climbs Down pov 270
+        // Trap pov 90
+        // Shift to Climb right bumper
 
 
     }
