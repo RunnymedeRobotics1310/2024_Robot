@@ -55,19 +55,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     public double getAimAngle() {
 
-        // Get the sensor angle
-        double rawAngle = getAimAbsoluteEncoderVoltage() * 360.0 / 5.0;
-
-        // The aim angle is scaled by the gear ratio between the sensor and the shaft
-        // and the offset to measure the aim angle relative to the link
-        double hexShaftAngle = rawAngle * ArmConstants.AIM_ABSOLUTE_ENCODER_SCALING_FACTOR
-            + ArmConstants.AIM_ABSOLUTE_ENCODER_OFFSET;
-
-        // Adjust to 0-360 range
-        hexShaftAngle %= 360;
+        // The conversion from volts to degrees
+        double angle = getAimAbsoluteEncoderVoltage()
+            * ArmConstants.AIM_ABSOLUTE_ENCODER_DEG_PER_VOLT
+            + ArmConstants.AIM_ABSOLUTE_ENCODER_OFFSET_DEG;
 
         // round to 2 decimal places
-        return Math.round(hexShaftAngle * 100) / 100.0d;
+        return Math.round(angle * 100) / 100.0d;
     }
 
     public double getLinkAbsoluteEncoderVoltage() {
@@ -77,19 +71,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     public double getLinkAngle() {
 
-        double rawAngle      = getLinkAbsoluteEncoderVoltage() * 360.0 / 5.0;
-
-        // The link angle is scaled by the gear ratio between the sensor and the shaft
-        // and the offset to measure the link angle relative to the vertical from ground
-        // (90deg = parallel to ground)
-        double hexShaftAngle = rawAngle * ArmConstants.LINK_ABSOLUTE_ENCODER_SCALING_FACTOR
-            + ArmConstants.LINK_ABSOLUTE_ENCODER_OFFSET;
-
-        // Adjust to 0-360 range
-        hexShaftAngle %= 360;
+        // The conversion from volts to degrees
+        double angle = getLinkAbsoluteEncoderVoltage()
+            * ArmConstants.LINK_ABSOLUTE_ENCODER_DEG_PER_VOLT
+            + ArmConstants.LINK_ABSOLUTE_ENCODER_OFFSET_DEG;
 
         // round to 2 decimal places
-        return Math.round(hexShaftAngle * 100) / 100.0d;
+        return Math.round(angle * 100) / 100.0d;
     }
 
     public double getShooterEncoderSpeed() {
@@ -199,6 +187,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Aim Speed", aimPivotSpeed);
         SmartDashboard.putNumber("Aim Angle", getAimAngle());
+        SmartDashboard.putNumber("Aim Absolute Encoder Voltage", getAimAbsoluteEncoderVoltage());
 
         SmartDashboard.putBoolean("Note Detected", isNoteDetected());
 
