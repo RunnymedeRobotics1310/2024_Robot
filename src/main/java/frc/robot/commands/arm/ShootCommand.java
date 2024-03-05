@@ -6,10 +6,10 @@ import frc.robot.subsystems.ArmSubsystem;
 public class ShootCommand extends ArmBaseCommand {
 
     private enum State {
-        START_INTAKE, STOP_INTAKE, START_SHOOTER, STOP_SHOOTER
+        START_INTAKE, STOP_INTAKE
     };
 
-    private State state       = State.START_SHOOTER;
+    private State state       = State.START_INTAKE;
 
     private long  startTimeMs = 0;
 
@@ -33,28 +33,9 @@ public class ShootCommand extends ArmBaseCommand {
     @Override
     public void execute() {
 
-        double shooterSpeed = 0;
-        double intakeSpeed  = 0;
+        double intakeSpeed = 0;
 
         switch (state) {
-
-        case START_SHOOTER:
-
-            shooterSpeed = 1;
-            armSubsystem.setShooterSpeed(shooterSpeed);
-            startTimeMs = System.currentTimeMillis();
-            if (((System.currentTimeMillis() - startTimeMs) / 1000.0d) > 0.25) {
-                state = State.START_INTAKE;
-            }
-
-            break;
-
-        case STOP_SHOOTER:
-
-            shooterSpeed = 0;
-            armSubsystem.setShooterSpeed(shooterSpeed);
-
-            break;
 
         case START_INTAKE:
 
@@ -71,8 +52,6 @@ public class ShootCommand extends ArmBaseCommand {
 
             intakeSpeed = 0;
             armSubsystem.setIntakeSpeed(intakeSpeed);
-
-            state = State.STOP_SHOOTER;
 
             break;
         }

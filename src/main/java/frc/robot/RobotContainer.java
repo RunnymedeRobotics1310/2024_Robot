@@ -34,7 +34,7 @@ public class RobotContainer {
     private final LightsSubsystem        lightsSubsystem = new LightsSubsystem();
     private final JackmanVisionSubsystem visionSubsystem = new JackmanVisionSubsystem();
     private final ArmSubsystem           armSubsystem    = new ArmSubsystem(lightsSubsystem);
-//    private final ClimbSubsystem         climbSubsystem  = new ClimbSubsystem(lightsSubsystem);
+    // private final ClimbSubsystem climbSubsystem = new ClimbSubsystem(lightsSubsystem);
 
 
 
@@ -50,15 +50,15 @@ public class RobotContainer {
             new DefaultArmCommand(
                 operatorInput, armSubsystem));
 
-//        climbSubsystem.setDefaultCommand(
-//            new DefaultClimbCommand(
-//                operatorInput, climbSubsystem));
+        // climbSubsystem.setDefaultCommand(
+        // new DefaultClimbCommand(
+        // operatorInput, climbSubsystem));
 
         // Initialize the dashboard choosers
         initDashboardChoosers();
 
         // Configure the button bindings
-        operatorInput.configureButtonBindings(armSubsystem, visionSubsystem);
+        operatorInput.configureButtonBindings(armSubsystem, visionSubsystem, operatorInput);
 
         // Add a trigger for the robot enabled
         new Trigger(() -> RobotController.isSysActive())

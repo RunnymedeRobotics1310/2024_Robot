@@ -33,20 +33,14 @@ public class AimSpeakerCommand extends ArmBaseCommand {
             state = State.MOVE_TO_OVER_BUMPER;
         }
         else {
-            state = State.MOVE_TO_SPEAKER;
-        }
-        if (state == State.MOVE_TO_SPEAKER) {
-            state = State.SET_SHOOTER_SPEED;
+            state = State.MOVE_TO_UNLOCK;
         }
     }
 
     @Override
     public void execute() {
 
-        boolean atArmAngle    = false;
-
-        // Get the current angles
-        double  aimAngleError = 0;
+        boolean atArmAngle = false;
 
 
         switch (state) {
@@ -56,6 +50,10 @@ public class AimSpeakerCommand extends ArmBaseCommand {
             // Move to the requested angle with a tolerance of 5 deg
             atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION, 5);
 
+            if (atArmAngle) {
+                logStateTransition("Start Shooter", "Arm at Shooter Position");
+                state = State.MOVE_TO_SPEAKER;
+            }
             break;
 
         case MOVE_TO_OVER_BUMPER:
@@ -73,6 +71,17 @@ public class AimSpeakerCommand extends ArmBaseCommand {
             }
 
             break;
+
+        case MOVE_TO_UNLOCK:
+
+            // Move to the requested angle with a tolerance of 5 deg
+            atArmAngle = this.driveToArmPosition(ArmConstants.UNLOCK_POSITION, 5);
+
+            // If past the bumper danger, move to the compact position.
+            if (atArmAngle) {
+                logStateTransition("Move to over bumper", "Arm at unlock position");
+                state = State.MOVE_TO_OVER_BUMPER;
+            }
 
         case SET_SHOOTER_SPEED:
             armSubsystem.setShooterSpeed(ArmConstants.SHOOTER_SPEAKER_SPEED);

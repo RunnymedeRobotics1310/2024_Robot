@@ -113,12 +113,15 @@ public final class Constants {
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
          */
+
         public static final double      MAX_AIM_HOLD                       = 0;
+
 
         /**
          * Amount of output required to hold the Link Pivot when the Link and Aim are parallel to
          * the ground
          */
+
         public static final double      MAX_LINK_HOLD                      = 0;
     }
 
@@ -131,8 +134,8 @@ public final class Constants {
         public static final double RAISE_CLIMBERS_SPEED          = .3;
 
         public static final double CLIMB_MAX                     = 240;// TODO: what are the min/max
-                                                                       // encoder
-                                                                       // values
+                                                                       // encoder values
+
         public static final double CLIMB_MIN                     = 0;
 
     }
