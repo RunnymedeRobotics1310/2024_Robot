@@ -1,14 +1,14 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.VisionConstants;
-import frc.robot.VisionConstants.VisionTarget;
 
 public class JackmanVisionSubsystem extends SubsystemBase {
+
 
     private static final long            LED_MODE_PIPELINE                    = 0;
     private static final long            LED_MODE_OFF                         = 1;
@@ -23,12 +23,12 @@ public class JackmanVisionSubsystem extends SubsystemBase {
     // configure more pipelines here
     @SuppressWarnings("unused")
     private static final long            PIPELINE_RETROREFLECTIVE_NOTE_DETECT = 0;
-    private static final long            PIPELINE_APRIL_TAG_DETECT            = 1;
     private static final long            PIPELINE_VISUAL                      = 2;
     private static final long            PIPELINE_NEURALNET_NOTE_DETECT       = 7;
 
+    private static final String MODEL_CLASS_NOTE = "note";
     NetworkTable                         table                                = NetworkTableInstance.getDefault()
-        .getTable("limelight-jackman");
+            .getTable("limelight-jackman");
 
     // inputs/configs
     NetworkTableEntry                    ledMode                              = table.getEntry("ledMode");
@@ -40,120 +40,60 @@ public class JackmanVisionSubsystem extends SubsystemBase {
     NetworkTableEntry                    tx                                   = table.getEntry("tx");
     NetworkTableEntry                    ty                                   = table.getEntry("ty");
     NetworkTableEntry                    ta                                   = table.getEntry("ta");
-    NetworkTableEntry                    tl                                   = table.getEntry("tl");
 
-    private VisionConstants.VisionTarget currentVisionTarget                  = VisionConstants.VisionTarget.NONE;
+    NetworkTableEntry                    tl                                   = table.getEntry("tl");
+    NetworkTableEntry                    cl                                   = table.getEntry("cl");
+
+    NetworkTableEntry                    tclass                               = table.getEntry("tclass");
+
 
     public JackmanVisionSubsystem() {
-        setVisionTarget(VisionTarget.APRILTAGS);
+        this.pipeline.setNumber(PIPELINE_NEURALNET_NOTE_DETECT);
+        this.camMode.setNumber(CAM_MODE_VISION);
+        this.ledMode.setNumber(LED_MODE_PIPELINE);
     }
+
+
 
     public double getTargetAreaPercent() {
         return ta.getDouble(-1.0);
     }
 
-    public VisionConstants.VisionTarget getCurrentVisionTarget() {
-        return currentVisionTarget;
-    }
-
-    public void setVisionTarget(VisionConstants.VisionTarget visionTarget) {
-
-        this.currentVisionTarget = visionTarget;
-
-        switch (visionTarget) {
-        case APRILTAGS:
-            this.pipeline.setNumber(PIPELINE_APRIL_TAG_DETECT);
-            this.camMode.setNumber(CAM_MODE_VISION);
-            this.ledMode.setNumber(LED_MODE_PIPELINE);
-            break;
-        case NOTES:
-            this.pipeline.setNumber(PIPELINE_NEURALNET_NOTE_DETECT);
-            this.camMode.setNumber(CAM_MODE_VISION);
-            this.ledMode.setNumber(LED_MODE_PIPELINE);
-            break;
-        case NONE:
-        default:
-            this.pipeline.setNumber(PIPELINE_VISUAL);
-            this.camMode.setNumber(CAM_MODE_DRIVER);
-            this.ledMode.setInteger(LED_MODE_OFF);
-            break;
-        }
-    }
-
-    /**
-     * Determine if a vision target of the current type is found.
-     * <p>
-     * Use {@link #setVisionTarget(VisionConstants.VisionTarget)} to set the vision target type
-     */
     public boolean isVisionTargetFound() {
         return tv.getDouble(-1) == 1;
     }
 
 
     public double getTargetDistanceCm() {
-        return -1.0; // fixme: calculate distance
+        return -1.0; // fixme: calculate distance; not possible if the limelight is on the moving arm
     }
 
 
-    public boolean isNoteTargetAcquired() {
-        // FIXME: finish this
-        if (PIPELINE_NEURALNET_NOTE_DETECT != pipeline.getInteger(-1)) {
-            return false;
+    public Rotation2d getNoteOffset(){
+        if (tclass.getString("").equals(MODEL_CLASS_NOTE)) {
+            double angleToTarget = getTargetX();
+            return Rotation2d.fromDegrees(angleToTarget);
         }
-
-        // Check that a target it acquired.
-        if (!isVisionTargetFound()) {
-            return false;
+        else{
+            return null;
         }
-
-        // ***NOTE***: This was from 2023 with retroflective model - likely handling false
-        // positives. Try without first.
-        // is the target area larger than minPercentForConeAcquisition of the screen?
-        // long minPercentForNoteAcquisition = 6;
-        // if (getTargetAreaPercent() < minPercentForNoteAcquisition) {
-        // return false;
-        // }
-
-        double[] tgt = getTarget();
-        if (tgt[0] < 0 || tgt[1] < 0)
-            return false;
-
-        // FIXME: more checks
-        return true;
     }
 
-    public boolean isVisionTargetClose() {
-        // FIXME: finish this
-        if (PIPELINE_APRIL_TAG_DETECT != pipeline.getInteger(-1)) {
-            return false;
-        }
 
-        // FIXME: Check 10% - it's based on 2023 robot.
-        double pct = getTargetAreaPercent();
-        if (isVisionTargetFound() && pct > 10) {
-            System.out.println("Vision target found and target area is " + pct + " which tells us we are close to the target");
-            return true;
-        }
-        return false;
 
-    }
 
 
     @Override
     public void periodic() {
         // read values periodically and post to smart dashboard periodically
-        SmartDashboard.putBoolean("Limelight Target Found", isVisionTargetFound());
-        SmartDashboard.putBoolean("Note",
-            (currentVisionTarget == VisionConstants.VisionTarget.NOTES) && isVisionTargetFound());
-        SmartDashboard.putBoolean("Tag", currentVisionTarget == VisionConstants.VisionTarget.APRILTAGS && isVisionTargetFound());
-        SmartDashboard.putNumber("Limelight tx-value", tx.getDouble(-1.0));
-        SmartDashboard.putNumber("Limelight ty-value", ty.getDouble(-1.0));
-        SmartDashboard.putNumber("Limelight ta-value", ta.getDouble(-1.0));
-        SmartDashboard.putNumber("Limelight l-value", tl.getDouble(-1.0));
-        SmartDashboard.putNumber("Limelight Cam Mode", camMode.getInteger(-1L));
-        SmartDashboard.putNumber("Limelight LED mode", ledMode.getInteger(-1L));
-        SmartDashboard.putNumber("Limelight Pipeline", pipeline.getInteger(-1L));
-        SmartDashboard.putBoolean("Note Target Acquired", isNoteTargetAcquired());
+        SmartDashboard.putBoolean("LimelightJackman/Target Found", isVisionTargetFound());
+        SmartDashboard.putNumber("LimelightJackman/tx-value", tx.getDouble(-1.0));
+        SmartDashboard.putNumber("LimelightJackman/ty-value", ty.getDouble(-1.0));
+        SmartDashboard.putNumber("LimelightJackman/ta-value", ta.getDouble(-1.0));
+        SmartDashboard.putNumber("LimelightJackman/l-value", tl.getDouble(-1.0));
+        SmartDashboard.putNumber("LimelightJackman/Cam Mode", camMode.getInteger(-1L));
+        SmartDashboard.putNumber("LimelightJackman/LED mode", ledMode.getInteger(-1L));
+        SmartDashboard.putNumber("LimelightJackman/Pipeline", pipeline.getInteger(-1L));
     }
 
     /**
@@ -174,7 +114,7 @@ public class JackmanVisionSubsystem extends SubsystemBase {
      *
      * @return limelight X target coordinates
      */
-    public double getTargetX() {
+    private double getTargetX() {
         return tx.getDouble(-1.0);
     }
 
@@ -186,6 +126,7 @@ public class JackmanVisionSubsystem extends SubsystemBase {
     private double getTargetY() {
         return ty.getDouble(-1.0);
     }
+
 
 
 }

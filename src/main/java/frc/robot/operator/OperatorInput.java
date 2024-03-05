@@ -48,13 +48,17 @@ public class OperatorInput extends SubsystemBase {
             || operatorController.getStartButton() && !operatorController.getBackButton();
     }
 
+    public boolean isCompactPressed() {
+        return driverController.getXButton() || operatorController.getXButton();
+    }
+
     /**
      * Use this method to define your button -> command mappings.
      *
      * NOTE: all subsystems should be passed into this method.
      */
     public void configureButtonBindings(ArmSubsystem armSubsystem,
-        JackmanVisionSubsystem visionSubsystem, ClimbSubsystem climbSubsystem) {
+        JackmanVisionSubsystem visionSubsystem, OperatorInput operatorInput, ClimbSubsystem climbSubsystem) {
 
         // System Test - only when FMS is not attached!
         new Trigger(() -> driverController.getStartButton() && driverController.getBackButton() && !DriverStation.isFMSAttached())
@@ -62,10 +66,10 @@ public class OperatorInput extends SubsystemBase {
 
         // Cancel
         new Trigger(() -> isCancelPressed())
-            .onTrue(new CancelCommand(this, armSubsystem, climbSubsystem));
+            .onTrue(new CancelCommand(operatorInput, armSubsystem, climbSubsystem));
 
         // Compact
-        new Trigger(() -> driverController.getXButton())
+        new Trigger(() -> isCompactPressed())
             .onTrue(new CompactPoseCommand(armSubsystem));
 
         // Start Intake
@@ -73,16 +77,23 @@ public class OperatorInput extends SubsystemBase {
             .onTrue(new StartIntakeCommand(armSubsystem));
 
         // Aim Amp
-        new Trigger(() -> driverController.getBButton())
+        new Trigger(() -> operatorController.getAButton())
             .onTrue(new AimAmpCommand(armSubsystem));
 
         // Aim Speaker
-        new Trigger(() -> driverController.getYButton())
+        new Trigger(() -> operatorController.getYButton())
             .onTrue(new AimSpeakerCommand(armSubsystem));
 
         // Shoot
-        new Trigger(() -> driverController.getRightTriggerAxis() > .4)
+        new Trigger(() -> operatorController.getBButton())
             .onTrue(new ShootCommand(armSubsystem));
+
+        // Climbs Up pov 0
+        // Climbs Down pov 180
+        // Climbs Down pov 270
+        // Trap pov 90
+        // Shift to Climb right bumper
+
 
     }
 
