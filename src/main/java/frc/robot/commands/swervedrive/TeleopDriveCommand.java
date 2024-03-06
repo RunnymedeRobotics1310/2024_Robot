@@ -102,8 +102,11 @@ public class TeleopDriveCommand extends BaseDriveCommand {
 
         double              correctedCcwRotAngularVelPct = inputOmegaLimiter.calculate(ccwRotAngularVelPct);
 
+        final String        modeForDebug;
+
         // User is steering!
         if (correctedCcwRotAngularVelPct != 0) {
+            modeForDebug  = "Steering";
             // Compute omega
             lockOnSpeaker = false;
             double w = Math.pow(correctedCcwRotAngularVelPct, 3) * MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
@@ -112,6 +115,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             headingSetpoint = swerve.getPose().getRotation();
         }
         else if (rawDesiredHeadingDeg > -1) {
+            modeForDebug  = "Jumping to POV";
             lockOnSpeaker = false;
             // User wants to jump to POV
             // POV coordinates don't match field coordinates. POV is CW+ and field is CCW+. Also,
@@ -128,6 +132,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             headingSetpoint = desiredHeading;
         }
         else if (faceSpeaker) {
+            modeForDebug = "Face speaker";
             Rotation2d desiredHeading = super.getHeadingToFieldPosition(speaker)
                 .plus(Rotation2d.fromDegrees(180));
 
@@ -136,6 +141,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             lockOnSpeaker   = true;
         }
         else {
+            modeForDebug = "Translating";
             // Translating only. Just drive on the last heading we knew.
 
             if (lockOnSpeaker) {
@@ -163,6 +169,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         SmartDashboard.putNumber("Drive/Teleop/ccwRotAngularVelPct", ccwRotAngularVelPct);
         SmartDashboard.putNumber("Drive/Teleop/rawDesiredHeadingDeg", rawDesiredHeadingDeg);
         SmartDashboard.putNumber("Drive/Teleop/boostFactor", boostFactor);
+        SmartDashboard.putString("Drive/Teleop/mode", modeForDebug);
         SmartDashboard.putBoolean("Drive/Teleop/lockOnSpeaker", lockOnSpeaker);
 
         SmartDashboard.putString("Drive/Teleop/velocity",
