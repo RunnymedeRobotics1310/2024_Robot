@@ -1,7 +1,9 @@
 package frc.robot.commands.arm;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.vision.HughVisionSubsystem;
 
 // Move arm to speaker shoot pose
 // Set shooter speed (distance based)
@@ -11,11 +13,16 @@ public class AimSpeakerCommand extends ArmBaseCommand {
         MOVE_TO_SPEAKER, MOVE_TO_UNLOCK, MOVE_TO_OVER_BUMPER, SET_SHOOTER_SPEED
     };
 
-    private State state = State.MOVE_TO_SPEAKER;
+    private State               state = State.MOVE_TO_SPEAKER;
 
-    public AimSpeakerCommand(ArmSubsystem armSubsystem) {
+    private HughVisionSubsystem hughVisionSubsystem;
+
+    public AimSpeakerCommand(ArmSubsystem armSubsystem, HughVisionSubsystem hughVisionSubsystem) {
 
         super(armSubsystem);
+        this.hughVisionSubsystem = hughVisionSubsystem;
+
+
     }
 
     @Override
@@ -42,13 +49,21 @@ public class AimSpeakerCommand extends ArmBaseCommand {
 
         boolean atArmAngle = false;
 
-
         switch (state) {
 
         case MOVE_TO_SPEAKER:
+            Translation2d getShooterXY = armSubsystem.getShooterXY();
 
-            // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION, 5);
+            double gDSSA = hughVisionSubsystem.getDynamicSpeakerShooterAngle(getShooterXY);
+
+            if (gDSSA == Double.MIN_VALUE) {
+                atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION, 5);
+            }
+            else {
+                atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION.linkAngle,
+                    gDSSA - ArmConstants.SHOOTER_AIM_DIFFERENCE, 5);
+            }
+
 
             if (atArmAngle) {
                 logStateTransition("Start Shooter", "Arm at Shooter Position");

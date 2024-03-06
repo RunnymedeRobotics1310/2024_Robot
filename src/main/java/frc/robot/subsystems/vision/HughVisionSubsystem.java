@@ -453,22 +453,23 @@ public class HughVisionSubsystem extends SubsystemBase {
     /**
      * if the limelight does not have a lock on the tag, the function will return Double.MIN_VALUE
      * so you should not use this function to set the arm angle
+     * 
      * @param shooterXY
      * @return return the angle the shooter needs to be at relative to the speaker's wall
      */
 
     public double getDynamicSpeakerShooterAngle(Translation2d shooterXY) {
         double distanceToTargetMeters = getDistanceToTargetMetres();
-        if (distanceToTargetMeters == Double.MIN_VALUE){
+        if (distanceToTargetMeters == Double.MIN_VALUE) {
             return Double.MIN_VALUE;
         }
-        double shooterHeight = shooterXY.getY();
-        double shooterDistanceOffsetFromMiddleOfBot = shooterXY.getX();
-        double shooterDistanceToWall = distanceToTargetMeters - shooterDistanceOffsetFromMiddleOfBot;
+        double shooterHeight                            = shooterXY.getY();
+        double shooterDistanceOffsetFromMiddleOfBot     = shooterXY.getX();
+        double shooterDistanceToWall                    = distanceToTargetMeters - shooterDistanceOffsetFromMiddleOfBot;
         double heightDifferenceBetweenShooterAndSpeaker = 2.12 - shooterHeight;
-        double oppOverAdj = heightDifferenceBetweenShooterAndSpeaker/shooterDistanceToWall;
-        double preCalculatedShooterAngle = Math.atan(oppOverAdj);
-        double dynamicSpeakerShooterAngle = 90 - preCalculatedShooterAngle;
+        double oppOverAdj                               = heightDifferenceBetweenShooterAndSpeaker / shooterDistanceToWall;
+        double preCalculatedShooterAngle                = Math.atan(oppOverAdj);
+        double dynamicSpeakerShooterAngle               = 90 - preCalculatedShooterAngle;
         return dynamicSpeakerShooterAngle;
     }
 

@@ -3,12 +3,14 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
+
 
 public class ArmSubsystem extends SubsystemBase {
 
@@ -94,6 +96,27 @@ public class ArmSubsystem extends SubsystemBase {
 
     public double getIntakeEncoderSpeed() {
         return Math.round(intakeMotor.getEncoder().getVelocity() * 100) / 100.0;
+    }
+
+    // This relies on 206.3 being the link angle. This should probably be changed to use different
+    // link angles as well.
+    public Translation2d getShooterXY() {
+        double shooterAngle = getAimAngle() - 90;
+
+
+
+        double yDifference  = 0.20955 * (Math.sin(shooterAngle));
+        double xDifference  = 0.20955 * (Math.sin(90 - shooterAngle));
+
+
+
+        double shooterX     = ArmConstants.AIM_X_SHOOTING - xDifference;
+        double shooterY     = ArmConstants.AIM_Y_SHOOTING + yDifference;
+
+
+
+        return new Translation2d(shooterX, shooterY);
+
     }
 
     public boolean isLinkAtLowerLimit() {

@@ -4,8 +4,8 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.LightingConstants.VISPOSE;
 import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.Constants.LightingConstants.VISPOSE;
 import static frc.robot.Constants.UsefulPoses.BLUE_2_2_20;
 import static frc.robot.Constants.UsefulPoses.RED_2_2_20;
 
@@ -25,8 +25,19 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants.AutoPattern;
 import frc.robot.Constants.OiConstants;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
-import frc.robot.commands.auto.*;
+import frc.robot.commands.arm.AimAmpCommand;
+import frc.robot.commands.arm.AimSpeakerCommand;
+import frc.robot.commands.arm.CompactPoseCommand;
+import frc.robot.commands.arm.DefaultArmCommand;
+import frc.robot.commands.arm.ShootCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.auto.PlanBAutoCommand;
+import frc.robot.commands.auto.Score1AmpAutoCommand;
+import frc.robot.commands.auto.Score1SpeakerAutoCommand;
+import frc.robot.commands.auto.Score2AmpAutoCommand;
+import frc.robot.commands.auto.Score3SpeakerAutoCommand;
+import frc.robot.commands.auto.Score4SpeakerAutoCommand;
+import frc.robot.commands.climb.DefaultClimbCommand;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.commands.swervedrive.DriveDistanceCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
@@ -34,14 +45,13 @@ import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.commands.swervedrive.TeleopDriveCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Enabled;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.swerve.yagsl.YagslSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
-import frc.robot.commands.climb.DefaultClimbCommand;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 
@@ -149,8 +159,9 @@ public class RobotContainer {
         new Trigger(operatorInput::isB)
             .onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(swerveDriveSubsystem, hughVisionSubsystem));
 
-//        new Trigger(operatorInput::isX)
-//            .whileTrue(new ResetOdometryCommand(swerveDriveSubsystem, new Pose2d(1.83, 0.40, Rotation2d.fromDegrees(0))));
+        // new Trigger(operatorInput::isX)
+        // .whileTrue(new ResetOdometryCommand(swerveDriveSubsystem, new Pose2d(1.83, 0.40,
+        // Rotation2d.fromDegrees(0))));
 
         // drive forward
         Translation2d          fwd         = new Translation2d(0, 7);
@@ -192,7 +203,7 @@ public class RobotContainer {
 
         // Aim Speaker
         new Trigger(operatorInput::isAimSpeaker)
-            .onTrue(new AimSpeakerCommand(armSubsystem));
+            .onTrue(new AimSpeakerCommand(armSubsystem, hughVisionSubsystem));
 
         // Shoot
         new Trigger(operatorInput::isShoot)
