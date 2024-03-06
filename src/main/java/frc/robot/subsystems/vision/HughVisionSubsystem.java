@@ -100,7 +100,7 @@ public class HughVisionSubsystem extends SubsystemBase {
     public HughVisionSubsystem() {
         this.pipeline.setNumber(PIPELINE_APRIL_TAG_DETECT);
         this.camMode.setNumber(CAM_MODE_VISION);
-        this.ledMode.setNumber(LED_MODE_ON);
+        this.ledMode.setNumber(LED_MODE_PIPELINE);
     }
 
     @Override
@@ -459,11 +459,13 @@ public class HughVisionSubsystem extends SubsystemBase {
      */
     // todo: fixme: return rotation2d for consistency with other APIs and to eliminate unit
     // ambiguity
-    public double getDynamicSpeakerShooterAngle(Translation2d shooterXY) {
+    public Rotation2d getDynamicSpeakerShooterAngle(Translation2d shooterXY) {
         double distanceToTargetMeters = getDistanceToTargetMetres();
+
         if (distanceToTargetMeters == Double.MIN_VALUE) {
-            return Double.MIN_VALUE;
+            return null;
         }
+
         double shooterHeight                            = shooterXY.getY();
         double shooterDistanceOffsetFromMiddleOfBot     = shooterXY.getX();
         double shooterDistanceToWall                    = distanceToTargetMeters - shooterDistanceOffsetFromMiddleOfBot;
@@ -471,7 +473,7 @@ public class HughVisionSubsystem extends SubsystemBase {
         double oppOverAdj                               = heightDifferenceBetweenShooterAndSpeaker / shooterDistanceToWall;
         double preCalculatedShooterAngle                = Math.atan(oppOverAdj);
         double dynamicSpeakerShooterAngle               = 90 - preCalculatedShooterAngle;
-        return dynamicSpeakerShooterAngle;
+        return Rotation2d.fromDegrees(dynamicSpeakerShooterAngle);
     }
 
 

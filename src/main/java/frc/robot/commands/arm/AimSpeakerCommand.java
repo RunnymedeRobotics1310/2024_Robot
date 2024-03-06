@@ -1,5 +1,6 @@
 package frc.robot.commands.arm;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -61,14 +62,14 @@ public class AimSpeakerCommand extends ArmBaseCommand {
 
             // todo: fixme: give a hint to units - method name, variable name, param name, or else
             // return Rotation2d
-            double gDSSA = hughVisionSubsystem.getDynamicSpeakerShooterAngle(getShooterXY);
+            Rotation2d gDSSA = hughVisionSubsystem.getDynamicSpeakerShooterAngle(getShooterXY);
 
-            if (gDSSA == Double.MIN_VALUE) {
+            if (gDSSA == null) {
                 atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION, 5);
             }
             else {
                 atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION.linkAngle,
-                    gDSSA - ArmConstants.SHOOTER_AIM_DIFFERENCE, 5);
+                    gDSSA.getDegrees() - ArmConstants.SHOOTER_AIM_DIFFERENCE, 5);
             }
 
 
