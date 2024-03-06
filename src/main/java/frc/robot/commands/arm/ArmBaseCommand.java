@@ -204,7 +204,7 @@ public abstract class ArmBaseCommand extends LoggingCommand {
 
         double aimContributionRad   = Math.PI * aimContributionAngle;
 
-        return Math.sin(linkAngleRad) + Math.sin(aimContributionRad) / 2.0;
+        return ArmConstants.MAX_LINK_HOLD * (Math.sin(linkAngleRad) + Math.sin(aimContributionRad) / 2.0);
     }
 
 }
