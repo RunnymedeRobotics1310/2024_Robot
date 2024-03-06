@@ -149,7 +149,7 @@ public class OperatorInput {
             case X:
                 return operatorController.getRightX();
             case Y:
-                return operatorController.getRightX();
+                return operatorController.getRightY();
             }
             break;
         }
