@@ -38,8 +38,8 @@ public class DefaultArmCommand extends LoggingCommand {
     public void execute() {
 
         if (!operatorInput.isShift()) {
-            setLinkMotorSpeed(operatorInput.getOperatorControllerAxis(LEFT, Y) * 0.1);
-            setAimMotorSpeed(operatorInput.getOperatorControllerAxis(RIGHT, Y) * 0.1);
+            setLinkMotorSpeed(operatorInput.getOperatorControllerAxis(LEFT, Y) * 0.2);
+            setAimMotorSpeed(operatorInput.getOperatorControllerAxis(RIGHT, Y) * 0.2);
         }
         else {
             setLinkMotorSpeed(0);
