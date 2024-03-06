@@ -457,7 +457,8 @@ public class HughVisionSubsystem extends SubsystemBase {
      * @param shooterXY
      * @return return the angle the shooter needs to be at relative to the speaker's wall
      */
-
+    // todo: fixme: return rotation2d for consistency with other APIs and to eliminate unit
+    // ambiguity
     public double getDynamicSpeakerShooterAngle(Translation2d shooterXY) {
         double distanceToTargetMeters = getDistanceToTargetMetres();
         if (distanceToTargetMeters == Double.MIN_VALUE) {

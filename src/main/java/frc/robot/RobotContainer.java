@@ -6,14 +6,9 @@ package frc.robot;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.Constants.LightingConstants.VISPOSE;
-import static frc.robot.Constants.UsefulPoses.BLUE_2_2_20;
-import static frc.robot.Constants.UsefulPoses.RED_2_2_20;
 
 import java.io.File;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,8 +29,6 @@ import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.climb.DefaultClimbCommand;
 import frc.robot.commands.operator.OperatorInput;
-import frc.robot.commands.swervedrive.DriveDistanceCommand;
-import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.commands.swervedrive.TeleopDriveCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
@@ -61,26 +54,24 @@ import frc.robot.subsystems.vision.JackmanVisionSubsystem;
  */
 public class RobotContainer {
 
-    private final LightingSubsystem      lightingSubsystem    = new LightingSubsystem(SIGNAL, VISPOSE);
-
     // The robot's subsystems and commands are defined here...
-    private final File                   yagslConfig          = new File(Filesystem.getDeployDirectory(), "swerve/neo");
 
-    private final HughVisionSubsystem    hughVisionSubsystem  = new HughVisionSubsystem();
+    private final HughVisionSubsystem    hugh               = new HughVisionSubsystem();
+    private final JackmanVisionSubsystem jackman            = new JackmanVisionSubsystem();
+    private final LightingSubsystem      lighting           = new LightingSubsystem(SIGNAL, VISPOSE);
+    private final ArmSubsystem           arm                = new ArmSubsystem(lighting);
+    private final ClimbSubsystem         climb              = new ClimbSubsystem(lighting);
 
     // todo: set up sendable chooser for this to toggle implementation for testing
-    private final SwerveSubsystem        swerveDriveSubsystem = new YagslSubsystem(yagslConfig, hughVisionSubsystem,
-        lightingSubsystem);
-    // private final SwerveSubsystem swerveDriveSubsystem = new
-    // RunnymedeSwerveSubsystem(hughVisionSubsystem);
-    private final JackmanVisionSubsystem jackmanVisionSubsystem      = new JackmanVisionSubsystem();
-    private final ArmSubsystem           armSubsystem         = new ArmSubsystem(lightingSubsystem);
-    private final ClimbSubsystem         climbSubsystem       = new ClimbSubsystem(lightingSubsystem);
+    private final File                   yagslConfig        = new File(Filesystem.getDeployDirectory(), "swerve/neo");
+    private final SwerveSubsystem        drive              = new YagslSubsystem(yagslConfig, hugh,
+        lighting);
+//    private final SwerveSubsystem        drive   = new RunnymedeSwerveSubsystem(hughVisionSubsystem,
+//        lightingSubsystem);
 
+    SendableChooser<AutoPattern>         autoPatternChooser = new SendableChooser<>();
 
-    SendableChooser<AutoPattern>         autoPatternChooser   = new SendableChooser<>();
-
-    private final OperatorInput          operatorInput        = new OperatorInput(
+    private final OperatorInput          operatorInput      = new OperatorInput(
         OiConstants.DRIVER_CONTROLLER_PORT, OiConstants.OPERATOR_CONTROLLER_PORT);
 
     /**
@@ -88,128 +79,70 @@ public class RobotContainer {
      */
     public RobotContainer() {
 
-        // Initialize all Subsystem default commands
-        swerveDriveSubsystem.setDefaultCommand(new TeleopDriveCommand(swerveDriveSubsystem, lightingSubsystem, operatorInput));
-        armSubsystem.setDefaultCommand(
-            new DefaultArmCommand(
-                operatorInput, armSubsystem));
+        drive.setDefaultCommand(new TeleopDriveCommand(drive, lighting, operatorInput));
+        arm.setDefaultCommand(new DefaultArmCommand(operatorInput, arm));
+        climb.setDefaultCommand(new DefaultClimbCommand(operatorInput, climb));
 
-        climbSubsystem.setDefaultCommand(
-            new DefaultClimbCommand(
-                operatorInput, climbSubsystem));
-
-        // Configure the trigger bindings
-        configureBindings();
-        // Initialize the autonomous choosers
+        configureTriggerBindings();
         initAutoSelectors();
     }
 
     private void initAutoSelectors() {
 
         // FIXME: (low) consider moving all of the choosers to their own classes.
-        autoPatternChooser.setDefaultOption("1 Amp", AutoPattern.SCORE_1_AMP);
         SmartDashboard.putData("Auto Pattern", autoPatternChooser);
+        autoPatternChooser.setDefaultOption("Do Nothing", AutoPattern.DO_NOTHING);
+        autoPatternChooser.addOption("1 Amp", AutoPattern.SCORE_1_AMP);
         autoPatternChooser.addOption("2 Amp", AutoPattern.SCORE_2_AMP);
         autoPatternChooser.addOption("1 Speaker", AutoPattern.SCORE_1_SPEAKER);
         autoPatternChooser.addOption("3 Speaker", AutoPattern.SCORE_3_SPEAKER);
         autoPatternChooser.addOption("4 Speaker", AutoPattern.SCORE_4_SPEAKER);
         autoPatternChooser.addOption("Plan B", AutoPattern.PLAN_B);
-        autoPatternChooser.setDefaultOption("Do Nothing", AutoPattern.DO_NOTHING);
         autoPatternChooser.addOption("Drive Forward", AutoPattern.DRIVE_FORWARD);
         autoPatternChooser.addOption("Three Note", AutoPattern.THREE_NOTE);
     }
 
     /**
-     * Use this method to define your trigger->command mappings. Triggers can be
-     * created via the
+     * Use this method to define your trigger->command mappings. Triggers can be created via the
      * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-     * an arbitrary
-     * predicate, or via the named factories in {@link
+     * an arbitrary predicate, or via the named factories in {@link
      * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-     * {@link
-     * CommandXboxController
-     * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-     * PS4} controllers or
-     * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-     * joysticks}.
+     * {@link CommandXboxController Xbox} /
+     * {@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4} controllers or
+     * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
      */
-    private void configureBindings() {
+    private void configureTriggerBindings() {
 
-        /*
-         * This is a trigger that will run the command when the robot is enabled.
-         */
-        new Trigger(RobotController::isSysActive)
-            .onTrue(new InstantCommand(() -> lightingSubsystem.addPattern(Enabled.getInstance())));
+        // Run when enabled
+        new Trigger(RobotController::isSysActive).onTrue(new InstantCommand(() -> lighting.addPattern(Enabled.getInstance())));
 
-        /*
-         * This is a trigger that will activate test mode (start & back at the same time)
-         */
-        new Trigger(operatorInput::isToggleTestMode)
-            .onTrue(new SystemTestCommand(operatorInput, swerveDriveSubsystem, armSubsystem, lightingSubsystem));
+        // Activate test mode
+        new Trigger(operatorInput::isToggleTestMode).onTrue(new SystemTestCommand(operatorInput, drive, arm, lighting));
 
-        new Trigger(operatorInput::isZeroGyro).onTrue(new ZeroGyroCommand(swerveDriveSubsystem));
-        new Trigger(operatorInput::isCancel)
-            .whileTrue(new CancelCommand(operatorInput, swerveDriveSubsystem, armSubsystem, climbSubsystem));
-
-        new Trigger(operatorInput::isB)
-            .onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(swerveDriveSubsystem, hughVisionSubsystem));
-
-        // new Trigger(operatorInput::isX)
-        // .whileTrue(new ResetOdometryCommand(swerveDriveSubsystem, new Pose2d(1.83, 0.40,
-        // Rotation2d.fromDegrees(0))));
-
-        // drive forward
-        Translation2d          fwd         = new Translation2d(0, 7);
-        Rotation2d             fwdHeading  = Rotation2d.fromDegrees(0);
-        DriveDistanceCommand   ddc         = new DriveDistanceCommand(swerveDriveSubsystem, fwd, fwdHeading, 3);
-        // new Trigger(operatorInput::isA).onTrue(ddc);
-
-        // drive to position test
-        Translation2d          location    = new Translation2d(2, 2);
-        Rotation2d             heading     = Rotation2d.fromDegrees(-20);
-        Pose2d                 desiredPose = new Pose2d(location, heading);
-        DriveToPositionCommand dtpc        = new DriveToPositionCommand(swerveDriveSubsystem, BLUE_2_2_20, RED_2_2_20);
-        // new Trigger(operatorInput::isY).onTrue(dtpc);
-        // new Trigger(operatorInput::isB).onTrue(new Score1SpeakerAutoCommand(swerveDriveSubsystem,
-        // hughVisionSubsystem));
-        // new Trigger(operatorInput::isB).onTrue(new Score3SpeakerAutoCommand(swerveDriveSubsystem,
-        // hughVisionSubsystem));
-        // new Trigger(operatorInput::isB).onTrue(new Score4SpeakerAutoCommand(swerveDriveSubsystem,
-        // hughVisionSubsystem));
-        // new Trigger(operatorInput::isB).onTrue(new Score1AmpAutoCommand(swerveDriveSubsystem,
-        // hughVisionSubsystem));
-        // new Trigger(operatorInput::isB).onTrue(new Score2AmpAutoCommand(swerveDriveSubsystem,
-        // hughVisionSubsystem));
-        // new Trigger(operatorInput::isA).onTrue(new RotateToSpeakerCommand(swerveDriveSubsystem,
-        // hughVisionSubsystem));
-
+        new Trigger(operatorInput::isZeroGyro).onTrue(new ZeroGyroCommand(drive));
+        new Trigger(operatorInput::isCancel).whileTrue(new CancelCommand(operatorInput, drive, arm, climb));
+        new Trigger(operatorInput::isB).onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(drive, hugh));
 
         // Compact
-        new Trigger(operatorInput::isCompactPressed)
-            .onTrue(new CompactPoseCommand(armSubsystem));
+        new Trigger(operatorInput::isCompactPressed).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
-        new Trigger(operatorInput::isStartIntake)
-            .onTrue(new StartIntakeCommand(armSubsystem));
+        new Trigger(operatorInput::isStartIntake).onTrue(new StartIntakeCommand(arm));
 
         // Aim Amp
-        new Trigger(operatorInput::isAimAmp)
-            .onTrue(new AimAmpCommand(armSubsystem));
+        new Trigger(operatorInput::isAimAmp).onTrue(new AimAmpCommand(arm));
 
         // Aim Speaker
-        new Trigger(operatorInput::isAimSpeaker)
-            .onTrue(new AimSpeakerCommand(armSubsystem, hughVisionSubsystem));
+        new Trigger(operatorInput::isAimSpeaker).onTrue(new AimSpeakerCommand(arm, hugh));
 
         // Shoot
-        new Trigger(operatorInput::isShoot)
-            .onTrue(new ShootCommand(armSubsystem));
+        new Trigger(operatorInput::isShoot).onTrue(new ShootCommand(arm));
 
         // Climbs Up pov 0
         // Climbs Down pov 180
         // Climbs Down pov 270
         // Trap pov 90
         // Shift to Climb right bumper
-
 
     }
 
@@ -220,34 +153,17 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
 
-        switch (autoPatternChooser.getSelected()) {
-
-        case SCORE_1_AMP:
-            return new Score1AmpAutoCommand(swerveDriveSubsystem, hughVisionSubsystem);
-
-        case SCORE_2_AMP:
-            return new Score2AmpAutoCommand(swerveDriveSubsystem, armSubsystem, hughVisionSubsystem, jackmanVisionSubsystem);
-
-        case SCORE_2_5_AMP:
-            return new Score2_5AmpAutoCommand(swerveDriveSubsystem, armSubsystem, hughVisionSubsystem, jackmanVisionSubsystem);
-
-        case SCORE_1_SPEAKER:
-            return new Score1SpeakerAutoCommand(swerveDriveSubsystem, hughVisionSubsystem);
-
-        case SCORE_3_SPEAKER:
-            return new Score3SpeakerAutoCommand(swerveDriveSubsystem, armSubsystem, hughVisionSubsystem, jackmanVisionSubsystem);
-
-        case SCORE_4_SPEAKER:
-            return new Score4SpeakerAutoCommand(swerveDriveSubsystem, armSubsystem, hughVisionSubsystem, jackmanVisionSubsystem);
-
-        case PLAN_B:
-            return new PlanBAutoCommand(swerveDriveSubsystem);
-
-        default:
-            // If the chooser did not work, then do nothing as the default auto.
-            return new InstantCommand();
-
-        }
+        return switch (autoPatternChooser.getSelected()) {
+        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh);
+        case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman);
+        case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman);
+        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, hugh);
+        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman);
+        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman);
+        case PLAN_B -> new PlanBAutoCommand(drive);
+        // If the chooser did not work, then do nothing as the default auto.
+        default -> new InstantCommand();
+        };
 
     }
 

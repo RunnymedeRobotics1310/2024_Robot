@@ -5,17 +5,19 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 
-// Move arm to speaker shoot pose
-// Set shooter speed (distance based)
+/**
+ * Move arm to speaker shoot pose
+ * Set shooter speed (distance based)
+ */
 public class AimSpeakerCommand extends ArmBaseCommand {
 
     private enum State {
         MOVE_TO_SPEAKER, MOVE_TO_UNLOCK, MOVE_TO_OVER_BUMPER, SET_SHOOTER_SPEED
     };
 
-    private State               state = State.MOVE_TO_SPEAKER;
+    private State                     state = State.MOVE_TO_SPEAKER;
 
-    private HughVisionSubsystem hughVisionSubsystem;
+    private final HughVisionSubsystem hughVisionSubsystem;
 
     public AimSpeakerCommand(ArmSubsystem armSubsystem, HughVisionSubsystem hughVisionSubsystem) {
 
@@ -31,6 +33,9 @@ public class AimSpeakerCommand extends ArmBaseCommand {
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
             System.out.println("No note detected in robot. AimSpeakerCommand cancelled");
+            // todo: fixme: command will still run execute unless you set some kind of state that
+            // can be picked up in isFinished (which runs before execute). Consider setting a state
+            // that isFinished can check.
             return;
         }
 
@@ -47,13 +52,15 @@ public class AimSpeakerCommand extends ArmBaseCommand {
     @Override
     public void execute() {
 
-        boolean atArmAngle = false;
+        final boolean atArmAngle;
 
         switch (state) {
 
         case MOVE_TO_SPEAKER:
             Translation2d getShooterXY = armSubsystem.getShooterXY();
 
+            // todo: fixme: give a hint to units - method name, variable name, param name, or else
+            // return Rotation2d
             double gDSSA = hughVisionSubsystem.getDynamicSpeakerShooterAngle(getShooterXY);
 
             if (gDSSA == Double.MIN_VALUE) {

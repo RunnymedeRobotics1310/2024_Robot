@@ -54,21 +54,9 @@ public class JackmanVisionSubsystem extends SubsystemBase {
     }
 
 
-
-    public double getTargetAreaPercent() {
-        return ta.getDouble(-1.0);
-    }
-
     public boolean isVisionTargetFound() {
         return tv.getDouble(-1) == 1;
     }
-
-
-    public double getTargetDistanceCm() {
-        return -1.0; // fixme: calculate distance; not possible if the limelight is on the moving
-                     // arm
-    }
-
 
     public Rotation2d getNoteOffset() {
         if (tclass.getString("").equals(MODEL_CLASS_NOTE)) {
@@ -126,6 +114,9 @@ public class JackmanVisionSubsystem extends SubsystemBase {
         return ty.getDouble(-1.0);
     }
 
-
+    @Override
+    public String toString() {
+        return "Jackman Vision Subsystem";
+    }
 
 }
