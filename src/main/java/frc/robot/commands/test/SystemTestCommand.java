@@ -264,14 +264,17 @@ public class SystemTestCommand extends LoggingCommand {
             break;
         }
         case LINK: {
+            angle = Rotation2d.fromDegrees(armSubsystem.getLinkAngle());
             armSubsystem.setArmPivotTestSpeeds(motorSpeed, 0);
             break;
         }
         case AIM: {
+            angle = Rotation2d.fromDegrees(armSubsystem.getAimAngle());
             armSubsystem.setArmPivotTestSpeeds(0, motorSpeed);
             break;
         }
         case LINK_AND_AIM: {
+            angle = Rotation2d.fromDegrees(armSubsystem.getAimAngle() + armSubsystem.getLinkAngle());
             armSubsystem.setArmPivotTestSpeeds(motorSpeed, motor2Speed);
             break;
         }
