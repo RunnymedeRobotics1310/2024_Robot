@@ -1,48 +1,36 @@
 package frc.robot.commands.swervedrive;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.swerve.yagsl.YagslSubsystem;
-
 
 public class DriveToNoteCommand extends BaseDriveCommand {
     private final JackmanVisionSubsystem jackman;
-    private final ArmSubsystem armSubsystem;
-    private Pose2d initialPose;
-    private Rotation2d robotRelativeTranslation;
-    private double speed;
-    public DriveToNoteCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, JackmanVisionSubsystem jackman, double speed) {
+    private double                       speed;
 
-        super(swerve);
-        this.armSubsystem = armSubsystem;
+    // todo: fixme: specify unit in speed param name (e.g. speedRPM, speedDegPerSec, etc.)
+    public DriveToNoteCommand(SwerveSubsystem drive, ArmSubsystem arm, JackmanVisionSubsystem jackman, double speed) {
+
+        super(drive);
         this.jackman = jackman;
-        this.speed = speed;
+        this.speed   = speed;
         addRequirements(jackman);
-    }
-
-    @Override
-    public void initialize() {
-        this.initialPose = swerve.getPose();
     }
 
     public void execute() {
         super.execute();
 
-        robotRelativeTranslation = jackman.getNoteOffset();
+        Rotation2d robotRelativeOffset = jackman.getNoteOffset();
 
-        if (robotRelativeTranslation != null) {
+        if (robotRelativeOffset != null) {
 
-            if (Math.abs(robotRelativeTranslation.getDegrees()) > 10) {
+            if (Math.abs(robotRelativeOffset.getDegrees()) > 10) {
                 speed = 0;
             }
 
-            Rotation2d omega = computeOmega(robotRelativeTranslation);
+            Rotation2d omega = computeOmega(robotRelativeOffset);
             swerve.driveRobotOriented(new ChassisSpeeds(speed, 0, omega.getRadians()));
         }
 
@@ -50,12 +38,10 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
     @Override
     public boolean isFinished() {
-        // IMPORTANT: Only ever used in deadline with intake command
+        // IMPORTANT: This command will not end itself, it is designed to be cancelled by a
+        // collaborating command. Specifically, it is primarily used in "deadline with intake
+        // command" which will cancel this command when the intake is ready to intake the note.
         return false;
     }
 
-    @Override
-    public void end(boolean interrupted) {
-
-    }
 }
