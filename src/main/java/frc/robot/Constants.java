@@ -425,9 +425,9 @@ public final class Constants {
         // Transition position - over bumper
         public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(60.0, 125.0);
         // Transition position - above the lock position (arm not caught on stops)
-        public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(105.0, 85.0);   //
+        public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(105.0, 85.0);   // Unfinished
 
-        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(115.0, 90.0);   //
+        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(206.3, 90.0);   // Unfinished
         public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(206.3, 102.92);
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
 
@@ -452,6 +452,14 @@ public final class Constants {
 
         public static final double      ARM_MIN_ANGLE_SUM                  = 180;
         public static final double      ARM_MAX_ANGLE_SUM                  = 310;
+
+        public static final double      AIM_X_SHOOTING                     = 0.133615525529;
+        /**
+         * TODO:add the distance from center of robot to the arm's base to AIM_X_SHOOTING
+         */
+        public static final double      AIM_Y_SHOOTING                     = 0.273952425424;
+
+        public static final double      SHOOTER_AIM_DIFFERENCE             = 47.9;
 
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground

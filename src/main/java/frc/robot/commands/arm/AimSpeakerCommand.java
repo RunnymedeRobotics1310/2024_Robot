@@ -2,6 +2,7 @@ package frc.robot.commands.arm;
 
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.vision.HughVisionSubsystem;
 
 // Move arm to speaker shoot pose
 // Set shooter speed (distance based)
@@ -46,9 +47,14 @@ public class AimSpeakerCommand extends ArmBaseCommand {
         switch (state) {
 
         case MOVE_TO_SPEAKER:
-
             // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION, 5);
+            if (HughVisionSubsystem.getDynamicSpeakerShooterAngle == Double.MIN_VALUE) {
+                atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION, 5);
+            }
+            else {
+                atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION.linkAngle,
+                    HughVisionSubsystem.getDynamicSpeakerShooterAngle - ArmConstants.SHOOTER_AIM_DIFFERENCE, 5);
+            }
 
             if (atArmAngle) {
                 logStateTransition("Start Shooter", "Arm at Shooter Position");
