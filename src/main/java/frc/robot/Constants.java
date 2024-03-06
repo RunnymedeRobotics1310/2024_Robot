@@ -350,7 +350,7 @@ public final class Constants {
     public static final class AutoConstants {
 
         public enum AutoPattern {
-            SCORE_1_AMP, SCORE_2_AMP, SCORE_1_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER, PLAN_B, DO_NOTHING, DRIVE_FORWARD,
+            SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP, SCORE_1_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER, PLAN_B, DO_NOTHING, DRIVE_FORWARD,
             OTHER_AUTO,
             THREE_NOTE
         }

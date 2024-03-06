@@ -20,6 +20,9 @@ public class Score1SpeakerAutoCommand extends SequentialCommandGroup {
 
         addCommands(new LogMessageCommand("Starting Auto"));
 
+
+        // TODO: replace FakeScoreSpeakerCommand
+
         /* ***AUTO PATTERN*** */
 
         /* Note 1 */

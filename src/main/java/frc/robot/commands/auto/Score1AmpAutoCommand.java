@@ -22,6 +22,7 @@ public class Score1AmpAutoCommand extends SequentialCommandGroup {
 
         addCommands(new LogMessageCommand("Starting Auto"));
 
+        // TODO: replace FakeScoreAmpCommand
 
         addCommands(new DriveToPositionCommand(swerve, SCORE_BLUE_AMP, SCORE_RED_AMP));
         addCommands(new FakeScoreAmpCommand());

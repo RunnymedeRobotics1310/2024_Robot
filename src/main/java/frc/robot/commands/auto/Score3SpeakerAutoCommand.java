@@ -9,17 +9,21 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BotTarget;
+import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.auto.stubs.FakeScoreSpeakerCommand;
 import frc.robot.commands.auto.stubs.FakeVisionNotePickupCommand;
+import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
 import frc.robot.commands.swervedrive.RotateToTargetCommand;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
+import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
 
-    public Score3SpeakerAutoCommand(SwerveSubsystem swerve, HughVisionSubsystem hugh) {
+    public Score3SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh, JackmanVisionSubsystem jackman) {
 
 
         Pose2d blueFinishPose = new Pose2d(new Translation2d(3.5, BLUE_NOTE_VALJEAN.getLocation().getY()),
@@ -29,6 +33,9 @@ public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
 
 
         addCommands(new LogMessageCommand("Starting Auto"));
+
+
+        // TODO: replace FakeScoreSpeakerCommand
 
         /* ***AUTO PATTERN*** */
 
@@ -41,13 +48,15 @@ public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
 
         /* Note 3 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
-        addCommands(new FakeVisionNotePickupCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
+        addCommands(new StartIntakeCommand(armSubsystem)
+                .deadlineWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, .5)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new FakeScoreSpeakerCommand(swerve));
 
         /* Note 4 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
-        addCommands(new FakeVisionNotePickupCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
+        addCommands(new StartIntakeCommand(armSubsystem)
+                .deadlineWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, .5)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new FakeScoreSpeakerCommand(swerve));
 

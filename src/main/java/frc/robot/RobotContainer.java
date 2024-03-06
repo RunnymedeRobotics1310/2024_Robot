@@ -31,12 +31,7 @@ import frc.robot.commands.arm.CompactPoseCommand;
 import frc.robot.commands.arm.DefaultArmCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.auto.PlanBAutoCommand;
-import frc.robot.commands.auto.Score1AmpAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerAutoCommand;
-import frc.robot.commands.auto.Score2AmpAutoCommand;
-import frc.robot.commands.auto.Score3SpeakerAutoCommand;
-import frc.robot.commands.auto.Score4SpeakerAutoCommand;
+import frc.robot.commands.auto.*;
 import frc.robot.commands.climb.DefaultClimbCommand;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.commands.swervedrive.DriveDistanceCommand;
@@ -78,7 +73,7 @@ public class RobotContainer {
         lightingSubsystem);
     // private final SwerveSubsystem swerveDriveSubsystem = new
     // RunnymedeSwerveSubsystem(hughVisionSubsystem);
-    private final JackmanVisionSubsystem visionSubsystem      = new JackmanVisionSubsystem();
+    private final JackmanVisionSubsystem jackmanVisionSubsystem      = new JackmanVisionSubsystem();
     private final ArmSubsystem           armSubsystem         = new ArmSubsystem(lightingSubsystem);
     private final ClimbSubsystem         climbSubsystem       = new ClimbSubsystem(lightingSubsystem);
 
@@ -231,16 +226,19 @@ public class RobotContainer {
             return new Score1AmpAutoCommand(swerveDriveSubsystem, hughVisionSubsystem);
 
         case SCORE_2_AMP:
-            return new Score2AmpAutoCommand(swerveDriveSubsystem, hughVisionSubsystem);
+            return new Score2AmpAutoCommand(swerveDriveSubsystem, armSubsystem, hughVisionSubsystem, jackmanVisionSubsystem);
+
+        case SCORE_2_5_AMP:
+            return new Score2_5AmpAutoCommand(swerveDriveSubsystem, armSubsystem, hughVisionSubsystem, jackmanVisionSubsystem);
 
         case SCORE_1_SPEAKER:
             return new Score1SpeakerAutoCommand(swerveDriveSubsystem, hughVisionSubsystem);
 
         case SCORE_3_SPEAKER:
-            return new Score3SpeakerAutoCommand(swerveDriveSubsystem, hughVisionSubsystem);
+            return new Score3SpeakerAutoCommand(swerveDriveSubsystem, armSubsystem, hughVisionSubsystem, jackmanVisionSubsystem);
 
         case SCORE_4_SPEAKER:
-            return new Score4SpeakerAutoCommand(swerveDriveSubsystem, hughVisionSubsystem);
+            return new Score4SpeakerAutoCommand(swerveDriveSubsystem, armSubsystem, hughVisionSubsystem, jackmanVisionSubsystem);
 
         case PLAN_B:
             return new PlanBAutoCommand(swerveDriveSubsystem);
