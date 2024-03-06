@@ -481,8 +481,9 @@ public final class Constants {
 
     public static final class ClimbConstants {
 
-        public static final int    RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 40;
-        public static final int    LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 41;
+        // todo: fixme: can addresses were clashing with arm - set to proper values
+        public static final int    RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 999;
+        public static final int    LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 998;
 
         public static final double MAX_ROBOT_LIFT_SPEED          = .5;
         public static final double RAISE_CLIMBERS_SPEED          = .3;
