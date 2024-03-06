@@ -46,7 +46,7 @@ import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.commands.climb.DefaultClimbCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.JackmanVisionSubsystem;
+import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 
 /**
