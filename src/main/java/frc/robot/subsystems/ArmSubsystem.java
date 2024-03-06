@@ -28,12 +28,12 @@ public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax       shooterTopMotor      = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
         MotorType.kBrushless);
 
-    private DigitalInput            linkLowerLimitSwitch = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
+    private final DigitalInput      linkLowerLimitSwitch = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
 
-    private DigitalInput            noteDetector         = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
+    private final DigitalInput      noteDetector         = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
 
-    private AnalogInput             linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
-    private AnalogInput             aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private final AnalogInput       linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private final AnalogInput       aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
 
     private double                  linkPivotSpeed       = 0;
     private double                  aimPivotSpeed        = 0;
@@ -51,11 +51,12 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
 
-    public double getAimAbsoluteEncoderVoltage() {
+    private double getAimAbsoluteEncoderVoltage() {
         // 0-5V range = 0-360 deg
         return aimAbsoluteEncoder.getVoltage();
     }
 
+    // todo: fixme: return rotation2d or specify unit in either javadoc or method name
     public double getAimAngle() {
 
         // The aim encoder should wrap at 4V.
@@ -74,11 +75,12 @@ public class ArmSubsystem extends SubsystemBase {
         return Math.round(angle * 100) / 100.0d;
     }
 
-    public double getLinkAbsoluteEncoderVoltage() {
+    private double getLinkAbsoluteEncoderVoltage() {
         // 0-5V range = 0-360 deg
         return linkAbsoluteEncoder.getVoltage();
     }
 
+    // todo: fixme: return rotation2d or specify unit in either javadoc or method name
     public double getLinkAngle() {
 
         // The conversion from volts to degrees
@@ -90,16 +92,19 @@ public class ArmSubsystem extends SubsystemBase {
         return Math.round(angle * 100) / 100.0d;
     }
 
+    // todo: fixme: specify unit in either javadoc or method name
     public double getShooterEncoderSpeed() {
         return shooterBottomMotor.getEncoder().getVelocity();
     }
 
+    // todo: fixme: specify unit in either javadoc or method name
     public double getIntakeEncoderSpeed() {
         return Math.round(intakeMotor.getEncoder().getVelocity() * 100) / 100.0;
     }
 
     // This relies on 206.3 being the link angle. This should probably be changed to use different
     // link angles as well.
+    // todo: fixme: specify unit in either javadoc or method name
     public Translation2d getShooterXY() {
         double shooterAngle = getAimAngle() - 90;
 
@@ -119,7 +124,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     }
 
-    public boolean isLinkAtLowerLimit() {
+    private boolean isLinkAtLowerLimit() {
         return !linkLowerLimitSwitch.get();
     }
 
@@ -127,6 +132,8 @@ public class ArmSubsystem extends SubsystemBase {
         return noteDetector.get();
     }
 
+    // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
+    // linkSpeedRPM, etc)
     public void setArmPivotTestSpeeds(double linkSpeed, double aimSpeed) {
 
         armSafetyMode       = false;
@@ -138,6 +145,8 @@ public class ArmSubsystem extends SubsystemBase {
         aimMotor.set(aimSpeed);
     }
 
+    // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
+    // linkSpeedRPM, etc)
     public void setLinkPivotSpeed(double speed) {
 
         this.linkPivotSpeed = speed;
@@ -147,6 +156,8 @@ public class ArmSubsystem extends SubsystemBase {
         linkMotor.set(linkPivotSpeed);
     }
 
+    // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
+    // linkSpeedRPM, etc)
     public void setAimPivotSpeed(double speed) {
 
         this.aimPivotSpeed = speed;
@@ -156,11 +167,15 @@ public class ArmSubsystem extends SubsystemBase {
         aimMotor.set(aimPivotSpeed);
     }
 
+    // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
+    // linkSpeedRPM, etc)
     public void setIntakeSpeed(double intakeSpeed) {
         this.intakeSpeed = intakeSpeed;
         intakeMotor.set(intakeSpeed);
     }
 
+    // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
+    // linkSpeedRPM, etc)
     public void setShooterSpeed(double shooterSpeed) {
         this.shooterSpeed = shooterSpeed;
         shooterTopMotor.set(shooterSpeed);

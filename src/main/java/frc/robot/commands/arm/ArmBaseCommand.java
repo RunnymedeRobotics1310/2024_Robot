@@ -24,6 +24,8 @@ public abstract class ArmBaseCommand extends LoggingCommand {
 
 
     public boolean driveToArmPosition(ArmPosition targetArmPosition, double targetAngleTolerance) {
+        // todo: fixme: set tolerances as a constants in ArmConstants as a Rotation2d to provide
+        // clarity into units, or else name parameters to hint at units
         return driveToArmPosition(targetArmPosition.linkAngle, targetArmPosition.aimAngle, targetAngleTolerance);
     }
 

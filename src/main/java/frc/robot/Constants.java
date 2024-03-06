@@ -350,7 +350,8 @@ public final class Constants {
     public static final class AutoConstants {
 
         public enum AutoPattern {
-            SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP, SCORE_1_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER, PLAN_B, DO_NOTHING, DRIVE_FORWARD,
+            SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP, SCORE_1_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER, PLAN_B, DO_NOTHING,
+            DRIVE_FORWARD,
             OTHER_AUTO,
             THREE_NOTE
         }
@@ -432,6 +433,7 @@ public final class Constants {
         public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(206.3, 102.92);
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
 
+        // todo: fixme: indicate units in doc or constant name for all of these settings
         public static final double      FAST_AIM_SPEED                     = .3;
         public static final double      SLOW_AIM_SPEED                     = .1;
         public static final double      FAST_LINK_SPEED                    = .3;
