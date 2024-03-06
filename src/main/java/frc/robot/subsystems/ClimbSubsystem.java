@@ -13,17 +13,17 @@ public class ClimbSubsystem extends SubsystemBase {
     // Lights Subsystem
     private final LightingSubsystem lighting;
 
-    private final CANSparkMax       leftClimbMotor  = new CANSparkMax(ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
-        MotorType.kBrushless);
+//    private final CANSparkMax       leftClimbMotor  = new CANSparkMax(ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
+//        MotorType.kBrushless);
 
-    private final CANSparkMax       rightClimbMotor = new CANSparkMax(ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
-        MotorType.kBrushless);
+//    private final CANSparkMax       rightClimbMotor = new CANSparkMax(ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
+//        MotorType.kBrushless);
 
-    private double                  rightClimbSpeed = 0;
-    private double                  leftClimbSpeed  = 0;
+    private double  rightClimbSpeed = 0;
+    private double  leftClimbSpeed  = 0;
 
-    private boolean                 safetyEnabled   = false;
-    private long                    safetyStartTime = 0;
+    private boolean safetyEnabled   = false;
+    private long    safetyStartTime = 0;
 
     public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
         this.lighting = lightingSubsystem;
@@ -36,16 +36,18 @@ public class ClimbSubsystem extends SubsystemBase {
 
         checkClimbSafety();
 
-        leftClimbMotor.set(leftClimbSpeed);
-        rightClimbMotor.set(rightClimbSpeed);
+//        leftClimbMotor.set(leftClimbSpeed);
+//        rightClimbMotor.set(rightClimbSpeed);
     }
 
     public double getRightClimbEncoder() {
-        return rightClimbMotor.getEncoder().getPosition();
+//        return rightClimbMotor.getEncoder().getPosition();
+        return 0;
     }
 
     public double getLeftClimbEncoder() {
-        return leftClimbMotor.getEncoder().getPosition();
+//        return leftClimbMotor.getEncoder().getPosition();
+        return 0;
     }
 
     public void stop() {
