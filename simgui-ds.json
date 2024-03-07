@@ -1,9 +1,4 @@
 {
-  "FMS": {
-    "window": {
-      "visible": false
-    }
-  },
   "Joysticks": {
     "window": {
       "visible": false
@@ -121,5 +116,6 @@
       "guid": "Keyboard2"
     }
   ],
+  "useEnableDisableHotkeys": true,
   "useEstopHotkey": true
 }

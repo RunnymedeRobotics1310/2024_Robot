@@ -1,5 +1,10 @@
 {
   "HALProvider": {
+    "Addressable LEDs": {
+      "window": {
+        "visible": true
+      }
+    },
     "Other Devices": {
       "CANCoder (v6)[12]": {
         "header": {
@@ -25,6 +30,11 @@
         "visible": false
       }
     },
+    "PWM Outputs": {
+      "window": {
+        "visible": true
+      }
+    },
     "Timing": {
       "window": {
         "visible": false
@@ -39,6 +49,11 @@
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },
     "windows": {
+      "/SmartDashboard/Auto Pattern": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Field": {
         "Robot": {
           "arrowSize": 25
@@ -93,7 +108,8 @@
           },
           "ToPosition": {
             "open": true
-          }
+          },
+          "open": true
         },
         "DriveTo": {
           "Position": {
