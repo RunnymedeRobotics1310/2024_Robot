@@ -9,6 +9,7 @@ import static frc.robot.Constants.LightingConstants.VISPOSE;
 
 import java.io.File;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -29,6 +30,7 @@ import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.climb.DefaultClimbCommand;
 import frc.robot.commands.operator.OperatorInput;
+import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.commands.swervedrive.TeleopDriveCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
@@ -137,6 +139,11 @@ public class RobotContainer {
 
         // Shoot
         new Trigger(operatorInput::isShoot).onTrue(new ShootCommand(arm));
+
+        // Test Drive to 2,2
+
+        new Trigger(operatorInput::isX)
+            .onTrue(new DriveToPositionCommand(drive, new Translation2d(2, 2), new Translation2d(14.54, 2)));
 
         // Climbs Up pov 0
         // Climbs Down pov 180
