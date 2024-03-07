@@ -59,9 +59,11 @@ public abstract class SwerveSubsystem extends SubsystemBase {
 
         // Limit change in values. Note this may not scale evenly - one may reach desired
         // speed before another. This will be corrected the next time drive() is called.
-        x = xLimiter.calculate(x);
-        y = yLimiter.calculate(y);
-        w = omegaLimiter.calculate(w);
+
+        // todo: fixme - IMPORTANT we do not know why these are negative.
+        x = -xLimiter.calculate(x);
+        y = -yLimiter.calculate(y);
+        w = -omegaLimiter.calculate(w);
 
         ChassisSpeeds safeVelocity = new ChassisSpeeds(x, y, w);
 
