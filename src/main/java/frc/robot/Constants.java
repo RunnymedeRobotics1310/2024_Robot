@@ -444,7 +444,7 @@ public final class Constants {
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(119.11, 104.18);
 
         // Transition position - over bumper
-        public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(60.0, 125.0);
+        public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(157, 76.89);
         // Transition position - above the lock position (arm not caught on stops)
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(105.0, 85.0);   // Unfinished
 
