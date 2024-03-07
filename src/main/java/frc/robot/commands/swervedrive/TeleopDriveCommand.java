@@ -82,9 +82,9 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         // User wants to jump directly to a specific heading. Computation is deferred because it is
         // complex
         // and may not be necessary. See below for details.
-        final int           rawDesiredHeadingDeg         = oi.getPOV();
+        final int           rawDesiredHeadingDeg         = oi.getDriverPOV();
 
-        final boolean       faceSpeaker                  = oi.isFaceSpeaker();
+        final boolean       faceSpeaker                  = oi.isDriveFacingSpeaker();
         final Translation2d speaker                      = alliance == Alliance.Blue
             ? Constants.BotTarget.BLUE_SPEAKER.getLocation().toTranslation2d()
             : Constants.BotTarget.RED_SPEAKER.getLocation().toTranslation2d();
