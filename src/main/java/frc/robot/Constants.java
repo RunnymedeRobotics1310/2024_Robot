@@ -396,6 +396,17 @@ public final class Constants {
 
     public static final class ArmConstants {
 
+        /**
+         * Completely disable control over the link motor. Normally set to false,
+         * but can be set to true when the link motor is not functioning correctly.
+         */
+        public static final boolean     DISABLE_LINK                       = true;
+        /**
+         * Completely disable control over the link motor. Normally set to false,
+         * but can be set to true when the aim motor is not functioning correctly.
+         */
+        public static final boolean     DISABLE_AIM                        = true;
+
         public static final int         LINK_MOTOR_CAN_ADDRESS             = 40;
         public static final int         AIM_MOTOR_CAN_ADDRESS              = 41;
 
@@ -467,14 +478,14 @@ public final class Constants {
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
          */
-        public static final double      MAX_AIM_HOLD                       = 0.03;
+        public static final double      MAX_AIM_HOLD                       = 0;                              // 0.03;
 
 
         /**
          * Amount of output required to hold the Link Pivot when the Link and Aim are parallel to
          * the ground
          */
-        public static final double      MAX_LINK_HOLD                      = 0.04;
+        public static final double      MAX_LINK_HOLD                      = 0;                              // 0.04;
     }
 
     public static final class ClimbConstants {

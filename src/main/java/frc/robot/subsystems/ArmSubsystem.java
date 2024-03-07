@@ -153,7 +153,9 @@ public class ArmSubsystem extends SubsystemBase {
 
         checkArmSafety();
 
-        linkMotor.set(linkPivotSpeed);
+        if (!ArmConstants.DISABLE_LINK) {
+            linkMotor.set(linkPivotSpeed);
+        }
     }
 
     // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
@@ -164,7 +166,9 @@ public class ArmSubsystem extends SubsystemBase {
 
         checkArmSafety();
 
-        aimMotor.set(aimPivotSpeed);
+        if (!ArmConstants.DISABLE_AIM) {
+            aimMotor.set(aimPivotSpeed);
+        }
     }
 
     // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
