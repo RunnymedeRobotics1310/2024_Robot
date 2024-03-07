@@ -13,7 +13,7 @@ import frc.robot.subsystems.vision.HughVisionSubsystem;
 public class AimSpeakerCommand extends ArmBaseCommand {
 
     private enum State {
-        MOVE_TO_SPEAKER, MOVE_TO_UNLOCK, MOVE_TO_OVER_BUMPER, SET_SHOOTER_SPEED
+        MOVE_TO_SPEAKER, MOVE_TO_UNLOCK, MOVE_TO_OVER_BUMPER, SET_SHOOTER_SPEED, IS_FINISHED
     };
 
     private State                     state = State.MOVE_TO_SPEAKER;
@@ -34,9 +34,7 @@ public class AimSpeakerCommand extends ArmBaseCommand {
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
             System.out.println("No note detected in robot. AimSpeakerCommand cancelled");
-            // todo: fixme: command will still run execute unless you set some kind of state that
-            // can be picked up in isFinished (which runs before execute). Consider setting a state
-            // that isFinished can check.
+            state = State.IS_FINISHED;
             return;
         }
 
@@ -47,6 +45,16 @@ public class AimSpeakerCommand extends ArmBaseCommand {
         }
         else {
             state = State.MOVE_TO_UNLOCK;
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        if (state == State.IS_FINISHED) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -108,6 +116,10 @@ public class AimSpeakerCommand extends ArmBaseCommand {
 
         case SET_SHOOTER_SPEED:
             armSubsystem.setShooterSpeed(ArmConstants.SHOOTER_SPEAKER_SPEED);
+
+            break;
+
+        case IS_FINISHED:
 
             break;
 

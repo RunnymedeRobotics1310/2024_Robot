@@ -506,10 +506,14 @@ public final class Constants {
         public static final double MAX_ROBOT_LIFT_SPEED          = .5;
         public static final double RAISE_CLIMBERS_SPEED          = .3;
 
-        public static final double CLIMB_MAX                     = 240;// TODO: what are the min/max
+        public static final double CLIMB_MAX                     = 240;// TODO: what are the
+                                                                       // min/max
         // encoder values
 
         public static final double CLIMB_MIN                     = 0;
+
+        public static final int    CLIMB_LIMIT_SWITCH_DIO_PORT_2 = 2;
+        public static final int    CLIMB_LIMIT_SWITCH_DIO_PORT_3 = 3;
 
     }
 }
