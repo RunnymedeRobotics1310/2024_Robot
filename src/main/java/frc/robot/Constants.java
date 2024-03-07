@@ -82,7 +82,7 @@ public final class Constants {
              */
             public static final double     MAX_TRANSLATION_SPEED_MPS              = 4.42;
             public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromRotations(1);
-            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(10);
+            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(25);
             public static final Rotation2d ROTATION_TOLERANCE                     = Rotation2d.fromDegrees(1);
             public static final double     TRANSLATION_TOLERANCE_METRES           = 0.02;
             public static final double     DECEL_FROM_MAX_TO_STOP_DIST_METRES     = 1.9;
