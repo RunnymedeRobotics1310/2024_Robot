@@ -65,13 +65,12 @@ public abstract class SwerveSubsystem extends SubsystemBase {
 
         ChassisSpeeds safeVelocity = new ChassisSpeeds(x, y, w);
 
-        SmartDashboard.putString("Drive/Swerve/chassis_robot", String.format("%.2f,%.2f m/s %.0f deg/s)",
+        SmartDashboard.putString("Drive/Swerve/robot_chassis_speed", String.format("%.2f,%.2f m/s %.0f deg/s)",
             safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond,
             Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
 
-        SmartDashboard.putString("Drive/Swerve/velocity_robot", String.format("%.2f m/s %.0f deg/s)",
-            Math.hypot(safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond),
-            Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
+        SmartDashboard.putString("Drive/Swerve/robot_speed", String.format("%.2f m/s",
+            Math.hypot(safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond)));
 
         driveRawRobotOriented(safeVelocity);
     }
