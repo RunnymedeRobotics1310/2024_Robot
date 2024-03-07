@@ -388,9 +388,9 @@ public final class Constants {
         public final double linkAngle;
         public final double aimAngle;
 
-        public ArmPosition(double armAngle, double aimAngle) {
-            this.linkAngle = armAngle;
-            this.aimAngle  = aimAngle;
+        public ArmPosition(double linkDegrees, double aimDegrees) {
+            this.linkAngle = linkDegrees;
+            this.aimAngle  = aimDegrees;
         }
     }
 
@@ -400,12 +400,12 @@ public final class Constants {
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the link motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_LINK                       = true;
+        public static final boolean     DISABLE_LINK                       = false;
         /**
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the aim motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_AIM                        = true;
+        public static final boolean     DISABLE_AIM                        = false;
 
         public static final int         LINK_MOTOR_CAN_ADDRESS             = 40;
         public static final int         AIM_MOTOR_CAN_ADDRESS              = 41;
@@ -441,7 +441,8 @@ public final class Constants {
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(105.0, 85.0);   // Unfinished
 
         public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(206.3, 90.0);   // Unfinished
-        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(206.3, 102.92);
+
+        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(194, 113);
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
@@ -458,8 +459,8 @@ public final class Constants {
 
         public static final double      SHOOTER_SPEAKER_SPEED              = 0.5;
         public static final double      SHOOTER_AMP_SPEED                  = 0.2;
+        public static final double      LINK_MAX_DEGREES                   = 200;
 
-        public static final double      LINK_MAX_DEGREES                   = 125;
         public static final double      LINK_MIN_DEGREES                   = 119.11;
         public static final double      AIM_MAX_DEGREES                    = 200;
         public static final double      AIM_MIN_DEGREES                    = 60;
