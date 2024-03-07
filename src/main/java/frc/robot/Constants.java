@@ -40,9 +40,6 @@ import frc.robot.subsystems.vision.PoseConfidence;
  */
 public final class Constants {
 
-    // Global constants
-    public static final double DEFAULT_COMMAND_TIMEOUT_SECONDS = 5;
-
     public static final class OiConstants {
 
         public static final int DRIVER_CONTROLLER_PORT   = 0;
@@ -56,13 +53,14 @@ public final class Constants {
             /**
              * Front to back from the middle of the wheels
              */
-            public static final double     WHEEL_BASE_METRES                      = inchesToMeters(24.75);
+            public static final double WHEEL_BASE_METRES            = inchesToMeters(24.75);
             /**
              * Side to side from the middle of the wheels
              */
-            public static final double     TRACK_WIDTH_METRES                     = inchesToMeters(22.75);
+            public static final double TRACK_WIDTH_METRES           = inchesToMeters(22.75);
 
-            public static final double     SDS_MK4I_WHEEL_RADIUS_METRES           = 0.0051;
+            public static final double SDS_MK4I_WHEEL_RADIUS_METRES = 0.0051;
+
             /**
              * Specify the maximum speed a module can physically reach in m/s.
              * The SDS
@@ -72,7 +70,31 @@ public final class Constants {
              * Do not use this value in software to cap how fast the robot drives on the field.
              * For that, use {@link #MAX_TRANSLATION_SPEED_MPS}.
              */
-            public static final double     MAX_MODULE_SPEED_MPS                   = 4.79;
+            public static final double MAX_MODULE_SPEED_MPS         = 4.79;
+
+
+            /*
+             * ****************** Rotation Constants ******************
+             */
+
+            // todo: this needs to be higher
+            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(35);
+            public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(360);
+            public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2 = Rotation2d.fromRotations(800).getRadians();
+            public static final Rotation2d ROTATION_TOLERANCE                     = Rotation2d.fromDegrees(2);
+
+            public static final class HeadingPIDConfig {
+                // 0.4 is a little low but okay
+                public static final double P = 0.4;
+                public static final double I = 0;
+                public static final double D = 0;
+            }
+
+
+            /*
+             * ****************** Translation Constants ******************
+             */
+
             /**
              * Set how fast you want the robot to actually translate across the field.
              * This is the "speed limit" of the robot.
@@ -80,42 +102,30 @@ public final class Constants {
              * Practically speaking 4.42 m/s is a good max, but
              * consider 1-2 for development and 2-3 for competitions.
              */
-            public static final double     MAX_TRANSLATION_SPEED_MPS              = 4.42;
-            public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromRotations(1);
-            // todo: this needs to be higher
-            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(35);
-            public static final Rotation2d ROTATION_TOLERANCE                     = Rotation2d.fromDegrees(2);
-            public static final double     TRANSLATION_TOLERANCE_METRES           = 0.02;
-            public static final double     DECEL_FROM_MAX_TO_STOP_DIST_METRES     = 1.9;
-            public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2 = Rotation2d.fromRotations(800).getRadians();
-            public static final double     MAX_TRANSLATION_ACCELERATION_MPS2      = 8;
+            public static final double MAX_TRANSLATION_SPEED_MPS          = 4.42;
+            public static final double TRANSLATION_TOLERANCE_METRES       = 0.02;
+            public static final double DECEL_FROM_MAX_TO_STOP_DIST_METRES = 1.9;
+            public static final double MAX_TRANSLATION_ACCELERATION_MPS2  = 8;
 
             /**
              * Standard drive speed factor. Regular teleop drive will use this factor of the max
              * translational speed.
              */
-            public static final double     GENERAL_SPEED_FACTOR                   = .5;
+            public static final double GENERAL_SPEED_FACTOR               = .5;
 
             /**
              * Maximum drive speed factor. When boosting, this factor will be multiplied against the
              * max translational speed.
              * todo: tune
              */
-            public static final double     MAX_SPEED_FACTOR                       = 1;
+            public static final double MAX_SPEED_FACTOR                   = 1;
 
             /**
              * Slow mode drive speed factor. When running in slow mode, this factor will be
              * multiplied against the max translational speed.
              * todo: tune
              */
-            public static final double     SLOW_SPEED_FACTOR                      = .1;
-
-            public static final class HeadingPIDConfig {
-                public static final double P = 0.4;
-                // .002 is too low but stable
-                public static final double I = 0;
-                public static final double D = 0;
-            }
+            public static final double SLOW_SPEED_FACTOR                  = .1;
 
             public static final class VelocityPIDConfig {
                 // public static final double P = 15;
@@ -124,7 +134,6 @@ public final class Constants {
                 // .002 is too low but stable
                 public static final double I = 0;
                 public static final double D = 0;
-
             }
         }
 
@@ -218,7 +227,6 @@ public final class Constants {
                 FRONT_LEFT.angleCANID                   = 11;
                 FRONT_LEFT.encoderCANID                 = 12;
                 FRONT_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.094238).getDegrees();
-
             }
 
             public static final Module FRONT_RIGHT = new Module();
@@ -301,7 +309,6 @@ public final class Constants {
 
     }
 
-
     public static final class VisionConstants {
         /** Time to switch pipelines and acquire a new vision target */
         public static final double  VISION_SWITCH_TIME_SEC         = .25;
@@ -351,10 +358,10 @@ public final class Constants {
     public static final class AutoConstants {
 
         public enum AutoPattern {
-            SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP, SCORE_1_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER, PLAN_B, DO_NOTHING,
-            DRIVE_FORWARD,
-            OTHER_AUTO,
-            THREE_NOTE
+            DO_NOTHING,
+            SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP,
+            SCORE_1_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
+            PLAN_B
         }
     }
 

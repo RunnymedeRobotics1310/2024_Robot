@@ -94,14 +94,16 @@ public class RobotContainer {
         // FIXME: (low) consider moving all of the choosers to their own classes.
         SmartDashboard.putData("Auto Pattern", autoPatternChooser);
         autoPatternChooser.setDefaultOption("Do Nothing", AutoPattern.DO_NOTHING);
+
         autoPatternChooser.addOption("1 Amp", AutoPattern.SCORE_1_AMP);
         autoPatternChooser.addOption("2 Amp", AutoPattern.SCORE_2_AMP);
+        autoPatternChooser.addOption("2.5 Amp", AutoPattern.SCORE_2_5_AMP);
+
         autoPatternChooser.addOption("1 Speaker", AutoPattern.SCORE_1_SPEAKER);
         autoPatternChooser.addOption("3 Speaker", AutoPattern.SCORE_3_SPEAKER);
         autoPatternChooser.addOption("4 Speaker", AutoPattern.SCORE_4_SPEAKER);
+
         autoPatternChooser.addOption("Plan B", AutoPattern.PLAN_B);
-        autoPatternChooser.addOption("Drive Forward", AutoPattern.DRIVE_FORWARD);
-        autoPatternChooser.addOption("Three Note", AutoPattern.THREE_NOTE);
     }
 
     /**
