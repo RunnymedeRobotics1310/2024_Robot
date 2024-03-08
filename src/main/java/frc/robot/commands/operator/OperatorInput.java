@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -25,6 +24,7 @@ import frc.robot.subsystems.lighting.pattern.Enabled;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
+import frc.robot.telemetry.Telemetry1310;
 
 import static frc.robot.Constants.UsefulPoses.BLUE_2_2_20;
 import static frc.robot.Constants.UsefulPoses.RED_2_2_20;
@@ -190,7 +190,7 @@ public class OperatorInput {
 
     public void initAutoSelectors() {
 
-        SmartDashboard.putData("Auto Pattern", autoPatternChooser);
+        Telemetry1310.auto.autoPatternChooser = autoPatternChooser;
 
         autoPatternChooser.setDefaultOption("Do Nothing", Constants.AutoConstants.AutoPattern.DO_NOTHING);
 

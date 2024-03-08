@@ -9,11 +9,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.Swerve.Chassis.VelocityPIDConfig;
 import frc.robot.RunnymedeUtils;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+import frc.robot.telemetry.Telemetry1310;
 
 public abstract class BaseDriveCommand extends LoggingCommand {
     protected final SwerveSubsystem     swerve;
@@ -27,11 +27,6 @@ public abstract class BaseDriveCommand extends LoggingCommand {
             MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians(), MAX_ROTATION_ACCELERATION_RAD_PER_SEC2));
         headingPidRad.setTolerance(ROTATION_TOLERANCE.getRadians());
         headingPidRad.enableContinuousInput(-Math.PI, Math.PI);
-
-        SmartDashboard.putString("Drive/ToFieldPosition/current", "");
-        SmartDashboard.putString("Drive/ToFieldPosition/delta", "");
-        SmartDashboard.putString("Drive/ToFieldPosition/desired", "");
-        SmartDashboard.putString("Drive/ToFieldPosition/velocity", "");
     }
 
     /**
@@ -185,11 +180,10 @@ public abstract class BaseDriveCommand extends LoggingCommand {
         // + " Target: " + format(desiredPose)
         // + " Velocity: " + format(velocity) + "m/s @ " + format(omega) + "/s");
 
-        SmartDashboard.putString("Drive/ToFieldPosition/current", format(current));
-        SmartDashboard.putString("Drive/ToFieldPosition/delta", format(delta.getTranslation()) + " m @ "
-            + format(delta.getRotation()));
-        SmartDashboard.putString("Drive/ToFieldPosition/desired", format(desiredPose));
-        SmartDashboard.putString("Drive/ToFieldPosition/velocity", format(velocity) + "m/s @ " + format(omega) + "/s");
+        Telemetry1310.drive.drive_to_pose_delta    = delta;
+        Telemetry1310.drive.drive_to_pose_desired  = desiredPose;
+        Telemetry1310.drive.drive_to_pose_velocity = velocity;
+        Telemetry1310.drive.drive_to_pose_omega    = omega;
 
         swerve.driveFieldOriented(velocity, omega);
     }

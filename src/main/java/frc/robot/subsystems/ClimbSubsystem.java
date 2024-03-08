@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.telemetry.Telemetry1310;
 
 public class ClimbSubsystem extends SubsystemBase {
 
@@ -90,18 +91,13 @@ public class ClimbSubsystem extends SubsystemBase {
         /*
          * Update the SmartDashboard
          */
-
-        SmartDashboard.putNumber("Left Climb Speed", leftClimbSpeed);
-        SmartDashboard.putNumber("Left Climb Encoder", getLeftClimbEncoder());
-
-        SmartDashboard.putNumber("Right Climb Speed", rightClimbSpeed);
-        SmartDashboard.putNumber("Right Climb Encoder", getRightClimbEncoder());
-
-        SmartDashboard.putBoolean("Climb Safety", safetyEnabled);
-
-        SmartDashboard.putBoolean("Climb Limit 2", isClimbAtLimit2());
-        SmartDashboard.putBoolean("Climb limit 3", isClimbAtLimit3());
-
+        Telemetry1310.climb.leftClimbSpeed    = leftClimbSpeed;
+        Telemetry1310.climb.leftClimbEncoder  = getLeftClimbEncoder();
+        Telemetry1310.climb.rightClimbSpeed   = rightClimbSpeed;
+        Telemetry1310.climb.rightClimbEncoder = getRightClimbEncoder();
+        Telemetry1310.climb.safetyEnabled     = safetyEnabled;
+        Telemetry1310.climb.isAtLimit2        = isClimbAtLimit2();
+        Telemetry1310.climb.isAtLimit3        = isClimbAtLimit3();
     }
 
     private void checkClimbSafety() {

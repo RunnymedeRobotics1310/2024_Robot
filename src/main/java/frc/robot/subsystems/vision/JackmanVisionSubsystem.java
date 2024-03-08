@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.telemetry.Telemetry1310;
 
 public class JackmanVisionSubsystem extends SubsystemBase {
 
@@ -72,15 +73,14 @@ public class JackmanVisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // read values periodically and post to smart dashboard periodically
-        SmartDashboard.putBoolean("LimelightJackman/Target Found", isVisionTargetFound());
-        SmartDashboard.putNumber("LimelightJackman/tx-value", tx.getDouble(-1.0));
-        SmartDashboard.putNumber("LimelightJackman/ty-value", ty.getDouble(-1.0));
-        SmartDashboard.putNumber("LimelightJackman/ta-value", ta.getDouble(-1.0));
-        SmartDashboard.putNumber("LimelightJackman/l-value", tl.getDouble(-1.0));
-        SmartDashboard.putNumber("LimelightJackman/Cam Mode", camMode.getInteger(-1L));
-        SmartDashboard.putNumber("LimelightJackman/LED mode", ledMode.getInteger(-1L));
-        SmartDashboard.putNumber("LimelightJackman/Pipeline", pipeline.getInteger(-1L));
+        Telemetry1310.jackman.isVisionTargetFound = isVisionTargetFound();
+        Telemetry1310.jackman.tx                  = tx.getDouble(-1.0);
+        Telemetry1310.jackman.ty                  = ty.getDouble(-1.0);
+        Telemetry1310.jackman.ta                  = ta.getDouble(-1.0);
+        Telemetry1310.jackman.tl                  = tl.getDouble(-1.0);
+        Telemetry1310.jackman.camMode             = camMode.getDouble(-1.0);
+        Telemetry1310.jackman.ledMode             = ledMode.getDouble(-1.0);
+        Telemetry1310.jackman.pipeline            = pipeline.getDouble(-1.0);
     }
 
     /**

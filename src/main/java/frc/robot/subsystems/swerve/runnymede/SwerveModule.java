@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.telemetry.Telemetry1310;
 
 public class SwerveModule {
 
@@ -91,8 +92,8 @@ public class SwerveModule {
 
         updateInternalEncoder();
 
-        SmartDashboard.putNumber("Module[" + name + "] Speed Setpoint", desiredState.speedMetersPerSecond);
-        SmartDashboard.putNumber("Module[" + name + "] Angle Setpoint", desiredState.angle.getDegrees());
+        Telemetry.getModule(name).speedMetersPerSecond = desiredState.speedMetersPerSecond;
+        Telemetry.getModule(name).angleDegrees         = desiredState.angle.getDegrees();
     }
 
     private void updateInternalEncoder() {
@@ -105,13 +106,8 @@ public class SwerveModule {
 
 
     public void updateTelemetry() {
-        // if (absoluteEncoder != null) {
-        // SmartDashboard.putNumber(rawAbsoluteAngleName, absoluteEncoder.getAbsolutePosition());
-        // }
-        // SmartDashboard.putNumber(rawAngleName, angleMotor.getPosition());
-        // SmartDashboard.putNumber(rawDriveName, driveMotor.getPosition());
-        // SmartDashboard.putNumber(adjAbsoluteAngleName, getAbsolutePosition());
-        // SmartDashboard.putNumber(absoluteEncoderIssueName, getAbsoluteEncoderReadIssue() ? 1 :
-        // 0);
+        Telemetry.getModule(name).absoluteEncoderPositionDegrees = encoder.getAbsolutePositionInDegrees();
+        Telemetry.getModule(name).angleMotorPosition             = angleMotor.getPosition();
+        Telemetry.getModule(name).driveMotorPosition             = driveMotor.getDistanceMetres();
     }
 }

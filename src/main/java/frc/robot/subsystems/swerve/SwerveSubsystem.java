@@ -15,7 +15,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.LoggingCommand;
@@ -26,6 +25,7 @@ import frc.robot.subsystems.lighting.pattern.VisionConfidenceMedium;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.VisionPositionInfo;
+import frc.robot.telemetry.Telemetry1310;
 
 public abstract class SwerveSubsystem extends SubsystemBase {
 
@@ -66,12 +66,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
 
         ChassisSpeeds safeVelocity = new ChassisSpeeds(x, y, w);
 
-        SmartDashboard.putString("Drive/Swerve/robot_chassis_speed", String.format("%.2f,%.2f m/s %.0f deg/s)",
-            safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond,
-            Rotation2d.fromRadians(safeVelocity.omegaRadiansPerSecond).getDegrees()));
-
-        SmartDashboard.putString("Drive/Swerve/robot_speed", String.format("%.2f m/s",
-            Math.hypot(safeVelocity.vxMetersPerSecond, safeVelocity.vyMetersPerSecond)));
+        Telemetry1310.drive.swerve_robot_chassis_speeds = safeVelocity;
 
         driveRawRobotOriented(safeVelocity);
     }
@@ -105,7 +100,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         double     y     = velocity.getY();
         double     w     = omega.getRadians();
         Rotation2d theta = this.getPose().getRotation();
-        SmartDashboard.putString("Drive/Swerve/velocity_field", LoggingCommand.format(velocity) + " m/s");
+        Telemetry1310.drive.swerve_velocity_field = velocity;
 
         ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, w, theta);
         this.driveRobotOriented(chassisSpeeds);
@@ -154,10 +149,10 @@ public abstract class SwerveSubsystem extends SubsystemBase {
      */
     private void updateOdometryWithVisionInfo() {
         VisionPositionInfo visPose = visionSubsystem.getPositionInfo();
+        Telemetry1310.drive.swerve_vispose = visPose;
 
         // ignore unreliable info from vision subsystem
         if (visPose == null) {
-            SmartDashboard.putString("Drive/Swerve/vispose", "");
             lightingSubsystem.setPattern(VisionConfidenceNone.getInstance());
             return;
         }
@@ -189,14 +184,12 @@ public abstract class SwerveSubsystem extends SubsystemBase {
 
         // ignore drastically different data
         if (stds == null) {
-            SmartDashboard.putString("Drive/Swerve/vispose", "");
             lightingSubsystem.setPattern(VisionConfidenceNone.getInstance());
             return;
         }
 
         double timeInSeconds = Timer.getFPGATimestamp() - (visPose.latencyMillis() / 1000);
 
-        SmartDashboard.putString("Drive/Swerve/vispose", visPose.toString());
         this.addVisionMeasurement(visPose.pose(), timeInSeconds, stds);
     }
 
@@ -220,9 +213,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         updateOdometryWithVisionInfo();
         updateTelemetry();
         Pose2d pose = getPose();
-        SmartDashboard.putString("Drive/Swerve/location",
-            String.format("%.2f,%.2f m", pose.getTranslation().getX(), pose.getTranslation().getY()));
-        SmartDashboard.putString("Drive/Swerve/heading", String.format("%.0f deg", pose.getRotation().getDegrees()));
+        Telemetry1310.drive.swerve_pose = pose;
     }
 
     @Override

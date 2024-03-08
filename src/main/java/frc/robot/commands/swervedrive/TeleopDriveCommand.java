@@ -23,6 +23,7 @@ import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.InShootingRange;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+import frc.robot.telemetry.Telemetry1310;
 
 public class TeleopDriveCommand extends BaseDriveCommand {
 
@@ -124,7 +125,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             // BLUE field = MOD(-POV + 360, 360)
             // RED field = MOD(-POV + 180 + 360, 360)
             double correctedHeadingDeg = ((rawDesiredHeadingDeg * -1) + (invert ? 180 : 0) + 360) % 360;
-            SmartDashboard.putNumber("Drive/Teleop/correctedHeadingDeg", correctedHeadingDeg);
+            Telemetry1310.drive.teleop_correctedHeadingDeg = correctedHeadingDeg;
             Rotation2d desiredHeading = Rotation2d.fromDegrees(correctedHeadingDeg);
 
             omega           = computeOmega(desiredHeading);
@@ -161,24 +162,18 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             lighting.removePattern(InShootingRange.class);
         }
 
+        Telemetry1310.drive.teleop_vX                   = vX;
+        Telemetry1310.drive.teleop_vY                   = vY;
+        Telemetry1310.drive.teleop_ccwRotAngularVelPct  = ccwRotAngularVelPct;
+        Telemetry1310.drive.teleop_rawDesiredHeadingDeg = rawDesiredHeadingDeg;
+        Telemetry1310.drive.teleop_boostFactor          = boostFactor;
+        Telemetry1310.drive.teleop_mode                 = modeForDebug;
+        Telemetry1310.drive.teleop_lockOnSpeaker        = lockOnSpeaker;
+        Telemetry1310.drive.teleop_velocity             = velocity;
+        Telemetry1310.drive.teleop_theta                = headingSetpoint;
+        Telemetry1310.drive.teleop_omega                = omega;
 
-        // write to dashboard
-        SmartDashboard.putString("Drive/Teleop/Alliance", alliance.name());
-        SmartDashboard.putNumber("Drive/Teleop/vX", vX);
-        SmartDashboard.putNumber("Drive/Teleop/vY", vY);
-        SmartDashboard.putNumber("Drive/Teleop/ccwRotAngularVelPct", ccwRotAngularVelPct);
-        SmartDashboard.putNumber("Drive/Teleop/rawDesiredHeadingDeg", rawDesiredHeadingDeg);
-        SmartDashboard.putNumber("Drive/Teleop/boostFactor", boostFactor);
-        SmartDashboard.putString("Drive/Teleop/mode", modeForDebug);
-        SmartDashboard.putBoolean("Drive/Teleop/lockOnSpeaker", lockOnSpeaker);
-
-        SmartDashboard.putString("Drive/Teleop/velocity",
-            format(velocity.getNorm()) + "m/s at " + format(velocity.getAngle()));
-        SmartDashboard.putString("Drive/Teleop/theta ", format(headingSetpoint));
-        SmartDashboard.putString("Drive/Teleop/omega", format(omega) + "/s");
         swerve.driveFieldOriented(velocity, omega);
-
-
     }
 
     // Called once the command ends or is interrupted.

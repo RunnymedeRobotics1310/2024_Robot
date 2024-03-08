@@ -1,51 +1,65 @@
 package frc.robot.subsystems.swerve.runnymede;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Telemetry {
     /** The number of swerve modules */
-    public static int      moduleCount;
+    public static int                          moduleCount;
     /** The number of swerve modules */
-    public static double[] wheelLocations;
+    public static double[]                     wheelLocations;
     /**
      * An array of rotation and velocity values describing the measured state of each swerve module
      */
-    public static double[] measuredStates;
+    public static double[]                     measuredStates;
     /**
      * An array of rotation and velocity values describing the desired state of each swerve module
      */
-    public static double[] desiredStates;
+    public static double[]                     desiredStates;
     /** The robot's current rotation based on odometry or gyro readings */
-    public static double   robotRotation         = 0;
+    public static double                       robotRotation         = 0;
     /** The maximum achievable speed of the modules, used to adjust the size of the vectors. */
-    public static double   maxSpeed;
+    public static double                       maxSpeed;
     /** The units of the module rotations and robot rotation */
-    public static String   rotationUnit          = "degrees";
+    public static String                       rotationUnit          = "degrees";
     /** The distance between the left and right modules. */
-    public static double   sizeLeftRight;
+    public static double                       sizeLeftRight;
     /** The distance between the front and back modules. */
-    public static double   sizeFrontBack;
+    public static double                       sizeFrontBack;
     /**
      * The direction the robot should be facing when the "Robot Rotation" is zero or blank. This
      * option is often useful to align with odometry data or match videos. 'up', 'right', 'down' or
      * 'left'
      */
-    public static String   forwardDirection      = "up";
+    public static String                       forwardDirection      = "up";
     /**
      * The maximum achievable angular velocity of the robot. This is used to visualize the angular
      * velocity from the chassis speeds properties.
      */
-    public static double   maxAngularVelocity;
+    public static double                       maxAngularVelocity;
     /**
      * The maximum achievable angular velocity of the robot. This is used to visualize the angular
      * velocity from the chassis speeds properties.
      */
-    public static double[] measuredChassisSpeeds = new double[3];
+    public static double[]                     measuredChassisSpeeds = new double[3];
     /** Describes the desired forward, sideways and angular velocity of the robot. */
-    public static double[] desiredChassisSpeeds  = new double[3];
+    public static double[]                     desiredChassisSpeeds  = new double[3];
 
-    public static double   rawImuDegrees;
-    public static double   adjustedImuDegrees;
+    public static double                       rawImuDegrees;
+    public static double                       adjustedImuDegrees;
+
+    public static Map<String, ModuleTelemetry> modules               = new LinkedHashMap<>();
+
+    public static ModuleTelemetry getModule(String name) {
+        if (!modules.containsKey(name)) {
+            modules.put(name, new ModuleTelemetry());
+        }
+        return modules.get(name);
+    }
+
 
     /** Upload data to smartdashboard */
     public static void updateData() {
@@ -64,5 +78,29 @@ public class Telemetry {
         SmartDashboard.putNumberArray("swerve/desiredChassisSpeeds", desiredChassisSpeeds);
         SmartDashboard.putString("swerve/1310/rawImuDegrees", String.format("%.2f", rawImuDegrees));
         SmartDashboard.putString("swerve/1310/adjustedImuDegrees", String.format("%.2f", adjustedImuDegrees));
+
+        for (String name : modules.keySet()) {
+            ModuleTelemetry module = modules.get(name);
+            SmartDashboard.putNumber("Module[" + name + "] Speed Setpoint", module.speedMetersPerSecond);
+            SmartDashboard.putNumber("Module[" + name + "] Angle Setpoint", module.angleDegrees);
+
+            SmartDashboard.putNumber("Module[" + name + "] Absolute Encoder Position Degrees",
+                module.absoluteEncoderPositionDegrees);
+            SmartDashboard.putString("Module[" + name + "] Angle Position", module.angleMotorPosition.toString());
+            SmartDashboard.putNumber("Module[" + name + "] Drive Position", module.driveMotorPosition);
+
+
+        }
+    }
+
+    public static class ModuleTelemetry {
+        ModuleTelemetry() {
+        }
+
+        public double     speedMetersPerSecond;
+        public double     angleDegrees;
+        public double     absoluteEncoderPositionDegrees;
+        public Rotation2d angleMotorPosition;
+        public double     driveMotorPosition;
     }
 }

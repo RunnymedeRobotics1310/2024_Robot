@@ -11,12 +11,13 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.TestMode;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+import frc.robot.telemetry.Telemetry1310;
 
 import static frc.robot.commands.test.SystemTestCommand.Motor.*;
 
 public class SystemTestCommand extends LoggingCommand {
 
-    enum Motor {
+    public enum Motor {
         NONE,
         FRONT_LEFT_DRIVE, FRONT_LEFT_TURN,
         BACK_LEFT_DRIVE, BACK_LEFT_TURN,
@@ -324,11 +325,11 @@ public class SystemTestCommand extends LoggingCommand {
     }
 
     private void updateDashboard() {
-        SmartDashboard.putBoolean("1310 Test Mode/Enabled", enabled);
-        SmartDashboard.putString("1310 Test Mode/Motor", selectedMotor.toString());
-        SmartDashboard.putString("1310 Test Mode/Motor Speed", String.format("%.1f", motorSpeed * 100) + " %");
-        SmartDashboard.putString("1310 Test Mode/Motor 2 Speed", String.format("%.1f", motor2Speed * 100) + " %");
-        SmartDashboard.putString("1310 Test Mode/Angle", String.format("%.3f", angle.getDegrees()) + " degrees");
+        Telemetry1310.test.enabled       = enabled;
+        Telemetry1310.test.selectedMotor = selectedMotor;
+        Telemetry1310.test.motorSpeed    = motorSpeed;
+        Telemetry1310.test.motor2Speed   = motor2Speed;
+        Telemetry1310.test.angle         = angle;
     }
 
 }

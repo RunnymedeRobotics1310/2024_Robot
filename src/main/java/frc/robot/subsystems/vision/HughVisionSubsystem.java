@@ -10,9 +10,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BotTarget;
+import frc.robot.telemetry.Telemetry1310;
 
 /**
  * Handles the April Tag Limelight On Shooter Side
@@ -111,22 +111,22 @@ public class HughVisionSubsystem extends SubsystemBase {
         double             avgDist     = getTargetAvgDistance();
         VisionPositionInfo visPos      = getPositionInfo(bp, visibleTags.length, avgDist);
 
-        SmartDashboard.putString("VisionHugh/BotTarget", getBotTarget().toString());
-        SmartDashboard.putString("VisionHugh/PriorityId", "" + getPriorityId());
-        SmartDashboard.putBoolean("VisionHugh/Target Found", isCurrentTargetVisible());
-        SmartDashboard.putNumber("VisionHugh/tid", tid.getDouble(-1.0));
-        SmartDashboard.putNumber("VisionHugh/tx", tx.getDouble(-1.0));
-        SmartDashboard.putNumber("VisionHugh/ty", ty.getDouble(-1.0));
-        SmartDashboard.putNumber("VisionHugh/ta", ta.getDouble(-1.0));
-        SmartDashboard.putNumber("VisionHugh/tl", tl.getDouble(-1.0));
-        SmartDashboard.putString("VisionHugh/Botpose", Arrays.toString(bp));
-        SmartDashboard.putNumber("VisionHugh/TargetAvgDist", avgDist);
-        SmartDashboard.putString("VisionHugh/PoseConf", visPos == null ? "NONE" : visPos.poseConfidence().toString());
-        SmartDashboard.putString("VisionHugh/NumTags", "" + getNumActiveTargets());
-        SmartDashboard.putString("VisionHugh/AprilTagInfo", aprilTagInfoArrayToString(visibleTags));
-        SmartDashboard.putNumber("VisionHugh/DistToTarget", getDistanceToTargetMetres());
-        SmartDashboard.putBoolean("VisionHugh/AlignedWithTarget", isAlignedWithTarget());
-        SmartDashboard.putString("VisionHugh/TargetOffset", getTargetOffset() == null ? "null" : getTargetOffset().toString());
+        Telemetry1310.hugh.botTarget              = getBotTarget();
+        Telemetry1310.hugh.priorityId             = getPriorityId();
+        Telemetry1310.hugh.targetFound            = isCurrentTargetVisible();
+        Telemetry1310.hugh.tid                    = tid.getDouble(-1.0);
+        Telemetry1310.hugh.tx                     = tx.getDouble(-1.0);
+        Telemetry1310.hugh.ty                     = ty.getDouble(-1.0);
+        Telemetry1310.hugh.ta                     = ta.getDouble(-1.0);
+        Telemetry1310.hugh.tl                     = tl.getDouble(-1.0);
+        Telemetry1310.hugh.botpost                = bp;
+        Telemetry1310.hugh.targetAvgDist          = avgDist;
+        Telemetry1310.hugh.visPose                = visPos;
+        Telemetry1310.hugh.numTags                = getNumActiveTargets();
+        Telemetry1310.hugh.distanceToTargetMetres = getDistanceToTargetMetres();
+        Telemetry1310.hugh.isAlignedWithTarget    = isAlignedWithTarget();
+        Telemetry1310.hugh.targetOffset           = getTargetOffset();
+        Telemetry1310.hugh.aprilTagInfo           = aprilTagInfoArrayToString(visibleTags);
     }
 
     /**

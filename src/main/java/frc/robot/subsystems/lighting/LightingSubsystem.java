@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.lighting.pattern.LightingPattern;
+import frc.robot.telemetry.Telemetry1310;
 
 public class LightingSubsystem extends SubsystemBase {
 
@@ -71,7 +72,8 @@ public class LightingSubsystem extends SubsystemBase {
             for (int i = 0; i < buffer.getLength(); i++) {
                 ledBuffer.setLED(region.start + i, buffer.getLED(i));
             }
-            SmartDashboard.putString("Lighting/" + region.name, pattern.getClass().getSimpleName());
+
+            Telemetry1310.light.regionStatus.put(region.name, pattern.getClass().getSimpleName());
         }
 
         safelySetLights();
