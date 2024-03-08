@@ -34,8 +34,8 @@ public class TelemetryConfig {
         telemetryLightChooser.addOption("Enabled", true);
         telemetryLightChooser.setDefaultOption("Disabled", false);
 
-        telemetrySwerveChooser.setDefaultOption("Enabled", true);
-        telemetrySwerveChooser.addOption("Disabled", false);
+        telemetrySwerveChooser.addOption("Enabled", true);
+        telemetrySwerveChooser.setDefaultOption("Disabled", false);
 
         telemetrySwerve1310Chooser.addOption("Enabled", true);
         telemetrySwerve1310Chooser.setDefaultOption("Disabled", false);
