@@ -106,14 +106,15 @@ public class HughVisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // read values periodically and post to smart dashboard periodically
-        double[]           bp          = getBotPose();
-        AprilTagInfo[]     visibleTags = getVisibleTagInfo();
-        double             avgDist     = getTargetAvgDistance();
-        VisionPositionInfo visPos      = getPositionInfo(bp, visibleTags.length, avgDist);
+        double[]           bp         = getBotPose();
+        // AprilTagInfo[] visibleTags = getVisibleTagInfo();
+        double             avgDist    = getTargetAvgDistance();
+        int                numTargets = getNumActiveTargets();
+        VisionPositionInfo visPos     = getPositionInfo(bp, numTargets, avgDist);
 
         Telemetry.hugh.botTarget              = getBotTarget();
         Telemetry.hugh.priorityId             = getPriorityId();
-        Telemetry.hugh.targetFound            = isCurrentTargetVisible();
+        // Telemetry.hugh.targetFound = isCurrentTargetVisible();
         Telemetry.hugh.tid                    = tid.getDouble(-1.0);
         Telemetry.hugh.tx                     = tx.getDouble(-1.0);
         Telemetry.hugh.ty                     = ty.getDouble(-1.0);
@@ -126,7 +127,7 @@ public class HughVisionSubsystem extends SubsystemBase {
         Telemetry.hugh.distanceToTargetMetres = getDistanceToTargetMetres();
         Telemetry.hugh.isAlignedWithTarget    = isAlignedWithTarget();
         Telemetry.hugh.targetOffset           = getTargetOffset();
-        Telemetry.hugh.aprilTagInfo           = aprilTagInfoArrayToString(visibleTags);
+        // Telemetry.hugh.aprilTagInfo = aprilTagInfoArrayToString(visibleTags);
     }
 
     /**

@@ -32,7 +32,7 @@ public class Hugh {
     void post() {
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/BotTarget", botTarget.toString());
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/PriorityId", "" + priorityId);
-        SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionHugh/Target Found", targetFound);
+        // SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionHugh/Target Found", targetFound);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/tid", tid);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/tx", tx);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/ty", ty);
@@ -43,7 +43,7 @@ public class Hugh {
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/PoseConf",
             visPose == null ? PoseConfidence.NONE.toString() : visPose.poseConfidence().toString());
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/NumTags", "" + numTags);
-        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/AprilTagInfo", aprilTagInfo);
+        // SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/AprilTagInfo", aprilTagInfo);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/DistToTarget", distanceToTargetMetres);
         SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionHugh/AlignedWithTarget", isAlignedWithTarget);
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/TargetOffset",
