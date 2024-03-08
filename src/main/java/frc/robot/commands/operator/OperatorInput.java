@@ -1,5 +1,8 @@
 package frc.robot.commands.operator;
 
+import static frc.robot.Constants.UsefulPoses.BLUE_2_2_20;
+import static frc.robot.Constants.UsefulPoses.RED_2_2_20;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
@@ -12,8 +15,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
-import frc.robot.commands.auto.*;
+import frc.robot.commands.arm.AimAmpCommand;
+import frc.robot.commands.arm.AimSpeakerCommand;
+import frc.robot.commands.arm.CompactPoseCommand;
+import frc.robot.commands.arm.ManualShootCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.auto.PlanBAutoCommand;
+import frc.robot.commands.auto.Score1AmpAutoCommand;
+import frc.robot.commands.auto.Score1SpeakerAutoCommand;
+import frc.robot.commands.auto.Score2AmpAutoCommand;
+import frc.robot.commands.auto.Score2_5AmpAutoCommand;
+import frc.robot.commands.auto.Score3SpeakerAutoCommand;
+import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
@@ -25,9 +38,6 @@ import frc.robot.subsystems.lighting.pattern.Enabled;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
-
-import static frc.robot.Constants.UsefulPoses.BLUE_2_2_20;
-import static frc.robot.Constants.UsefulPoses.RED_2_2_20;
 
 /**
  * The DriverController exposes all driver functions
@@ -175,7 +185,7 @@ public class OperatorInput {
         new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
         // Shoot
-        new Trigger(operatorController::getBButton).onTrue(new ShootCommand(arm));
+        new Trigger(operatorController::getBButton).onTrue(new ManualShootCommand(arm));
 
         // Test Drive to 2,2,20
         new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive, BLUE_2_2_20, RED_2_2_20));
