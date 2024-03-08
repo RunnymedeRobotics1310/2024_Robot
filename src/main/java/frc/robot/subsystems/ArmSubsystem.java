@@ -128,6 +128,8 @@ public class ArmSubsystem extends SubsystemBase {
         return !linkLowerLimitSwitch.get();
     }
 
+
+
     public boolean isNoteDetected() {
         return noteDetector.get();
     }
@@ -149,7 +151,7 @@ public class ArmSubsystem extends SubsystemBase {
     // linkSpeedRPM, etc)
     public void setLinkPivotSpeed(double speed) {
 
-        this.linkPivotSpeed = speed;
+        this.linkPivotSpeed = -speed;
 
         checkArmSafety();
 
@@ -192,6 +194,8 @@ public class ArmSubsystem extends SubsystemBase {
         setIntakeSpeed(0);
         setShooterSpeed(0);
     }
+
+
 
     @Override
     public void periodic() {
