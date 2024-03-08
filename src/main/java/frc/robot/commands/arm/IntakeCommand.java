@@ -1,6 +1,7 @@
 package frc.robot.commands.arm;
 
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
@@ -9,25 +10,26 @@ public class IntakeCommand extends ArmBaseCommand {
 
     private final JackmanVisionSubsystem jackmanVisionSubsystem;
 
-    private static final long            NOTE_DETECT_TIMEOUT = 10000;
+    private static final long            NOTE_DETECT_TIMEOUT  = 1000;
 
-    private static final long            NOTE_FORWARD_TIME   = 300;
+    private static final long            NOTE_FORWARD_TIME    = 300;
 
-    private static final long            ARM_UP_TIME         = 1000;
+
+    private static final long            INTAKE_SPINUP_WINDOW = 500;
 
 
 
     private enum State {
-        WAIT_FOR_NOTE, NOTE_DETECTED, RAISE_ARM, REVERSE_NOTE, FORWARD_NOTE, NOTE_READY, KILLED
+        WAIT_FOR_NOTE, NOTE_DETECTED, REVERSE_NOTE, FORWARD_NOTE, NOTE_READY, FINISHED, KILLED
     };
 
     private IntakeCommand.State state                = IntakeCommand.State.WAIT_FOR_NOTE;
 
-    private long                lastNoteDetectedTime = 0;
 
     private long                noteForwardStartTime = 0;
 
-    private long                armUpStartTime       = 0;
+
+    private long                intakeStartTime      = 0;
 
     /**
      * Creates a new ExampleCommand.
@@ -62,47 +64,37 @@ public class IntakeCommand extends ArmBaseCommand {
             // Notes should not be detected in this state but as a failsafe this will prevent the
             // state machine from getting stuck
             if (armSubsystem.isNoteDetected()) {
-                lastNoteDetectedTime = System.currentTimeMillis();
+
                 System.out.println("safety code activated, switched to note detect");
                 state = IntakeCommand.State.NOTE_DETECTED;
             }
-            // This is the normal case
-            if (jackmanVisionSubsystem.isNoteClose()) {
+            else {// This is the normal case
                 armSubsystem.setIntakeSpeed(Constants.ArmConstants.INTAKE_INTAKE_SPEED);
-                lastNoteDetectedTime = System.currentTimeMillis();
+                intakeStartTime = System.currentTimeMillis();
                 System.out.println("Switched to note detect");
                 state = IntakeCommand.State.NOTE_DETECTED;
             }
             break;
 
         case NOTE_DETECTED:
-            if (armSubsystem.isNoteDetected()) {
-                armUpStartTime = System.currentTimeMillis();
+            if (System.currentTimeMillis() - intakeStartTime >= INTAKE_SPINUP_WINDOW) {
+                if (armSubsystem.getIntakeEncoderSpeed() <= 400) {
+                    System.out.println(armSubsystem.getIntakeEncoderSpeed());
+                    atArmPosition = this.driveToArmPosition(Constants.ArmConstants.OVER_BUMPER_POSITION, 5);
+//                    if (atArmPosition) {
+                    if (armSubsystem.isNoteDetected()) {
 
-                System.out.println("Switched to Raise Arm");
-                state = IntakeCommand.State.RAISE_ARM;
-            }
-            else if (jackmanVisionSubsystem.isNoteClose()) {
-                lastNoteDetectedTime = System.currentTimeMillis();
-            }
-            else if (System.currentTimeMillis() - lastNoteDetectedTime >= NOTE_DETECT_TIMEOUT) {
-                armSubsystem.setIntakeSpeed(0);
-                System.out.println("timedout, switched to wait for note");
-                state = IntakeCommand.State.WAIT_FOR_NOTE;
-            }
-            break;
-
-        case RAISE_ARM:
-            if (System.currentTimeMillis() - armUpStartTime >= ARM_UP_TIME) {
-                armSubsystem.setAimPivotSpeed(0);
-                armSubsystem.setIntakeSpeed(Constants.ArmConstants.INTAKE_NOTE_REVERSAL_REVERSE_SPEED);
-
-                atArmPosition = this.driveToArmPosition(Constants.ArmConstants.OVER_BUMPER_POSITION, 5);
-                if (atArmPosition) {
-                    System.out.println("Switched to Reverse Note");
-                    state = IntakeCommand.State.REVERSE_NOTE;
+                        armSubsystem.setIntakeSpeed(Constants.ArmConstants.INTAKE_NOTE_REVERSAL_REVERSE_SPEED);
+                        System.out.println("Switched to Reverse Note");
+                        state = IntakeCommand.State.REVERSE_NOTE;
+                    }
+                    else {
+                        System.out.println("there should be a note in the thing");
+                    }
+//                    }
                 }
             }
+
             break;
 
         case REVERSE_NOTE:
@@ -124,16 +116,26 @@ public class IntakeCommand extends ArmBaseCommand {
 
         case NOTE_READY:
             if (!armSubsystem.isNoteDetected()) {
-                System.out.println("Switched to wait for note from note ready");
+                System.out.println("Switched to wait for note from note ready, this should not happen but it did");
                 state = IntakeCommand.State.WAIT_FOR_NOTE;
             }
+            else {
+                state = State.FINISHED;
+            }
+
+            break;
+
+        case FINISHED:
+
             break;
 
         case KILLED:
             if (armSubsystem.isNoteDetected()) {
+                System.out.println("switched to note_ready from killed");
                 state = IntakeCommand.State.NOTE_READY;
             }
             else {
+                System.out.println("switched to wait for note from killed");
                 state = IntakeCommand.State.WAIT_FOR_NOTE;
             }
             break;
@@ -144,15 +146,27 @@ public class IntakeCommand extends ArmBaseCommand {
     @Override
     public boolean isFinished() {
         // The default arm command never ends, but can be interrupted by other commands.
-        return false;
+        return state == State.FINISHED;
+
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        logCommandEnd(interrupted);
-        armSubsystem.setIntakeSpeed(0);
-        state = IntakeCommand.State.KILLED;
+        // run if interupted
+        if (interrupted) {
+            logCommandEnd(interrupted);
+            armSubsystem.setIntakeSpeed(0);
+            System.out.println("interupted, switched to killed state");
+            state = IntakeCommand.State.KILLED;
+        }
+        // run if not interupted
+        else {
+            System.out.println("command finished, moving to compact pose");
+            CommandScheduler.getInstance().schedule(new CompactPoseCommand(armSubsystem));
+
+        }
+
     }
 
 }

@@ -81,7 +81,7 @@ public final class Constants {
             public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(35);
             public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(360);
             public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2 = Rotation2d.fromRotations(1310).getRadians();
-            public static final Rotation2d ROTATION_DECELERATION_DISTANCE = Rotation2d.fromDegrees(5);
+            public static final Rotation2d ROTATION_DECELERATION_DISTANCE         = Rotation2d.fromDegrees(5);
             public static final Rotation2d ROTATION_TOLERANCE                     = Rotation2d.fromDegrees(2);
 
             public static final class HeadingPIDConfig {
@@ -466,7 +466,7 @@ public final class Constants {
         public static final double      SLOW_ARM_ZONE_DEG                  = 20.0;
         public static final double      AT_TARGET_DEG                      = 2;
 
-        public static final double      INTAKE_INTAKE_SPEED                = .5;
+        public static final double      INTAKE_INTAKE_SPEED                = .75;
         public static final double      INTAKE_REVERSE_SPEED               = -.3;
 
         public static final double      INTAKE_NOTE_REVERSAL_REVERSE_SPEED = -.075;
