@@ -67,18 +67,18 @@ public abstract class BaseDriveCommand extends LoggingCommand {
         double targetRad  = normalizeRotation(target).getRadians();
         double currentRad = normalizeRotation(current).getRadians();
 
-        System.out.println("target: " + targetRad + "current: " + currentRad);
+        //System.out.println("target: " + targetRad + "current: " + currentRad);
 
         if (Math.abs(targetRad - currentRad) < ROTATION_TOLERANCE.getRadians()) {
             return new Rotation2d();
         }
 
-        if (targetRad - currentRad <= ROTATION_DECELERATION_DISTANCE.getRadians()) {
-            headingPidRad.setConstraints(slowConstraints);
-        }
-        else {
-            headingPidRad.setConstraints(fastConstraints);
-        }
+//        if (targetRad - currentRad <= ROTATION_DECELERATION_DISTANCE.getRadians()) {
+////            headingPidRad.setConstraints(slowConstraints);
+//        }
+//        else {
+//            headingPidRad.setConstraints(fastConstraints);
+//        }
 
 
 
