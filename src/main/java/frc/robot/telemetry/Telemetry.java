@@ -9,8 +9,8 @@ public class Telemetry {
     public static Hugh       hugh       = new Hugh();
     public static Jackman    jackman    = new Jackman();
     public static Light      light      = new Light();
-    public static SwerveCore swerveCore = new SwerveCore();
-    public static SwervePlus swervePlus = new SwervePlus();
+    public static SwerveCore swerve     = new SwerveCore();
+    public static SwervePlus swerve1310 = new SwervePlus();
     public static Test       test       = new Test();
 
     private Telemetry() {
@@ -25,8 +25,8 @@ public class Telemetry {
         hugh.post();
         jackman.post();
         light.post();
-        swerveCore.post();
-        swervePlus.post();
+        swerve.post();
+        swerve1310.post();
         test.post();
     }
 }
