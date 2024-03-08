@@ -12,7 +12,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BotTarget;
-import frc.robot.telemetry.Telemetry1310;
+import frc.robot.telemetry.Telemetry;
 
 /**
  * Handles the April Tag Limelight On Shooter Side
@@ -111,22 +111,22 @@ public class HughVisionSubsystem extends SubsystemBase {
         double             avgDist     = getTargetAvgDistance();
         VisionPositionInfo visPos      = getPositionInfo(bp, visibleTags.length, avgDist);
 
-        Telemetry1310.hugh.botTarget              = getBotTarget();
-        Telemetry1310.hugh.priorityId             = getPriorityId();
-        Telemetry1310.hugh.targetFound            = isCurrentTargetVisible();
-        Telemetry1310.hugh.tid                    = tid.getDouble(-1.0);
-        Telemetry1310.hugh.tx                     = tx.getDouble(-1.0);
-        Telemetry1310.hugh.ty                     = ty.getDouble(-1.0);
-        Telemetry1310.hugh.ta                     = ta.getDouble(-1.0);
-        Telemetry1310.hugh.tl                     = tl.getDouble(-1.0);
-        Telemetry1310.hugh.botpost                = bp;
-        Telemetry1310.hugh.targetAvgDist          = avgDist;
-        Telemetry1310.hugh.visPose                = visPos;
-        Telemetry1310.hugh.numTags                = getNumActiveTargets();
-        Telemetry1310.hugh.distanceToTargetMetres = getDistanceToTargetMetres();
-        Telemetry1310.hugh.isAlignedWithTarget    = isAlignedWithTarget();
-        Telemetry1310.hugh.targetOffset           = getTargetOffset();
-        Telemetry1310.hugh.aprilTagInfo           = aprilTagInfoArrayToString(visibleTags);
+        Telemetry.hugh.botTarget              = getBotTarget();
+        Telemetry.hugh.priorityId             = getPriorityId();
+        Telemetry.hugh.targetFound            = isCurrentTargetVisible();
+        Telemetry.hugh.tid                    = tid.getDouble(-1.0);
+        Telemetry.hugh.tx                     = tx.getDouble(-1.0);
+        Telemetry.hugh.ty                     = ty.getDouble(-1.0);
+        Telemetry.hugh.ta                     = ta.getDouble(-1.0);
+        Telemetry.hugh.tl                     = tl.getDouble(-1.0);
+        Telemetry.hugh.botpost                = bp;
+        Telemetry.hugh.targetAvgDist          = avgDist;
+        Telemetry.hugh.visPose                = visPos;
+        Telemetry.hugh.numTags                = getNumActiveTargets();
+        Telemetry.hugh.distanceToTargetMetres = getDistanceToTargetMetres();
+        Telemetry.hugh.isAlignedWithTarget    = isAlignedWithTarget();
+        Telemetry.hugh.targetOffset           = getTargetOffset();
+        Telemetry.hugh.aprilTagInfo           = aprilTagInfoArrayToString(visibleTags);
     }
 
     /**

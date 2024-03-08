@@ -1,9 +1,8 @@
 package frc.robot.subsystems.lighting;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.lighting.pattern.LightingPattern;
-import frc.robot.telemetry.Telemetry1310;
+import frc.robot.telemetry.Telemetry;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -101,7 +100,7 @@ public class LightstripRegion {
             result = pattern;
         }
         errmsg.append(". Using the last version.");
-        Telemetry1310.light.lightstripRegionWarning = errmsg.toString();
+        Telemetry.light.lightstripRegionWarning = errmsg.toString();
         return result;
 
     }

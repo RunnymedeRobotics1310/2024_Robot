@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.telemetry.Telemetry1310;
+import frc.robot.telemetry.Telemetry;
 
 public class ClimbSubsystem extends SubsystemBase {
 
@@ -91,13 +91,13 @@ public class ClimbSubsystem extends SubsystemBase {
          * Update the SmartDashboard
          */
 
-        Telemetry1310.climb.leftClimbSpeed    = leftClimbSpeed;
-        Telemetry1310.climb.leftClimbEncoder  = getLeftClimbEncoder();
-        Telemetry1310.climb.rightClimbSpeed   = rightClimbSpeed;
-        Telemetry1310.climb.rightClimbEncoder = getRightClimbEncoder();
-        Telemetry1310.climb.safetyEnabled     = safetyEnabled;
-        Telemetry1310.climb.rightLimit        = isRightClimbAtLimit();
-        Telemetry1310.climb.leftLimit         = isLeftClimbAtLimit();
+        Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
+        Telemetry.climb.leftClimbEncoder  = getLeftClimbEncoder();
+        Telemetry.climb.rightClimbSpeed   = rightClimbSpeed;
+        Telemetry.climb.rightClimbEncoder = getRightClimbEncoder();
+        Telemetry.climb.safetyEnabled     = safetyEnabled;
+        Telemetry.climb.rightLimit        = isRightClimbAtLimit();
+        Telemetry.climb.leftLimit         = isLeftClimbAtLimit();
     }
 
     private void checkClimbSafety() {

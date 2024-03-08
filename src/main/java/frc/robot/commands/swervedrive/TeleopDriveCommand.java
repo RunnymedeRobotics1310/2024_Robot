@@ -17,13 +17,12 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.InShootingRange;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.telemetry.Telemetry1310;
+import frc.robot.telemetry.Telemetry;
 
 public class TeleopDriveCommand extends BaseDriveCommand {
 
@@ -125,7 +124,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             // BLUE field = MOD(-POV + 360, 360)
             // RED field = MOD(-POV + 180 + 360, 360)
             double correctedHeadingDeg = ((rawDesiredHeadingDeg * -1) + (invert ? 180 : 0) + 360) % 360;
-            Telemetry1310.drive.teleop_correctedHeadingDeg = correctedHeadingDeg;
+            Telemetry.drive.teleop_correctedHeadingDeg = correctedHeadingDeg;
             Rotation2d desiredHeading = Rotation2d.fromDegrees(correctedHeadingDeg);
 
             omega           = computeOmega(desiredHeading);
@@ -162,16 +161,16 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             lighting.removePattern(InShootingRange.class);
         }
 
-        Telemetry1310.drive.teleop_vX                   = vX;
-        Telemetry1310.drive.teleop_vY                   = vY;
-        Telemetry1310.drive.teleop_ccwRotAngularVelPct  = ccwRotAngularVelPct;
-        Telemetry1310.drive.teleop_rawDesiredHeadingDeg = rawDesiredHeadingDeg;
-        Telemetry1310.drive.teleop_boostFactor          = boostFactor;
-        Telemetry1310.drive.teleop_mode                 = modeForDebug;
-        Telemetry1310.drive.teleop_lockOnSpeaker        = lockOnSpeaker;
-        Telemetry1310.drive.teleop_velocity             = velocity;
-        Telemetry1310.drive.teleop_theta                = headingSetpoint;
-        Telemetry1310.drive.teleop_omega                = omega;
+        Telemetry.drive.teleop_vX                   = vX;
+        Telemetry.drive.teleop_vY                   = vY;
+        Telemetry.drive.teleop_ccwRotAngularVelPct  = ccwRotAngularVelPct;
+        Telemetry.drive.teleop_rawDesiredHeadingDeg = rawDesiredHeadingDeg;
+        Telemetry.drive.teleop_boostFactor          = boostFactor;
+        Telemetry.drive.teleop_mode                 = modeForDebug;
+        Telemetry.drive.teleop_lockOnSpeaker        = lockOnSpeaker;
+        Telemetry.drive.teleop_velocity             = velocity;
+        Telemetry.drive.teleop_theta                = headingSetpoint;
+        Telemetry.drive.teleop_omega                = omega;
 
         swerve.driveFieldOriented(velocity, omega);
     }

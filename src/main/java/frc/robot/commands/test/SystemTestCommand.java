@@ -3,7 +3,6 @@ package frc.robot.commands.test;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
@@ -12,7 +11,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.TestMode;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.telemetry.Telemetry1310;
+import frc.robot.telemetry.Telemetry;
 
 import static frc.robot.commands.test.SystemTestCommand.Motor.*;
 
@@ -34,7 +33,7 @@ public class SystemTestCommand extends LoggingCommand {
     private final XboxController    controller;
     private final SwerveSubsystem   drive;
     private final ArmSubsystem      armSubsystem;
-    private final ClimbSubsystem climbSubsystem;
+    private final ClimbSubsystem    climbSubsystem;
     private final LightingSubsystem lighting;
 
 
@@ -47,13 +46,14 @@ public class SystemTestCommand extends LoggingCommand {
     private boolean                 previousLeftBumper  = false;
     private boolean                 previousRightBumper = false;
 
-    public SystemTestCommand(OperatorInput oi, SwerveSubsystem drive, ArmSubsystem armSubsystem, ClimbSubsystem climbSubsystem, LightingSubsystem lighting) {
-        this.oi           = oi;
-        this.controller   = oi.getRawDriverController();
-        this.drive        = drive;
-        this.armSubsystem = armSubsystem;
+    public SystemTestCommand(OperatorInput oi, SwerveSubsystem drive, ArmSubsystem armSubsystem, ClimbSubsystem climbSubsystem,
+        LightingSubsystem lighting) {
+        this.oi             = oi;
+        this.controller     = oi.getRawDriverController();
+        this.drive          = drive;
+        this.armSubsystem   = armSubsystem;
         this.climbSubsystem = climbSubsystem;
-        this.lighting     = lighting;
+        this.lighting       = lighting;
         addRequirements(drive, armSubsystem);
     }
 
@@ -290,13 +290,13 @@ public class SystemTestCommand extends LoggingCommand {
             armSubsystem.setShooterSpeed(motorSpeed);
             break;
         }
-            case CLIMB_RIGHT: {
-                climbSubsystem.setClimbSpeeds(0, motorSpeed);
-                break;
-            }
-            case CLIMB_LEFT: {
-                climbSubsystem.setClimbSpeeds(motorSpeed, 0);
-            }
+        case CLIMB_RIGHT: {
+            climbSubsystem.setClimbSpeeds(0, motorSpeed);
+            break;
+        }
+        case CLIMB_LEFT: {
+            climbSubsystem.setClimbSpeeds(motorSpeed, 0);
+        }
 
 
         }
@@ -337,11 +337,11 @@ public class SystemTestCommand extends LoggingCommand {
     }
 
     private void updateDashboard() {
-        Telemetry1310.test.enabled       = enabled;
-        Telemetry1310.test.selectedMotor = selectedMotor;
-        Telemetry1310.test.motorSpeed    = motorSpeed;
-        Telemetry1310.test.motor2Speed   = motor2Speed;
-        Telemetry1310.test.angle         = angle;
+        Telemetry.test.enabled       = enabled;
+        Telemetry.test.selectedMotor = selectedMotor;
+        Telemetry.test.motorSpeed    = motorSpeed;
+        Telemetry.test.motor2Speed   = motor2Speed;
+        Telemetry.test.angle         = angle;
     }
 
 }

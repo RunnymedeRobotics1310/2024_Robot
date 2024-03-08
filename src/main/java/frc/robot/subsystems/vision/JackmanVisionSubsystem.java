@@ -4,9 +4,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.telemetry.Telemetry1310;
+import frc.robot.telemetry.Telemetry;
 
 public class JackmanVisionSubsystem extends SubsystemBase {
 
@@ -79,14 +78,14 @@ public class JackmanVisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Telemetry1310.jackman.isVisionTargetFound = isVisionTargetFound();
-        Telemetry1310.jackman.tx                  = tx.getDouble(-1.0);
-        Telemetry1310.jackman.ty                  = ty.getDouble(-1.0);
-        Telemetry1310.jackman.ta                  = ta.getDouble(-1.0);
-        Telemetry1310.jackman.tl                  = tl.getDouble(-1.0);
-        Telemetry1310.jackman.camMode             = camMode.getDouble(-1.0);
-        Telemetry1310.jackman.ledMode             = ledMode.getDouble(-1.0);
-        Telemetry1310.jackman.pipeline            = pipeline.getDouble(-1.0);
+        Telemetry.jackman.isVisionTargetFound = isVisionTargetFound();
+        Telemetry.jackman.tx                  = tx.getDouble(-1.0);
+        Telemetry.jackman.ty                  = ty.getDouble(-1.0);
+        Telemetry.jackman.ta                  = ta.getDouble(-1.0);
+        Telemetry.jackman.tl                  = tl.getDouble(-1.0);
+        Telemetry.jackman.camMode             = camMode.getDouble(-1.0);
+        Telemetry.jackman.ledMode             = ledMode.getDouble(-1.0);
+        Telemetry.jackman.pipeline            = pipeline.getDouble(-1.0);
     }
 
     /**

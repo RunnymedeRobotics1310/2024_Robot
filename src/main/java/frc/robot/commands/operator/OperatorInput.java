@@ -33,7 +33,7 @@ import frc.robot.subsystems.lighting.pattern.Enabled;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
-import frc.robot.telemetry.Telemetry1310;
+import frc.robot.telemetry.Telemetry;
 
 /**
  * The DriverController exposes all driver functions
@@ -196,7 +196,7 @@ public class OperatorInput {
 
     public void initAutoSelectors() {
 
-        Telemetry1310.auto.autoPatternChooser = autoPatternChooser;
+        Telemetry.auto.autoPatternChooser = autoPatternChooser;
 
         autoPatternChooser.setDefaultOption("Do Nothing", Constants.AutoConstants.AutoPattern.DO_NOTHING);
 

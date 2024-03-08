@@ -1,6 +1,6 @@
 package frc.robot.telemetry;
 
-public class Telemetry1310 {
+public class Telemetry {
 
     public static Arm        arm        = new Arm();
     public static Auto       auto       = new Auto();
@@ -13,7 +13,7 @@ public class Telemetry1310 {
     public static SwervePlus swervePlus = new SwervePlus();
     public static Test       test       = new Test();
 
-    private Telemetry1310() {
+    private Telemetry() {
     }
 
     public static void post() {

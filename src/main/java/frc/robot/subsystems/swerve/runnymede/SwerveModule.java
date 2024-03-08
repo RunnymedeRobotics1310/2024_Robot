@@ -7,7 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
-import frc.robot.telemetry.Telemetry1310;
+import frc.robot.telemetry.Telemetry;
 
 public class SwerveModule {
 
@@ -91,8 +91,8 @@ public class SwerveModule {
 
         updateInternalEncoder();
 
-        Telemetry1310.swervePlus.getModule(name).speedMetersPerSecond = desiredState.speedMetersPerSecond;
-        Telemetry1310.swervePlus.getModule(name).angleDegrees         = desiredState.angle.getDegrees();
+        Telemetry.swervePlus.getModule(name).speedMetersPerSecond = desiredState.speedMetersPerSecond;
+        Telemetry.swervePlus.getModule(name).angleDegrees         = desiredState.angle.getDegrees();
     }
 
     private void updateInternalEncoder() {
@@ -105,8 +105,8 @@ public class SwerveModule {
 
 
     public void updateTelemetry() {
-        Telemetry1310.swervePlus.getModule(name).absoluteEncoderPositionDegrees = encoder.getAbsolutePositionInDegrees();
-        Telemetry1310.swervePlus.getModule(name).angleMotorPosition             = angleMotor.getPosition();
-        Telemetry1310.swervePlus.getModule(name).driveMotorPosition             = driveMotor.getDistanceMetres();
+        Telemetry.swervePlus.getModule(name).absoluteEncoderPositionDegrees = encoder.getAbsolutePositionInDegrees();
+        Telemetry.swervePlus.getModule(name).angleMotorPosition             = angleMotor.getPosition();
+        Telemetry.swervePlus.getModule(name).driveMotorPosition             = driveMotor.getDistanceMetres();
     }
 }

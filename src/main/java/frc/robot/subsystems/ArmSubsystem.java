@@ -6,11 +6,10 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.telemetry.Telemetry1310;
+import frc.robot.telemetry.Telemetry;
 
 
 public class ArmSubsystem extends SubsystemBase {
@@ -229,19 +228,19 @@ public class ArmSubsystem extends SubsystemBase {
          * Update the SmartDashboard
          */
 
-        Telemetry1310.arm.intakeSpeed                = intakeSpeed;
-        Telemetry1310.arm.intakeEncoderSpeed         = getIntakeEncoderSpeed();
-        Telemetry1310.arm.shooterSpeed               = shooterSpeed;
-        Telemetry1310.arm.shooterEncoderSpeed        = getShooterEncoderSpeed();
-        Telemetry1310.arm.linkPivotSpeed             = linkPivotSpeed;
-        Telemetry1310.arm.linkAngle                  = getLinkAngle();
-        Telemetry1310.arm.linkAbsoluteEncoderVoltage = getLinkAbsoluteEncoderVoltage();
-        Telemetry1310.arm.isLinkAtLowerLimit         = isLinkAtLowerLimit();
-        Telemetry1310.arm.aimPivotSpeed              = aimPivotSpeed;
-        Telemetry1310.arm.aimAngle                   = getAimAngle();
-        Telemetry1310.arm.aimAbsoluteEncoderVoltage  = getAimAbsoluteEncoderVoltage();
-        Telemetry1310.arm.noteDetected               = isNoteDetected();
-        Telemetry1310.arm.safetyEnabled              = safetyEnabled;
+        Telemetry.arm.intakeSpeed                = intakeSpeed;
+        Telemetry.arm.intakeEncoderSpeed         = getIntakeEncoderSpeed();
+        Telemetry.arm.shooterSpeed               = shooterSpeed;
+        Telemetry.arm.shooterEncoderSpeed        = getShooterEncoderSpeed();
+        Telemetry.arm.linkPivotSpeed             = linkPivotSpeed;
+        Telemetry.arm.linkAngle                  = getLinkAngle();
+        Telemetry.arm.linkAbsoluteEncoderVoltage = getLinkAbsoluteEncoderVoltage();
+        Telemetry.arm.isLinkAtLowerLimit         = isLinkAtLowerLimit();
+        Telemetry.arm.aimPivotSpeed              = aimPivotSpeed;
+        Telemetry.arm.aimAngle                   = getAimAngle();
+        Telemetry.arm.aimAbsoluteEncoderVoltage  = getAimAbsoluteEncoderVoltage();
+        Telemetry.arm.noteDetected               = isNoteDetected();
+        Telemetry.arm.safetyEnabled              = safetyEnabled;
 
         // Update the lights
         updateLights();
