@@ -169,4 +169,32 @@ public class RunnymedeUtils {
         return DriverStation.getAlliance().orElse(DriverStation.Alliance.Red);
     }
 
+    public static String format(double d) {
+        return String.format("%.2f", d);
+    }
+
+    public static String format(Pose2d pose) {
+        if (pose == null)
+            return "";
+        return String.format("%.2f", pose.getX()) + "," + String.format("%.2f", pose.getY()) + " @ " + format(pose.getRotation());
+    }
+
+    public static String format(Rotation2d rotation) {
+        if (rotation == null)
+            return "";
+        return String.format("%.1f", rotation.getDegrees()) + " deg";
+    }
+
+    public static String format(Translation2d vector) {
+        if (vector == null)
+            return "";
+        return String.format("%.2f", vector.getNorm())
+            + " (" + String.format("%.2f", vector.getX()) + "," + String.format("%.2f", vector.getY()) + ")";
+    }
+
+    public static String format(Transform2d transform) {
+        if (transform == null)
+            return "";
+        return format(transform.getTranslation()) + " @ " + format(transform.getRotation());
+    }
 }

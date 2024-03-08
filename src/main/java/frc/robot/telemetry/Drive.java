@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.LoggingCommand;
 
+import static frc.robot.RunnymedeUtils.format;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class Drive {
@@ -58,14 +59,14 @@ public class Drive {
         // drive to position
         SmartDashboard.putString(Telemetry.PREFIX + "Drive/ToFieldPosition/delta",
             drive_to_pose_delta == null ? ""
-                : LoggingCommand.format(drive_to_pose_delta.getTranslation()) + " m @ "
-                    + LoggingCommand.format(drive_to_pose_delta.getRotation()));
+                : format(drive_to_pose_delta.getTranslation()) + " m @ "
+                    + format(drive_to_pose_delta.getRotation()));
 
         SmartDashboard.putString(Telemetry.PREFIX + "Drive/ToFieldPosition/desired",
-            LoggingCommand.format(drive_to_pose_desired));
+            format(drive_to_pose_desired));
 
         SmartDashboard.putString(Telemetry.PREFIX + "Drive/ToFieldPosition/velocity",
-            LoggingCommand.format(drive_to_pose_velocity) + "m/s @ " + LoggingCommand.format(drive_to_pose_omega) + "/s");
+            format(drive_to_pose_velocity) + "m/s @ " + format(drive_to_pose_omega) + "/s");
 
     }
 }

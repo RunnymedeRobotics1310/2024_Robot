@@ -11,6 +11,8 @@ import frc.robot.subsystems.vision.VisionPositionInfo;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static frc.robot.RunnymedeUtils.format;
+
 public class SwervePlus {
 
     SwervePlus() {
@@ -75,8 +77,7 @@ public class SwervePlus {
             : String.format("%.2f m/s",
                 Math.hypot(swerve_robot_chassis_speeds.vxMetersPerSecond, swerve_robot_chassis_speeds.vyMetersPerSecond)));
 
-        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/velocity_field",
-            LoggingCommand.format(swerve_velocity_field) + " m/s");
+        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/velocity_field", format(swerve_velocity_field) + " m/s");
 
         SmartDashboard.putString(Telemetry.PREFIX + "Swerve/vispose", swerve_vispose == null ? "" : swerve_vispose.toString());
 

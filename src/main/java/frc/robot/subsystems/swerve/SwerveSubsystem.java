@@ -4,6 +4,7 @@ import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATION_ACCELERATION_RAD_P
 import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_ACCELERATION_MPS2;
 import static frc.robot.Constants.VisionConstants.CAMERA_LOC_REL_TO_ROBOT_CENTER;
 import static frc.robot.Constants.VisionConstants.getVisionStandardDeviation;
+import static frc.robot.RunnymedeUtils.format;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -218,6 +219,6 @@ public abstract class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public String toString() {
-        return "SwerveSubsystem Current Pose: " + LoggingCommand.format(getPose());
+        return "SwerveSubsystem Current Pose: " + format(getPose());
     }
 }
