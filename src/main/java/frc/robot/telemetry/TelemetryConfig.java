@@ -13,7 +13,6 @@ public class TelemetryConfig {
     public SendableChooser<Boolean> telemetryLightChooser      = new SendableChooser<>();
     public SendableChooser<Boolean> telemetrySwerveChooser     = new SendableChooser<>();
     public SendableChooser<Boolean> telemetrySwerve1310Chooser = new SendableChooser<>();
-    public SendableChooser<Boolean> telemetryTestChooser       = new SendableChooser<>();
 
     TelemetryConfig() {
         telemetryArmChooser.addOption("Enabled", true);
@@ -39,9 +38,6 @@ public class TelemetryConfig {
 
         telemetrySwerve1310Chooser.addOption("Enabled", true);
         telemetrySwerve1310Chooser.setDefaultOption("Disabled", false);
-
-        telemetryTestChooser.setDefaultOption("Enabled", true);
-        telemetryTestChooser.addOption("Disabled", false);
     }
 
     void post() {
@@ -53,16 +49,11 @@ public class TelemetryConfig {
         SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Light", telemetryLightChooser);
         SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Swerve", telemetrySwerveChooser);
         SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Swerve1310", telemetrySwerve1310Chooser);
-        SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Test", telemetryTestChooser);
     }
 
     boolean arm() {
         Boolean enabled = telemetryArmChooser.getSelected();
         return enabled != null && enabled;
-    }
-
-    boolean auto() {
-        return true;
     }
 
     boolean climb() {
@@ -97,11 +88,6 @@ public class TelemetryConfig {
 
     boolean swerve1310() {
         Boolean enabled = telemetrySwerve1310Chooser.getSelected();
-        return enabled != null && enabled;
-    }
-
-    boolean test() {
-        Boolean enabled = telemetryTestChooser.getSelected();
         return enabled != null && enabled;
     }
 

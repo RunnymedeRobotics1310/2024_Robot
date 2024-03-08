@@ -37,6 +37,7 @@ import frc.robot.Robot;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
+import frc.robot.telemetry.SwerveCore;
 import frc.robot.telemetry.Telemetry;
 
 /**
@@ -69,6 +70,7 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
         simulatedIMU                        = new SimulatedIMU();
 
 
+        Telemetry.swerve.implementation     = SwerveCore.Implementation.RUNNYMEDE;
         field                               = new Field2d();
         Telemetry.swerve.field              = field;
         Telemetry.swerve.maxSpeed           = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
@@ -117,8 +119,8 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
         Telemetry.swerve.measuredChassisSpeeds[0] = measuredChassisSpeeds.vxMetersPerSecond;
         Telemetry.swerve.measuredChassisSpeeds[2] = Math.toDegrees(measuredChassisSpeeds.omegaRadiansPerSecond);
         Telemetry.swerve.robotRotation            = getPose().getRotation().getDegrees();
-        Telemetry.swerve1310.rawImuDegrees        = gyro.getRotation3d().toRotation2d().getDegrees();
-        Telemetry.swerve1310.adjustedImuDegrees   = gyro.getRotation3d().minus(gyroOffset).toRotation2d().getDegrees();
+        Telemetry.swerve.rawImuDegrees            = gyro.getRotation3d().toRotation2d().getDegrees();
+        Telemetry.swerve.adjustedImuDegrees       = gyro.getRotation3d().minus(gyroOffset).toRotation2d().getDegrees();
 
         for (int i = 0; i < modules.length; i++) {
             SwerveModule      module      = modules[i];

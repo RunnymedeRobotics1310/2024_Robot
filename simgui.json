@@ -117,16 +117,6 @@
           "visible": true
         }
       },
-      "/SmartDashboard/1310/Telemetry/Swerve1310": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/1310/Telemetry/Test": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
         "Robot": {
           "arrowSize": 25

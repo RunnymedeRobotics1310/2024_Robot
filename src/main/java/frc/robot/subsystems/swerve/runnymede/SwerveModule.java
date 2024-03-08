@@ -91,8 +91,8 @@ public class SwerveModule {
 
         updateInternalEncoder();
 
-        Telemetry.swerve1310.getModule(name).speedMetersPerSecond = desiredState.speedMetersPerSecond;
-        Telemetry.swerve1310.getModule(name).angleDegrees         = desiredState.angle.getDegrees();
+        Telemetry.swerve.getModule(name).speedMetersPerSecond = desiredState.speedMetersPerSecond;
+        Telemetry.swerve.getModule(name).angleDegrees         = desiredState.angle.getDegrees();
     }
 
     private void updateInternalEncoder() {
@@ -105,8 +105,8 @@ public class SwerveModule {
 
 
     public void updateTelemetry() {
-        Telemetry.swerve1310.getModule(name).absoluteEncoderPositionDegrees = encoder.getAbsolutePositionInDegrees();
-        Telemetry.swerve1310.getModule(name).angleMotorPosition             = angleMotor.getPosition();
-        Telemetry.swerve1310.getModule(name).driveMotorPosition             = driveMotor.getDistanceMetres();
+        Telemetry.swerve.getModule(name).absoluteEncoderPositionDegrees = encoder.getAbsolutePositionInDegrees();
+        Telemetry.swerve.getModule(name).angleMotorPosition             = angleMotor.getPosition();
+        Telemetry.swerve.getModule(name).driveMotorPosition             = driveMotor.getDistanceMetres();
     }
 }

@@ -24,7 +24,8 @@
               "_showGlyph": false,
               "Game/Game": "k2024Crescendo",
               "Visuals/Robot Icon Size": 50.0,
-              "Visuals/Show Outside Circles": false
+              "Visuals/Show Outside Circles": false,
+              "Colors/XModules": "#FFFFFFFF"
             }
           },
           "6,4": {
@@ -48,54 +49,15 @@
               "imageHeight": -1
             }
           },
-          "12,1": {
-            "size": [
-              6,
-              8
-            ],
-            "content": {
-              "_type": "Network Table Tree",
-              "_source0": "network_table:///SmartDashboard/1310/Drive",
-              "_title": "SmartDashboard/1310/Drive",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
           "12,0": {
             "size": [
-              6,
-              1
+              4,
+              2
             ],
             "content": {
               "_type": "ComboBox Chooser",
               "_source0": "network_table:///SmartDashboard/1310/Auto Pattern",
               "_title": "SmartDashboard/1310/Auto Pattern",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "12,9": {
-            "size": [
-              6,
-              3
-            ],
-            "content": {
-              "_type": "Network Table Tree",
-              "_source0": "network_table:///SmartDashboard/1310/Lighting",
-              "_title": "SmartDashboard/1310/Lighting",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "18,0": {
-            "size": [
-              7,
-              5
-            ],
-            "content": {
-              "_type": "Network Table Tree",
-              "_source0": "network_table:///SmartDashboard/1310/Swerve",
-              "_title": "SmartDashboard/1310/Swerve",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -126,15 +88,41 @@
               "_showGlyph": false
             }
           },
-          "18,5": {
+          "19,0": {
             "size": [
-              7,
-              7
+              6,
+              9
             ],
             "content": {
               "_type": "Network Table Tree",
-              "_source0": "network_table:///SmartDashboard/swerve",
-              "_title": "SmartDashboard/swerve",
+              "_source0": "network_table:///SmartDashboard/1310/Drive",
+              "_title": "SmartDashboard/1310/Drive",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "12,6": {
+            "size": [
+              6,
+              3
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/1310/Lighting",
+              "_title": "SmartDashboard/1310/Lighting",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "12,2": {
+            "size": [
+              7,
+              4
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/1310/Swerve",
+              "_title": "SmartDashboard/1310/Swerve",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -219,6 +207,32 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "11,0": {
+            "size": [
+              6,
+              8
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/1310/Arm",
+              "_title": "SmartDashboard/1310/Arm",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "17,0": {
+            "size": [
+              5,
+              5
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/1310/Climb",
+              "_title": "SmartDashboard/1310/Climb",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
@@ -230,14 +244,14 @@
       "widgetPane": {
         "gridSize": 64.0,
         "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
+        "hgap": 8.0,
+        "vgap": 8.0,
         "titleType": 0,
         "tiles": {
           "6,0": {
             "size": [
               4,
-              1
+              2
             ],
             "content": {
               "_type": "ComboBox Chooser",
@@ -247,10 +261,10 @@
               "_showGlyph": false
             }
           },
-          "6,1": {
+          "6,2": {
             "size": [
               4,
-              1
+              2
             ],
             "content": {
               "_type": "ComboBox Chooser",
@@ -260,10 +274,10 @@
               "_showGlyph": false
             }
           },
-          "6,2": {
+          "6,4": {
             "size": [
               4,
-              1
+              2
             ],
             "content": {
               "_type": "ComboBox Chooser",
@@ -273,10 +287,10 @@
               "_showGlyph": false
             }
           },
-          "6,3": {
+          "6,6": {
             "size": [
               4,
-              1
+              2
             ],
             "content": {
               "_type": "ComboBox Chooser",
@@ -286,23 +300,10 @@
               "_showGlyph": false
             }
           },
-          "10,3": {
+          "6,8": {
             "size": [
               4,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/1310/Telemetry/Jackman",
-              "_title": "SmartDashboard/1310/Telemetry/Jackman",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,4": {
-            "size": [
-              4,
-              1
+              2
             ],
             "content": {
               "_type": "ComboBox Chooser",
@@ -312,41 +313,28 @@
               "_showGlyph": false
             }
           },
-          "10,2": {
+          "10,6": {
             "size": [
               4,
-              1
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/1310/Telemetry/Jackman",
+              "_title": "SmartDashboard/1310/Telemetry/Jackman",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,4": {
+            "size": [
+              4,
+              2
             ],
             "content": {
               "_type": "ComboBox Chooser",
               "_source0": "network_table:///SmartDashboard/1310/Telemetry/Swerve",
               "_title": "SmartDashboard/1310/Telemetry/Swerve",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "14,2": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/1310/Telemetry/Swerve1310",
-              "_title": "SmartDashboard/1310/Telemetry/Swerve1310",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,5": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/1310/Telemetry/Test",
-              "_title": "SmartDashboard/1310/Telemetry/Test",
               "_glyph": 148,
               "_showGlyph": false
             }
