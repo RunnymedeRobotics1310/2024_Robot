@@ -446,16 +446,16 @@ public final class Constants {
         // Transition position - over bumper
         public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(157, 76.89);
         // Transition position - above the lock position (arm not caught on stops)
-        public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(105.0, 85.0);   // Unfinished
+        public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
         public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(206.3, 90.0);   // Unfinished
 
-        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(194, 113);
+        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108);
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
-        public static final double      FAST_AIM_SPEED                     = .3;
-        public static final double      SLOW_AIM_SPEED                     = .1;
+        public static final double      FAST_AIM_SPEED                     = .4;
+        public static final double      SLOW_AIM_SPEED                     = .2;
         public static final double      FAST_LINK_SPEED                    = .3;
         public static final double      SLOW_LINK_SPEED                    = .1;
 
@@ -467,7 +467,7 @@ public final class Constants {
 
         public static final double      SHOOTER_SPEAKER_SPEED              = 0.5;
         public static final double      SHOOTER_AMP_SPEED                  = 0.2;
-        public static final double      LINK_MAX_DEGREES                   = 200;
+        public static final double      LINK_MAX_DEGREES                   = 210;
 
         public static final double      LINK_MIN_DEGREES                   = 119.11;
         public static final double      AIM_MAX_DEGREES                    = 200;

@@ -29,11 +29,14 @@ public class AimAmpCommand extends ArmBaseCommand {
 
         logCommandStart();
 
-        if (armSubsystem.getAimAngle() == ArmConstants.OVER_BUMPER_POSITION.aimAngle) {
+        if (armSubsystem.getAimAngle() < ArmConstants.UNLOCK_POSITION.aimAngle) {
+            state = State.MOVE_TO_UNLOCK;
+        }
+        else if (armSubsystem.getLinkAngle() < ArmConstants.OVER_BUMPER_POSITION.linkAngle) {
             state = State.MOVE_TO_OVER_BUMPER;
         }
         else {
-            state = State.MOVE_TO_UNLOCK;
+            state = State.MOVE_TO_AMP;
         }
     }
 
@@ -47,6 +50,11 @@ public class AimAmpCommand extends ArmBaseCommand {
         case MOVE_TO_AMP:
             // Move to the requested angle with a tolerance of 5 deg
             atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_AMP_ARM_POSITION, 5);
+            if (atArmAngle) {
+                logStateTransition("Start Shooter", "Arm at Shoot Amp position");
+                state = State.SET_SHOOTER_SPEED;
+            }
+
 
         case MOVE_TO_OVER_BUMPER:
 

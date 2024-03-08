@@ -40,11 +40,14 @@ public class AimSpeakerCommand extends ArmBaseCommand {
 
         logCommandStart();
 
-        if (armSubsystem.getAimAngle() > ArmConstants.OVER_BUMPER_POSITION.aimAngle) {
+        if (armSubsystem.getAimAngle() < ArmConstants.UNLOCK_POSITION.aimAngle) {
+            state = State.MOVE_TO_UNLOCK;
+        }
+        else if (armSubsystem.getLinkAngle() < ArmConstants.OVER_BUMPER_POSITION.linkAngle) {
             state = State.MOVE_TO_OVER_BUMPER;
         }
         else {
-            state = State.MOVE_TO_UNLOCK;
+            state = State.MOVE_TO_SPEAKER;
         }
     }
 
