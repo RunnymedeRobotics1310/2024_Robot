@@ -11,8 +11,8 @@ public class Climb {
     public double  rightClimbSpeed   = -1310.0;
     public double  rightClimbEncoder = -1310.0;
     public boolean safetyEnabled     = false;
-    public boolean isAtLimit2        = false;
-    public boolean isAtLimit3        = false;
+    public boolean rightLimit        = false;
+    public boolean leftLimit         = false;
 
     void post() {
         SmartDashboard.putNumber("Left Climb Speed", leftClimbSpeed);
@@ -23,7 +23,7 @@ public class Climb {
 
         SmartDashboard.putBoolean("Climb Safety", safetyEnabled);
 
-        SmartDashboard.putBoolean("Climb Limit 2", isAtLimit2);
-        SmartDashboard.putBoolean("Climb limit 3", isAtLimit3);
+        SmartDashboard.putBoolean("Climb Right Limit", rightLimit);
+        SmartDashboard.putBoolean("Climb Left Limit", leftLimit);
     }
 }

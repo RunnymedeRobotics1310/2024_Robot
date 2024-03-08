@@ -1,8 +1,10 @@
 package frc.robot.commands.arm;
 
+import frc.robot.Constants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 import static frc.robot.commands.operator.OperatorInput.Axis.Y;
 import static frc.robot.commands.operator.OperatorInput.Stick.LEFT;
@@ -12,6 +14,7 @@ public class DefaultArmCommand extends LoggingCommand {
 
     private final ArmSubsystem  armSubsystem;
     private final OperatorInput operatorInput;
+
 
     /**
      * Creates a new ExampleCommand.
@@ -45,7 +48,6 @@ public class DefaultArmCommand extends LoggingCommand {
             setLinkMotorSpeed(0);
             setAimMotorSpeed(0);
         }
-
     }
 
     // Returns true when the command should end.

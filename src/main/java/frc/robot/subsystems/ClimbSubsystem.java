@@ -1,7 +1,8 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
@@ -12,23 +13,21 @@ public class ClimbSubsystem extends SubsystemBase {
     // Lights Subsystem
     private final LightingSubsystem lighting;
 
-    // private final CANSparkMax leftClimbMotor = new
-    // CANSparkMax(ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
-    // MotorType.kBrushless);
+    private final CANSparkMax       leftClimbMotor        = new CANSparkMax(ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
+        MotorType.kBrushless);
 
-    // private final CANSparkMax rightClimbMotor = new
-    // CANSparkMax(ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
-    // MotorType.kBrushless);
-    // private final DigitalInput linkLowerLimitSwitch = new
-    // DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
-    private final DigitalInput climbLimitSwitch2 = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
-    private final DigitalInput climbLimitSwitch3 = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
+    private final CANSparkMax       rightClimbMotor       = new CANSparkMax(ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
+        MotorType.kBrushless);
+//     private final DigitalInput linkLowerLimitSwitch = new
+//     DigitalInput(Constants.ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
+    private final DigitalInput      rightClimbLimitSwitch = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
+    private final DigitalInput      leftClimbLimitSwitch  = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
 
-    private double             rightClimbSpeed   = 0;
-    private double             leftClimbSpeed    = 0;
+    private double                  rightClimbSpeed       = 0;
+    private double                  leftClimbSpeed        = 0;
 
-    private boolean            safetyEnabled     = false;
-    private long               safetyStartTime   = 0;
+    private boolean                 safetyEnabled         = false;
+    private long                    safetyStartTime       = 0;
 
     public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
         this.lighting = lightingSubsystem;
@@ -41,26 +40,26 @@ public class ClimbSubsystem extends SubsystemBase {
 
         checkClimbSafety();
 
-        // leftClimbMotor.set(leftClimbSpeed);
-        // rightClimbMotor.set(rightClimbSpeed);
+        leftClimbMotor.set(leftClimbSpeed);
+        rightClimbMotor.set(rightClimbSpeed);
     }
 
     public double getRightClimbEncoder() {
-        // return rightClimbMotor.getEncoder().getPosition();
-        return 0;
+        return rightClimbMotor.getEncoder().getPosition();
+//         return 0;
     }
 
     public double getLeftClimbEncoder() {
-        // return leftClimbMotor.getEncoder().getPosition();
-        return 0;
+        return leftClimbMotor.getEncoder().getPosition();
+//        return 0;
     }
 
-    private boolean isClimbAtLimit2() {
-        return !climbLimitSwitch2.get();
+    private boolean isRightClimbAtLimit() {
+        return !rightClimbLimitSwitch.get();
     }
 
-    private boolean isClimbAtLimit3() {
-        return !climbLimitSwitch3.get();
+    private boolean isLeftClimbAtLimit() {
+        return !leftClimbLimitSwitch.get();
     }
 
     public void stop() {
@@ -91,13 +90,14 @@ public class ClimbSubsystem extends SubsystemBase {
         /*
          * Update the SmartDashboard
          */
+
         Telemetry1310.climb.leftClimbSpeed    = leftClimbSpeed;
         Telemetry1310.climb.leftClimbEncoder  = getLeftClimbEncoder();
         Telemetry1310.climb.rightClimbSpeed   = rightClimbSpeed;
         Telemetry1310.climb.rightClimbEncoder = getRightClimbEncoder();
         Telemetry1310.climb.safetyEnabled     = safetyEnabled;
-        Telemetry1310.climb.isAtLimit2        = isClimbAtLimit2();
-        Telemetry1310.climb.isAtLimit3        = isClimbAtLimit3();
+        Telemetry1310.climb.rightLimit        = isRightClimbAtLimit();
+        Telemetry1310.climb.leftLimit         = isLeftClimbAtLimit();
     }
 
     private void checkClimbSafety() {

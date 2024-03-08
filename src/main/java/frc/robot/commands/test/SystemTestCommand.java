@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.TestMode;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -33,6 +34,7 @@ public class SystemTestCommand extends LoggingCommand {
     private final XboxController    controller;
     private final SwerveSubsystem   drive;
     private final ArmSubsystem      armSubsystem;
+    private final ClimbSubsystem climbSubsystem;
     private final LightingSubsystem lighting;
 
 
@@ -45,11 +47,12 @@ public class SystemTestCommand extends LoggingCommand {
     private boolean                 previousLeftBumper  = false;
     private boolean                 previousRightBumper = false;
 
-    public SystemTestCommand(OperatorInput oi, SwerveSubsystem drive, ArmSubsystem armSubsystem, LightingSubsystem lighting) {
+    public SystemTestCommand(OperatorInput oi, SwerveSubsystem drive, ArmSubsystem armSubsystem, ClimbSubsystem climbSubsystem, LightingSubsystem lighting) {
         this.oi           = oi;
         this.controller   = oi.getRawDriverController();
         this.drive        = drive;
         this.armSubsystem = armSubsystem;
+        this.climbSubsystem = climbSubsystem;
         this.lighting     = lighting;
         addRequirements(drive, armSubsystem);
     }
@@ -287,6 +290,15 @@ public class SystemTestCommand extends LoggingCommand {
             armSubsystem.setShooterSpeed(motorSpeed);
             break;
         }
+            case CLIMB_RIGHT: {
+                climbSubsystem.setClimbSpeeds(0, motorSpeed);
+                break;
+            }
+            case CLIMB_LEFT: {
+                climbSubsystem.setClimbSpeeds(motorSpeed, 0);
+            }
+
+
         }
     }
 

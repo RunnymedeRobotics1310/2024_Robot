@@ -1,30 +1,23 @@
 package frc.robot.commands.arm;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 
 /**
  * Move arm to speaker shoot pose
  * Set shooter speed (distance based)
  */
-public class AimSpeakerCommand extends ArmBaseCommand {
+public class AimSpeakerStaticCommand extends ArmBaseCommand {
 
     private enum State {
         MOVE_TO_SPEAKER, MOVE_TO_UNLOCK, MOVE_TO_OVER_BUMPER, SET_SHOOTER_SPEED, IS_FINISHED
     };
 
-    private State                     state = State.MOVE_TO_SPEAKER;
+    private State state = State.MOVE_TO_SPEAKER;
 
-    private final HughVisionSubsystem hughVisionSubsystem;
-
-    public AimSpeakerCommand(ArmSubsystem armSubsystem, HughVisionSubsystem hughVisionSubsystem) {
+    public AimSpeakerStaticCommand(ArmSubsystem armSubsystem) {
 
         super(armSubsystem);
-        this.hughVisionSubsystem = hughVisionSubsystem;
-
 
     }
 
@@ -69,20 +62,8 @@ public class AimSpeakerCommand extends ArmBaseCommand {
         switch (state) {
 
         case MOVE_TO_SPEAKER:
-            Translation2d getShooterXY = armSubsystem.getShooterXY();
 
-            // todo: fixme: give a hint to units - method name, variable name, param name, or else
-            // return Rotation2d
-            Rotation2d gDSSA = hughVisionSubsystem.getDynamicSpeakerShooterAngle(getShooterXY);
-
-            if (gDSSA == null) {
-                atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION, 5);
-            }
-            else {
-                atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION.linkAngle,
-                    gDSSA.getDegrees() - ArmConstants.SHOOTER_AIM_DIFFERENCE, 5);
-            }
-
+            atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_STATIC_ARM_POSITION, 5);
 
             if (atArmAngle) {
                 logStateTransition("Start Shooter", "Arm at Shooter Position");

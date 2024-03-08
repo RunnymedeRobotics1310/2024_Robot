@@ -77,10 +77,11 @@ public final class Constants {
              * ****************** Rotation Constants ******************
              */
 
-            // todo: this needs to be higher
+            // todo: this needs to be increased
             public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(35);
             public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(360);
-            public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2 = Rotation2d.fromRotations(800).getRadians();
+            public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2 = Rotation2d.fromRotations(1310).getRadians();
+            public static final Rotation2d ROTATION_DECELERATION_DISTANCE = Rotation2d.fromDegrees(5);
             public static final Rotation2d ROTATION_TOLERANCE                     = Rotation2d.fromDegrees(2);
 
             public static final class HeadingPIDConfig {
@@ -444,30 +445,37 @@ public final class Constants {
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(119.11, 104.18);
 
         // Transition position - over bumper
-        public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(60.0, 125.0);
+        public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(157, 76.89);
         // Transition position - above the lock position (arm not caught on stops)
-        public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(105.0, 85.0);   // Unfinished
+        public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
         public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(206.3, 90.0);   // Unfinished
+        public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(200, 90.0);     // Unfinished
 
-        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(194, 113);
+        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108);
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
-        public static final double      FAST_AIM_SPEED                     = .3;
-        public static final double      SLOW_AIM_SPEED                     = .1;
+        public static final double      FAST_AIM_SPEED                     = .4;
+        public static final double      SLOW_AIM_SPEED                     = .2;
         public static final double      FAST_LINK_SPEED                    = .3;
         public static final double      SLOW_LINK_SPEED                    = .1;
 
         public static final double      SLOW_ARM_ZONE_DEG                  = 20.0;
         public static final double      AT_TARGET_DEG                      = 2;
 
-        public static final double      INTAKE_INTAKE_SPEED                = .3;
+        public static final double      INTAKE_INTAKE_SPEED                = .5;
         public static final double      INTAKE_REVERSE_SPEED               = -.3;
+
+        public static final double      INTAKE_NOTE_REVERSAL_REVERSE_SPEED = -.075;
+
+        public static final double      INTAKE_NOTE_REVERSAL_FORWARD_SPEED = .1;
+
+
 
         public static final double      SHOOTER_SPEAKER_SPEED              = 0.5;
         public static final double      SHOOTER_AMP_SPEED                  = 0.2;
-        public static final double      LINK_MAX_DEGREES                   = 200;
+        public static final double      LINK_MAX_DEGREES                   = 210;
 
         public static final double      LINK_MIN_DEGREES                   = 119.11;
         public static final double      AIM_MAX_DEGREES                    = 200;
@@ -499,7 +507,6 @@ public final class Constants {
 
     public static final class ClimbConstants {
 
-        // todo: fixme: can addresses were clashing with arm - set to proper values
         public static final int    RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 60;
         public static final int    LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 61;
 
