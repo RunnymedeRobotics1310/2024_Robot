@@ -50,6 +50,7 @@ public class IntakeCommand extends ArmBaseCommand {
     @Override
     public void initialize() {
         logCommandStart();
+        state = State.WAIT_FOR_NOTE;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -129,6 +130,7 @@ public class IntakeCommand extends ArmBaseCommand {
 
             break;
 
+//            not currently being used
         case KILLED:
             if (armSubsystem.isNoteDetected()) {
                 System.out.println("switched to note_ready from killed");
@@ -157,8 +159,9 @@ public class IntakeCommand extends ArmBaseCommand {
         if (interrupted) {
             logCommandEnd(interrupted);
             armSubsystem.setIntakeSpeed(0);
-            System.out.println("interupted, switched to killed state");
-            state = IntakeCommand.State.KILLED;
+            System.out.println("interupted");
+//            Quentin said they had issues with interuptions last year, the killed state might work but idk, we arent using it
+//            state = IntakeCommand.State.KILLED;
         }
         // run if not interupted
         else {

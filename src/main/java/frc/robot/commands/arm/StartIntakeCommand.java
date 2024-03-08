@@ -3,19 +3,22 @@ package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 // Start Intake
-// Move Aim/Arm 
+// Move Aim/Arm
 public class StartIntakeCommand extends ArmBaseCommand {
 
     private enum State {
-        MOVE_TO_UNLOCK, MOVE_TO_OVER_BUMPER, MOVE_TO_INTAKE
+        MOVE_TO_UNLOCK, MOVE_TO_OVER_BUMPER, MOVE_TO_INTAKE, FINISHED
     };
 
-    private State state = State.MOVE_TO_UNLOCK;
+    private State                        state = State.MOVE_TO_UNLOCK;
+    private final JackmanVisionSubsystem m_jackmanVisionSubsystem;
 
-    public StartIntakeCommand(ArmSubsystem armSubsystem) {
+    public StartIntakeCommand(ArmSubsystem armSubsystem, JackmanVisionSubsystem jackmanVisionSubsystem) {
         super(armSubsystem);
+        this.m_jackmanVisionSubsystem = jackmanVisionSubsystem;
     }
 
     @Override
@@ -83,23 +86,31 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         case MOVE_TO_INTAKE:
 
-            // Start the intake wheels
-            armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
+            // dont Start the intake wheels because IntakeCommand does it
+//            armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
 
             // Move to the requested angle with a tolerance of 2 deg
-            this.driveToArmPosition(ArmConstants.INTAKE_ARM_POSITION, 2);
+            atArmPosition = this.driveToArmPosition(ArmConstants.INTAKE_ARM_POSITION, 2);
+
+            if (atArmPosition) {
+                System.out.println("at intake position");
+                state = State.FINISHED;
+            }
 
             break;
 
+        case FINISHED:
+
+            break;
         }
     }
 
     @Override
     public boolean isFinished() {
 
-        // If there is a note detected, then this command ends
-        if (armSubsystem.isNoteDetected()) {
-            setFinishReason("Note detected");
+        // If the arm is in position, then this command ends
+        if (state == State.FINISHED) {
+            setFinishReason("At Intake Position");
             return true;
         }
 
@@ -113,9 +124,9 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         logCommandEnd(interrupted);
 
-//        if (!interrupted) {
-//            CommandScheduler.getInstance().schedule(new intake(armSubsystem));
-//        }
+        if (!interrupted) {
+            CommandScheduler.getInstance().schedule(new IntakeCommand(armSubsystem, m_jackmanVisionSubsystem));
+        }
     }
 
 }
