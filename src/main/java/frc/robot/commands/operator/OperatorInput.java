@@ -172,7 +172,8 @@ public class OperatorInput {
         new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
-        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm)); // IntakeCommand(arm, jackman);
+        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm, jackman)); // IntakeCommand(arm,
+                                                                                                // jackman);
 
         // Aim Amp
         new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
