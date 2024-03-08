@@ -32,7 +32,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.lighting.LightingSubsystem;
@@ -56,22 +55,22 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
     public RunnymedeSwerveSubsystem(HughVisionSubsystem visionSubsystem, LightingSubsystem lightingSubsystem) {
         super(visionSubsystem, lightingSubsystem);
 
-        modules      = new SwerveModule[4];
-        modules[0]   = new SwerveModule(FRONT_LEFT, DRIVE, ANGLE);
-        modules[1]   = new SwerveModule(FRONT_RIGHT, DRIVE, ANGLE);
-        modules[2]   = new SwerveModule(BACK_LEFT, DRIVE, ANGLE);
-        modules[3]   = new SwerveModule(BACK_RIGHT, DRIVE, ANGLE);
+        modules                             = new SwerveModule[4];
+        modules[0]                          = new SwerveModule(FRONT_LEFT, DRIVE, ANGLE);
+        modules[1]                          = new SwerveModule(FRONT_RIGHT, DRIVE, ANGLE);
+        modules[2]                          = new SwerveModule(BACK_LEFT, DRIVE, ANGLE);
+        modules[3]                          = new SwerveModule(BACK_RIGHT, DRIVE, ANGLE);
 
-        kinematics   = new SwerveDriveKinematics(
+        kinematics                          = new SwerveDriveKinematics(
             Arrays.stream(modules).map(SwerveModule::getLocation).toArray(Translation2d[]::new));
 
-        gyro         = new AHRS(SerialPort.Port.kMXP);
-        gyroOffset   = gyro.getRotation3d();
-        simulatedIMU = new SimulatedIMU();
+        gyro                                = new AHRS(SerialPort.Port.kMXP);
+        gyroOffset                          = gyro.getRotation3d();
+        simulatedIMU                        = new SimulatedIMU();
 
 
-        field        = new Field2d();
-        SmartDashboard.putData(field);
+        field                               = new Field2d();
+        Telemetry.swerve.field              = field;
         Telemetry.swerve.maxSpeed           = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
         Telemetry.swerve.maxAngularVelocity = Constants.Swerve.Chassis.MAX_ROTATIONAL_VELOCITY_PER_SEC.getDegrees();
         Telemetry.swerve.moduleCount        = modules.length;

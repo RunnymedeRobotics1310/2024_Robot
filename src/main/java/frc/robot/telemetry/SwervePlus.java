@@ -46,41 +46,44 @@ public class SwervePlus {
 
 
     void post() {
-        SmartDashboard.putString("swerve/1310/rawImuDegrees", String.format("%.2f", rawImuDegrees));
-        SmartDashboard.putString("swerve/1310/adjustedImuDegrees", String.format("%.2f", adjustedImuDegrees));
+        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/rawImuDegrees", String.format("%.2f", rawImuDegrees));
+        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/adjustedImuDegrees", String.format("%.2f", adjustedImuDegrees));
 
         for (String name : modules.keySet()) {
             ModuleTelemetry module = modules.get(name);
-            SmartDashboard.putNumber("Module[" + name + "] Speed Setpoint", module.speedMetersPerSecond);
-            SmartDashboard.putNumber("Module[" + name + "] Angle Setpoint", module.angleDegrees);
+            SmartDashboard.putNumber(Telemetry.PREFIX + "Swerve/Module[" + name + "]/Speed Setpoint",
+                module.speedMetersPerSecond);
+            SmartDashboard.putNumber(Telemetry.PREFIX + "Swerve/Module[" + name + "]/Angle Setpoint", module.angleDegrees);
 
-            SmartDashboard.putNumber("Module[" + name + "] Absolute Encoder Position Degrees",
+            SmartDashboard.putNumber(Telemetry.PREFIX + "Swerve/Module[" + name + "]/Absolute Encoder Position Degrees",
                 module.absoluteEncoderPositionDegrees);
-            SmartDashboard.putString("Module[" + name + "] Angle Position", module.angleMotorPosition.toString());
-            SmartDashboard.putNumber("Module[" + name + "] Drive Position", module.driveMotorPosition);
+            SmartDashboard.putString(Telemetry.PREFIX + "Swerve/Module[" + name + "]/Angle Position",
+                module.angleMotorPosition.toString());
+            SmartDashboard.putNumber(Telemetry.PREFIX + "Swerve/Module[" + name + "]/Drive Position", module.driveMotorPosition);
 
 
         }
 
         // Swerve
-        SmartDashboard.putString("Drive/Swerve/robot_chassis_speed",
+        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/robot_chassis_speed",
             swerve_robot_chassis_speeds == null ? ""
                 : String.format("%.2f,%.2f m/s %.0f deg/s)",
                     swerve_robot_chassis_speeds.vxMetersPerSecond, swerve_robot_chassis_speeds.vyMetersPerSecond,
                     Rotation2d.fromRadians(swerve_robot_chassis_speeds.omegaRadiansPerSecond).getDegrees()));
 
-        SmartDashboard.putString("Drive/Swerve/robot_speed", swerve_robot_chassis_speeds == null ? ""
+        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/robot_speed", swerve_robot_chassis_speeds == null ? ""
             : String.format("%.2f m/s",
                 Math.hypot(swerve_robot_chassis_speeds.vxMetersPerSecond, swerve_robot_chassis_speeds.vyMetersPerSecond)));
 
-        SmartDashboard.putString("Drive/Swerve/velocity_field", LoggingCommand.format(swerve_velocity_field) + " m/s");
+        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/velocity_field",
+            LoggingCommand.format(swerve_velocity_field) + " m/s");
 
-        SmartDashboard.putString("Drive/Swerve/vispose", swerve_vispose == null ? "" : swerve_vispose.toString());
+        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/vispose", swerve_vispose == null ? "" : swerve_vispose.toString());
 
-        SmartDashboard.putString("Drive/Swerve/location", swerve_pose == null ? ""
+        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/location", swerve_pose == null ? ""
             : String.format("%.2f,%.2f m", swerve_pose.getTranslation().getX(), swerve_pose.getTranslation().getY()));
 
-        SmartDashboard.putString("Drive/Swerve/heading",
+        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/heading",
             swerve_pose == null ? "" : String.format("%.0f deg", swerve_pose.getRotation().getDegrees()));
 
     }

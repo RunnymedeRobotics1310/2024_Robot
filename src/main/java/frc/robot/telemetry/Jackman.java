@@ -15,16 +15,14 @@ public class Jackman {
     public double  ledMode             = -1310.0;
     public double  pipeline            = -1310.0;
 
-
-
     void post() {
-        SmartDashboard.putBoolean("LimelightJackman/Target Found", isVisionTargetFound);
-        SmartDashboard.putNumber("LimelightJackman/tx-value", tx);
-        SmartDashboard.putNumber("LimelightJackman/ty-value", ty);
-        SmartDashboard.putNumber("LimelightJackman/ta-value", ta);
-        SmartDashboard.putNumber("LimelightJackman/l-value", tl);
-        SmartDashboard.putNumber("LimelightJackman/Cam Mode", camMode);
-        SmartDashboard.putNumber("LimelightJackman/LED mode", ledMode);
-        SmartDashboard.putNumber("LimelightJackman/Pipeline", pipeline);
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionJackman/Target Found", isVisionTargetFound);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/tx-value", tx);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/ty-value", ty);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/ta-value", ta);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/l-value", tl);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/Cam Mode", camMode);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/LED mode", ledMode);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/Pipeline", pipeline);
     }
 }

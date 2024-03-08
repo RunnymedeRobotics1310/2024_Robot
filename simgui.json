@@ -44,6 +44,7 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/1310/Auto/Selected Pattern": "String Chooser",
       "/SmartDashboard/Auto Pattern": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
@@ -91,6 +92,56 @@
         "open": true
       },
       "SmartDashboard": {
+        "1310": {
+          "Arm": {
+            "Aim": {
+              "open": true
+            },
+            "Intake": {
+              "open": true
+            },
+            "Link": {
+              "open": true
+            },
+            "Shooter": {
+              "open": true
+            },
+            "open": true
+          },
+          "Auto": {
+            "Selected Pattern": {
+              "open": true
+            },
+            "open": true
+          },
+          "Climb": {
+            "open": true
+          },
+          "Drive": {
+            "Teleop": {
+              "open": true
+            },
+            "ToFieldPosition": {
+              "open": true
+            },
+            "open": true
+          },
+          "Lighting": {
+            "open": true
+          },
+          "Swerve": {
+            "open": true
+          },
+          "Test Mode": {
+            "open": true
+          },
+          "VisionHugh": {
+            "open": true
+          },
+          "VisionJackman": {
+            "open": true
+          }
+        },
         "Auto Pattern": {
           "string[]##v_/SmartDashboard/Auto Pattern/options": {
             "open": true
@@ -115,9 +166,6 @@
           "Position": {
             "open": true
           },
-          "open": true
-        },
-        "Swerve Drive": {
           "open": true
         },
         "open": true,

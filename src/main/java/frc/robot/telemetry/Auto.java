@@ -11,6 +11,5 @@ public class Auto {
 
     public void post() {
         SmartDashboard.putData("Auto Pattern", autoPatternChooser);
-
     }
 }

@@ -21,23 +21,23 @@ public class Arm {
     public boolean safetyEnabled              = false;
 
     void post() {
-        SmartDashboard.putNumber("Intake Motor", intakeSpeed);
-        SmartDashboard.putNumber("Intake Encoder Speed", intakeEncoderSpeed);
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "Arm/Safety", safetyEnabled);
 
-        SmartDashboard.putNumber("Shooter Motor", shooterSpeed);
-        SmartDashboard.putNumber("Shooter Encoder Speed", shooterEncoderSpeed);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Intake/Motor", intakeSpeed);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Intake/Encoder Speed", intakeEncoderSpeed);
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "Arm/Intake/Note/Detected", noteDetected);
 
-        SmartDashboard.putNumber("Link Speed", linkPivotSpeed);
-        SmartDashboard.putNumber("Link Angle", linkAngle);
-        SmartDashboard.putNumber("Link Absolute Encoder Voltage", linkAbsoluteEncoderVoltage);
-        SmartDashboard.putBoolean("Link Lower Limit", isLinkAtLowerLimit);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/Motor", shooterSpeed);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/Encoder Speed", shooterEncoderSpeed);
 
-        SmartDashboard.putNumber("Aim Speed", aimPivotSpeed);
-        SmartDashboard.putNumber("Aim Angle", aimAngle);
-        SmartDashboard.putNumber("Aim Absolute Encoder Voltage", aimAbsoluteEncoderVoltage);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Link/Speed", linkPivotSpeed);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Link/Angle", linkAngle);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Link/Absolute Encoder Voltage", linkAbsoluteEncoderVoltage);
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "Arm/Link/Lower Limit", isLinkAtLowerLimit);
 
-        SmartDashboard.putBoolean("Note Detected", noteDetected);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Aim/Speed", aimPivotSpeed);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Aim/Angle", aimAngle);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Aim/Absolute Encoder Voltage", aimAbsoluteEncoderVoltage);
 
-        SmartDashboard.putBoolean("Arm Safety", safetyEnabled);
     }
 }

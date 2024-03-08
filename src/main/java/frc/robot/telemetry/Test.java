@@ -16,11 +16,11 @@ public class Test {
 
 
     void post() {
-        SmartDashboard.putBoolean("1310 Test Mode/Enabled", enabled);
-        SmartDashboard.putString("1310 Test Mode/Motor", selectedMotor == null ? "" : selectedMotor.toString());
-        SmartDashboard.putString("1310 Test Mode/Motor Speed", String.format("%.1f", motorSpeed * 100) + " %");
-        SmartDashboard.putString("1310 Test Mode/Motor 2 Speed", String.format("%.1f", motor2Speed * 100) + " %");
-        SmartDashboard.putString("1310 Test Mode/Angle",
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "Test Mode/Enabled", enabled);
+        SmartDashboard.putString(Telemetry.PREFIX + "Test Mode/Motor", selectedMotor == null ? "" : selectedMotor.toString());
+        SmartDashboard.putString(Telemetry.PREFIX + "Test Mode/Motor Speed", String.format("%.1f", motorSpeed * 100) + " %");
+        SmartDashboard.putString(Telemetry.PREFIX + "Test Mode/Motor 2 Speed", String.format("%.1f", motor2Speed * 100) + " %");
+        SmartDashboard.putString(Telemetry.PREFIX + "Test Mode/Angle",
             angle == null ? "" : String.format("%.3f", angle.getDegrees()) + " degrees");
     }
 }

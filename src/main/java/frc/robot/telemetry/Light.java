@@ -13,11 +13,12 @@ public class Light {
     public final LinkedHashMap<String, String> regionStatus            = new LinkedHashMap<>();
 
     void post() {
-        SmartDashboard.putString("Lighting/Warning", lightstripRegionWarning == null ? "" : lightstripRegionWarning);
+        SmartDashboard.putString(Telemetry.PREFIX + "Lighting/Warning",
+            lightstripRegionWarning == null ? "" : lightstripRegionWarning);
 
         regionStatus.forEach((k, v) -> {
             if (v != null) {
-                SmartDashboard.putString("Lighting/" + k, v);
+                SmartDashboard.putString(Telemetry.PREFIX + "Lighting/" + k, v);
             }
         });
 

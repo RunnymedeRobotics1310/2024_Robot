@@ -30,22 +30,23 @@ public class Hugh {
     public String              aprilTagInfo           = null;
 
     void post() {
-        SmartDashboard.putString("VisionHugh/BotTarget", botTarget.toString());
-        SmartDashboard.putString("VisionHugh/PriorityId", "" + priorityId);
-        SmartDashboard.putBoolean("VisionHugh/Target Found", targetFound);
-        SmartDashboard.putNumber("VisionHugh/tid", tid);
-        SmartDashboard.putNumber("VisionHugh/tx", tx);
-        SmartDashboard.putNumber("VisionHugh/ty", ty);
-        SmartDashboard.putNumber("VisionHugh/ta", ta);
-        SmartDashboard.putNumber("VisionHugh/tl", tl);
-        SmartDashboard.putString("VisionHugh/Botpose", Arrays.toString(botpost));
-        SmartDashboard.putNumber("VisionHugh/TargetAvgDist", targetAvgDist);
-        SmartDashboard.putString("VisionHugh/PoseConf",
+        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/BotTarget", botTarget.toString());
+        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/PriorityId", "" + priorityId);
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionHugh/Target Found", targetFound);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/tid", tid);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/tx", tx);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/ty", ty);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/ta", ta);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/tl", tl);
+        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/Botpose", Arrays.toString(botpost));
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/TargetAvgDist", targetAvgDist);
+        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/PoseConf",
             visPose == null ? PoseConfidence.NONE.toString() : visPose.poseConfidence().toString());
-        SmartDashboard.putString("VisionHugh/NumTags", "" + numTags);
-        SmartDashboard.putString("VisionHugh/AprilTagInfo", aprilTagInfo);
-        SmartDashboard.putNumber("VisionHugh/DistToTarget", distanceToTargetMetres);
-        SmartDashboard.putBoolean("VisionHugh/AlignedWithTarget", isAlignedWithTarget);
-        SmartDashboard.putString("VisionHugh/TargetOffset", targetOffset == null ? "null" : targetOffset.toString());
+        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/NumTags", "" + numTags);
+        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/AprilTagInfo", aprilTagInfo);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/DistToTarget", distanceToTargetMetres);
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionHugh/AlignedWithTarget", isAlignedWithTarget);
+        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/TargetOffset",
+            targetOffset == null ? "null" : targetOffset.toString());
     }
 }

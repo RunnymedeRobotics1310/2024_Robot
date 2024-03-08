@@ -1,5 +1,6 @@
 package frc.robot.telemetry;
 
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -7,6 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * visualization to work. The names of the variables are important and should not be changed.
  */
 public class SwerveCore {
+    /** The Field! */
+    public Field2d  field                 = new Field2d();
     /** The number of swerve modules */
     public int      moduleCount           = -1310;
     /** The number of swerve modules */
@@ -50,6 +53,7 @@ public class SwerveCore {
 
     /** Upload data to smartdashboard */
     public void post() {
+        SmartDashboard.putData(field);
         SmartDashboard.putNumber("swerve/moduleCount", moduleCount);
         SmartDashboard.putNumberArray("swerve/wheelLocations", wheelLocations == null ? new double[0] : wheelLocations);
         SmartDashboard.putNumberArray("swerve/measuredStates", measuredStates == null ? new double[0] : measuredStates);

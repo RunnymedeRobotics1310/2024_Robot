@@ -4,10 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.LoggingCommand;
-import frc.robot.subsystems.vision.VisionPositionInfo;
 
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
@@ -34,38 +32,39 @@ public class Drive {
     void post() {
 
         // Teleop
-        SmartDashboard.putString("Drive/Teleop/Alliance", getRunnymedeAlliance().name());
+        SmartDashboard.putString(Telemetry.PREFIX + "Drive/Teleop/Alliance", getRunnymedeAlliance().name());
 
-        SmartDashboard.putNumber("Drive/Teleop/correctedHeadingDeg", teleop_correctedHeadingDeg);
-        SmartDashboard.putNumber("Drive/Teleop/vX", teleop_vX);
-        SmartDashboard.putNumber("Drive/Teleop/vY", teleop_vY);
-        SmartDashboard.putNumber("Drive/Teleop/ccwRotAngularVelPct", teleop_ccwRotAngularVelPct);
-        SmartDashboard.putNumber("Drive/Teleop/rawDesiredHeadingDeg", teleop_rawDesiredHeadingDeg);
-        SmartDashboard.putNumber("Drive/Teleop/boostFactor", teleop_boostFactor);
-        SmartDashboard.putString("Drive/Teleop/mode", teleop_mode == null ? "" : teleop_mode);
-        SmartDashboard.putBoolean("Drive/Teleop/lockOnSpeaker", teleop_lockOnSpeaker);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Drive/Teleop/vX", teleop_vX);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Drive/Teleop/vY", teleop_vY);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Drive/Teleop/correctedHeadingDeg", teleop_correctedHeadingDeg);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Drive/Teleop/ccwRotAngularVelPct", teleop_ccwRotAngularVelPct);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Drive/Teleop/rawDesiredHeadingDeg", teleop_rawDesiredHeadingDeg);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Drive/Teleop/boostFactor", teleop_boostFactor);
+        SmartDashboard.putString(Telemetry.PREFIX + "Drive/Teleop/mode", teleop_mode == null ? "" : teleop_mode);
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "Drive/Teleop/lockOnSpeaker", teleop_lockOnSpeaker);
 
-        SmartDashboard.putString("Drive/Teleop/velocity",
+        SmartDashboard.putString(Telemetry.PREFIX + "Drive/Teleop/velocity",
             teleop_velocity == null ? ""
                 : String.format("%.2f", teleop_velocity.getNorm()) + "m/s at "
                     + String.format("%.2f", teleop_velocity.getAngle().getDegrees()) + "deg");
 
-        SmartDashboard.putString("Drive/Teleop/theta ",
+        SmartDashboard.putString(Telemetry.PREFIX + "Drive/Teleop/theta ",
             teleop_theta == null ? "" : String.format("%.2f", teleop_theta.getDegrees()) + "deg");
 
-        SmartDashboard.putString("Drive/Teleop/omega",
+        SmartDashboard.putString(Telemetry.PREFIX + "Drive/Teleop/omega",
             teleop_omega == null ? "" : String.format("%.2f", teleop_omega.getDegrees()) + "deg/s");
 
 
         // drive to position
-        SmartDashboard.putString("Drive/ToFieldPosition/delta",
+        SmartDashboard.putString(Telemetry.PREFIX + "Drive/ToFieldPosition/delta",
             drive_to_pose_delta == null ? ""
                 : LoggingCommand.format(drive_to_pose_delta.getTranslation()) + " m @ "
                     + LoggingCommand.format(drive_to_pose_delta.getRotation()));
 
-        SmartDashboard.putString("Drive/ToFieldPosition/desired", LoggingCommand.format(drive_to_pose_desired));
+        SmartDashboard.putString(Telemetry.PREFIX + "Drive/ToFieldPosition/desired",
+            LoggingCommand.format(drive_to_pose_desired));
 
-        SmartDashboard.putString("Drive/ToFieldPosition/velocity",
+        SmartDashboard.putString(Telemetry.PREFIX + "Drive/ToFieldPosition/velocity",
             LoggingCommand.format(drive_to_pose_velocity) + "m/s @ " + LoggingCommand.format(drive_to_pose_omega) + "/s");
 
     }
