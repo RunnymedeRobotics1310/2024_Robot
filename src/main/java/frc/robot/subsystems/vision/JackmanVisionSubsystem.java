@@ -27,6 +27,9 @@ public class JackmanVisionSubsystem extends SubsystemBase {
     private static final long   PIPELINE_NEURALNET_NOTE_DETECT       = 7;
 
     private static final String MODEL_CLASS_NOTE                     = "note";
+
+    private static final double CLOSE_NOTE_AREA_THRESHOLD            = 7.5;
+
     NetworkTable                table                                = NetworkTableInstance.getDefault()
         .getTable("limelight-jackman");
 
@@ -53,6 +56,9 @@ public class JackmanVisionSubsystem extends SubsystemBase {
         this.ledMode.setNumber(LED_MODE_PIPELINE);
     }
 
+    public boolean isNoteClose() {
+        return ta.getDouble(-1) >= CLOSE_NOTE_AREA_THRESHOLD;
+    }
 
     public boolean isVisionTargetFound() {
         return tv.getDouble(-1) == 1;

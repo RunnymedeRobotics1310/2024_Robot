@@ -464,8 +464,14 @@ public final class Constants {
         public static final double      SLOW_ARM_ZONE_DEG                  = 20.0;
         public static final double      AT_TARGET_DEG                      = 2;
 
-        public static final double      INTAKE_INTAKE_SPEED                = .3;
+        public static final double      INTAKE_INTAKE_SPEED                = .5;
         public static final double      INTAKE_REVERSE_SPEED               = -.3;
+
+        public static final double      INTAKE_NOTE_REVERSAL_REVERSE_SPEED = -.075;
+
+        public static final double      INTAKE_NOTE_REVERSAL_FORWARD_SPEED = .1;
+
+
 
         public static final double      SHOOTER_SPEAKER_SPEED              = 0.5;
         public static final double      SHOOTER_AMP_SPEED                  = 0.2;
