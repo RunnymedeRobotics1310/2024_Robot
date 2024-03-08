@@ -151,7 +151,7 @@ public class OperatorInput {
 
         // Activate test mode
         new Trigger(() -> !DriverStation.isFMSAttached() && driverController.getBackButton() && driverController.getStartButton())
-            .onTrue(new SystemTestCommand(this, drive, arm, lighting));
+            .onTrue(new SystemTestCommand(this, drive, arm, climb, lighting));
 
         // Cancel all systems
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));

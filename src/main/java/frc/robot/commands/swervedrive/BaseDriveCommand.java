@@ -3,6 +3,7 @@ package frc.robot.commands.swervedrive;
 import static frc.robot.Constants.Swerve.Chassis.*;
 import static frc.robot.Constants.Swerve.Chassis.HeadingPIDConfig.*;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,13 +19,15 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 public abstract class BaseDriveCommand extends LoggingCommand {
     protected final SwerveSubsystem     swerve;
     private final ProfiledPIDController headingPidRad;
+    private final TrapezoidProfile.Constraints fastConstraints = new TrapezoidProfile.Constraints(MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians(),
+            MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
+    private final TrapezoidProfile.Constraints slowConstraints = new TrapezoidProfile.Constraints(Rotation2d.fromDegrees(30).getRadians(), MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
 
     public BaseDriveCommand(SwerveSubsystem swerve) {
         this.swerve = swerve;
         addRequirements(swerve);
 
-        headingPidRad = new ProfiledPIDController(P, I, D, new TrapezoidProfile.Constraints(
-            MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians(), MAX_ROTATION_ACCELERATION_RAD_PER_SEC2));
+        headingPidRad = new ProfiledPIDController(P, I, D, fastConstraints);
         headingPidRad.setTolerance(ROTATION_TOLERANCE.getRadians());
         headingPidRad.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -64,9 +67,20 @@ public abstract class BaseDriveCommand extends LoggingCommand {
         double targetRad  = normalizeRotation(target).getRadians();
         double currentRad = normalizeRotation(current).getRadians();
 
+        System.out.println("target: " + targetRad + "current: " + currentRad);
+
         if (Math.abs(targetRad - currentRad) < ROTATION_TOLERANCE.getRadians()) {
             return new Rotation2d();
         }
+
+        if (targetRad - currentRad <= ROTATION_DECELERATION_DISTANCE.getRadians()) {
+            headingPidRad.setConstraints(slowConstraints);
+        }
+        else {
+            headingPidRad.setConstraints(fastConstraints);
+        }
+
+
 
         double outputRad = headingPidRad.calculate(currentRad, targetRad);
 
