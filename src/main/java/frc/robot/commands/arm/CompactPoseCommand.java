@@ -9,7 +9,7 @@ import frc.robot.subsystems.ArmSubsystem;
 public class CompactPoseCommand extends ArmBaseCommand {
 
     private enum State {
-        MOVE_TO_OVER_BUMPER, MOVE_TO_UNLOCK, MOVE_TO_COMPACT, LOCK, LOCKED
+        MOVE_TO_OVER_INTAKE, MOVE_TO_OVER_BUMPER, MOVE_TO_UNLOCK, MOVE_TO_COMPACT, LOCK, LOCKED
     };
 
     private State state = State.MOVE_TO_OVER_BUMPER;
@@ -23,7 +23,11 @@ public class CompactPoseCommand extends ArmBaseCommand {
     public void initialize() {
         logCommandStart();
 
-        if (armSubsystem.getAimAngle() > ArmConstants.OVER_BUMPER_POSITION.aimAngle) {
+
+        if (armSubsystem.getLinkAngle() < ArmConstants.OVER_INTAKE.linkAngle) {
+            state = state.MOVE_TO_OVER_INTAKE;
+        }
+        else if (armSubsystem.getAimAngle() > ArmConstants.OVER_BUMPER_POSITION.aimAngle) {
             state = State.MOVE_TO_OVER_BUMPER;
         }
         else {
@@ -40,6 +44,16 @@ public class CompactPoseCommand extends ArmBaseCommand {
         boolean atArmAngle = false;
 
         switch (state) {
+
+        case MOVE_TO_OVER_INTAKE:
+
+            atArmAngle = this.driveToArmPosition(ArmConstants.OVER_INTAKE, 5);
+
+            if (atArmAngle) {
+                logStateTransition("Move to over intake", "Arm ground");
+
+            }
+        break;
 
         case MOVE_TO_OVER_BUMPER:
 

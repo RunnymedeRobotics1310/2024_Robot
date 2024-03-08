@@ -184,7 +184,7 @@ public class OperatorInput {
         new Trigger(operatorController::getBButton).onTrue(new ManualShootCommand(arm));
 
         // Test Drive to 2,2,20
-        new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive, BLUE_2_2_20, RED_2_2_20));
+        //new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive, BLUE_2_2_20, RED_2_2_20));
 
         // Climbs Up pov 0
         // Climbs Down pov 180

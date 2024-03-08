@@ -48,7 +48,8 @@ public abstract class ArmBaseCommand extends LoggingCommand {
         // Move the motor with the larger error at the appropriate speed (Fast or Slow)
         // depending on the error
 
-        if (Math.abs(aimAngleError) >= Math.abs(linkAngleError)) {
+        //if (Math.abs(aimAngleError) >= Math.abs(linkAngleError)) {
+        if (linkAngleError > 0 || aimAngleError > 0) {
 
             aimSpeed = ArmConstants.FAST_AIM_SPEED;
 
