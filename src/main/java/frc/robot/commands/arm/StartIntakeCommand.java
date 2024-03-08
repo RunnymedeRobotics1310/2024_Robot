@@ -114,7 +114,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
         logCommandEnd(interrupted);
 
 //        if (!interrupted) {
-//            CommandScheduler.getInstance().schedule(new CompactPoseCommand(armSubsystem));
+//            CommandScheduler.getInstance().schedule(new intake(armSubsystem));
 //        }
     }
 

@@ -172,7 +172,7 @@ public class OperatorInput {
         new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
-        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm)); // IntakeCommand(arm, jackman);
+        new Trigger(driverController::getAButton).onTrue(new IntakeCommand(arm, jackman));
 
         // Aim Amp
         new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
@@ -184,7 +184,8 @@ public class OperatorInput {
         new Trigger(operatorController::getBButton).onTrue(new ManualShootCommand(arm));
 
         // Test Drive to 2,2,20
-        new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive, BLUE_2_2_20, RED_2_2_20));
+        // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,
+        // BLUE_2_2_20, RED_2_2_20));
 
         // Climbs Up pov 0
         // Climbs Down pov 180
