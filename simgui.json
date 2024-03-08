@@ -30,11 +30,6 @@
         "visible": false
       }
     },
-    "PWM Outputs": {
-      "window": {
-        "visible": true
-      }
-    },
     "Timing": {
       "window": {
         "visible": false
@@ -44,7 +39,20 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/1310 Auto Pattern": "String Chooser",
+      "/SmartDashboard/1310/Auto Pattern": "String Chooser",
       "/SmartDashboard/1310/Auto/Selected Pattern": "String Chooser",
+      "/SmartDashboard/1310/Telemetry - Arm": "String Chooser",
+      "/SmartDashboard/1310/Telemetry/Arm": "String Chooser",
+      "/SmartDashboard/1310/Telemetry/Auto": "String Chooser",
+      "/SmartDashboard/1310/Telemetry/Climb": "String Chooser",
+      "/SmartDashboard/1310/Telemetry/Drive": "String Chooser",
+      "/SmartDashboard/1310/Telemetry/Hugh": "String Chooser",
+      "/SmartDashboard/1310/Telemetry/Jackman": "String Chooser",
+      "/SmartDashboard/1310/Telemetry/Light": "String Chooser",
+      "/SmartDashboard/1310/Telemetry/Swerve": "String Chooser",
+      "/SmartDashboard/1310/Telemetry/Swerve1310": "String Chooser",
+      "/SmartDashboard/1310/Telemetry/Test": "String Chooser",
       "/SmartDashboard/Arm Telemetry": "String Chooser",
       "/SmartDashboard/Auto Pattern": "String Chooser",
       "/SmartDashboard/Auto Telemetry": "String Chooser",
@@ -56,31 +64,65 @@
       "/SmartDashboard/Light Telemetry": "String Chooser",
       "/SmartDashboard/Swerve Telemetry": "String Chooser",
       "/SmartDashboard/Swerve1310 Telemetry": "String Chooser",
+      "/SmartDashboard/Telemetry - Auto": "String Chooser",
+      "/SmartDashboard/Telemetry - Climb": "String Chooser",
+      "/SmartDashboard/Telemetry - Drive": "String Chooser",
+      "/SmartDashboard/Telemetry - Hugh": "String Chooser",
+      "/SmartDashboard/Telemetry - Jackman": "String Chooser",
+      "/SmartDashboard/Telemetry - Light": "String Chooser",
+      "/SmartDashboard/Telemetry - Swerve": "String Chooser",
+      "/SmartDashboard/Telemetry - Swerve1310": "String Chooser",
+      "/SmartDashboard/Telemetry - Test": "String Chooser",
       "/SmartDashboard/Test Telemetry": "String Chooser",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },
     "windows": {
-      "/SmartDashboard/Arm Telemetry": {
+      "/SmartDashboard/1310/Auto Pattern": {
         "window": {
           "visible": true
         }
       },
-      "/SmartDashboard/Auto Pattern": {
+      "/SmartDashboard/1310/Telemetry/Arm": {
         "window": {
           "visible": true
         }
       },
-      "/SmartDashboard/Auto Telemetry": {
+      "/SmartDashboard/1310/Telemetry/Climb": {
         "window": {
           "visible": true
         }
       },
-      "/SmartDashboard/Climb Telemetry": {
+      "/SmartDashboard/1310/Telemetry/Drive": {
         "window": {
           "visible": true
         }
       },
-      "/SmartDashboard/Drive Telemetry": {
+      "/SmartDashboard/1310/Telemetry/Hugh": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/1310/Telemetry/Jackman": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/1310/Telemetry/Light": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/1310/Telemetry/Swerve": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/1310/Telemetry/Swerve1310": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/1310/Telemetry/Test": {
         "window": {
           "visible": true
         }
@@ -102,46 +144,26 @@
         "window": {
           "visible": true
         }
-      },
-      "/SmartDashboard/Hugh Telemetry": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Jackman Telemetry": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Light Telemetry": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Swerve Telemetry": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Swerve1310 Telemetry": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Test Telemetry": {
-        "window": {
-          "visible": true
-        }
       }
     }
   },
   "NetworkTables": {
     "retained": {
       "SmartDashboard": {
+        "1310": {
+          "Telemetry": {
+            "Arm": {
+              "open": true
+            },
+            "Auto": {
+              "open": true
+            },
+            "open": true
+          }
+        },
         "Auto Pattern": {
           "open": true
-        },
-        "open": true
+        }
       }
     },
     "transitory": {
@@ -186,6 +208,11 @@
           },
           "Swerve": {
             "open": true
+          },
+          "Telemetry": {
+            "Arm": {
+              "open": true
+            }
           },
           "VisionHugh": {
             "open": true

@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class TelemetryConfig {
 
     public SendableChooser<Boolean> telemetryArmChooser        = new SendableChooser<>();
-    public SendableChooser<Boolean> telemetryAutoChooser       = new SendableChooser<>();
     public SendableChooser<Boolean> telemetryClimbChooser      = new SendableChooser<>();
     public SendableChooser<Boolean> telemetryDriveChooser      = new SendableChooser<>();
     public SendableChooser<Boolean> telemetryHughChooser       = new SendableChooser<>();
@@ -19,9 +18,6 @@ public class TelemetryConfig {
     TelemetryConfig() {
         telemetryArmChooser.addOption("Enabled", true);
         telemetryArmChooser.setDefaultOption("Disabled", false);
-
-        telemetryAutoChooser.addOption("Enabled", true);
-        telemetryAutoChooser.setDefaultOption("Disabled", false);
 
         telemetryClimbChooser.addOption("Enabled", true);
         telemetryClimbChooser.setDefaultOption("Disabled", false);
@@ -49,16 +45,15 @@ public class TelemetryConfig {
     }
 
     void post() {
-        SmartDashboard.putData("Arm Telemetry", telemetryArmChooser);
-        SmartDashboard.putData("Auto Telemetry", telemetryAutoChooser);
-        SmartDashboard.putData("Climb Telemetry", telemetryClimbChooser);
-        SmartDashboard.putData("Drive Telemetry", telemetryDriveChooser);
-        SmartDashboard.putData("Hugh Telemetry", telemetryHughChooser);
-        SmartDashboard.putData("Jackman Telemetry", telemetryJackmanChooser);
-        SmartDashboard.putData("Light Telemetry", telemetryLightChooser);
-        SmartDashboard.putData("Swerve Telemetry", telemetrySwerveChooser);
-        SmartDashboard.putData("Swerve1310 Telemetry", telemetrySwerve1310Chooser);
-        SmartDashboard.putData("Test Telemetry", telemetryTestChooser);
+        SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Arm", telemetryArmChooser);
+        SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Climb", telemetryClimbChooser);
+        SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Drive", telemetryDriveChooser);
+        SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Hugh", telemetryHughChooser);
+        SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Jackman", telemetryJackmanChooser);
+        SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Light", telemetryLightChooser);
+        SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Swerve", telemetrySwerveChooser);
+        SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Swerve1310", telemetrySwerve1310Chooser);
+        SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Test", telemetryTestChooser);
     }
 
     boolean arm() {
@@ -67,8 +62,7 @@ public class TelemetryConfig {
     }
 
     boolean auto() {
-        Boolean enabled = telemetryAutoChooser.getSelected();
-        return enabled != null && enabled;
+        return true;
     }
 
     boolean climb() {
