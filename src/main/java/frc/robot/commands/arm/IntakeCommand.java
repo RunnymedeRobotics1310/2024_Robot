@@ -5,9 +5,8 @@ import frc.robot.commands.LoggingCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
-public class IntakeCommand extends LoggingCommand {
+public class IntakeCommand extends ArmBaseCommand {
 
-    private final ArmSubsystem           armSubsystem;
     private final JackmanVisionSubsystem jackmanVisionSubsystem;
 
     private static final long            NOTE_DETECT_TIMEOUT = 10000;
@@ -37,12 +36,12 @@ public class IntakeCommand extends LoggingCommand {
      */
     public IntakeCommand(ArmSubsystem armSubsystem,
         JackmanVisionSubsystem jackmanVisionSubsystem) {
+        super(armSubsystem);
 
-        this.armSubsystem           = armSubsystem;
         this.jackmanVisionSubsystem = jackmanVisionSubsystem;
 
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(armSubsystem);
+        addRequirements(jackmanVisionSubsystem);
     }
 
     // Called when the command is initially scheduled.
@@ -55,6 +54,8 @@ public class IntakeCommand extends LoggingCommand {
     @Override
     public void execute() {
 
+
+        boolean atArmPosition = false;
         switch (state) {
 
         case WAIT_FOR_NOTE:
@@ -77,7 +78,7 @@ public class IntakeCommand extends LoggingCommand {
         case NOTE_DETECTED:
             if (armSubsystem.isNoteDetected()) {
                 armUpStartTime = System.currentTimeMillis();
-                armSubsystem.setAimPivotSpeed(0.4);
+
                 System.out.println("Switched to Raise Arm");
                 state = IntakeCommand.State.RAISE_ARM;
             }
@@ -95,8 +96,12 @@ public class IntakeCommand extends LoggingCommand {
             if (System.currentTimeMillis() - armUpStartTime >= ARM_UP_TIME) {
                 armSubsystem.setAimPivotSpeed(0);
                 armSubsystem.setIntakeSpeed(Constants.ArmConstants.INTAKE_NOTE_REVERSAL_REVERSE_SPEED);
-                System.out.println("Switched to Reverse Note");
-                state = IntakeCommand.State.REVERSE_NOTE;
+
+                atArmPosition = this.driveToArmPosition(Constants.ArmConstants.OVER_BUMPER_POSITION, 5);
+                if (atArmPosition) {
+                    System.out.println("Switched to Reverse Note");
+                    state = IntakeCommand.State.REVERSE_NOTE;
+                }
             }
             break;
 
