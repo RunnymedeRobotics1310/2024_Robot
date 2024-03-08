@@ -51,7 +51,7 @@ public class CompactPoseCommand extends ArmBaseCommand {
 
             if (atArmAngle) {
                 logStateTransition("Move to over intake", "Arm ground");
-
+                state = State.MOVE_TO_OVER_BUMPER;
             }
         break;
 

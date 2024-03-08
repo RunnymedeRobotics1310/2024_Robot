@@ -223,7 +223,7 @@ public class OperatorInput {
         case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh);
         case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman);
-        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, hugh);
+        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh);
         case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman);
         case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman);
         case PLAN_B -> new PlanBAutoCommand(drive);
