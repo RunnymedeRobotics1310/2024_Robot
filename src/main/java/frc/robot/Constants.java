@@ -449,6 +449,7 @@ public final class Constants {
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
         public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(206.3, 90.0);   // Unfinished
+        public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(200, 90.0);     // Unfinished
 
         public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108);
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
