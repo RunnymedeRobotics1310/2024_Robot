@@ -38,6 +38,7 @@ import frc.robot.Robot;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
+import frc.robot.telemetry.Telemetry1310;
 
 import java.util.Arrays;
 
@@ -73,22 +74,22 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
 
         field        = new Field2d();
         SmartDashboard.putData(field);
-        Telemetry.maxSpeed           = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
-        Telemetry.maxAngularVelocity = Constants.Swerve.Chassis.MAX_ROTATIONAL_VELOCITY_PER_SEC.getDegrees();
-        Telemetry.moduleCount        = modules.length;
-        Telemetry.sizeFrontBack      = metersToInches(Constants.Swerve.Chassis.WHEEL_BASE_METRES);
-        Telemetry.sizeLeftRight      = metersToInches(Constants.Swerve.Chassis.TRACK_WIDTH_METRES);
-        Telemetry.wheelLocations     = new double[Telemetry.moduleCount * 2];
+        Telemetry1310.swerveCore.maxSpeed           = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
+        Telemetry1310.swerveCore.maxAngularVelocity = Constants.Swerve.Chassis.MAX_ROTATIONAL_VELOCITY_PER_SEC.getDegrees();
+        Telemetry1310.swerveCore.moduleCount        = modules.length;
+        Telemetry1310.swerveCore.sizeFrontBack      = metersToInches(Constants.Swerve.Chassis.WHEEL_BASE_METRES);
+        Telemetry1310.swerveCore.sizeLeftRight      = metersToInches(Constants.Swerve.Chassis.TRACK_WIDTH_METRES);
+        Telemetry1310.swerveCore.wheelLocations     = new double[Telemetry1310.swerveCore.moduleCount * 2];
         for (int i = 0; i < modules.length; i++) {
             SwerveModule module = modules[i];
-            Telemetry.wheelLocations[i * 2]     = metersToInches(module.getLocation().getX());
-            Telemetry.wheelLocations[i * 2 + 1] = metersToInches(module.getLocation().getY());
+            Telemetry1310.swerveCore.wheelLocations[i * 2]     = metersToInches(module.getLocation().getX());
+            Telemetry1310.swerveCore.wheelLocations[i * 2 + 1] = metersToInches(module.getLocation().getY());
         }
-        Telemetry.measuredStates      = new double[Telemetry.moduleCount * 2];
-        Telemetry.desiredStates       = new double[Telemetry.moduleCount * 2];
+        Telemetry1310.swerveCore.measuredStates = new double[Telemetry1310.swerveCore.moduleCount * 2];
+        Telemetry1310.swerveCore.desiredStates  = new double[Telemetry1310.swerveCore.moduleCount * 2];
 
 
-        this.swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(
+        this.swerveDrivePoseEstimator           = new SwerveDrivePoseEstimator(
             this.kinematics,
             gyro.getRotation3d().minus(gyroOffset).toRotation2d(),
             Arrays.stream(modules).map(SwerveModule::getPosition).toArray(SwerveModulePosition[]::new),
@@ -115,22 +116,20 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
     @Override
     public void updateTelemetry() {
         ChassisSpeeds measuredChassisSpeeds = kinematics.toChassisSpeeds(getStates());
-        Telemetry.measuredChassisSpeeds[1] = measuredChassisSpeeds.vyMetersPerSecond;
-        Telemetry.measuredChassisSpeeds[0] = measuredChassisSpeeds.vxMetersPerSecond;
-        Telemetry.measuredChassisSpeeds[2] = Math.toDegrees(measuredChassisSpeeds.omegaRadiansPerSecond);
-        Telemetry.robotRotation            = getPose().getRotation().getDegrees();
-        Telemetry.rawImuDegrees            = gyro.getRotation3d().toRotation2d().getDegrees();
-        Telemetry.adjustedImuDegrees       = gyro.getRotation3d().minus(gyroOffset).toRotation2d().getDegrees();
+        Telemetry1310.swerveCore.measuredChassisSpeeds[1] = measuredChassisSpeeds.vyMetersPerSecond;
+        Telemetry1310.swerveCore.measuredChassisSpeeds[0] = measuredChassisSpeeds.vxMetersPerSecond;
+        Telemetry1310.swerveCore.measuredChassisSpeeds[2] = Math.toDegrees(measuredChassisSpeeds.omegaRadiansPerSecond);
+        Telemetry1310.swerveCore.robotRotation            = getPose().getRotation().getDegrees();
+        Telemetry1310.swervePlus.rawImuDegrees            = gyro.getRotation3d().toRotation2d().getDegrees();
+        Telemetry1310.swervePlus.adjustedImuDegrees       = gyro.getRotation3d().minus(gyroOffset).toRotation2d().getDegrees();
 
         for (int i = 0; i < modules.length; i++) {
             SwerveModule      module      = modules[i];
             SwerveModuleState moduleState = module.getState();
-            Telemetry.measuredStates[i * 2]       = moduleState.angle.getDegrees();
-            Telemetry.measuredStates[(i * 2) + 1] = moduleState.speedMetersPerSecond;
+            Telemetry1310.swerveCore.measuredStates[i * 2]       = moduleState.angle.getDegrees();
+            Telemetry1310.swerveCore.measuredStates[(i * 2) + 1] = moduleState.speedMetersPerSecond;
             module.updateTelemetry();
         }
-
-        Telemetry.updateData();
     }
 
     @Override
@@ -144,15 +143,15 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
             swerveModuleStates, velocity,
             MAX_MODULE_SPEED_MPS, MAX_TRANSLATION_SPEED_MPS, MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians());
 
-        Telemetry.desiredChassisSpeeds[1] = velocity.vyMetersPerSecond;
-        Telemetry.desiredChassisSpeeds[0] = velocity.vxMetersPerSecond;
-        Telemetry.desiredChassisSpeeds[2] = Math.toDegrees(velocity.omegaRadiansPerSecond);
+        Telemetry1310.swerveCore.desiredChassisSpeeds[1] = velocity.vyMetersPerSecond;
+        Telemetry1310.swerveCore.desiredChassisSpeeds[0] = velocity.vxMetersPerSecond;
+        Telemetry1310.swerveCore.desiredChassisSpeeds[2] = Math.toDegrees(velocity.omegaRadiansPerSecond);
 
         // set states
         for (int i = 0; i < modules.length; i++) {
             modules[i].setDesiredState(swerveModuleStates[i]);
-            Telemetry.desiredStates[i * 2]       = swerveModuleStates[i].angle.getDegrees();
-            Telemetry.desiredStates[(i * 2) + 1] = swerveModuleStates[i].speedMetersPerSecond;
+            Telemetry1310.swerveCore.desiredStates[i * 2]       = swerveModuleStates[i].angle.getDegrees();
+            Telemetry1310.swerveCore.desiredStates[(i * 2) + 1] = swerveModuleStates[i].speedMetersPerSecond;
 
         }
     }
@@ -205,8 +204,8 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
         // set speed to 0 and angle wheels to center
         for (int i = 0; i < modules.length; i++) {
             modules[i].setDesiredState(new SwerveModuleState(0.0, modules[i].getPosition().angle));
-            Telemetry.desiredStates[i * 2]       = modules[i].getPosition().angle.getDegrees();
-            Telemetry.desiredStates[(i * 2) + 1] = 0;
+            Telemetry1310.swerveCore.desiredStates[i * 2]       = modules[i].getPosition().angle.getDegrees();
+            Telemetry1310.swerveCore.desiredStates[(i * 2) + 1] = 0;
         }
 
         // tell kinematics that we aren't moving

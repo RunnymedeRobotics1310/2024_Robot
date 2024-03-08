@@ -49,7 +49,6 @@ public class Robot extends TimedRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
-        Telemetry1310.allianceName = getRunnymedeAlliance().name();
         Telemetry1310.post();
     }
 

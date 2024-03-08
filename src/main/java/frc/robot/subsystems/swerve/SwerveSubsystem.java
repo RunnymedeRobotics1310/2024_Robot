@@ -66,7 +66,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
 
         ChassisSpeeds safeVelocity = new ChassisSpeeds(x, y, w);
 
-        Telemetry1310.drive.swerve_robot_chassis_speeds = safeVelocity;
+        Telemetry1310.swervePlus.swerve_robot_chassis_speeds = safeVelocity;
 
         driveRawRobotOriented(safeVelocity);
     }
@@ -100,7 +100,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         double     y     = velocity.getY();
         double     w     = omega.getRadians();
         Rotation2d theta = this.getPose().getRotation();
-        Telemetry1310.drive.swerve_velocity_field = velocity;
+        Telemetry1310.swervePlus.swerve_velocity_field = velocity;
 
         ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, w, theta);
         this.driveRobotOriented(chassisSpeeds);
@@ -149,7 +149,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
      */
     private void updateOdometryWithVisionInfo() {
         VisionPositionInfo visPose = visionSubsystem.getPositionInfo();
-        Telemetry1310.drive.swerve_vispose = visPose;
+        Telemetry1310.swervePlus.swerve_vispose = visPose;
 
         // ignore unreliable info from vision subsystem
         if (visPose == null) {
@@ -213,7 +213,7 @@ public abstract class SwerveSubsystem extends SubsystemBase {
         updateOdometryWithVisionInfo();
         updateTelemetry();
         Pose2d pose = getPose();
-        Telemetry1310.drive.swerve_pose = pose;
+        Telemetry1310.swervePlus.swerve_pose = pose;
     }
 
     @Override
