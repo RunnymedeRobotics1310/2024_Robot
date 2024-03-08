@@ -91,6 +91,6 @@ public class CancelCommand extends LoggingCommand {
         // Stop all of the robot movement
         swerve.driveFieldOriented(DONT_MOVE, DONT_TURN);
         armSubsystem.stop();
-        climbSubsystem.setClimbSpeeds(0, 0);
+        climbSubsystem.stop();
     }
 }
