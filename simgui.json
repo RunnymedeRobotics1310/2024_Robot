@@ -45,12 +45,42 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/1310/Auto/Selected Pattern": "String Chooser",
+      "/SmartDashboard/Arm Telemetry": "String Chooser",
       "/SmartDashboard/Auto Pattern": "String Chooser",
+      "/SmartDashboard/Auto Telemetry": "String Chooser",
+      "/SmartDashboard/Climb Telemetry": "String Chooser",
+      "/SmartDashboard/Drive Telemetry": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Hugh Telemetry": "String Chooser",
+      "/SmartDashboard/Jackman Telemetry": "String Chooser",
+      "/SmartDashboard/Light Telemetry": "String Chooser",
+      "/SmartDashboard/Swerve Telemetry": "String Chooser",
+      "/SmartDashboard/Swerve1310 Telemetry": "String Chooser",
+      "/SmartDashboard/Test Telemetry": "String Chooser",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },
     "windows": {
+      "/SmartDashboard/Arm Telemetry": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Auto Pattern": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Auto Telemetry": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Climb Telemetry": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Drive Telemetry": {
         "window": {
           "visible": true
         }
@@ -69,6 +99,36 @@
         "right": 2961,
         "top": 79,
         "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Hugh Telemetry": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Jackman Telemetry": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Light Telemetry": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Swerve Telemetry": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Swerve1310 Telemetry": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Test Telemetry": {
         "window": {
           "visible": true
         }
@@ -105,16 +165,12 @@
             },
             "Shooter": {
               "open": true
-            },
-            "open": true
+            }
           },
           "Auto": {
             "Selected Pattern": {
               "open": true
             },
-            "open": true
-          },
-          "Climb": {
             "open": true
           },
           "Drive": {
@@ -123,8 +179,7 @@
             },
             "ToFieldPosition": {
               "open": true
-            },
-            "open": true
+            }
           },
           "Lighting": {
             "open": true
@@ -132,15 +187,13 @@
           "Swerve": {
             "open": true
           },
-          "Test Mode": {
-            "open": true
-          },
           "VisionHugh": {
             "open": true
           },
           "VisionJackman": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Auto Pattern": {
           "string[]##v_/SmartDashboard/Auto Pattern/options": {
