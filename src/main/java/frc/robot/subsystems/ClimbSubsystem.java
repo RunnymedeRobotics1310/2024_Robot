@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.Climbing;
 import frc.robot.telemetry.Telemetry;
 
 public class ClimbSubsystem extends SubsystemBase {
@@ -18,16 +19,14 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private final CANSparkMax       rightClimbMotor       = new CANSparkMax(ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-//     private final DigitalInput linkLowerLimitSwitch = new
-//     DigitalInput(Constants.ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
     private final DigitalInput      rightClimbLimitSwitch = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
     private final DigitalInput      leftClimbLimitSwitch  = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
 
     private double                  rightClimbSpeed       = 0;
     private double                  leftClimbSpeed        = 0;
+    private boolean                 rightEncoderZeroed    = false;
+    private boolean                 leftEncoderZeroed     = false;
 
-    private boolean                 safetyEnabled         = false;
-    private long                    safetyStartTime       = 0;
 
     public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
         this.lighting = lightingSubsystem;
@@ -40,18 +39,17 @@ public class ClimbSubsystem extends SubsystemBase {
 
         checkClimbSafety();
 
+        if (rightEncoderZeroed && leftEncoderZeroed) {
+            if (leftClimbSpeed > 0 || rightClimbSpeed > 0) {
+                lighting.addPattern(Climbing.getInstance());
+            }
+            else {
+                lighting.removePattern(Climbing.class);
+            }
+        }
+
         leftClimbMotor.set(leftClimbSpeed);
         rightClimbMotor.set(rightClimbSpeed);
-    }
-
-    public double getRightClimbEncoder() {
-        return rightClimbMotor.getEncoder().getPosition();
-//         return 0;
-    }
-
-    public double getLeftClimbEncoder() {
-        return leftClimbMotor.getEncoder().getPosition();
-//        return 0;
     }
 
     private boolean isRightClimbAtLimit() {
@@ -69,6 +67,28 @@ public class ClimbSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
+        if (rightClimbLimitSwitch.get()) {
+            rightEncoderZeroed = true;
+            if (rightClimbMotor.getEncoder().getPosition() > 0) {
+                rightClimbMotor.getEncoder().setPosition(0);
+            }
+        }
+
+        if (leftClimbLimitSwitch.get()) {
+            leftEncoderZeroed = true;
+            if (leftClimbMotor.getEncoder().getPosition() > 0) {
+                leftClimbMotor.getEncoder().setPosition(0);
+            }
+        }
+
+        if (!rightEncoderZeroed) {
+            rightClimbMotor.set(-ClimbConstants.SLOW_SPEED);
+        }
+
+        if (!leftEncoderZeroed) {
+            leftClimbMotor.set(-ClimbConstants.SLOW_SPEED);
+        }
+
         /*
          * Safety-check all of the motors speeds, and
          * set the motor outputs.
@@ -79,70 +99,21 @@ public class ClimbSubsystem extends SubsystemBase {
          */
         setClimbSpeeds(leftClimbSpeed, rightClimbSpeed);
 
-        // Latch the climb safety for 2 seconds when a safety condition
-        // is activated.
-        if (safetyEnabled) {
-            if ((System.currentTimeMillis() - safetyStartTime) > 2000) {
-                safetyEnabled = false;
-            }
-        }
-
         /*
          * Update the SmartDashboard
          */
 
         Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
-        Telemetry.climb.leftClimbEncoder  = getLeftClimbEncoder();
+        Telemetry.climb.leftClimbEncoder  = leftClimbMotor.getEncoder().getPosition();
         Telemetry.climb.rightClimbSpeed   = rightClimbSpeed;
-        Telemetry.climb.rightClimbEncoder = getRightClimbEncoder();
-        Telemetry.climb.safetyEnabled     = safetyEnabled;
+        Telemetry.climb.rightClimbEncoder = rightClimbMotor.getEncoder().getPosition();
         Telemetry.climb.rightLimit        = isRightClimbAtLimit();
         Telemetry.climb.leftLimit         = isLeftClimbAtLimit();
     }
 
     private void checkClimbSafety() {
-
-        // NOTE: Set safetyEnabled = true if a safety condition
-        // is encountered
-
-        leftClimbSpeed = checkClimbSafety(leftClimbSpeed, getLeftClimbEncoder());
-        /*
-         * RIGHT CLIMB RANGE
-         *
-         * if (rightClimbSpeed < 0 && rightClimbSpeedEncoder <= ClimbConstants.CLIMB_MIN) {
-         * rightClimbSpeed = 0;
-         * safetyEnabled = true;
-         * safetyStartTime = System.currentTimeMillis();
-         * System.out.println("right min");
-         * }
-         *
-         * if (rightClimbSpeed > 0 && rightClimbSpeedEncoder <= ClimbConstants.CLIMB_MAX) {
-         * rightClimbSpeed = 0;
-         * safetyEnabled = true;
-         * safetyStartTime = System.currentTimeMillis();
-         * System.out.println("right max");
-         * }
-         *
-         * /*
-         * LEFT CLIMB RANGE
-         *
-         *
-         * if (leftClimbSpeed < 0 && leftClimbSpeedEncoder <= ClimbConstants.CLIMB_MIN) {
-         * leftClimbSpeed = 0;
-         * safetyEnabled = true;
-         * safetyStartTime = System.currentTimeMillis();
-         * System.out.println("left min");
-         * }
-         *
-         * if (leftClimbSpeed > 0 && leftClimbSpeedEncoder <= ClimbConstants.CLIMB_MAX) {
-         * leftClimbSpeed = 0;
-         * safetyEnabled = true;
-         * safetyStartTime = System.currentTimeMillis();
-         * System.out.println("left max");
-         * }
-         */
-
-        return;
+        rightClimbSpeed = checkClimbSafety(rightClimbSpeed, rightClimbMotor.getEncoder().getPosition());
+        leftClimbSpeed  = checkClimbSafety(leftClimbSpeed, leftClimbMotor.getEncoder().getPosition());
     }
 
     private double checkClimbSafety(double climbSpeed, double climbEncoder) {
@@ -156,6 +127,13 @@ public class ClimbSubsystem extends SubsystemBase {
         if (climbSpeed > 0 && climbEncoder > ClimbConstants.CLIMB_MAX) {
             return 0;
         }
+
+        // Slow zones
+        if (climbSpeed > ClimbConstants.SLOW_SPEED
+            && (climbEncoder < ClimbConstants.BOTTOM_SLOW_ZONE || climbEncoder > ClimbConstants.TOP_SLOW_ZONE)) {
+            return Math.signum(climbSpeed) * ClimbConstants.SLOW_SPEED;
+        }
+
         return climbSpeed;
     }
 

@@ -30,8 +30,6 @@ public class StartIntakeCommand extends ArmBaseCommand {
             return;
         }
 
-        logCommandStart();
-
         // If the arm is at the resting position, go to the unlock position first
         // If the aim is inside the bumper area, then move to over bumper first
         // else just go to the intake position
@@ -45,6 +43,8 @@ public class StartIntakeCommand extends ArmBaseCommand {
             state = State.MOVE_TO_INTAKE;
         }
 
+        logCommandStart(state.name());
+
     }
 
     @Override
@@ -55,7 +55,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
             return;
         }
 
-        boolean atArmPosition = false;
+        boolean atArmPosition;
 
         switch (state) {
 
@@ -93,7 +93,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
             atArmPosition = this.driveToArmPosition(ArmConstants.INTAKE_ARM_POSITION, 5);
 
             if (atArmPosition) {
-                System.out.println("at intake position");
+                logStateTransition(State.FINISHED.name(), "At intake position");
                 state = State.FINISHED;
             }
 
