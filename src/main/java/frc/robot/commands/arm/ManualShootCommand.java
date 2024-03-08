@@ -20,11 +20,13 @@ public class ManualShootCommand extends ArmBaseCommand {
 
     @Override
     public void initialize() {
+        startTimeMs = System.currentTimeMillis();
+        state = State.START_SHOOTER;
         // If there is no note detected, then why are we aiming?
-        if (!armSubsystem.isNoteDetected()) {
-            System.out.println(" No note detected in robot. ShootCommand cancelled");
-            return;
-        }
+//        if (!armSubsystem.isNoteDetected()) {
+//            System.out.println(" No note detected in robot. ShootCommand cancelled");
+//            return;
+//        }
 
         logCommandStart();
 
@@ -42,8 +44,7 @@ public class ManualShootCommand extends ArmBaseCommand {
 
             intakeSpeed = 1;
             armSubsystem.setIntakeSpeed(intakeSpeed);
-            startTimeMs = System.currentTimeMillis();
-            if (((System.currentTimeMillis() - startTimeMs) / 1000.0d) > 1) {
+            if (((armSubsystem.getIntakeEncoderSpeed())) >= 70) {
                 state = State.STOP_INTAKE;
             }
 
@@ -59,10 +60,9 @@ public class ManualShootCommand extends ArmBaseCommand {
 
         case START_SHOOTER:
 
-            shooterSpeed = 1;
+            shooterSpeed = 0.75;
             armSubsystem.setShooterSpeed(shooterSpeed);
-            startTimeMs = System.currentTimeMillis();
-            if (((System.currentTimeMillis() - startTimeMs) / 1000.0d) > 1) {
+            if (((armSubsystem.getShooterEncoderSpeed())) >= 120) {
                 state = State.START_INTAKE;
             }
 
@@ -77,5 +77,12 @@ public class ManualShootCommand extends ArmBaseCommand {
         }
     }
 
+    public boolean isFinished() {
+        if ( state == State.STOP_SHOOTER) {
+            armSubsystem.setShooterSpeed(0);
+            return true;
+        }
+        return false;
+    }
 
 }
