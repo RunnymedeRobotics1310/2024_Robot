@@ -441,15 +441,15 @@ public final class Constants {
         /*
          * Key Arm Positions
          */
-        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185.65, 38);
-        public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(119.11, 104.18);
+        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185.65, 35);
+        public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(114, 118);
 
         public static final ArmPosition OVER_INTAKE                         = new ArmPosition(134, 104);
 
         // Transition position - over bumper
         public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(157, 76.89);
         // Transition position - above the lock position (arm not caught on stops)
-        public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(195, 35);
+        public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
         public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(206.3, 90.0);   // Unfinished
         public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(183, 45);     // Unfinished
