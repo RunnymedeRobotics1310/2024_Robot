@@ -103,7 +103,7 @@ public class OperatorInput {
     }
 
     public boolean isCancel() {
-        return driverController.getStartButton();
+        return (driverController.getStartButton() || operatorController.getStartButton());
     }
 
     public boolean isShift() {
@@ -172,7 +172,7 @@ public class OperatorInput {
         new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
-        new Trigger(driverController::getAButton).onTrue(new IntakeCommand(arm, jackman));
+        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm)); // IntakeCommand(arm, jackman);
 
         // Aim Amp
         new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));

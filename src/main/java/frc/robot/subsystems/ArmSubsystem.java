@@ -151,7 +151,7 @@ public class ArmSubsystem extends SubsystemBase {
     // linkSpeedRPM, etc)
     public void setLinkPivotSpeed(double speed) {
 
-        this.linkPivotSpeed = -speed;
+        this.linkPivotSpeed = speed;
 
         checkArmSafety();
 
