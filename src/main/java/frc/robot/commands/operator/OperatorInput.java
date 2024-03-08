@@ -1,8 +1,11 @@
 package frc.robot.commands.operator;
 
-import static frc.robot.Constants.UsefulPoses.BLUE_2_2_20;
-import static frc.robot.Constants.UsefulPoses.RED_2_2_20;
+import static frc.robot.Constants.UsefulPoses.*;
+import static frc.robot.telemetry.Telemetry.swerve;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
@@ -23,6 +26,7 @@ import frc.robot.commands.auto.Score2_5AmpAutoCommand;
 import frc.robot.commands.auto.Score3SpeakerAutoCommand;
 import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
+import frc.robot.commands.swervedrive.ResetOdometryCommand;
 import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
@@ -166,23 +170,23 @@ public class OperatorInput {
         new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
 
         // Rotate to speaker
-        new Trigger(driverController::getBButton).onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(drive, hugh));
+        //new Trigger(driverController::getBButton).onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(drive, hugh));
 
         // Compact
         new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
-        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm, jackman)); // IntakeCommand(arm,
-                                                                                                // jackman);
+        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm, jackman));
 
         // Aim Amp
-        new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
+        //new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
 
         // Aim Speaker
-        new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
+        //new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
         // Shoot
-        new Trigger(operatorController::getBButton).onTrue(new ManualShootCommand(arm));
+        new Trigger(operatorController::getBButton).onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(drive, hugh)
+                .andThen(new ManualShootCommand(arm)));
 
         // Test Drive to 2,2,20
         // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,
@@ -190,9 +194,19 @@ public class OperatorInput {
 
         // Climbs Up pov 0
         // Climbs Down pov 180
-        // Climbs Down pov 270
         // Trap pov 90
-        // Shift to Climb right bumper
+
+        // setpose for practice fields
+
+        // in front of speaker
+        new Trigger(() -> operatorController.getPOV() == 0)
+                .onTrue(new ResetOdometryCommand(drive,
+                        new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(), 1.6, new Rotation2d()),
+                        new Pose2d(Constants.BotTarget.RED_SPEAKER.getLocation().getX(), 16.54-1.6, new Rotation2d())));
+
+        // in front of amp
+        new Trigger(() -> operatorController.getPOV() == 180)
+                .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
 
     }
 
