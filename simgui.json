@@ -252,7 +252,14 @@
         "swerve": {
           "double[]##v_/SmartDashboard/swerve/desiredChassisSpeeds": {
             "open": true
-          }
+          },
+          "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
+            "open": true
+          },
+          "double[]##v_/SmartDashboard/swerve/measuredStates": {
+            "open": true
+          },
+          "open": true
         }
       }
     }
