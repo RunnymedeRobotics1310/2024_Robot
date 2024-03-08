@@ -92,6 +92,7 @@ public class IntakeCommand extends ArmBaseCommand {
                     state = IntakeCommand.State.REVERSE_NOTE;
                 }
                 else {
+                    armSubsystem.setIntakeSpeed(0);
                     logStateTransition(State.FINISHED.name(), "No note detected, SOMETHING WENT WRONG");
                     state = State.FINISHED;
                 }
