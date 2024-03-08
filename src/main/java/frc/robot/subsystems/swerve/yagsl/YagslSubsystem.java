@@ -15,7 +15,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
-import frc.robot.telemetry.SwerveCore;
+import frc.robot.telemetry.Swerve;
 import frc.robot.telemetry.Telemetry;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
@@ -39,7 +39,7 @@ public class YagslSubsystem extends SwerveSubsystem {
         super(visionSubsystem, lightingSubsystem);
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
-        Telemetry.swerve.implementation = SwerveCore.Implementation.YAGSL;
+        Telemetry.swerve.implementation = Swerve.Implementation.YAGSL;
         SwerveDriveTelemetry.verbosity  = SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
         try {
             swerveDrive = new SwerveParser(configDirectory).createSwerveDrive(MAX_TRANSLATION_SPEED_MPS);

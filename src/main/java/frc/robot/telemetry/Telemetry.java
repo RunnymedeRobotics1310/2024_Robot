@@ -13,7 +13,7 @@ public class Telemetry {
     public static Hugh            hugh    = new Hugh();
     public static Jackman         jackman = new Jackman();
     public static Light           light   = new Light();
-    public static SwerveCore      swerve  = new SwerveCore();
+    public static Swerve          swerve  = new Swerve();
     public static Test            test    = new Test();
 
     private Telemetry() {

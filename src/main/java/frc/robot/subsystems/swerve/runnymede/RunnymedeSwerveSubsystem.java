@@ -37,7 +37,7 @@ import frc.robot.Robot;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
-import frc.robot.telemetry.SwerveCore;
+import frc.robot.telemetry.Swerve;
 import frc.robot.telemetry.Telemetry;
 
 /**
@@ -70,7 +70,7 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
         simulatedIMU                        = new SimulatedIMU();
 
 
-        Telemetry.swerve.implementation     = SwerveCore.Implementation.RUNNYMEDE;
+        Telemetry.swerve.implementation     = Swerve.Implementation.RUNNYMEDE;
         field                               = new Field2d();
         Telemetry.swerve.field              = field;
         Telemetry.swerve.maxSpeed           = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
