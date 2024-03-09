@@ -46,7 +46,7 @@ public class MaxClimbCommand extends LoggingCommand {
             break;
 
         case WAIT_FOR_CLIMB:
-            if (climbSubsystem.isClimbAtMax()) {
+            if (climbSubsystem.isRightClimbAtMax() && climbSubsystem.isLeftClimbAtMax()) {
                 logStateTransition(State.FINISHED.name(), "In position");
                 state = State.FINISHED;
             }
