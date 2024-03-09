@@ -15,22 +15,25 @@ public class ClimbSubsystem extends SubsystemBase {
     // Lights Subsystem
     private final LightingSubsystem lighting;
 
-    private final CANSparkMax       leftClimbMotor        = new CANSparkMax(ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax       leftClimbMotor          = new CANSparkMax(ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
 
-    private final CANSparkMax       rightClimbMotor       = new CANSparkMax(ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax       rightClimbMotor         = new CANSparkMax(ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final DigitalInput      rightClimbLimitSwitch = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
-    private final DigitalInput      leftClimbLimitSwitch  = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
+    private final DigitalInput      rightClimbLimitSwitch   = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
+    private final DigitalInput      leftClimbLimitSwitch    = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
 
-    private double                  rightClimbSpeed       = 0;
-    private double                  leftClimbSpeed        = 0;
-    private Double                  rightEncoderOffset    = null;
-    private Double                  leftEncoderOffset     = null;
+    private double                  rightClimbSpeed         = 0;
+    private double                  leftClimbSpeed          = 0;
+
+    private boolean                 rightEncoderInitialized = false;
+    private boolean                 leftEncoderInitialized  = false;
 
 
     public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
+
         this.lighting = lightingSubsystem;
+
     }
 
     public void setClimbSpeeds(double leftClimbSpeed, double rightClimbSpeed) {
@@ -38,101 +41,60 @@ public class ClimbSubsystem extends SubsystemBase {
         this.leftClimbSpeed  = leftClimbSpeed;
         this.rightClimbSpeed = rightClimbSpeed;
 
-        checkClimbSafety();
+        if (leftEncoderInitialized && rightEncoderInitialized) {
 
-        if (rightEncoderOffset != null && leftEncoderOffset != 0) {
-            if (Math.abs(leftClimbSpeed) > 0 || Math.abs(rightClimbSpeed) > 0) {
-                lighting.addPattern(Climbing.getInstance());
-            }
-            else {
-                lighting.removePattern(Climbing.class);
-            }
+            // if everything is initialized, check safety then turn the motors
+            checkClimbSafety();
+
+            leftClimbMotor.set(leftClimbSpeed);
+            rightClimbMotor.set(rightClimbSpeed);
+        }
+        else {
+
+            // init the encoders.
+            initEncoders();
         }
 
-        leftClimbMotor.set(leftClimbSpeed);
-        rightClimbMotor.set(rightClimbSpeed);
     }
 
-    private boolean isRightClimbAtLimit() {
-        return !rightClimbLimitSwitch.get();
-    }
-
-    private boolean isLeftClimbAtLimit() {
-        return !leftClimbLimitSwitch.get();
-    }
 
     public void stop() {
+
         setClimbSpeeds(0, 0);
-    }
 
-    private double getLeftEncoderPos() {
-        if (leftEncoderOffset == null)
-            return 0;
-
-        return leftClimbMotor.getEncoder().getPosition() - leftEncoderOffset.doubleValue();
-    }
-
-    private double getRightEncoderPos() {
-        if (rightEncoderOffset == null)
-            return 0;
-
-        return rightClimbMotor.getEncoder().getPosition() - rightEncoderOffset.doubleValue();
     }
 
     @Override
     public void periodic() {
 
-        if (rightEncoderOffset == null) {
-            if (isRightClimbAtLimit()) {
-                rightEncoderOffset = rightClimbMotor.getEncoder().getPosition();
-            }
-            else {
-                rightClimbMotor.set(-ClimbConstants.SLOW_SPEED);
-            }
-        }
-
-        if (leftEncoderOffset == null) {
-            if (isLeftClimbAtLimit()) {
-                leftEncoderOffset = leftClimbMotor.getEncoder().getPosition();
-            }
-            else {
-                leftClimbMotor.set(-ClimbConstants.SLOW_SPEED);
-            }
-        }
-
-        if (leftEncoderOffset == null || rightEncoderOffset == null) {
-            // nothing else happens till we reset encoders.
-            return;
-        }
-
-        /*
-         * Safety-check all of the motors speeds, and
-         * set the motor outputs.
-         *
-         * This is required because a command may set the motor speed
-         * at the beginning and may not ever set it again. The periodic
-         * loop checks the limits every loop.
-         */
         setClimbSpeeds(leftClimbSpeed, rightClimbSpeed);
 
-        /*
-         * Update the SmartDashboard
-         */
+        setLightingPattern();
 
         Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
-        Telemetry.climb.leftClimbEncoder  = getLeftEncoderPos();
+        Telemetry.climb.leftClimbEncoder  = leftClimbMotor.getEncoder().getPosition();
         Telemetry.climb.rightClimbSpeed   = rightClimbSpeed;
-        Telemetry.climb.rightClimbEncoder = getRightEncoderPos();
-        Telemetry.climb.rightLimit        = isRightClimbAtLimit();
-        Telemetry.climb.leftLimit         = isLeftClimbAtLimit();
+        Telemetry.climb.rightClimbEncoder = rightClimbMotor.getEncoder().getPosition();
+        Telemetry.climb.rightLimit        = rightClimbLimitSwitch.get();
+        Telemetry.climb.leftLimit         = leftClimbLimitSwitch.get();
 
     }
 
     private void checkClimbSafety() {
-        rightClimbSpeed = checkClimbSafety(rightClimbSpeed, getRightEncoderPos());
-        leftClimbSpeed  = checkClimbSafety(leftClimbSpeed, getLeftEncoderPos());
+
+        rightClimbSpeed = checkClimbSafety(rightClimbSpeed, leftClimbMotor.getEncoder().getPosition());
+        leftClimbSpeed  = checkClimbSafety(leftClimbSpeed, rightClimbMotor.getEncoder().getPosition());
+
     }
 
+    /**
+     * Safety-check all of the motors speeds, and
+     * set the motor outputs.
+     *
+     * This is required because a command may set the motor speed
+     * at the beginning and may not ever set it again. The periodic
+     * loop checks the limits every loop.
+     */
     private double checkClimbSafety(double climbSpeed, double climbEncoder) {
 
         // Do not allow the motor to go below the lower limit
@@ -152,6 +114,41 @@ public class ClimbSubsystem extends SubsystemBase {
         }
 
         return climbSpeed;
+    }
+
+    public void initEncoders() {
+        if (!rightEncoderInitialized) {
+            if (rightClimbLimitSwitch.get()) {
+                rightClimbMotor.getEncoder().setPosition(0);
+                rightClimbMotor.burnFlash();
+                rightEncoderInitialized = true;
+            }
+            else {
+                rightClimbMotor.set(-ClimbConstants.SLOW_SPEED);
+            }
+        }
+
+        if (!leftEncoderInitialized) {
+            if (leftClimbLimitSwitch.get()) {
+                leftClimbMotor.getEncoder().setPosition(0);
+                leftClimbMotor.burnFlash();
+                leftEncoderInitialized = true;
+            }
+            else {
+                leftClimbMotor.set(-ClimbConstants.SLOW_SPEED);
+            }
+        }
+    }
+
+    private void setLightingPattern() {
+        if (rightEncoderInitialized && leftEncoderInitialized) {
+            if (Math.abs(leftClimbSpeed) > 0 || Math.abs(rightClimbSpeed) > 0) {
+                lighting.addPattern(Climbing.getInstance());
+            }
+            else {
+                lighting.removePattern(Climbing.class);
+            }
+        }
     }
 
 }
