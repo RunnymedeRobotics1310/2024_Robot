@@ -27,8 +27,8 @@ public class IntakeEjectCommand extends ArmBaseCommand {
 
         switch (state) {
         case EJECT:
-            armSubsystem.setIntakeSpeed(-.2);
-
+            armSubsystem.setIntakeSpeed(-.75);
+            armSubsystem.setShooterSpeed(-1);
             break;
         }
     }
@@ -47,6 +47,7 @@ public class IntakeEjectCommand extends ArmBaseCommand {
         if (interrupted) {
             logCommandEnd(interrupted);
             armSubsystem.setIntakeSpeed(0);
+            armSubsystem.setShooterSpeed(0);
         }
         // run if not interupted
 

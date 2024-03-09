@@ -176,7 +176,7 @@ public class OperatorInput {
         new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
-        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm, jackman));
+        new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeSimpleCommand(arm, jackman));
 
         // Vision note pickup
         new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand2(arm, jackman)
@@ -189,7 +189,7 @@ public class OperatorInput {
         // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
         // Shoot
-        new Trigger(operatorController::getBButton).onTrue((new ManualShootCommand(arm)));
+        new Trigger(operatorController::getBButton).onTrue((new ManualShootSimpleCommand(arm)));
 
         new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
 
