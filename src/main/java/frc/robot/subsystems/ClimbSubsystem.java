@@ -29,6 +29,8 @@ public class ClimbSubsystem extends SubsystemBase {
     private boolean                 rightEncoderInitialized = false;
     private boolean                 leftEncoderInitialized  = false;
 
+    private boolean                 unsafeMode              = false;
+
 
     public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
 
@@ -36,12 +38,16 @@ public class ClimbSubsystem extends SubsystemBase {
 
     }
 
+    public void setUnsafeMode(boolean unsafeMode) {
+        this.unsafeMode = unsafeMode;
+    }
+
     public void setClimbSpeeds(double leftClimbSpeed, double rightClimbSpeed) {
 
         this.leftClimbSpeed  = leftClimbSpeed;
         this.rightClimbSpeed = rightClimbSpeed;
 
-        if (leftEncoderInitialized && rightEncoderInitialized) {
+        if (!unsafeMode && leftEncoderInitialized && rightEncoderInitialized) {
 
             // if everything is initialized, check safety then turn the motors
             checkClimbSafety();
@@ -96,6 +102,10 @@ public class ClimbSubsystem extends SubsystemBase {
      * loop checks the limits every loop.
      */
     private double checkClimbSafety(double climbSpeed, double climbEncoder) {
+
+        if (unsafeMode) {
+            return climbSpeed;
+        }
 
         // Do not allow the motor to go below the lower limit
         if (climbSpeed < 0 && climbEncoder <= ClimbConstants.CLIMB_MIN) {

@@ -293,11 +293,14 @@ public class SystemTestCommand extends LoggingCommand {
             break;
         }
         case CLIMB_RIGHT: {
+            climbSubsystem.setUnsafeMode(true);
             climbSubsystem.setClimbSpeeds(0, motorSpeed);
             break;
         }
         case CLIMB_LEFT: {
+            climbSubsystem.setUnsafeMode(true);
             climbSubsystem.setClimbSpeeds(motorSpeed, 0);
+            break;
         }
 
 
@@ -326,6 +329,7 @@ public class SystemTestCommand extends LoggingCommand {
     @Override
     public void end(boolean interrupted) {
         stopAllMotors();
+        climbSubsystem.setUnsafeMode(false);
         enabled = false;
         lighting.removePattern(TestMode.class);
         updateDashboard();
