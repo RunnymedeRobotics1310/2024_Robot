@@ -62,7 +62,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
         case MOVE_TO_UNLOCK:
 
             // Move to the requested angle with a tolerance of 3 deg
-            atArmPosition = this.driveToArmPosition(ArmConstants.UNLOCK_POSITION, 5);
+            atArmPosition = this.driveThroughArmPosition(ArmConstants.UNLOCK_POSITION, 5);
 
             if (atArmPosition) {
                 logStateTransition("Move to over bumper", "Arm Unlocked");
@@ -74,7 +74,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
         case MOVE_TO_OVER_BUMPER:
 
             // Move to the requested angle with a tolerance of 5 deg
-            atArmPosition = this.driveToArmPosition(ArmConstants.OVER_BUMPER_POSITION, 10);
+            atArmPosition = this.driveThroughArmPosition(ArmConstants.OVER_BUMPER_POSITION, 10);
 
             // If past the bumper danger, move to the intake position.
             if (atArmPosition) {
@@ -87,7 +87,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
         case MOVE_TO_INTAKE:
 
             // dont Start the intake wheels because IntakeCommand does it
-//            armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
+            // armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
 
             // Move to the requested angle with a tolerance of 2 deg
             atArmPosition = this.driveToArmPosition(ArmConstants.INTAKE_ARM_POSITION, 5);

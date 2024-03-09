@@ -35,13 +35,17 @@ public abstract class ArmBaseCommand extends LoggingCommand {
     /**
      * Drive through arm position
      *
-     * This command optimizes the arm transition through the selected position. It will not back up to try
-     * to correct to the precise position, but may return true after the angles are further past the target
+     * This command optimizes the arm transition through the selected position. It will not back up
+     * to try
+     * to correct to the precise position, but may return true after the angles are further past the
+     * target
      * than the starting position.
      *
      * @param targetArmPosition containing link and aim angles.
-     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is past the target
-     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the target, {@code false}
+     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is past
+     * the target
+     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the
+     * target, {@code false}
      * otherwise
      */
     public boolean driveThroughArmPosition(ArmPosition targetArmPosition, double targetAngleTolerance) {
@@ -51,17 +55,26 @@ public abstract class ArmBaseCommand extends LoggingCommand {
     /**
      * Drive through arm position
      *
-     * This command optimizes the arm transition through the selected position. It will not back up to try
-     * to correct to the precise position, and may return true after the angles are further past the target
+     * This command optimizes the arm transition through the selected position. It will not back up
+     * to try
+     * to correct to the precise position, and may return true after the angles are further past the
+     * target
      * than the starting position and the angles may be outside the target tolerance.
      *
      * @param targetLinkAngle in degrees
      * @param targetAimAngle in degrees
-     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is past the target
-     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the target, {@code false}
+     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is past
+     * the target
+     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the
+     * target, {@code false}
      * otherwise
      */
     public boolean driveThroughArmPosition(double targetLinkAngle, double targetAimAngle, double targetAngleTolerance) {
+
+        // prevents crash first time through
+        if (targetArmPosition == null) {
+            targetArmPosition = new ArmPosition(targetLinkAngle, targetAimAngle);
+        }
 
         double currentLinkAngle = armSubsystem.getLinkAngle();
         double currentAimAngle  = armSubsystem.getAimAngle();
@@ -239,8 +252,10 @@ public abstract class ArmBaseCommand extends LoggingCommand {
      * Drive to arm position
      *
      * @param targetArmPosition containing link and aim angles
-     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is at the target
-     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the target, {@code false}
+     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is at the
+     * target
+     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the
+     * target, {@code false}
      * otherwise
      */
     public boolean driveToArmPosition(ArmPosition targetArmPosition, double targetAngleTolerance) {
@@ -254,8 +269,10 @@ public abstract class ArmBaseCommand extends LoggingCommand {
      *
      * @param targetLinkAngle in degrees
      * @param targetAimAngle in degrees
-     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is at the target
-     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the target, {@code false}
+     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is at the
+     * target
+     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the
+     * target, {@code false}
      * otherwise
      */
     public boolean driveToArmPosition(double targetLinkAngle, double targetAimAngle, double targetAngleTolerance) {

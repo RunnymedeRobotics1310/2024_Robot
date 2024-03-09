@@ -444,17 +444,17 @@ public final class Constants {
         public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185.65, 35);
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(114, 118);
 
-        public static final ArmPosition OVER_INTAKE                         = new ArmPosition(134, 104);
+        public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 104);
 
         // Transition position - over bumper
         public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(157, 76.89);
         // Transition position - above the lock position (arm not caught on stops)
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
-        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(206.3, 90.0);   // Unfinished
-        public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(183, 45);     // Unfinished
+        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(206.3, 90.0);  // Unfinished
+        public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(183, 45);      // Unfinished
 
-        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108); // Unfinished
+        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108);     // Unfinished
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
@@ -497,14 +497,14 @@ public final class Constants {
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
          */
-        public static final double      MAX_AIM_HOLD                       = 0.04;                              // 0.03;
+        public static final double      MAX_AIM_HOLD                       = 0.055;                         // 0.03;
 
 
         /**
          * Amount of output required to hold the Link Pivot when the Link and Aim are parallel to
          * the ground
          */
-        public static final double      MAX_LINK_HOLD                      = 0.04;                              // 0.04;
+        public static final double      MAX_LINK_HOLD                      = 0.04;                          // 0.04;
     }
 
     public static final class ClimbConstants {
