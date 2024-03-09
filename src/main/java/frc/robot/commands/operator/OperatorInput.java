@@ -15,7 +15,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.CompactPoseCommand;
+import frc.robot.commands.arm.IntakeEjectCommand;
+import frc.robot.commands.arm.IntakeSimpleCommand;
+import frc.robot.commands.arm.ManualShootSimpleCommand;
+import frc.robot.commands.arm.ShShShakeItOffCommand;
+import frc.robot.commands.arm.StartIntakeCommand2;
 import frc.robot.commands.auto.PlanBAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
@@ -112,6 +117,10 @@ public class OperatorInput {
         return operatorController.getRightBumper();
     }
 
+    public boolean isShakeItOff() {
+        return isShift() && operatorController.getAButton();
+    }
+
     public double getDriverControllerAxis(Stick stick, Axis axis) {
 
         return switch (stick) {
@@ -193,6 +202,7 @@ public class OperatorInput {
 
         new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
 
+        new Trigger(this::isShakeItOff).whileTrue(new ShShShakeItOffCommand(arm));
 
         // Test Drive to 2,2,20
         // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,
