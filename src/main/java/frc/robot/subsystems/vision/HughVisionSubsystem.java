@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BotTarget;
 import frc.robot.telemetry.Telemetry;
@@ -97,10 +98,12 @@ public class HughVisionSubsystem extends SubsystemBase {
 
     private static final double        SPEAKER_TAG_DELTA                    = 0.565868;
 
+    private boolean                    isEnabled                            = DriverStation.isEnabled();
+
     public HughVisionSubsystem() {
         this.pipeline.setNumber(PIPELINE_APRIL_TAG_DETECT);
         this.camMode.setNumber(CAM_MODE_VISION);
-        this.ledMode.setNumber(LED_MODE_PIPELINE);
+        setLedMode(isEnabled);
     }
 
     @Override
@@ -128,6 +131,27 @@ public class HughVisionSubsystem extends SubsystemBase {
         Telemetry.hugh.isAlignedWithTarget    = isAlignedWithTarget();
         Telemetry.hugh.targetOffset           = getTargetOffset();
         // Telemetry.hugh.aprilTagInfo = aprilTagInfoArrayToString(visibleTags);
+
+        // Toggle the LED mode if it's changed since last we looked
+        boolean enabledNow = DriverStation.isEnabled();
+        if (this.isEnabled != enabledNow) {
+            this.isEnabled = enabledNow;
+            setLedMode(enabledNow);
+        }
+    }
+
+    /**
+     * Sets the LED on when enabled, off when disabled
+     * 
+     * @param enabled
+     */
+    private void setLedMode(boolean enabled) {
+        if (enabled) {
+            ledMode.setNumber(LED_MODE_ON);
+        }
+        else {
+            ledMode.setNumber(LED_MODE_OFF);
+        }
     }
 
     /**
