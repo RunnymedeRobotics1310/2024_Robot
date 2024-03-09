@@ -19,9 +19,9 @@ import frc.robot.commands.arm.CompactPoseCommand;
 import frc.robot.commands.arm.IntakeBackwardsCommand;
 import frc.robot.commands.arm.IntakeCommand;
 import frc.robot.commands.arm.IntakeEjectCommand;
+import frc.robot.commands.arm.LinkToSourceCommand;
 import frc.robot.commands.arm.ManualShootCommand;
 import frc.robot.commands.arm.ShShShakeItOffCommand;
-import frc.robot.commands.arm.StartIntakeCommand2;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.PlanBAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
@@ -32,7 +32,6 @@ import frc.robot.commands.auto.Score2_5AmpAutoCommand;
 import frc.robot.commands.auto.Score3SpeakerAutoCommand;
 import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.climb.MaxClimbCommand;
-import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.ResetOdometryCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
@@ -195,8 +194,8 @@ public class OperatorInput {
         new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeCommand(arm, jackman));
 
         // Vision note pickup
-        new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand2(arm, jackman)
-            .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
+        new Trigger(driverController::getBButton).onTrue(new LinkToSourceCommand(arm));
+        // .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
 
         new Trigger(driverController::getAButton).onTrue(new IntakeBackwardsCommand(arm));
 
