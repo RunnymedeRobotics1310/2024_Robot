@@ -56,17 +56,17 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
         if (unsafeMode || (leftEncoderInitialized && rightEncoderInitialized)) {
 
-            // if everything is initialized, check safety then turn the motors
+            // if everything is initialized, check safety then set motors to appropriate values.
             checkClimbSafety();
-
-            leftClimbMotor.set(leftClimbSpeed);
-            rightClimbMotor.set(rightClimbSpeed);
         }
         else {
 
-            // init the encoders.
+            // init the encoders. Set motors speeds to appropriate values.
             initEncoders();
         }
+
+        leftClimbMotor.set(leftClimbSpeed);
+        rightClimbMotor.set(rightClimbSpeed);
 
 
         setLightingPattern();
@@ -153,8 +153,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
                 rightEncoderInitialized = true;
             }
             else {
-                log("Setting right climb in initEncoders to " + -ClimbConstants.LOWER_CLIMBERS_SPEED);
-                rightClimbMotor.set(-ClimbConstants.LOWER_CLIMBERS_SPEED);
+                rightClimbSpeed = -ClimbConstants.LOWER_CLIMBERS_SPEED;
             }
         }
 
@@ -165,8 +164,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
                 leftEncoderInitialized = true;
             }
             else {
-                log("Setting left climb in initEncoders to " + -ClimbConstants.LOWER_CLIMBERS_SPEED);
-                leftClimbMotor.set(-ClimbConstants.LOWER_CLIMBERS_SPEED);
+                leftClimbSpeed = -ClimbConstants.LOWER_CLIMBERS_SPEED;
             }
         }
     }
