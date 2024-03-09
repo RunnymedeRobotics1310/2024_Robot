@@ -189,7 +189,7 @@ public class OperatorInput {
         new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand2(arm, jackman)
             .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
 
-        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand2(arm, jackman));
+        new Trigger(driverController::getAButton).onTrue(new IntakeBackwardsCommand(arm));
 
         // Aim Amp
         // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
