@@ -1,5 +1,6 @@
 package frc.robot.commands.arm;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class IntakeEjectCommand extends ArmBaseCommand {
@@ -27,8 +28,8 @@ public class IntakeEjectCommand extends ArmBaseCommand {
 
         switch (state) {
         case EJECT:
-            armSubsystem.setIntakeSpeed(-.75);
-            armSubsystem.setShooterSpeed(-1);
+            armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_EJECT_INTAKE_SPEED);
+            armSubsystem.setShooterSpeed(ArmConstants.INTAKE_EJECT_SHOOTER_SPEED);
             break;
         }
     }
