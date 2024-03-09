@@ -392,18 +392,5 @@ public class ArmSubsystem extends SubsystemBase {
         return;
     }
 
-    public double calcAimOmega(double targetAngle, double tolerance) {
-
-        double p            = 0.1;
-        double currentAngle = getAimAngle();
-
-        double error        = targetAngle - currentAngle;
-
-        if (Math.abs(error) < tolerance) {
-            return 0;
-        }
-
-        return error * p;
-    }
 
 }

@@ -170,7 +170,9 @@ public class OperatorInput {
         new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
 
         // Rotate to speaker
-        //new Trigger(driverController::getBButton).onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(drive, hugh));
+        // new
+        // Trigger(driverController::getBButton).onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(drive,
+        // hugh));
 
         // Compact
         new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
@@ -179,14 +181,17 @@ public class OperatorInput {
         new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm, jackman));
 
         // Aim Amp
-        //new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
+        // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
 
         // Aim Speaker
-        //new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
+        // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
         // Shoot
         new Trigger(operatorController::getBButton).onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(drive, hugh)
-                .andThen(new ManualShootCommand(arm)));
+            .andThen(new ManualShootCommand(arm)));
+
+        new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
+
 
         // Test Drive to 2,2,20
         // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,
@@ -200,13 +205,13 @@ public class OperatorInput {
 
         // in front of speaker
         new Trigger(() -> operatorController.getPOV() == 0)
-                .onTrue(new ResetOdometryCommand(drive,
-                        new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(), 1.6, new Rotation2d()),
-                        new Pose2d(Constants.BotTarget.RED_SPEAKER.getLocation().getX(), 16.54-1.6, new Rotation2d())));
+            .onTrue(new ResetOdometryCommand(drive,
+                new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(), 1.6, new Rotation2d()),
+                new Pose2d(Constants.BotTarget.RED_SPEAKER.getLocation().getX(), 16.54 - 1.6, new Rotation2d())));
 
         // in front of amp
         new Trigger(() -> operatorController.getPOV() == 180)
-                .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
+            .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
 
     }
 
