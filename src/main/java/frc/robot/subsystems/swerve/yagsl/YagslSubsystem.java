@@ -56,7 +56,7 @@ public class YagslSubsystem extends SwerveSubsystem {
     public void setModuleStateForTestMode(Constants.Swerve.Module module, SwerveModuleState desiredState) {
         SwerveModule swerveModule = swerveDrive.getModuleMap().get(module.name);
         if (swerveModule == null) {
-            System.out.println("Invalid module name: " + module.name);
+            log("Invalid module name: " + module.name);
             return;
         }
 

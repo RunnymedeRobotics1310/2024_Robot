@@ -126,7 +126,7 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
 
 
         if (dimmedBuffer != null) {
-            System.out.println("Dimming lights to reduce current draw");
+            log("Dimming lights to reduce current draw");
             ledStrip.setData(dimmedBuffer);
         }
         else {

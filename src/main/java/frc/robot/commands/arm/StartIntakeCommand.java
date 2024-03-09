@@ -26,7 +26,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         // If there is a note inside the robot, then do not start this command
         if (armSubsystem.isNoteDetected()) {
-            System.out.println("Note detected in robot. StartIntakeCommand cancelled");
+            log("Note detected in robot. StartIntakeCommand cancelled");
             return;
         }
 

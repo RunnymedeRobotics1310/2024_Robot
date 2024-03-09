@@ -22,7 +22,7 @@ public class ShootCommand extends ArmBaseCommand {
     public void initialize() {
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
-            System.out.println(" No note detected in robot. ShootCommand cancelled");
+            log(" No note detected in robot. ShootCommand cancelled");
             return;
         }
 

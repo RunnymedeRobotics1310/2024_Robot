@@ -23,7 +23,7 @@ public class AimAmpCommand extends ArmBaseCommand {
 
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
-            System.out.println(" No note detected in robot. AimAmpCommand cancelled");
+            log(" No note detected in robot. AimAmpCommand cancelled");
             return;
         }
 
