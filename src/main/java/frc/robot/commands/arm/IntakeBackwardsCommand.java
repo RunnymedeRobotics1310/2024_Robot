@@ -44,8 +44,8 @@ public class IntakeBackwardsCommand extends ArmBaseCommand {
         // Notes should not be detected in this state but as a failsafe this will prevent the
         // state machine from getting stuck
         if (armSubsystem.isNoteDetected()) {
-            logStateTransition(State.NOTE_READY.name(), "Note already present/detected");
-            state = State.NOTE_READY;
+            logStateTransition(State.FINISHED.name(), "Note already present/detected");
+            state = State.FINISHED;
         }
         else {// This is the normal case
             armSubsystem.setShooterSpeed(ArmConstants.INTAKE_NOTE_REVERSAL_REVERSE_SPEED);
