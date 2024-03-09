@@ -5,6 +5,7 @@ import frc.robot.subsystems.ArmSubsystem;
 
 public class LinkToSourceCommand extends ArmBaseCommand {
 
+    // todo fixme: use constants for all
 
     public LinkToSourceCommand(ArmSubsystem armSubsystem) {
 
@@ -22,16 +23,13 @@ public class LinkToSourceCommand extends ArmBaseCommand {
 
     @Override
     public void execute() {
-
         driveToArmPosition(sourceIntake, 5, 50);
-
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        // The command should hold the arm in the right place. Should be interrupted.
-        return false;
+        return driveToArmPosition(sourceIntake, 5, 50);
     }
 
     // Called once the command ends or is interrupted.
