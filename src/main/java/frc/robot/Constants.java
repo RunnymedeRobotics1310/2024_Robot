@@ -445,7 +445,7 @@ public final class Constants {
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(114, 118);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 104);
-        public static final ArmPosition NOTE_INTAKE_CLEARANCE_POSITION     = new ArmPosition(157, 118);
+        public static final ArmPosition NOTE_INTAKE_CLEARANCE_POSITION     = new ArmPosition(144, 128);
 
         // Transition position - over bumper
         public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(157, 76.89);
@@ -498,7 +498,7 @@ public final class Constants {
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
          */
-        public static final double      MAX_AIM_HOLD                       = 0.055;                         // 0.03;
+        public static final double      MAX_AIM_HOLD                       = 0.1;                           // 0.03;
 
 
         /**
