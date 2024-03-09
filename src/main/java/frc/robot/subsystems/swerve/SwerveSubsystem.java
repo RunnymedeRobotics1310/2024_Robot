@@ -16,9 +16,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.LoggingCommand;
+import frc.robot.subsystems.RunnymedeSubsystemBase;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceHigh;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceLow;
@@ -28,7 +27,7 @@ import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.VisionPositionInfo;
 import frc.robot.telemetry.Telemetry;
 
-public abstract class SwerveSubsystem extends SubsystemBase {
+public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
     private final HughVisionSubsystem visionSubsystem;
     LightingSubsystem                 lightingSubsystem;

@@ -4,10 +4,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.RunnymedeSubsystemBase;
 import frc.robot.telemetry.Telemetry;
 
-public class JackmanVisionSubsystem extends SubsystemBase {
+public class JackmanVisionSubsystem extends RunnymedeSubsystemBase {
 
 
     private static final long   LED_MODE_PIPELINE                    = 0;

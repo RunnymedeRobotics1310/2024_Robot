@@ -4,13 +4,12 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Climbing;
 import frc.robot.telemetry.Telemetry;
 
-public class ClimbSubsystem extends SubsystemBase {
+public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     // Lights Subsystem
     private final LightingSubsystem lighting;
