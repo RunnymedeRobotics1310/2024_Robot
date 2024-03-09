@@ -146,8 +146,6 @@ public class SystemTestCommand extends LoggingCommand {
         int    pov          = controller.getPOV();
         double leftTrigger  = controller.getLeftTriggerAxis();
         double rightTrigger = controller.getRightTriggerAxis();
-        motorSpeed  = 0;
-        motor2Speed = 0;
 
 
         if (controller.getXButton()) {
@@ -337,8 +335,9 @@ public class SystemTestCommand extends LoggingCommand {
     }
 
     private void stopAllMotors() {
-        motorSpeed = 0;
-        angle      = Rotation2d.fromDegrees(1310);
+        motorSpeed  = 0;
+        motor2Speed = 0;
+        angle       = Rotation2d.fromDegrees(1310);
         drive.stop();
     }
 

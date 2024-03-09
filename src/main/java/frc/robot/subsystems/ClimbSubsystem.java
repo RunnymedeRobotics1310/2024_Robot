@@ -47,7 +47,7 @@ public class ClimbSubsystem extends SubsystemBase {
         this.leftClimbSpeed  = leftClimbSpeed;
         this.rightClimbSpeed = rightClimbSpeed;
 
-        if (!unsafeMode && leftEncoderInitialized && rightEncoderInitialized) {
+        if (unsafeMode || (leftEncoderInitialized && rightEncoderInitialized)) {
 
             // if everything is initialized, check safety then turn the motors
             checkClimbSafety();
