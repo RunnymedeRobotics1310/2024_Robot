@@ -473,6 +473,8 @@ public final class Constants {
         public static final double      INTAKE_NOTE_REVERSAL_REVERSE_SPEED = -.075;
 
         public static final double      INTAKE_NOTE_REVERSAL_FORWARD_SPEED = .1;
+        public static final long            INTAKE_SPINUP_WINDOW = 500;
+
 
 
 
