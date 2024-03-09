@@ -16,9 +16,9 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
 import frc.robot.commands.arm.CompactPoseCommand;
+import frc.robot.commands.arm.IntakeCommand;
 import frc.robot.commands.arm.IntakeEjectCommand;
-import frc.robot.commands.arm.IntakeSimpleCommand;
-import frc.robot.commands.arm.ManualShootSimpleCommand;
+import frc.robot.commands.arm.ManualShootCommand;
 import frc.robot.commands.arm.ShShShakeItOffCommand;
 import frc.robot.commands.arm.StartIntakeCommand2;
 import frc.robot.commands.auto.PlanBAutoCommand;
@@ -185,11 +185,13 @@ public class OperatorInput {
         new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
-        new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeSimpleCommand(arm));
+        new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeCommand(arm, jackman));
 
         // Vision note pickup
         new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand2(arm, jackman)
             .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
+
+        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand2(arm, jackman));
 
         // Aim Amp
         // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
@@ -198,7 +200,7 @@ public class OperatorInput {
         // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
         // Shoot
-        new Trigger(operatorController::getBButton).onTrue((new ManualShootSimpleCommand(arm)));
+        new Trigger(operatorController::getBButton).onTrue((new ManualShootCommand(arm)));
 
         new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
 

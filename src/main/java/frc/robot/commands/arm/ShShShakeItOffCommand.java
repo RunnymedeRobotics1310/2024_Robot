@@ -29,12 +29,16 @@ public class ShShShakeItOffCommand extends ArmBaseCommand {
             count++;
         }
         armSubsystem.setIntakeSpeed(factor * ArmConstants.INTAKE_EJECT_INTAKE_SPEED);
-        armSubsystem.setShooterSpeed(factor * ArmConstants.INTAKE_EJECT_SHOOTER_SPEED);
 
     }
 
     @Override
     public boolean isFinished() {
         return count > 10;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        armSubsystem.stop();
     }
 }
