@@ -29,10 +29,32 @@ public class ClimbSubsystem extends SubsystemBase {
     private boolean                 rightEncoderInitialized = false;
     private boolean                 leftEncoderInitialized  = false;
 
+    private boolean                 unsafeMode              = false;
+
 
     public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
 
         this.lighting = lightingSubsystem;
+
+    }
+
+    public void setUnsafeMode(boolean unsafeMode) {
+        this.unsafeMode = unsafeMode;
+    }
+
+    @Override
+    public void periodic() {
+
+        setClimbSpeeds(leftClimbSpeed, rightClimbSpeed);
+
+        setLightingPattern();
+
+        Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
+        Telemetry.climb.leftClimbEncoder  = leftClimbMotor.getEncoder().getPosition();
+        Telemetry.climb.rightClimbSpeed   = rightClimbSpeed;
+        Telemetry.climb.rightClimbEncoder = rightClimbMotor.getEncoder().getPosition();
+        Telemetry.climb.rightLimit        = rightClimbLimitSwitch.get();
+        Telemetry.climb.leftLimit         = leftClimbLimitSwitch.get();
 
     }
 
@@ -41,7 +63,7 @@ public class ClimbSubsystem extends SubsystemBase {
         this.leftClimbSpeed  = leftClimbSpeed;
         this.rightClimbSpeed = rightClimbSpeed;
 
-        if (leftEncoderInitialized && rightEncoderInitialized) {
+        if (unsafeMode || (leftEncoderInitialized && rightEncoderInitialized)) {
 
             // if everything is initialized, check safety then turn the motors
             checkClimbSafety();
@@ -64,22 +86,6 @@ public class ClimbSubsystem extends SubsystemBase {
 
     }
 
-    @Override
-    public void periodic() {
-
-        setClimbSpeeds(leftClimbSpeed, rightClimbSpeed);
-
-        setLightingPattern();
-
-        Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
-        Telemetry.climb.leftClimbEncoder  = leftClimbMotor.getEncoder().getPosition();
-        Telemetry.climb.rightClimbSpeed   = rightClimbSpeed;
-        Telemetry.climb.rightClimbEncoder = rightClimbMotor.getEncoder().getPosition();
-        Telemetry.climb.rightLimit        = rightClimbLimitSwitch.get();
-        Telemetry.climb.leftLimit         = leftClimbLimitSwitch.get();
-
-    }
-
     private void checkClimbSafety() {
 
         rightClimbSpeed = checkClimbSafety(rightClimbSpeed, leftClimbMotor.getEncoder().getPosition());
@@ -96,6 +102,10 @@ public class ClimbSubsystem extends SubsystemBase {
      * loop checks the limits every loop.
      */
     private double checkClimbSafety(double climbSpeed, double climbEncoder) {
+
+        if (unsafeMode) {
+            return climbSpeed;
+        }
 
         // Do not allow the motor to go below the lower limit
         if (climbSpeed < 0 && climbEncoder <= ClimbConstants.CLIMB_MIN) {
@@ -118,7 +128,8 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public void initEncoders() {
         if (!rightEncoderInitialized) {
-            if (rightClimbLimitSwitch.get()) {
+            System.out.println("Zeroing right climb encoder. Limit: " + rightClimbLimitSwitch.get());
+            if (!rightClimbLimitSwitch.get()) {
                 rightClimbMotor.getEncoder().setPosition(0);
                 rightClimbMotor.burnFlash();
                 rightEncoderInitialized = true;
@@ -129,7 +140,8 @@ public class ClimbSubsystem extends SubsystemBase {
         }
 
         if (!leftEncoderInitialized) {
-            if (leftClimbLimitSwitch.get()) {
+            System.out.println("Zeroing left climb encoder. Limit:" + leftClimbLimitSwitch.get());
+            if (!leftClimbLimitSwitch.get()) {
                 leftClimbMotor.getEncoder().setPosition(0);
                 leftClimbMotor.burnFlash();
                 leftEncoderInitialized = true;

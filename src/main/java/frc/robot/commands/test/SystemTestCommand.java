@@ -76,6 +76,7 @@ public class SystemTestCommand extends LoggingCommand {
         super.initialize();
         stopAllMotors();
         enabled = true;
+        climbSubsystem.setUnsafeMode(true);
         updateDashboard();
         lighting.addPattern(TestMode.getInstance());
     }
@@ -296,6 +297,7 @@ public class SystemTestCommand extends LoggingCommand {
         }
         case CLIMB_LEFT: {
             climbSubsystem.setClimbSpeeds(motorSpeed, 0);
+            break;
         }
 
 
@@ -324,6 +326,7 @@ public class SystemTestCommand extends LoggingCommand {
     @Override
     public void end(boolean interrupted) {
         stopAllMotors();
+        climbSubsystem.setUnsafeMode(false);
         enabled = false;
         lighting.removePattern(TestMode.class);
         updateDashboard();
@@ -331,8 +334,9 @@ public class SystemTestCommand extends LoggingCommand {
     }
 
     private void stopAllMotors() {
-        motorSpeed = 0;
-        angle      = Rotation2d.fromDegrees(1310);
+        motorSpeed  = 0;
+        motor2Speed = 0;
+        angle       = Rotation2d.fromDegrees(1310);
         drive.stop();
     }
 

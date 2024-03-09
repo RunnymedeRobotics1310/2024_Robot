@@ -17,7 +17,7 @@ import frc.robot.subsystems.vision.HughVisionSubsystem;
 public class AimSpeakerCommand extends ArmBaseCommand {
 
     private enum State {
-        MOVE_TO_SPEAKER, MOVE_TO_UNLOCK, MOVE_TO_OVER_BUMPER, SET_SHOOTER_SPEED, IS_FINISHED
+        MOVE_TO_SPEAKER, SET_SHOOTER_SPEED, FIRE_NOTE, FIRING_NOW, IS_FINISHED
     };
 
     private State                     state = State.MOVE_TO_SPEAKER;
@@ -28,8 +28,6 @@ public class AimSpeakerCommand extends ArmBaseCommand {
 
         super(armSubsystem);
         this.hughVisionSubsystem = hughVisionSubsystem;
-
-
     }
 
     @Override
@@ -52,15 +50,15 @@ public class AimSpeakerCommand extends ArmBaseCommand {
             hughVisionSubsystem.setBotTarget(Constants.BotTarget.RED_SPEAKER);
         }
 
-        if (armSubsystem.getAimAngle() < ArmConstants.UNLOCK_POSITION.aimAngle) {
-            state = State.MOVE_TO_UNLOCK;
-        }
-        else if (armSubsystem.getLinkAngle() < ArmConstants.OVER_BUMPER_POSITION.linkAngle) {
-            state = State.MOVE_TO_OVER_BUMPER;
-        }
-        else {
-            state = State.MOVE_TO_SPEAKER;
-        }
+//        if (armSubsystem.getAimAngle() < ArmConstants.UNLOCK_POSITION.aimAngle) {
+//            state = State.MOVE_TO_UNLOCK;
+//        }
+//        else if (armSubsystem.getLinkAngle() < ArmConstants.OVER_BUMPER_POSITION.linkAngle) {
+//            state = State.MOVE_TO_OVER_BUMPER;
+//        }
+//        else {
+//            state = State.MOVE_TO_SPEAKER;
+//        }
     }
 
     @Override
@@ -71,7 +69,7 @@ public class AimSpeakerCommand extends ArmBaseCommand {
     @Override
     public void execute() {
 
-        final boolean atArmAngle;
+        boolean atArmAngle;
 
         switch (state) {
 
@@ -104,42 +102,29 @@ public class AimSpeakerCommand extends ArmBaseCommand {
             }
             break;
 
-        case MOVE_TO_OVER_BUMPER:
-
-            // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.OVER_BUMPER_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
-                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
-
-            // If past the bumper danger, move to the speaker position.
-
-            // If the aim is higher than the over-the-bumper angle, then it is safe to start
-            // raising the link to the speaker position.
-            if (atArmAngle) {
-                logStateTransition("Move to Speaker", "Arm over bumper");
-                state = State.MOVE_TO_SPEAKER;
-            }
-
-            break;
-
-        case MOVE_TO_UNLOCK:
-
-            // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.UNLOCK_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
-                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
-
-            // If past the bumper danger, move to the compact position.
-            if (atArmAngle) {
-                logStateTransition("Move to over bumper", "Arm at unlock position");
-                state = State.MOVE_TO_OVER_BUMPER;
-            }
-
         case SET_SHOOTER_SPEED:
             armSubsystem.setShooterSpeed(ArmConstants.SHOOTER_SPEAKER_SPEED);
+            logStateTransition(State.FIRE_NOTE.name(), "Shooter motor started");
+            break;
 
+        case FIRE_NOTE:
+            if (armSubsystem.getShooterEncoderSpeed() >= 1000) {
+                armSubsystem.setIntakeSpeed(0.75);
+                logStateTransition(State.FIRING_NOW.name(), "Intake Stated, let's gooo!");
+                state = State.FIRING_NOW;
+            }
+            break;
+
+        case FIRING_NOW:
+            if (armSubsystem.getIntakeEncoderSpeed() >= 1000) {
+                armSubsystem.setIntakeSpeed(0);
+                armSubsystem.setShooterSpeed(0);
+                logStateTransition(State.IS_FINISHED.name(), "We've fired");
+                state = State.IS_FINISHED;
+            }
             break;
 
         case IS_FINISHED:
-
             break;
 
         }
