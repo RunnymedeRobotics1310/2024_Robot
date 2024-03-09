@@ -109,8 +109,8 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     private void checkClimbSafety() {
 
-        rightClimbSpeed = checkClimbSafety(rightClimbSpeed, leftClimbMotor.getEncoder().getPosition());
-        leftClimbSpeed  = checkClimbSafety(leftClimbSpeed, rightClimbMotor.getEncoder().getPosition());
+        rightClimbSpeed = checkClimbSafety(rightClimbSpeed, rightClimbMotor.getEncoder().getPosition());
+        leftClimbSpeed  = checkClimbSafety(leftClimbSpeed, leftClimbMotor.getEncoder().getPosition());
 
     }
 
