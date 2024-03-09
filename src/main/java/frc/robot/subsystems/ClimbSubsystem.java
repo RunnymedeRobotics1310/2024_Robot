@@ -54,24 +54,6 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
     @Override
     public void periodic() {
 
-        setClimbSpeeds(leftClimbSpeed, rightClimbSpeed);
-
-        setLightingPattern();
-
-        Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
-        Telemetry.climb.leftClimbEncoder  = leftClimbMotor.getEncoder().getPosition();
-        Telemetry.climb.rightClimbSpeed   = rightClimbSpeed;
-        Telemetry.climb.rightClimbEncoder = rightClimbMotor.getEncoder().getPosition();
-        Telemetry.climb.rightLimit        = rightClimbLimitSwitch.get();
-        Telemetry.climb.leftLimit         = leftClimbLimitSwitch.get();
-
-    }
-
-    public void setClimbSpeeds(double leftClimbSpeed, double rightClimbSpeed) {
-
-        this.leftClimbSpeed  = leftClimbSpeed;
-        this.rightClimbSpeed = rightClimbSpeed;
-
         if (unsafeMode || (leftEncoderInitialized && rightEncoderInitialized)) {
 
             // if everything is initialized, check safety then turn the motors
@@ -85,6 +67,33 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
             // init the encoders.
             initEncoders();
         }
+
+
+        setLightingPattern();
+
+        Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
+        Telemetry.climb.leftClimbEncoder  = leftClimbMotor.getEncoder().getPosition();
+        Telemetry.climb.rightClimbSpeed   = rightClimbSpeed;
+        Telemetry.climb.rightClimbEncoder = rightClimbMotor.getEncoder().getPosition();
+        Telemetry.climb.rightLimit        = rightAllTheWayDown();
+        Telemetry.climb.leftLimit         = leftAllTheWayDown();
+        Telemetry.climb.leftInited        = leftEncoderInitialized;
+        Telemetry.climb.rightInited       = rightEncoderInitialized;
+
+    }
+
+    private boolean leftAllTheWayDown() {
+        return leftClimbLimitSwitch.get() == false;
+    }
+
+    private boolean rightAllTheWayDown() {
+        return rightClimbLimitSwitch.get() == false;
+    }
+
+    public void setClimbSpeeds(double leftClimbSpeed, double rightClimbSpeed) {
+
+        this.leftClimbSpeed  = leftClimbSpeed;
+        this.rightClimbSpeed = rightClimbSpeed;
 
     }
 
@@ -136,27 +145,28 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
     }
 
     public void initEncoders() {
+        log("Init encoders. Right:" + rightEncoderInitialized + " Left:" + leftEncoderInitialized);
         if (!rightEncoderInitialized) {
-            // log("Zeroing right climb encoder. Limit: " + rightClimbLimitSwitch.get());
-            if (!rightClimbLimitSwitch.get()) {
+            if (rightAllTheWayDown()) {
                 rightClimbMotor.getEncoder().setPosition(0);
                 rightClimbMotor.burnFlash();
                 rightEncoderInitialized = true;
             }
             else {
-                rightClimbMotor.set(-ClimbConstants.SLOW_SPEED);
+                log("Setting right climb in initEncoders to " + -ClimbConstants.LOWER_CLIMBERS_SPEED);
+                rightClimbMotor.set(-ClimbConstants.LOWER_CLIMBERS_SPEED);
             }
         }
 
         if (!leftEncoderInitialized) {
-            // log("Zeroing left climb encoder. Limit:" + leftClimbLimitSwitch.get());
-            if (!leftClimbLimitSwitch.get()) {
+            if (leftAllTheWayDown()) {
                 leftClimbMotor.getEncoder().setPosition(0);
                 leftClimbMotor.burnFlash();
                 leftEncoderInitialized = true;
             }
             else {
-                leftClimbMotor.set(-ClimbConstants.SLOW_SPEED);
+                log("Setting left climb in initEncoders to " + -ClimbConstants.LOWER_CLIMBERS_SPEED);
+                leftClimbMotor.set(-ClimbConstants.LOWER_CLIMBERS_SPEED);
             }
         }
     }

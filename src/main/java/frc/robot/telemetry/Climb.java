@@ -12,6 +12,8 @@ public class Climb {
     public double  rightClimbEncoder = -1310.0;
     public boolean rightLimit        = false;
     public boolean leftLimit         = false;
+    public boolean leftInited        = false;
+    public boolean rightInited       = false;
 
     void post() {
         SmartDashboard.putNumber(Telemetry.PREFIX + "Climb/Left Speed", leftClimbSpeed);
@@ -22,5 +24,8 @@ public class Climb {
 
         SmartDashboard.putBoolean(Telemetry.PREFIX + "Climb/Right Limit", rightLimit);
         SmartDashboard.putBoolean(Telemetry.PREFIX + "Climb/Left Limit", leftLimit);
+
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "Climb/Right Inited", rightInited);
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "Climb/Left Inited", leftInited);
     }
 }
