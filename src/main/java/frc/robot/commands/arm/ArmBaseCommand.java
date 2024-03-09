@@ -71,11 +71,6 @@ public abstract class ArmBaseCommand extends LoggingCommand {
      */
     public boolean driveThroughArmPosition(double targetLinkAngle, double targetAimAngle, double targetAngleTolerance) {
 
-        // prevents crash first time through
-        if (targetArmPosition == null) {
-            targetArmPosition = new ArmPosition(targetLinkAngle, targetAimAngle);
-        }
-
         double currentLinkAngle = armSubsystem.getLinkAngle();
         double currentAimAngle  = armSubsystem.getAimAngle();
 
@@ -83,7 +78,8 @@ public abstract class ArmBaseCommand extends LoggingCommand {
         targetAngleTolerance = Math.max(ArmConstants.AT_TARGET_DEG, targetAngleTolerance);
 
         // If the target has changed, determine whether to move the link and aim up or down
-        if (targetLinkAngle != targetArmPosition.linkAngle || targetAimAngle != targetArmPosition.aimAngle) {
+        if (targetArmPosition == null || targetLinkAngle != targetArmPosition.linkAngle
+            || targetAimAngle != targetArmPosition.aimAngle) {
 
             targetArmPosition = new ArmPosition(targetLinkAngle, targetAimAngle);
 
