@@ -437,6 +437,11 @@ public final class Constants {
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
+        /*
+         * ARM PID CONTROLS
+         */
+        public static final double      AIM_PID_P                          = 0.03;
+
 
         /*
          * Key Arm Positions
@@ -473,8 +478,7 @@ public final class Constants {
         public static final double      INTAKE_NOTE_REVERSAL_REVERSE_SPEED = -.075;
 
         public static final double      INTAKE_NOTE_REVERSAL_FORWARD_SPEED = .1;
-        public static final long            INTAKE_SPINUP_WINDOW = 500;
-
+        public static final long        INTAKE_SPINUP_WINDOW               = 500;
 
 
 

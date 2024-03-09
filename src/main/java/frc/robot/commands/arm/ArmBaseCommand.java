@@ -458,7 +458,7 @@ public abstract class ArmBaseCommand extends LoggingCommand {
 
     public double calcAimOmega(double targetAngle, double tolerance) {
 
-        double p            = 0.1;
+        double kP           = ArmConstants.AIM_PID_P;
         double currentAngle = armSubsystem.getAimAngle();
 
         double error        = targetAngle - currentAngle;
@@ -467,6 +467,6 @@ public abstract class ArmBaseCommand extends LoggingCommand {
             return 0;
         }
 
-        return error * p;
+        return error * kP;
     }
 }
