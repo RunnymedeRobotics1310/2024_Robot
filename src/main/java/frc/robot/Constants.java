@@ -522,7 +522,7 @@ public final class Constants {
         public static final int    LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 61;
 
         public static final double MAX_ROBOT_LIFT_SPEED          = .5;
-        public static final double RAISE_CLIMBERS_SPEED          = .3;
+        public static final double RAISE_CLIMBERS_SPEED          = .75;
 
         public static final double CLIMB_MAX                     = 120;
         // encoder values
