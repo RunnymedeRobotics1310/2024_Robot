@@ -15,21 +15,27 @@ public class ClimbSubsystem extends SubsystemBase {
     // Lights Subsystem
     private final LightingSubsystem lighting;
 
-    private final CANSparkMax       leftClimbMotor          = new CANSparkMax(ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax       leftClimbMotor                             = new CANSparkMax(
+        ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
 
-    private final CANSparkMax       rightClimbMotor         = new CANSparkMax(ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax       rightClimbMotor                            = new CANSparkMax(
+        ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final DigitalInput      rightClimbLimitSwitch   = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
-    private final DigitalInput      leftClimbLimitSwitch    = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
+    private final DigitalInput      rightClimbLimitSwitch                      = new DigitalInput(
+        ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
+    private final DigitalInput      leftClimbLimitSwitch                       = new DigitalInput(
+        ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
 
-    private double                  rightClimbSpeed         = 0;
-    private double                  leftClimbSpeed          = 0;
+    private double                  rightClimbSpeed                            = 0;
+    private double                  leftClimbSpeed                             = 0;
 
-    private boolean                 rightEncoderInitialized = false;
-    private boolean                 leftEncoderInitialized  = false;
+    private boolean                 rightEncoderInitialized                    = false;
+    private boolean                 leftEncoderInitialized                     = false;
 
-    private boolean                 unsafeMode              = false;
+    private boolean                 unsafeMode                                 = false;
+
+    private boolean                 temporarilyDisableForCompTillHardwareFixed = true;
 
 
     public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
@@ -44,6 +50,9 @@ public class ClimbSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (temporarilyDisableForCompTillHardwareFixed) {
+            return;
+        }
 
         setClimbSpeeds(leftClimbSpeed, rightClimbSpeed);
 
@@ -59,6 +68,9 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     public void setClimbSpeeds(double leftClimbSpeed, double rightClimbSpeed) {
+        if (temporarilyDisableForCompTillHardwareFixed) {
+            return;
+        }
 
         this.leftClimbSpeed  = leftClimbSpeed;
         this.rightClimbSpeed = rightClimbSpeed;
@@ -128,7 +140,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public void initEncoders() {
         if (!rightEncoderInitialized) {
-            System.out.println("Zeroing right climb encoder. Limit: " + rightClimbLimitSwitch.get());
+//            System.out.println("Zeroing right climb encoder. Limit: " + rightClimbLimitSwitch.get());
             if (!rightClimbLimitSwitch.get()) {
                 rightClimbMotor.getEncoder().setPosition(0);
                 rightClimbMotor.burnFlash();
@@ -140,7 +152,7 @@ public class ClimbSubsystem extends SubsystemBase {
         }
 
         if (!leftEncoderInitialized) {
-            System.out.println("Zeroing left climb encoder. Limit:" + leftClimbLimitSwitch.get());
+//            System.out.println("Zeroing left climb encoder. Limit:" + leftClimbLimitSwitch.get());
             if (!leftClimbLimitSwitch.get()) {
                 leftClimbMotor.getEncoder().setPosition(0);
                 leftClimbMotor.burnFlash();
