@@ -1,10 +1,6 @@
 package frc.robot.commands.arm;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants;
-import frc.robot.commands.LoggingCommand;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 public class IntakeEjectCommand extends ArmBaseCommand {
     public IntakeEjectCommand(ArmSubsystem armSubsystem) {
@@ -31,7 +27,7 @@ public class IntakeEjectCommand extends ArmBaseCommand {
 
         switch (state) {
         case EJECT:
-            armSubsystem.setIntakeSpeed(Constants.ArmConstants.INTAKE_NOTE_REVERSAL_REVERSE_SPEED);
+            armSubsystem.setIntakeSpeed(-.2);
 
             break;
         }

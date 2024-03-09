@@ -315,8 +315,8 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
          * If the link lower limit switch is active, then stop lowering
          * the link.
          */
-        if (linkPivotSpeed < 0 && getLinkAngle() <= ArmConstants.LINK_MIN_DEGREES
-            || isLinkAtLowerLimit()) {
+        if (linkPivotSpeed < 0 && (getLinkAngle() <= ArmConstants.LINK_MIN_DEGREES
+            || isLinkAtLowerLimit())) {
             linkPivotSpeed  = 0;
             safetyEnabled   = true;
             safetyStartTime = System.currentTimeMillis();

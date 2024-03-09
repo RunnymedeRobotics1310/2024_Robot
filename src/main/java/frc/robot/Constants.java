@@ -440,24 +440,24 @@ public final class Constants {
         /*
          * ARM PID CONTROLS
          */
-        public static final double      AIM_PID_P                          = 0.03;
+        public static final double      AIM_PID_P                          = 0.05;
 
 
         /*
          * Key Arm Positions
          */
         public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185.65, 35);
-        public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(114, 118);
+        public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 144);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 104);
-        public static final ArmPosition NOTE_INTAKE_CLEARANCE_POSITION     = new ArmPosition(144, 118);
+        public static final ArmPosition NOTE_INTAKE_CLEARANCE_POSITION     = new ArmPosition(149, 144);
 
         // Transition position - over bumper
         public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(157, 76.89);
         // Transition position - above the lock position (arm not caught on stops)
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
-        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0);  // Unfinished
+        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0);    // Unfinished
         public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(183, 45);      // Unfinished
 
         public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108);     // Unfinished
