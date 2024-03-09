@@ -1,6 +1,7 @@
 package frc.robot.commands.arm;
 
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 // Shoot. That's it.
 public class ShootCommand extends ArmBaseCommand {
@@ -9,13 +10,16 @@ public class ShootCommand extends ArmBaseCommand {
         START_INTAKE, STOP_INTAKE
     };
 
-    private State state       = State.START_INTAKE;
+    private State                 state       = State.START_INTAKE;
+    private final SwerveSubsystem drive;
 
-    private long  startTimeMs = 0;
+    private long                  startTimeMs = 0;
 
-    public ShootCommand(ArmSubsystem armSubsystem) {
+    public ShootCommand(ArmSubsystem armSubsystem, SwerveSubsystem drive) {
 
         super(armSubsystem);
+        addRequirements(drive);
+        this.drive = drive;
     }
 
     @Override
@@ -26,6 +30,7 @@ public class ShootCommand extends ArmBaseCommand {
             return;
         }
 
+        drive.stop();
         logCommandStart();
 
     }
