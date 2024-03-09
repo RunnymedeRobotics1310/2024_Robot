@@ -7,41 +7,21 @@ import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 public class IntakeSimpleCommand extends ArmBaseCommand {
 
-    private final JackmanVisionSubsystem jackmanVisionSubsystem;
-
-    private static final long            NOTE_DETECT_TIMEOUT = 1000;
-
-    private static final long            NOTE_FORWARD_TIME   = 300;
-
-
-
     private enum State {
         WAIT_FOR_NOTE, WAIT_FOR_ARM, NOTE_READY, FINISHED
     };
 
     private IntakeSimpleCommand.State state                = IntakeSimpleCommand.State.WAIT_FOR_NOTE;
 
-
-    private long                      noteForwardStartTime = 0;
-
-
     private long                      intakeStartTime      = 0;
-
-    private boolean                   noteAcquiredSuccess  = false;
 
     /**
      * Creates a new ExampleCommand.
      *
      * @param armSubsystem The subsystem used by this command.
      */
-    public IntakeSimpleCommand(ArmSubsystem armSubsystem,
-        JackmanVisionSubsystem jackmanVisionSubsystem) {
+    public IntakeSimpleCommand(ArmSubsystem armSubsystem) {
         super(armSubsystem);
-
-        this.jackmanVisionSubsystem = jackmanVisionSubsystem;
-
-        // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(jackmanVisionSubsystem);
     }
 
     // Called when the command is initially scheduled.

@@ -54,6 +54,7 @@ public class ManualShootSimpleCommand extends ArmBaseCommand {
             shooterSpeed = 0.75;
             armSubsystem.setShooterSpeed(shooterSpeed);
             if (((armSubsystem.getShooterEncoderSpeed())) >= 1310) {
+                logStateTransition(State.START_INTAKE.name(), "Shooter up to speed");
                 state = State.START_INTAKE;
             }
 
@@ -63,6 +64,7 @@ public class ManualShootSimpleCommand extends ArmBaseCommand {
             intakeSpeed = 1;
             armSubsystem.setIntakeSpeed(intakeSpeed);
             if (((armSubsystem.getIntakeEncoderSpeed())) >= 70) {
+                logStateTransition(State.STOP_INTAKE.name(), "Intake up to speed");
                 state = State.STOP_INTAKE;
             }
             break;
@@ -70,6 +72,7 @@ public class ManualShootSimpleCommand extends ArmBaseCommand {
         case STOP_INTAKE:
             intakeSpeed = 0;
             armSubsystem.setIntakeSpeed(intakeSpeed);
+            logStateTransition(State.STOP_SHOOTER.name(), "Intake stopped, command done");
             state = State.STOP_SHOOTER;
             break;
 
