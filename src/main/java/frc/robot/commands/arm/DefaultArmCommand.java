@@ -47,7 +47,7 @@ public class DefaultArmCommand extends ArmBaseCommand {
             aimAngle  = armSubsystem.getAimAngle();
             linkAngle = armSubsystem.getLinkAngle();
             setLinkMotorSpeed(operatorInput.getOperatorControllerAxis(LEFT, Y) * 0.3);
-            setAimMotorSpeed(operatorInput.getOperatorControllerAxis(RIGHT, Y) * 0.3);
+            setAimMotorSpeed(operatorInput.getOperatorControllerAxis(RIGHT, Y) * 0.5);
 
         }
         else {
