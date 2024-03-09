@@ -351,7 +351,7 @@ public abstract class ArmBaseCommand extends LoggingCommand {
             linkSpeed *= -1.0;
         }
 
-        aimSpeed  = armSubsystem.calcAimOmega(targetAimAngle, targetAngleTolerance);
+        aimSpeed  = calcAimOmega(targetAimAngle, targetAngleTolerance);
 
 
         // Adjust the output speeds by compensating for gravity.
@@ -455,4 +455,18 @@ public abstract class ArmBaseCommand extends LoggingCommand {
         return ArmConstants.MAX_LINK_HOLD * (Math.sin(linkAngleRad) + Math.sin(aimContributionRad) / 2.0);
     }
 
+
+    public double calcAimOmega(double targetAngle, double tolerance) {
+
+        double p            = 0.1;
+        double currentAngle = armSubsystem.getAimAngle();
+
+        double error        = targetAngle - currentAngle;
+
+        if (Math.abs(error) < tolerance) {
+            return 0;
+        }
+
+        return error * p;
+    }
 }
