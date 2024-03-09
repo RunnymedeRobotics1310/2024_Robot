@@ -45,20 +45,23 @@ public class Score4SpeakerAutoCommand extends SequentialCommandGroup {
 
         /* Note 2 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_WOLVERINE, BotTarget.RED_NOTE_WOLVERINE));
-        addCommands(new StartIntakeCommand(armSubsystem, jackman));
+        addCommands(new StartIntakeCommand(armSubsystem, jackman)
+                .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ManualShootCommand(armSubsystem));
 
 
         /* Note 3 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
-        addCommands(new StartIntakeCommand(armSubsystem, jackman));
+        addCommands(new StartIntakeCommand(armSubsystem, jackman)
+                .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ManualShootCommand(armSubsystem));
 
         /* Note 4 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
-        addCommands(new StartIntakeCommand(armSubsystem, jackman));
+        addCommands(new StartIntakeCommand(armSubsystem, jackman)
+                .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ManualShootCommand(armSubsystem));
 

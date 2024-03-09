@@ -14,14 +14,14 @@ public class DriveToNoteCommand extends BaseDriveCommand {
     private final ArmSubsystem arm;
     private long intakeStartTime;
     private boolean startTimeSet = false;
-    private double speed;
+    private double speedMPS;
 
     // todo: fixme: specify unit in speed param name (e.g. speedRPM, speedDegPerSec, etc.)
-    public DriveToNoteCommand(SwerveSubsystem drive, ArmSubsystem arm, JackmanVisionSubsystem jackman, double speed) {
+    public DriveToNoteCommand(SwerveSubsystem drive, ArmSubsystem arm, JackmanVisionSubsystem jackman, double speedMPS) {
 
         super(drive);
         this.jackman = jackman;
-        this.speed   = speed;
+        this.speedMPS   = speedMPS;
         this.arm     = arm;
         addRequirements(jackman);
     }
@@ -34,11 +34,11 @@ public class DriveToNoteCommand extends BaseDriveCommand {
         if (robotRelativeOffset != null) {
 
             if (Math.abs(robotRelativeOffset.getDegrees()) > 10) {
-                speed = 0;
+                speedMPS = 0;
             }
 
             Rotation2d omega = computeOmega(robotRelativeOffset);
-            swerve.driveRobotOriented(new ChassisSpeeds(speed, 0, omega.getRadians()));
+            swerve.driveRobotOriented(new ChassisSpeeds(speedMPS, 0, omega.getRadians()));
         }
 
     }

@@ -25,10 +25,7 @@ import frc.robot.commands.auto.Score2AmpAutoCommand;
 import frc.robot.commands.auto.Score2_5AmpAutoCommand;
 import frc.robot.commands.auto.Score3SpeakerAutoCommand;
 import frc.robot.commands.auto.Score4SpeakerAutoCommand;
-import frc.robot.commands.swervedrive.DriveToPositionCommand;
-import frc.robot.commands.swervedrive.ResetOdometryCommand;
-import frc.robot.commands.swervedrive.RotateToTargetCommand;
-import frc.robot.commands.swervedrive.ZeroGyroCommand;
+import frc.robot.commands.swervedrive.*;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -179,6 +176,10 @@ public class OperatorInput {
 
         // Start Intake
         new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm, jackman));
+
+        // Vision note pickup
+        new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand(arm, jackman)
+                .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
 
         // Aim Amp
         // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
