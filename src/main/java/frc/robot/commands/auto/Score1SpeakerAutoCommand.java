@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.arm.ManualShootCommand;
-import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
@@ -33,8 +32,8 @@ public class Score1SpeakerAutoCommand extends SequentialCommandGroup {
         addCommands(new ManualShootCommand(arm));
 
         /* Exit Zone */
-        addCommands(new DriveToPositionCommand(swerve, blueTransitPose, redTransitPose));
-        addCommands(new DriveToPositionCommand(swerve, blueFinishPose, redFinishPose));
+        // addCommands(new DriveToPositionCommand(swerve, blueTransitPose, redTransitPose));
+        // addCommands(new DriveToPositionCommand(swerve, blueFinishPose, redFinishPose));
 
         // tell people we're done
         addCommands(new LogMessageCommand("Auto Complete"));
