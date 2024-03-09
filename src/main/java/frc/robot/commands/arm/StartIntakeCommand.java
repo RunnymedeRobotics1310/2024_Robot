@@ -26,13 +26,14 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         // If there is a note inside the robot, then do not start this command
         if (armSubsystem.isNoteDetected()) {
-            System.out.println("Note detected in robot. StartIntakeCommand cancelled");
+            log("Note detected in robot. StartIntakeCommand cancelled");
             return;
         }
 
         // If the arm is at the resting position, go to the unlock position first
         // If the aim is inside the bumper area, then move to over bumper first
         // else just go to the intake position
+        // TODO: FIXME: USE CONSTANT
         if (armSubsystem.getAimAngle() < 42.6) {
             state = State.MOVE_TO_UNLOCK;
         }

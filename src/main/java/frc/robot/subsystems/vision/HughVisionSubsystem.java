@@ -11,14 +11,14 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BotTarget;
+import frc.robot.subsystems.RunnymedeSubsystemBase;
 import frc.robot.telemetry.Telemetry;
 
 /**
  * Handles the April Tag Limelight On Shooter Side
  */
-public class HughVisionSubsystem extends SubsystemBase {
+public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
     private static final long          LED_MODE_PIPELINE                    = 0;
     private static final long          LED_MODE_OFF                         = 1;

@@ -1,11 +1,9 @@
 package frc.robot.commands.operator;
 
-import static frc.robot.Constants.UsefulPoses.*;
-import static frc.robot.telemetry.Telemetry.swerve;
+import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
@@ -18,8 +16,18 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
 import frc.robot.commands.arm.*;
-import frc.robot.commands.auto.*;
-import frc.robot.commands.swervedrive.*;
+import frc.robot.commands.auto.PlanBAutoCommand;
+import frc.robot.commands.auto.Score1AmpAutoCommand;
+import frc.robot.commands.auto.Score1SpeakerAutoCommand;
+import frc.robot.commands.auto.Score2AmpAutoCommand;
+import frc.robot.commands.auto.Score2SpeakerAutoCommand;
+import frc.robot.commands.auto.Score2_5AmpAutoCommand;
+import frc.robot.commands.auto.Score3SpeakerAutoCommand;
+import frc.robot.commands.auto.Score4SpeakerAutoCommand;
+import frc.robot.commands.climb.MaxClimbCommand;
+import frc.robot.commands.swervedrive.DriveToNoteCommand;
+import frc.robot.commands.swervedrive.ResetOdometryCommand;
+import frc.robot.commands.swervedrive.ZeroGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -105,6 +113,12 @@ public class OperatorInput {
         return operatorController.getRightBumper();
     }
 
+    public boolean isShakeItOff() {
+        return isShift() && operatorController.getAButton();
+    }
+
+    public boolean isClimbPosition() {  return isShift() && operatorController.getBButton(); }
+
     public double getDriverControllerAxis(Stick stick, Axis axis) {
 
         return switch (stick) {
@@ -171,10 +185,11 @@ public class OperatorInput {
         // Start Intake
         new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeCommand(arm, jackman));
 
-
         // Vision note pickup
-        new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand(arm, jackman)
-                .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
+        new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand2(arm, jackman)
+            .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
+
+        new Trigger(driverController::getAButton).onTrue(new IntakeBackwardsCommand(arm));
 
         // Aim Amp
         // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
@@ -183,11 +198,14 @@ public class OperatorInput {
         // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
         // Shoot
-        new Trigger(operatorController::getBButton).onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(drive, hugh)
-            .andThen(new ManualShootCommand(arm)));
+        new Trigger(operatorController::getBButton).onTrue((new ManualShootCommand(arm)));
 
         new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
 
+        new Trigger(this::isShakeItOff).whileTrue(new ShShShakeItOffCommand(arm));
+
+        // TODO: Uncomment AmpPositionCommand when link is fixed
+        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb)/*.alongWith(new AmpPositionCommand(arm))*/);
 
         // Test Drive to 2,2,20
         // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,

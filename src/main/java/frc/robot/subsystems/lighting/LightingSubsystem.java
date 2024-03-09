@@ -3,12 +3,12 @@ package frc.robot.subsystems.lighting;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.RunnymedeSubsystemBase;
 import frc.robot.subsystems.lighting.pattern.LightingPattern;
 import frc.robot.telemetry.Telemetry;
 
-public class LightingSubsystem extends SubsystemBase {
+public class LightingSubsystem extends RunnymedeSubsystemBase {
 
     private final AddressableLED       ledStrip;
     private final AddressableLEDBuffer ledBuffer;
@@ -126,7 +126,7 @@ public class LightingSubsystem extends SubsystemBase {
 
 
         if (dimmedBuffer != null) {
-            System.out.println("Dimming lights to reduce current draw");
+            log("Dimming lights to reduce current draw");
             ledStrip.setData(dimmedBuffer);
         }
         else {

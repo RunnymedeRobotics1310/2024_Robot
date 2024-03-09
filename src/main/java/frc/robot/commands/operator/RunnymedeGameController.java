@@ -46,7 +46,7 @@ public class RunnymedeGameController extends XboxController {
         super(port);
 
         if (axisDeadband < 0 || axisDeadband > 0.4) {
-            System.out.println("Invalid axis deadband(" + axisDeadband + ") must be between 0 - 0.4. Overriding value to "
+            System.err.println("Invalid axis deadband(" + axisDeadband + ") must be between 0 - 0.4. Overriding value to "
                 + DEFAULT_AXIS_DEADBAND);
             setAxisDeadband(DEFAULT_AXIS_DEADBAND);
         }
@@ -108,7 +108,7 @@ public class RunnymedeGameController extends XboxController {
     public void setAxisDeadband(double axisDeadband) {
 
         if (axisDeadband < 0 || axisDeadband > 0.4) {
-            System.out.println("Invalid axis deadband(" + axisDeadband
+            System.err.println("Invalid axis deadband(" + axisDeadband
                 + ") must be between 0 - 0.4. Axis deadband value not changed.  Currently " + this.axisDeadband);
             return;
         }

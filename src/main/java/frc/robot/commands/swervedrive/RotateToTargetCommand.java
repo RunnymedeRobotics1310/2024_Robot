@@ -82,11 +82,10 @@ public class RotateToTargetCommand extends BaseDriveCommand {
             driveToFieldPose(targetPose);
         }
         else {
-            // System.out.println("vision");
+            // log("vision");
             Rotation2d omega = computeOmegaForOffset(targetOffset);
-            System.out
-                .println("offset: " + format(targetOffset) + " heading: " + format(swerve.getPose().getRotation()) + " omage: "
-                    + format(omega));
+            // System.out.println("offset: " + format(targetOffset) + " heading: " +
+            // format(swerve.getPose().getRotation()) + " omage: "+ format(omega));
             swerve.driveRobotOriented(new ChassisSpeeds(0, 0, omega.getRadians()));
         }
     }

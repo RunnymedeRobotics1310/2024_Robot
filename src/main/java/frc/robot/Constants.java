@@ -409,7 +409,7 @@ public final class Constants {
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the link motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_LINK                       = false;
+        public static final boolean     DISABLE_LINK                       = true;
         /**
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the aim motor is not functioning correctly.
@@ -440,24 +440,24 @@ public final class Constants {
         /*
          * ARM PID CONTROLS
          */
-        public static final double      AIM_PID_P                          = 0.03;
+        public static final double      AIM_PID_P                          = 0.05;
 
 
         /*
          * Key Arm Positions
          */
         public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185.65, 35);
-        public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(114, 118);
+        public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 144);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 104);
-        public static final ArmPosition NOTE_INTAKE_CLEARANCE_POSITION     = new ArmPosition(144, 118);
+        public static final ArmPosition NOTE_INTAKE_CLEARANCE_POSITION     = new ArmPosition(149, 144);
 
         // Transition position - over bumper
         public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(157, 76.89);
         // Transition position - above the lock position (arm not caught on stops)
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
-        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0);  // Unfinished
+        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0);    // Unfinished
         public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(183, 45);      // Unfinished
 
         public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108);     // Unfinished
@@ -481,6 +481,9 @@ public final class Constants {
 
         public static final double      INTAKE_NOTE_REVERSAL_FORWARD_SPEED = .1;
         public static final long        INTAKE_SPINUP_WINDOW               = 500;
+
+        public static final double      INTAKE_EJECT_INTAKE_SPEED          = -1.0;
+        public static final double      INTAKE_EJECT_SHOOTER_SPEED         = -1.0;
 
 
 
@@ -519,7 +522,7 @@ public final class Constants {
         public static final int    LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 61;
 
         public static final double MAX_ROBOT_LIFT_SPEED          = .5;
-        public static final double RAISE_CLIMBERS_SPEED          = .3;
+        public static final double RAISE_CLIMBERS_SPEED          = .75;
 
         public static final double CLIMB_MAX                     = 120;
         // encoder values

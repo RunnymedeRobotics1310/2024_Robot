@@ -26,7 +26,7 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
 
         // If there is a note inside the robot, then do not start this command
         if (armSubsystem.isNoteDetected()) {
-            System.out.println("Note detected in robot. StartIntakeCommand cancelled");
+            log("Note detected in robot. StartIntakeCommand cancelled");
             return;
         }
 
@@ -78,8 +78,7 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
             armSubsystem.setAimPivotSpeed(.3);
 
             // Once the arm has extended by 15 deg, then start a sychro movement
-            if (armSubsystem.getAimAngle() > ArmConstants.COMPACT_ARM_POSITION.aimAngle + 15) {
-
+            if (armSubsystem.getAimAngle() > ArmConstants.COMPACT_ARM_POSITION.aimAngle + 5) {
                 logStateTransition("Extend Aim -> Extend Both", "Aim at " + armSubsystem.getAimAngle());
                 state = State.EXTEND_BOTH;
             }
@@ -89,11 +88,11 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
         case EXTEND_BOTH:
 
             // Start by extending the aim
-            armSubsystem.setLinkPivotSpeed(-.25);
+            armSubsystem.setLinkPivotSpeed(-1);
             armSubsystem.setAimPivotSpeed(.3);
 
             // Once the aim has reached the target, then stop the aim.
-            if (armSubsystem.getAimAngle() > ArmConstants.INTAKE_ARM_POSITION.aimAngle - 3) {
+            if (armSubsystem.getAimAngle() > ArmConstants.INTAKE_ARM_POSITION.aimAngle + 0) {
 
                 logStateTransition("Extend Both -> Move to intake", "Aim at " + armSubsystem.getAimAngle());
                 state = State.MOVE_TO_INTAKE;
@@ -105,7 +104,7 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
         case MOVE_TO_INTAKE:
 
             // Start by extending the aim
-            armSubsystem.setLinkPivotSpeed(-.1);
+            armSubsystem.setLinkPivotSpeed(-1);
             armSubsystem.setAimPivotSpeed(0);
 
             // Rest the aim on the hard stop
@@ -119,6 +118,7 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
         case FINISHED:
             break;
         }
+
     }
 
     @Override

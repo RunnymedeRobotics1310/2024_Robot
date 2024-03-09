@@ -21,10 +21,10 @@ public class ManualShootCommand extends ArmBaseCommand {
     @Override
     public void initialize() {
         startTimeMs = System.currentTimeMillis();
-        state = State.START_SHOOTER;
+        state       = State.START_SHOOTER;
         // If there is no note detected, then why are we aiming?
 //        if (!armSubsystem.isNoteDetected()) {
-//            System.out.println(" No note detected in robot. ShootCommand cancelled");
+//            log(" No note detected in robot. ShootCommand cancelled");
 //            return;
 //        }
 
@@ -78,7 +78,7 @@ public class ManualShootCommand extends ArmBaseCommand {
     }
 
     public boolean isFinished() {
-        if ( state == State.STOP_SHOOTER) {
+        if (state == State.STOP_SHOOTER) {
             armSubsystem.setShooterSpeed(0);
             return true;
         }

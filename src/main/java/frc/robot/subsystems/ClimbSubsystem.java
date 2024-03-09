@@ -4,24 +4,27 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Climbing;
 import frc.robot.telemetry.Telemetry;
 
-public class ClimbSubsystem extends SubsystemBase {
+public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     // Lights Subsystem
     private final LightingSubsystem lighting;
 
-    private final CANSparkMax       leftClimbMotor          = new CANSparkMax(ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax       leftClimbMotor          = new CANSparkMax(
+        ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
 
-    private final CANSparkMax       rightClimbMotor         = new CANSparkMax(ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax       rightClimbMotor         = new CANSparkMax(
+        ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final DigitalInput      rightClimbLimitSwitch   = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
-    private final DigitalInput      leftClimbLimitSwitch    = new DigitalInput(ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
+    private final DigitalInput      rightClimbLimitSwitch   = new DigitalInput(
+        ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
+    private final DigitalInput      leftClimbLimitSwitch    = new DigitalInput(
+        ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
 
     private double                  rightClimbSpeed         = 0;
     private double                  leftClimbSpeed          = 0;
@@ -40,6 +43,12 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public void setUnsafeMode(boolean unsafeMode) {
         this.unsafeMode = unsafeMode;
+    }
+
+    public boolean isClimbAtMax() {
+
+        return leftClimbMotor.getEncoder().getPosition() >= ClimbConstants.CLIMB_MAX
+            && rightClimbMotor.getEncoder().getPosition() >= ClimbConstants.CLIMB_MAX;
     }
 
     @Override
@@ -128,7 +137,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public void initEncoders() {
         if (!rightEncoderInitialized) {
-            System.out.println("Zeroing right climb encoder. Limit: " + rightClimbLimitSwitch.get());
+            // log("Zeroing right climb encoder. Limit: " + rightClimbLimitSwitch.get());
             if (!rightClimbLimitSwitch.get()) {
                 rightClimbMotor.getEncoder().setPosition(0);
                 rightClimbMotor.burnFlash();
@@ -140,7 +149,7 @@ public class ClimbSubsystem extends SubsystemBase {
         }
 
         if (!leftEncoderInitialized) {
-            System.out.println("Zeroing left climb encoder. Limit:" + leftClimbLimitSwitch.get());
+            // log("Zeroing left climb encoder. Limit:" + leftClimbLimitSwitch.get());
             if (!leftClimbLimitSwitch.get()) {
                 leftClimbMotor.getEncoder().setPosition(0);
                 leftClimbMotor.burnFlash();

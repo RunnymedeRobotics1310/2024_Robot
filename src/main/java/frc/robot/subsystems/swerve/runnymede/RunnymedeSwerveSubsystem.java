@@ -104,7 +104,7 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
             }
         }
         if (swerveModule == null) {
-            System.out.println("Invalid module name: " + module.name);
+            log("Invalid module name: " + module.name);
             return;
         }
 
