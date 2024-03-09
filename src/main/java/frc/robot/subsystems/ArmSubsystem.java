@@ -115,7 +115,7 @@ public class ArmSubsystem extends SubsystemBase {
         return new Translation2d(shooterX, shooterY);
     }
 
-    private boolean isLinkAtLowerLimit() {
+    public boolean isLinkAtLowerLimit() {
         return !linkLowerLimitSwitch.get();
     }
 
