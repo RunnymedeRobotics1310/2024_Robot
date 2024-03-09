@@ -118,6 +118,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public void initEncoders() {
         if (!rightEncoderInitialized) {
+            System.out.println("Zeroing right climb encoder.");
             if (rightClimbLimitSwitch.get()) {
                 rightClimbMotor.getEncoder().setPosition(0);
                 rightClimbMotor.burnFlash();
@@ -129,6 +130,7 @@ public class ClimbSubsystem extends SubsystemBase {
         }
 
         if (!leftEncoderInitialized) {
+            System.out.println("Zeroing left climb encoder.");
             if (leftClimbLimitSwitch.get()) {
                 leftClimbMotor.getEncoder().setPosition(0);
                 leftClimbMotor.burnFlash();
