@@ -33,6 +33,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
         // If the arm is at the resting position, go to the unlock position first
         // If the aim is inside the bumper area, then move to over bumper first
         // else just go to the intake position
+        // TODO: FIXME: USE CONSTANT
         if (armSubsystem.getAimAngle() < 42.6) {
             state = State.MOVE_TO_UNLOCK;
         }
