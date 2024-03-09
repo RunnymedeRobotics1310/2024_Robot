@@ -42,6 +42,22 @@ public class ClimbSubsystem extends SubsystemBase {
         this.unsafeMode = unsafeMode;
     }
 
+    @Override
+    public void periodic() {
+
+        setClimbSpeeds(leftClimbSpeed, rightClimbSpeed);
+
+        setLightingPattern();
+
+        Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
+        Telemetry.climb.leftClimbEncoder  = leftClimbMotor.getEncoder().getPosition();
+        Telemetry.climb.rightClimbSpeed   = rightClimbSpeed;
+        Telemetry.climb.rightClimbEncoder = rightClimbMotor.getEncoder().getPosition();
+        Telemetry.climb.rightLimit        = rightClimbLimitSwitch.get();
+        Telemetry.climb.leftLimit         = leftClimbLimitSwitch.get();
+
+    }
+
     public void setClimbSpeeds(double leftClimbSpeed, double rightClimbSpeed) {
 
         this.leftClimbSpeed  = leftClimbSpeed;
@@ -67,22 +83,6 @@ public class ClimbSubsystem extends SubsystemBase {
     public void stop() {
 
         setClimbSpeeds(0, 0);
-
-    }
-
-    @Override
-    public void periodic() {
-
-        setClimbSpeeds(leftClimbSpeed, rightClimbSpeed);
-
-        setLightingPattern();
-
-        Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
-        Telemetry.climb.leftClimbEncoder  = leftClimbMotor.getEncoder().getPosition();
-        Telemetry.climb.rightClimbSpeed   = rightClimbSpeed;
-        Telemetry.climb.rightClimbEncoder = rightClimbMotor.getEncoder().getPosition();
-        Telemetry.climb.rightLimit        = rightClimbLimitSwitch.get();
-        Telemetry.climb.leftLimit         = leftClimbLimitSwitch.get();
 
     }
 
