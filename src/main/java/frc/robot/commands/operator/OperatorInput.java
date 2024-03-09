@@ -15,8 +15,22 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
-import frc.robot.commands.auto.*;
+import frc.robot.commands.arm.CompactPoseCommand;
+import frc.robot.commands.arm.IntakeBackwardsCommand;
+import frc.robot.commands.arm.IntakeCommand;
+import frc.robot.commands.arm.IntakeEjectCommand;
+import frc.robot.commands.arm.ManualShootCommand;
+import frc.robot.commands.arm.ShShShakeItOffCommand;
+import frc.robot.commands.arm.StartIntakeCommand2;
+import frc.robot.commands.auto.ExitZoneAutoCommand;
+import frc.robot.commands.auto.PlanBAutoCommand;
+import frc.robot.commands.auto.Score1AmpAutoCommand;
+import frc.robot.commands.auto.Score1SpeakerAutoCommand;
+import frc.robot.commands.auto.Score2AmpAutoCommand;
+import frc.robot.commands.auto.Score2SpeakerAutoCommand;
+import frc.robot.commands.auto.Score2_5AmpAutoCommand;
+import frc.robot.commands.auto.Score3SpeakerAutoCommand;
+import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.climb.MaxClimbCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.ResetOdometryCommand;
@@ -110,7 +124,9 @@ public class OperatorInput {
         return isShift() && operatorController.getAButton();
     }
 
-    public boolean isClimbPosition() {  return isShift() && operatorController.getBButton(); }
+    public boolean isClimbPosition() {
+        return isShift() && operatorController.getBButton();
+    }
 
     public double getDriverControllerAxis(Stick stick, Axis axis) {
 
@@ -198,7 +214,11 @@ public class OperatorInput {
         new Trigger(this::isShakeItOff).whileTrue(new ShShShakeItOffCommand(arm));
 
         // TODO: Uncomment AmpPositionCommand when link is fixed
-        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb)/*.alongWith(new AmpPositionCommand(arm))*/);
+        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb)/*
+                                                                             * .alongWith(new
+                                                                             * AmpPositionCommand(
+                                                                             * arm))
+                                                                             */);
 
         // Test Drive to 2,2,20
         // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,
@@ -228,6 +248,7 @@ public class OperatorInput {
 
         autoPatternChooser.setDefaultOption("Do Nothing", Constants.AutoConstants.AutoPattern.DO_NOTHING);
 
+        autoPatternChooser.addOption("Exit Zone", Constants.AutoConstants.AutoPattern.EXIT_ZONE);
         autoPatternChooser.addOption("1 Amp", Constants.AutoConstants.AutoPattern.SCORE_1_AMP);
         autoPatternChooser.addOption("2 Amp", Constants.AutoConstants.AutoPattern.SCORE_2_AMP);
         autoPatternChooser.addOption("2.5 Amp", Constants.AutoConstants.AutoPattern.SCORE_2_5_AMP);
@@ -248,7 +269,8 @@ public class OperatorInput {
     public Command getAutonomousCommand() {
 
         return switch (autoPatternChooser.getSelected()) {
-        case SCORE_1_AMP -> new ExitZoneAutoCommand(drive, arm, hugh);
+        case EXIT_ZONE -> new ExitZoneAutoCommand(drive);
+        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh);
         case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh);

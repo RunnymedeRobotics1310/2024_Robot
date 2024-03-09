@@ -360,7 +360,7 @@ public final class Constants {
 
         public enum AutoPattern {
             DO_NOTHING,
-            SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP,
+            EXIT_ZONE, SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP,
             SCORE_1_SPEAKER, SCORE_2_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
             PLAN_B
         }
