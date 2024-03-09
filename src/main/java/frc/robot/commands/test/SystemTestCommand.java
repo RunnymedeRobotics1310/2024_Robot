@@ -146,6 +146,8 @@ public class SystemTestCommand extends LoggingCommand {
         int    pov          = controller.getPOV();
         double leftTrigger  = controller.getLeftTriggerAxis();
         double rightTrigger = controller.getRightTriggerAxis();
+        motorSpeed  = 0;
+        motor2Speed = 0;
 
 
         if (controller.getXButton()) {
