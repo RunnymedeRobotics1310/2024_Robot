@@ -7,9 +7,18 @@ import frc.robot.subsystems.ArmSubsystem;
 
 public abstract class ArmBaseCommand extends LoggingCommand {
 
+    private enum Direction {
+        UP, DOWN
+    }
+
     ArmPosition                  targetArmPosition;
 
     protected final ArmSubsystem armSubsystem;
+
+    Direction                    linkTransitionDirection   = Direction.UP;
+    Direction                    aimTransitionDirection    = Direction.DOWN;
+
+    long                         transitionStartTimeMillis = 0;
 
     public ArmBaseCommand(ArmSubsystem armSubsystem) {
 
@@ -23,12 +32,249 @@ public abstract class ArmBaseCommand extends LoggingCommand {
     }
 
 
+    /**
+     * Drive through arm position
+     *
+     * This command optimizes the arm transition through the selected position. It will not back up
+     * to try
+     * to correct to the precise position, but may return true after the angles are further past the
+     * target
+     * than the starting position.
+     *
+     * @param targetArmPosition containing link and aim angles.
+     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is past
+     * the target
+     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the
+     * target, {@code false}
+     * otherwise
+     */
+    public boolean driveThroughArmPosition(ArmPosition targetArmPosition, double targetAngleTolerance) {
+        return driveThroughArmPosition(targetArmPosition.linkAngle, targetArmPosition.aimAngle, targetAngleTolerance);
+    }
+
+    /**
+     * Drive through arm position
+     *
+     * This command optimizes the arm transition through the selected position. It will not back up
+     * to try
+     * to correct to the precise position, and may return true after the angles are further past the
+     * target
+     * than the starting position and the angles may be outside the target tolerance.
+     *
+     * @param targetLinkAngle in degrees
+     * @param targetAimAngle in degrees
+     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is past
+     * the target
+     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the
+     * target, {@code false}
+     * otherwise
+     */
+    public boolean driveThroughArmPosition(double targetLinkAngle, double targetAimAngle, double targetAngleTolerance) {
+
+        // prevents crash first time through
+        if (targetArmPosition == null) {
+            targetArmPosition = new ArmPosition(targetLinkAngle, targetAimAngle);
+        }
+
+        double currentLinkAngle = armSubsystem.getLinkAngle();
+        double currentAimAngle  = armSubsystem.getAimAngle();
+
+        // The angle tolerance cannot be set less than the AT_TARGET constant
+        targetAngleTolerance = Math.max(ArmConstants.AT_TARGET_DEG, targetAngleTolerance);
+
+        // If the target has changed, determine whether to move the link and aim up or down
+        if (targetLinkAngle != targetArmPosition.linkAngle || targetAimAngle != targetArmPosition.aimAngle) {
+
+            targetArmPosition = new ArmPosition(targetLinkAngle, targetAimAngle);
+
+            if (targetAimAngle > currentAimAngle) {
+                aimTransitionDirection = Direction.UP;
+            }
+            else {
+                aimTransitionDirection = Direction.DOWN;
+            }
+
+            if (targetLinkAngle > currentLinkAngle) {
+                linkTransitionDirection = Direction.UP;
+            }
+            else {
+                linkTransitionDirection = Direction.DOWN;
+            }
+
+            transitionStartTimeMillis = System.currentTimeMillis();
+
+            log("Transition through angle : link " + targetLinkAngle + ", " + linkTransitionDirection
+                + ", aim " + targetAimAngle + ", " + aimTransitionDirection + " tolerance " + targetAngleTolerance + "deg");
+        }
+
+        /*
+         * Calculate the errors
+         *
+         * There is no error if past the transition point.
+         */
+        double linkAngleError = targetLinkAngle - currentLinkAngle;
+
+        if (linkTransitionDirection == Direction.UP) {
+            linkAngleError = Math.max(0, linkAngleError);
+        }
+        else {
+            linkAngleError = Math.min(linkAngleError, 0);
+        }
+
+
+        double aimAngleError = targetAimAngle - currentAimAngle;
+
+        if (aimTransitionDirection == Direction.UP) {
+            aimAngleError = Math.max(0, aimAngleError);
+        }
+        else {
+            aimAngleError = Math.min(aimAngleError, 0);
+        }
+
+        // Determine the relative motor speeds
+        double linkSpeed = 0;
+        double aimSpeed  = 0;
+
+        if (Math.abs(aimAngleError) >= Math.abs(linkAngleError)) {
+
+            aimSpeed = ArmConstants.FAST_AIM_SPEED;
+
+            if (Math.abs(aimAngleError) <= ArmConstants.SLOW_ARM_ZONE_DEG) {
+                aimSpeed = ArmConstants.SLOW_AIM_SPEED;
+            }
+
+            if (Math.abs(aimAngleError) <= ArmConstants.AT_TARGET_DEG) {
+                aimSpeed = 0;
+            }
+
+            // Set the link speed relative to the aim speed.
+            linkSpeed = Math.abs(linkAngleError / aimAngleError) * aimSpeed;
+
+            if (Math.abs(linkAngleError) <= ArmConstants.SLOW_ARM_ZONE_DEG) {
+                linkSpeed = Math.min(linkSpeed, ArmConstants.SLOW_LINK_SPEED);
+            }
+
+            if (Math.abs(linkAngleError) <= ArmConstants.AT_TARGET_DEG) {
+                linkSpeed = 0;
+            }
+        }
+        else {
+
+            // Link error is larger than Aim error
+            // Set the link speed to the maximum
+
+            linkSpeed = ArmConstants.FAST_LINK_SPEED;
+
+            if (Math.abs(linkAngleError) <= ArmConstants.SLOW_ARM_ZONE_DEG) {
+                linkSpeed = ArmConstants.SLOW_LINK_SPEED;
+            }
+
+            if (Math.abs(linkAngleError) <= ArmConstants.AT_TARGET_DEG) {
+                linkSpeed = 0;
+            }
+
+            // Set the link speed relative to the aim speed.
+            aimSpeed = Math.abs(aimAngleError / linkAngleError) * linkSpeed;
+
+            if (Math.abs(aimAngleError) <= ArmConstants.SLOW_ARM_ZONE_DEG) {
+                aimSpeed = Math.min(aimSpeed, ArmConstants.SLOW_AIM_SPEED);
+            }
+
+            if (Math.abs(aimAngleError) <= ArmConstants.AT_TARGET_DEG) {
+                aimSpeed = 0;
+            }
+        }
+
+        if (linkAngleError < 0) {
+            linkSpeed *= -1.0;
+        }
+
+        if (aimAngleError < 0) {
+            aimSpeed *= -1.0;
+        }
+
+        // Prioritize the UP speeds by adding .1 to the up speed and delaying down for
+        // for .1 seconds
+        if (linkSpeed > 0) {
+            linkSpeed += .1;
+        }
+
+        if (aimSpeed > 0) {
+            aimSpeed += .1;
+        }
+
+        // delay the down directions
+        if (System.currentTimeMillis() - transitionStartTimeMillis < 100) {
+            linkSpeed = Math.max(0, linkSpeed);
+            aimSpeed  = Math.max(0, aimSpeed);
+        }
+
+        // Adjust the output speeds by compensating for gravity.
+        linkSpeed = linkSpeed + calcLinkHold(currentAimAngle, currentLinkAngle);
+        aimSpeed  = aimSpeed + calcAimHold(currentAimAngle, currentLinkAngle);
+
+        // Set the motor speeds
+
+        armSubsystem.setLinkPivotSpeed(linkSpeed);
+        armSubsystem.setAimPivotSpeed(aimSpeed);
+
+        /*
+         * Determine if we are at or past the target
+         */
+        boolean linkAtTarget = false;
+        if (linkTransitionDirection == Direction.UP) {
+            if (currentLinkAngle >= targetLinkAngle - targetAngleTolerance) {
+                linkAtTarget = true;
+            }
+        }
+        else {
+            if (currentLinkAngle <= targetLinkAngle + targetAngleTolerance) {
+                linkAtTarget = true;
+            }
+        }
+
+        boolean aimAtTarget = false;
+        if (aimTransitionDirection == Direction.UP) {
+            if (currentAimAngle >= targetAimAngle - targetAngleTolerance) {
+                aimAtTarget = true;
+            }
+        }
+        else {
+            if (currentAimAngle <= targetAimAngle + targetAngleTolerance) {
+                aimAtTarget = true;
+            }
+        }
+
+        return linkAtTarget && aimAtTarget;
+    }
+
+    /**
+     * Drive to arm position
+     *
+     * @param targetArmPosition containing link and aim angles
+     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is at the
+     * target
+     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the
+     * target, {@code false}
+     * otherwise
+     */
     public boolean driveToArmPosition(ArmPosition targetArmPosition, double targetAngleTolerance) {
         // todo: fixme: set tolerances as a constants in ArmConstants as a Rotation2d to provide
         // clarity into units, or else name parameters to hint at units
         return driveToArmPosition(targetArmPosition.linkAngle, targetArmPosition.aimAngle, targetAngleTolerance);
     }
 
+    /**
+     * Drive to arm position
+     *
+     * @param targetLinkAngle in degrees
+     * @param targetAimAngle in degrees
+     * @param targetAngleTolerance in degrees, which is used to determine whether the arm is at the
+     * target
+     * @return {@code true} if both the link and aim angles are within the tolerance degrees of the
+     * target, {@code false}
+     * otherwise
+     */
     public boolean driveToArmPosition(double targetLinkAngle, double targetAimAngle, double targetAngleTolerance) {
 
         double currentLinkAngle = armSubsystem.getLinkAngle();
@@ -36,6 +282,8 @@ public abstract class ArmBaseCommand extends LoggingCommand {
 
         // The angle tolerance cannot be set less than the AT_TARGET constant
         targetAngleTolerance = Math.max(ArmConstants.AT_TARGET_DEG, targetAngleTolerance);
+
+        targetArmPosition    = new ArmPosition(targetLinkAngle, targetAimAngle);
 
         // Calculate the errors
 
@@ -48,7 +296,7 @@ public abstract class ArmBaseCommand extends LoggingCommand {
         // Move the motor with the larger error at the appropriate speed (Fast or Slow)
         // depending on the error
 
-        //if (Math.abs(aimAngleError) >= Math.abs(linkAngleError)) {
+        // if (Math.abs(aimAngleError) >= Math.abs(linkAngleError)) {
         if (linkAngleError > 0 || aimAngleError > 0) {
 
             aimSpeed = ArmConstants.FAST_AIM_SPEED;
