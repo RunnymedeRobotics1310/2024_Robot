@@ -457,7 +457,7 @@ public final class Constants {
         // Transition position - above the lock position (arm not caught on stops)
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
-        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(206.3, 90.0);  // Unfinished
+        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0);  // Unfinished
         public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(183, 45);      // Unfinished
 
         public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108);     // Unfinished

@@ -88,14 +88,19 @@ public class AimSpeakerCommand extends ArmBaseCommand {
             }
             else {
                 atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION.linkAngle,
-                    gDSSA.getDegrees() - ArmConstants.SHOOTER_AIM_DIFFERENCE, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                    -gDSSA.getDegrees() + 90, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
                     ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
             }
 
+            // shooter facing up == 0
+            // shooter moving down == -angle
+            //
+            // getDynamicSpeakerShooterAngle == 0 == horizontal
+            // angle moving up == +angle
 
             if (atArmAngle) {
                 logStateTransition("Start Shooter", "Arm at Shooter Position");
-                state = State.MOVE_TO_SPEAKER;
+                state = State.SET_SHOOTER_SPEED;
             }
             break;
 
