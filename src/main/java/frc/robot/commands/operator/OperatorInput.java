@@ -33,6 +33,7 @@ import frc.robot.commands.auto.Score3SpeakerAutoCommand;
 import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.climb.MaxClimbCommand;
 import frc.robot.commands.swervedrive.ResetOdometryCommand;
+import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -204,6 +205,8 @@ public class OperatorInput {
 
         // Aim Speaker
         // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
+
+        new Trigger(operatorController::getXButton).onTrue(RotateToTargetCommand.createRotateToSourceCommand(drive, hugh));
 
         // Shoot
         new Trigger(operatorController::getBButton).onTrue((new ManualShootCommand(arm)));
