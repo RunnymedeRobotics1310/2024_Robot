@@ -84,7 +84,7 @@ public class IntakeCommand extends ArmBaseCommand {
             break;
 
         case WAIT_FOR_ARM:
-            boolean atArmPosition = this.driveToArmPosition(Constants.ArmConstants.NOTE_INTAKE_CLEARANCE_POSITION, 5);
+            boolean atArmPosition = this.driveThroughArmPosition(Constants.ArmConstants.NOTE_INTAKE_CLEARANCE_POSITION, 5);
             if (atArmPosition) {
                 if (armSubsystem.isNoteDetected()) {
                     armSubsystem.setIntakeSpeed(Constants.ArmConstants.INTAKE_NOTE_REVERSAL_REVERSE_SPEED);
