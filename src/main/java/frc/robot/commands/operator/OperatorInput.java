@@ -1,11 +1,9 @@
 package frc.robot.commands.operator;
 
-import static frc.robot.Constants.UsefulPoses.*;
-import static frc.robot.telemetry.Telemetry.swerve;
+import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
@@ -17,9 +15,22 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
-import frc.robot.commands.auto.*;
-import frc.robot.commands.swervedrive.*;
+import frc.robot.commands.arm.CompactPoseCommand;
+import frc.robot.commands.arm.IntakeEjectCommand;
+import frc.robot.commands.arm.ManualShootCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.arm.StartIntakeCommand2;
+import frc.robot.commands.auto.PlanBAutoCommand;
+import frc.robot.commands.auto.Score1AmpAutoCommand;
+import frc.robot.commands.auto.Score1SpeakerAutoCommand;
+import frc.robot.commands.auto.Score2AmpAutoCommand;
+import frc.robot.commands.auto.Score2SpeakerAutoCommand;
+import frc.robot.commands.auto.Score2_5AmpAutoCommand;
+import frc.robot.commands.auto.Score3SpeakerAutoCommand;
+import frc.robot.commands.auto.Score4SpeakerAutoCommand;
+import frc.robot.commands.swervedrive.DriveToNoteCommand;
+import frc.robot.commands.swervedrive.ResetOdometryCommand;
+import frc.robot.commands.swervedrive.ZeroGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -172,8 +183,8 @@ public class OperatorInput {
         new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm, jackman));
 
         // Vision note pickup
-        new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand(arm, jackman)
-                .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
+        new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand2(arm, jackman)
+            .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
 
         // Aim Amp
         // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
@@ -182,8 +193,7 @@ public class OperatorInput {
         // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
         // Shoot
-        new Trigger(operatorController::getBButton).onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(drive, hugh)
-            .andThen(new ManualShootCommand(arm)));
+        new Trigger(operatorController::getBButton).onTrue((new ManualShootCommand(arm)));
 
         new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
 

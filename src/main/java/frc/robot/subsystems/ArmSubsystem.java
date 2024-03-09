@@ -107,28 +107,28 @@ public class ArmSubsystem extends SubsystemBase {
     public Translation2d getShooterXY() {
 
         // calculate angle of bar
-        double aimMotorAngle = getAimAngle() + 48;
+        double       aimMotorAngle = getAimAngle() + 48;
 
-        final double hypM = 0.20955;
+        final double hypM          = 0.20955;
 
-        double yDifference;
-        double xDifference;
-        double shooterX;
-        double shooterY;
+        double       yDifference;
+        double       xDifference;
+        double       shooterX;
+        double       shooterY;
 
-        if(aimMotorAngle > 90){
+        if (aimMotorAngle > 90) {
             aimMotorAngle -= 90;
-            yDifference  = hypM * (Math.cos(aimMotorAngle));
-            xDifference  = hypM * (Math.sin(aimMotorAngle));
-            shooterX     = ArmConstants.AIM_X_SHOOTING - xDifference;
-            shooterY     = ArmConstants.AIM_Y_SHOOTING + yDifference;
+            yDifference    = hypM * (Math.cos(aimMotorAngle));
+            xDifference    = hypM * (Math.sin(aimMotorAngle));
+            shooterX       = ArmConstants.AIM_X_SHOOTING - xDifference;
+            shooterY       = ArmConstants.AIM_Y_SHOOTING + yDifference;
         }
-        else if(aimMotorAngle < 90){
+        else if (aimMotorAngle < 90) {
             aimMotorAngle += 90;
-            yDifference  = hypM * (Math.cos(aimMotorAngle));
-            xDifference  = hypM * (Math.sin(aimMotorAngle));
-            shooterX     = ArmConstants.AIM_X_SHOOTING - xDifference;
-            shooterY     = ArmConstants.AIM_Y_SHOOTING + yDifference;
+            yDifference    = hypM * (Math.cos(aimMotorAngle));
+            xDifference    = hypM * (Math.sin(aimMotorAngle));
+            shooterX       = ArmConstants.AIM_X_SHOOTING - xDifference;
+            shooterY       = ArmConstants.AIM_Y_SHOOTING + yDifference;
 
         }
         // aimMotorAngle == 90
@@ -316,8 +316,8 @@ public class ArmSubsystem extends SubsystemBase {
          * If the link lower limit switch is active, then stop lowering
          * the link.
          */
-        if (linkPivotSpeed < 0 && getLinkAngle() <= ArmConstants.LINK_MIN_DEGREES
-            || isLinkAtLowerLimit()) {
+        if (linkPivotSpeed < 0 && (getLinkAngle() <= ArmConstants.LINK_MIN_DEGREES
+            || isLinkAtLowerLimit())) {
             linkPivotSpeed  = 0;
             safetyEnabled   = true;
             safetyStartTime = System.currentTimeMillis();
