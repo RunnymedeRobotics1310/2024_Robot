@@ -176,7 +176,7 @@ public class OperatorInput {
         new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
-        new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeSimpleCommand(arm, jackman));
+        new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeSimpleCommand(arm));
 
         // Vision note pickup
         new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand2(arm, jackman)
