@@ -18,17 +18,8 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
 import frc.robot.commands.arm.*;
-import frc.robot.commands.auto.PlanBAutoCommand;
-import frc.robot.commands.auto.Score1AmpAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerAutoCommand;
-import frc.robot.commands.auto.Score2AmpAutoCommand;
-import frc.robot.commands.auto.Score2_5AmpAutoCommand;
-import frc.robot.commands.auto.Score3SpeakerAutoCommand;
-import frc.robot.commands.auto.Score4SpeakerAutoCommand;
-import frc.robot.commands.swervedrive.DriveToPositionCommand;
-import frc.robot.commands.swervedrive.ResetOdometryCommand;
-import frc.robot.commands.swervedrive.RotateToTargetCommand;
-import frc.robot.commands.swervedrive.ZeroGyroCommand;
+import frc.robot.commands.auto.*;
+import frc.robot.commands.swervedrive.*;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -180,6 +171,10 @@ public class OperatorInput {
         // Start Intake
         new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm, jackman));
 
+        // Vision note pickup
+        new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand(arm, jackman)
+                .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
+
         // Aim Amp
         // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
 
@@ -226,6 +221,7 @@ public class OperatorInput {
         autoPatternChooser.addOption("2.5 Amp", Constants.AutoConstants.AutoPattern.SCORE_2_5_AMP);
 
         autoPatternChooser.addOption("1 Speaker", Constants.AutoConstants.AutoPattern.SCORE_1_SPEAKER);
+        autoPatternChooser.addOption("2 Speaker", Constants.AutoConstants.AutoPattern.SCORE_2_SPEAKER);
         autoPatternChooser.addOption("3 Speaker", Constants.AutoConstants.AutoPattern.SCORE_3_SPEAKER);
         autoPatternChooser.addOption("4 Speaker", Constants.AutoConstants.AutoPattern.SCORE_4_SPEAKER);
 
@@ -244,6 +240,7 @@ public class OperatorInput {
         case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh);
+        case SCORE_2_SPEAKER -> new Score2SpeakerAutoCommand(drive, arm, hugh, jackman);
         case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman);
         case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman);
         case PLAN_B -> new PlanBAutoCommand(drive);

@@ -14,8 +14,6 @@ public class IntakeCommand extends ArmBaseCommand {
 
     private static final long            NOTE_FORWARD_TIME    = 300;
 
-    private static final long            INTAKE_SPINUP_WINDOW = 500;
-
 
 
     private enum State {
@@ -73,7 +71,7 @@ public class IntakeCommand extends ArmBaseCommand {
         switch (state) {
 
         case WAIT_FOR_NOTE:
-            if (System.currentTimeMillis() - intakeStartTime >= INTAKE_SPINUP_WINDOW) {
+            if (System.currentTimeMillis() - intakeStartTime >= Constants.ArmConstants.INTAKE_SPINUP_WINDOW) {
                 // If the intake is jammed, we need to move the arm to the over bumper position.
                 // We shouldn't have a note detected at this point - this is safety code
                 if (armSubsystem.getIntakeEncoderSpeed() <= 400 || armSubsystem.isNoteDetected()) {

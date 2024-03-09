@@ -1,9 +1,6 @@
 package frc.robot.commands.auto;
 
 
-import static frc.robot.Constants.BotTarget.BLUE_NOTE_VALJEAN;
-import static frc.robot.Constants.BotTarget.RED_NOTE_VALJEAN;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,16 +20,19 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
-public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
+import static frc.robot.Constants.BotTarget.*;
 
-    public Score3SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
-        JackmanVisionSubsystem jackman) {
+public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
+
+    public Score2SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
+                                    JackmanVisionSubsystem jackman) {
 
 
-        Pose2d blueFinishPose = new Pose2d(new Translation2d(3.5, BLUE_NOTE_VALJEAN.getLocation().getY()),
-            Rotation2d.fromDegrees(0));
-        Pose2d redFinishPose  = new Pose2d(new Translation2d(13.04, RED_NOTE_VALJEAN.getLocation().getY()),
-            Rotation2d.fromDegrees(180));
+        Pose2d blueFinishPose = new Pose2d(4, 1.5, new Rotation2d());
+        Pose2d redFinishPose  = new Pose2d(12.54, 1.8, new Rotation2d());
+
+        Pose2d blueTransitionPose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
+        Pose2d redTransitionPose = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
 
 
         addCommands(new LogMessageCommand("Starting Auto"));
@@ -45,25 +45,20 @@ public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
         /* Note 1 */
         // back up to not hit the speaker while rotating
         addCommands(new DriveToPositionCommand(swerve,
-            BotTarget.BLUE_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(1.6, 0)),
-            BotTarget.RED_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(-1.6, 0))));
+                BotTarget.BLUE_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(1.6, 0)),
+                BotTarget.RED_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(-1.6, 0))));
         addCommands(new ManualShootCommand(armSubsystem));
 
         /* Note 3 */
-        addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
-        addCommands(new StartIntakeCommand(armSubsystem, jackman)
-                .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
-        addCommands(new ManualShootCommand(armSubsystem));
-
-        /* Note 4 */
-        addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
+        addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_WOLVERINE, BotTarget.RED_NOTE_WOLVERINE));
         addCommands(new StartIntakeCommand(armSubsystem, jackman)
                 .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ManualShootCommand(armSubsystem));
 
         /* Exit Zone */
+
+        addCommands(new DriveToPositionCommand(swerve, blueTransitionPose, redTransitionPose));
         addCommands(new DriveToPositionCommand(swerve, blueFinishPose, redFinishPose));
 
         // tell people we're done
