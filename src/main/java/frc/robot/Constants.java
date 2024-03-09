@@ -445,6 +445,7 @@ public final class Constants {
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(114, 118);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 104);
+        public static final ArmPosition NOTE_INTAKE_CLEARANCE_POSITION     = new ArmPosition(157, 118);
 
         // Transition position - over bumper
         public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(157, 76.89);
