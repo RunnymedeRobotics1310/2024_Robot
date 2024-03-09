@@ -14,27 +14,25 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
     // Lights Subsystem
     private final LightingSubsystem lighting;
 
-    private final CANSparkMax       leftClimbMotor                             = new CANSparkMax(
+    private final CANSparkMax       leftClimbMotor          = new CANSparkMax(
         ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
 
-    private final CANSparkMax       rightClimbMotor                            = new CANSparkMax(
+    private final CANSparkMax       rightClimbMotor         = new CANSparkMax(
         ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final DigitalInput      rightClimbLimitSwitch                      = new DigitalInput(
+    private final DigitalInput      rightClimbLimitSwitch   = new DigitalInput(
         ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
-    private final DigitalInput      leftClimbLimitSwitch                       = new DigitalInput(
+    private final DigitalInput      leftClimbLimitSwitch    = new DigitalInput(
         ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
 
-    private double                  rightClimbSpeed                            = 0;
-    private double                  leftClimbSpeed                             = 0;
+    private double                  rightClimbSpeed         = 0;
+    private double                  leftClimbSpeed          = 0;
 
-    private boolean                 rightEncoderInitialized                    = false;
-    private boolean                 leftEncoderInitialized                     = false;
+    private boolean                 rightEncoderInitialized = false;
+    private boolean                 leftEncoderInitialized  = false;
 
-    private boolean                 unsafeMode                                 = false;
-
-    private boolean                 temporarilyDisableForCompTillHardwareFixed = false;
+    private boolean                 unsafeMode              = false;
 
 
     public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
@@ -49,9 +47,6 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     @Override
     public void periodic() {
-        if (temporarilyDisableForCompTillHardwareFixed) {
-            return;
-        }
 
         setClimbSpeeds(leftClimbSpeed, rightClimbSpeed);
 
@@ -67,9 +62,6 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
     }
 
     public void setClimbSpeeds(double leftClimbSpeed, double rightClimbSpeed) {
-        if (temporarilyDisableForCompTillHardwareFixed) {
-            return;
-        }
 
         this.leftClimbSpeed  = leftClimbSpeed;
         this.rightClimbSpeed = rightClimbSpeed;
