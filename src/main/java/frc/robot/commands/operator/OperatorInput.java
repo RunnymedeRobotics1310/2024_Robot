@@ -15,11 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.CompactPoseCommand;
-import frc.robot.commands.arm.IntakeEjectCommand;
-import frc.robot.commands.arm.ManualShootCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.arm.StartIntakeCommand2;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.auto.PlanBAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
@@ -180,8 +176,7 @@ public class OperatorInput {
         new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
-        new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeCommand(arm, jackman));
-
+        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm, jackman));
 
         // Vision note pickup
         new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand2(arm, jackman)
