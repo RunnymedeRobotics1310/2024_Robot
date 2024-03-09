@@ -106,12 +106,37 @@ public class ArmSubsystem extends SubsystemBase {
     // changed to use static link pose and aim from link pose
     public Translation2d getShooterXY() {
 
-        double shooterAngle = getAimAngle() - 90;
-        double yDifference  = 0.20955 * (Math.cos(shooterAngle));
-        double xDifference  = 0.20955 * (Math.sin(shooterAngle));
-        double shooterX     = ArmConstants.AIM_X_SHOOTING - xDifference;
-        double shooterY     = ArmConstants.AIM_Y_SHOOTING + yDifference;
-        // TODO: IMPORTANT - THIS WAS COMMENTED OUT AND NOT COMPILING....
+        // calculate angle of bar
+        double aimMotorAngle = getAimAngle() + 48;
+
+        final double hypM = 0.20955;
+
+        double yDifference;
+        double xDifference;
+        double shooterX;
+        double shooterY;
+
+        if(aimMotorAngle > 90){
+            aimMotorAngle -= 90;
+            yDifference  = hypM * (Math.cos(aimMotorAngle));
+            xDifference  = hypM * (Math.sin(aimMotorAngle));
+            shooterX     = ArmConstants.AIM_X_SHOOTING - xDifference;
+            shooterY     = ArmConstants.AIM_Y_SHOOTING + yDifference;
+        }
+        else if(aimMotorAngle < 90){
+            aimMotorAngle += 90;
+            yDifference  = hypM * (Math.cos(aimMotorAngle));
+            xDifference  = hypM * (Math.sin(aimMotorAngle));
+            shooterX     = ArmConstants.AIM_X_SHOOTING - xDifference;
+            shooterY     = ArmConstants.AIM_Y_SHOOTING + yDifference;
+
+        }
+        // aimMotorAngle == 90
+        else {
+            shooterX = 0.20955;
+            shooterY = 0;
+        }
+
         return new Translation2d(shooterX, shooterY);
     }
 
