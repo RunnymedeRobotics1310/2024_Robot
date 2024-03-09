@@ -103,7 +103,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     // todo: fixme: specify unit in either javadoc or method name
-    // changed to use static link pose and aim from link pose 
+    // changed to use static link pose and aim from link pose
     public Translation2d getShooterXY() {
 
         double shooterAngle = getAimAngle() - 90;
@@ -111,7 +111,8 @@ public class ArmSubsystem extends SubsystemBase {
         double xDifference  = 0.20955 * (Math.sin(shooterAngle));
         double shooterX     = ArmConstants.AIM_X_SHOOTING - xDifference;
         double shooterY     = ArmConstants.AIM_Y_SHOOTING + yDifference;
-        // return new Translation2d(shooterX, shooterY);
+        // TODO: IMPORTANT - THIS WAS COMMENTED OUT AND NOT COMPILING....
+        return new Translation2d(shooterX, shooterY);
     }
 
     private boolean isLinkAtLowerLimit() {
