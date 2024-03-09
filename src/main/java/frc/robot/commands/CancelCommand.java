@@ -14,13 +14,10 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
  */
 public class CancelCommand extends LoggingCommand {
 
-    private static final Translation2d DONT_MOVE = new Translation2d();
-    private static final Rotation2d    DONT_TURN = new Rotation2d();
-
-    private final SwerveSubsystem      swerve;
-    private final OperatorInput        operatorInput;
-    private final ArmSubsystem         armSubsystem;
-    private final ClimbSubsystem       climbSubsystem;
+    private final SwerveSubsystem swerve;
+    private final OperatorInput   operatorInput;
+    private final ArmSubsystem    armSubsystem;
+    private final ClimbSubsystem  climbSubsystem;
 
     /**
      * Cancel the commands running on all subsystems.
@@ -89,7 +86,7 @@ public class CancelCommand extends LoggingCommand {
     private void stopAll() {
 
         // Stop all of the robot movement
-        swerve.driveFieldOriented(DONT_MOVE, DONT_TURN);
+        swerve.stop();
         armSubsystem.stop();
         climbSubsystem.stop();
     }
