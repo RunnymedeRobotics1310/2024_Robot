@@ -10,9 +10,9 @@ public class IntakeCommand extends ArmBaseCommand {
 
     private final JackmanVisionSubsystem jackmanVisionSubsystem;
 
-    private static final long            NOTE_DETECT_TIMEOUT  = 1000;
+    private static final long            NOTE_DETECT_TIMEOUT = 1000;
 
-    private static final long            NOTE_FORWARD_TIME    = 300;
+    private static final long            NOTE_FORWARD_TIME   = 300;
 
 
 
@@ -86,6 +86,7 @@ public class IntakeCommand extends ArmBaseCommand {
             if (atArmPosition) {
                 if (armSubsystem.isNoteDetected()) {
                     armSubsystem.setIntakeSpeed(Constants.ArmConstants.INTAKE_NOTE_REVERSAL_REVERSE_SPEED);
+                    armSubsystem.setShooterSpeed(-0.1);
                     logStateTransition(State.REVERSE_NOTE.name(), "Arm In Position, ready for note positioning");
                     state = IntakeCommand.State.REVERSE_NOTE;
                 }
@@ -101,6 +102,7 @@ public class IntakeCommand extends ArmBaseCommand {
             if (!armSubsystem.isNoteDetected()) {
                 noteForwardStartTime = System.currentTimeMillis();
                 armSubsystem.setIntakeSpeed(Constants.ArmConstants.INTAKE_NOTE_REVERSAL_FORWARD_SPEED);
+                armSubsystem.setShooterSpeed(0);
                 logStateTransition(State.FORWARD_NOTE.name(), "Note detection gone, note has reversed enough");
                 state = IntakeCommand.State.FORWARD_NOTE;
             }
@@ -146,6 +148,7 @@ public class IntakeCommand extends ArmBaseCommand {
         if (interrupted) {
             logCommandEnd(interrupted);
             armSubsystem.setIntakeSpeed(0);
+            armSubsystem.setShooterSpeed(0);
         }
         // run if not interupted
         else {
