@@ -1,13 +1,13 @@
 package frc.robot.commands.climb;
 
+import static frc.robot.commands.operator.OperatorInput.Axis.Y;
+import static frc.robot.commands.operator.OperatorInput.Stick.LEFT;
+import static frc.robot.commands.operator.OperatorInput.Stick.RIGHT;
+
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ClimbSubsystem;
-
-import static frc.robot.commands.operator.OperatorInput.Axis.Y;
-import static frc.robot.commands.operator.OperatorInput.Stick.LEFT;
-import static frc.robot.commands.operator.OperatorInput.Stick.RIGHT;
 
 public class DefaultClimbCommand extends LoggingCommand {
 

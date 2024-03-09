@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
@@ -24,8 +25,8 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private double                  rightClimbSpeed       = 0;
     private double                  leftClimbSpeed        = 0;
-    private boolean                 rightEncoderZeroed    = false;
-    private boolean                 leftEncoderZeroed     = false;
+    private Double                  rightEncoderOffset    = null;
+    private Double                  leftEncoderOffset     = null;
 
 
     public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
@@ -39,8 +40,8 @@ public class ClimbSubsystem extends SubsystemBase {
 
         checkClimbSafety();
 
-        if (rightEncoderZeroed && leftEncoderZeroed) {
-            if (leftClimbSpeed > 0 || rightClimbSpeed > 0) {
+        if (rightEncoderOffset != null && leftEncoderOffset != 0) {
+            if (Math.abs(leftClimbSpeed) > 0 || Math.abs(rightClimbSpeed) > 0) {
                 lighting.addPattern(Climbing.getInstance());
             }
             else {
@@ -64,29 +65,44 @@ public class ClimbSubsystem extends SubsystemBase {
         setClimbSpeeds(0, 0);
     }
 
+    private double getLeftEncoderPos() {
+        if (leftEncoderOffset == null)
+            return 0;
+
+        return leftClimbMotor.getEncoder().getPosition() - leftEncoderOffset.doubleValue();
+    }
+
+    private double getRightEncoderPos() {
+        if (rightEncoderOffset == null)
+            return 0;
+
+        return rightClimbMotor.getEncoder().getPosition() - rightEncoderOffset.doubleValue();
+    }
+
     @Override
     public void periodic() {
 
-        if (rightClimbLimitSwitch.get()) {
-            rightEncoderZeroed = true;
-            if (rightClimbMotor.getEncoder().getPosition() > 0) {
-                rightClimbMotor.getEncoder().setPosition(0);
+        if (rightEncoderOffset == null) {
+            if (isRightClimbAtLimit()) {
+                rightEncoderOffset = rightClimbMotor.getEncoder().getPosition();
+            }
+            else {
+                rightClimbMotor.set(-ClimbConstants.SLOW_SPEED);
             }
         }
 
-        if (leftClimbLimitSwitch.get()) {
-            leftEncoderZeroed = true;
-            if (leftClimbMotor.getEncoder().getPosition() > 0) {
-                leftClimbMotor.getEncoder().setPosition(0);
+        if (leftEncoderOffset == null) {
+            if (isLeftClimbAtLimit()) {
+                leftEncoderOffset = leftClimbMotor.getEncoder().getPosition();
+            }
+            else {
+                leftClimbMotor.set(-ClimbConstants.SLOW_SPEED);
             }
         }
 
-        if (!rightEncoderZeroed) {
-            rightClimbMotor.set(-ClimbConstants.SLOW_SPEED);
-        }
-
-        if (!leftEncoderZeroed) {
-            leftClimbMotor.set(-ClimbConstants.SLOW_SPEED);
+        if (leftEncoderOffset == null || rightEncoderOffset == null) {
+            // nothing else happens till we reset encoders.
+            return;
         }
 
         /*
@@ -104,16 +120,17 @@ public class ClimbSubsystem extends SubsystemBase {
          */
 
         Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
-        Telemetry.climb.leftClimbEncoder  = leftClimbMotor.getEncoder().getPosition();
+        Telemetry.climb.leftClimbEncoder  = getLeftEncoderPos();
         Telemetry.climb.rightClimbSpeed   = rightClimbSpeed;
-        Telemetry.climb.rightClimbEncoder = rightClimbMotor.getEncoder().getPosition();
+        Telemetry.climb.rightClimbEncoder = getRightEncoderPos();
         Telemetry.climb.rightLimit        = isRightClimbAtLimit();
         Telemetry.climb.leftLimit         = isLeftClimbAtLimit();
+
     }
 
     private void checkClimbSafety() {
-        rightClimbSpeed = checkClimbSafety(rightClimbSpeed, rightClimbMotor.getEncoder().getPosition());
-        leftClimbSpeed  = checkClimbSafety(leftClimbSpeed, leftClimbMotor.getEncoder().getPosition());
+        rightClimbSpeed = checkClimbSafety(rightClimbSpeed, getRightEncoderPos());
+        leftClimbSpeed  = checkClimbSafety(leftClimbSpeed, getLeftEncoderPos());
     }
 
     private double checkClimbSafety(double climbSpeed, double climbEncoder) {
