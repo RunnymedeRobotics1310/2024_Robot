@@ -2,7 +2,11 @@ package frc.robot.commands.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.RunnymedeUtils;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 
@@ -40,6 +44,14 @@ public class AimSpeakerCommand extends ArmBaseCommand {
 
         logCommandStart();
 
+        DriverStation.Alliance alliance = RunnymedeUtils.getRunnymedeAlliance();
+        if (alliance == DriverStation.Alliance.Blue) {
+            hughVisionSubsystem.setBotTarget(Constants.BotTarget.BLUE_SPEAKER);
+        }
+        else {
+            hughVisionSubsystem.setBotTarget(Constants.BotTarget.RED_SPEAKER);
+        }
+
         if (armSubsystem.getAimAngle() < ArmConstants.UNLOCK_POSITION.aimAngle) {
             state = State.MOVE_TO_UNLOCK;
         }
@@ -53,12 +65,7 @@ public class AimSpeakerCommand extends ArmBaseCommand {
 
     @Override
     public boolean isFinished() {
-        if (state == State.IS_FINISHED) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (state == State.IS_FINISHED);
     }
 
     @Override
@@ -128,4 +135,14 @@ public class AimSpeakerCommand extends ArmBaseCommand {
 
         }
     }
+
+    @Override
+    public void end(boolean interrupted) {
+
+        armSubsystem.stop();
+        hughVisionSubsystem.setBotTarget(Constants.BotTarget.ALL);
+
+        logCommandEnd(interrupted);
+    }
+
 }
