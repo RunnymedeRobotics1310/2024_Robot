@@ -45,10 +45,13 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
         this.unsafeMode = unsafeMode;
     }
 
-    public boolean isClimbAtMax() {
+    public boolean isRightClimbAtMax() {
 
-        return leftClimbMotor.getEncoder().getPosition() >= ClimbConstants.CLIMB_MAX
-            && rightClimbMotor.getEncoder().getPosition() >= ClimbConstants.CLIMB_MAX;
+        return rightClimbMotor.getEncoder().getPosition() >= ClimbConstants.CLIMB_MAX;
+    }
+
+    public boolean isLeftClimbAtMax() {
+        return leftClimbMotor.getEncoder().getPosition() >= ClimbConstants.CLIMB_MAX;
     }
 
     @Override
