@@ -34,7 +34,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     private boolean                 unsafeMode                                 = false;
 
-    private boolean                 temporarilyDisableForCompTillHardwareFixed = true;
+    private boolean                 temporarilyDisableForCompTillHardwareFixed = false;
 
 
     public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
@@ -139,7 +139,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     public void initEncoders() {
         if (!rightEncoderInitialized) {
-//            log("Zeroing right climb encoder. Limit: " + rightClimbLimitSwitch.get());
+            // log("Zeroing right climb encoder. Limit: " + rightClimbLimitSwitch.get());
             if (!rightClimbLimitSwitch.get()) {
                 rightClimbMotor.getEncoder().setPosition(0);
                 rightClimbMotor.burnFlash();
@@ -151,7 +151,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
         }
 
         if (!leftEncoderInitialized) {
-//            log("Zeroing left climb encoder. Limit:" + leftClimbLimitSwitch.get());
+            // log("Zeroing left climb encoder. Limit:" + leftClimbLimitSwitch.get());
             if (!leftClimbLimitSwitch.get()) {
                 leftClimbMotor.getEncoder().setPosition(0);
                 leftClimbMotor.burnFlash();
