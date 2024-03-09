@@ -237,7 +237,7 @@ public class OperatorInput {
     public Command getAutonomousCommand() {
 
         return switch (autoPatternChooser.getSelected()) {
-        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh);
+        case SCORE_1_AMP -> new ExitZoneAutoCommand(drive, arm, hugh);
         case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh);
