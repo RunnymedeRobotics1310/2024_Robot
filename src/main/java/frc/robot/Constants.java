@@ -471,6 +471,8 @@ public final class Constants {
 
         public static final double      SLOW_ARM_ZONE_DEG                  = 20.0;
         public static final double      AT_TARGET_DEG                      = 2;
+        public static final double      DEFAULT_LINK_TOLERANCE_DEG         = 3;
+        public static final double      DEFAULT_AIM_TOLERANCE_DEG          = 6;
 
         public static final double      INTAKE_INTAKE_SPEED                = .75;
         public static final double      INTAKE_REVERSE_SPEED               = -.3;

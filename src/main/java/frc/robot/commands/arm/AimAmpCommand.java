@@ -49,7 +49,8 @@ public class AimAmpCommand extends ArmBaseCommand {
 
         case MOVE_TO_AMP:
             // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_AMP_ARM_POSITION, 5);
+            atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_AMP_ARM_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
             if (atArmAngle) {
                 logStateTransition("Start Shooter", "Arm at Shoot Amp position");
                 state = State.SET_SHOOTER_SPEED;
@@ -59,7 +60,8 @@ public class AimAmpCommand extends ArmBaseCommand {
         case MOVE_TO_OVER_BUMPER:
 
             // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.OVER_BUMPER_POSITION, 5);
+            atArmAngle = this.driveThroughArmPosition(ArmConstants.OVER_BUMPER_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             // If past the bumper danger, move to the amp position.
 
@@ -75,7 +77,8 @@ public class AimAmpCommand extends ArmBaseCommand {
         case MOVE_TO_UNLOCK:
 
             // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.UNLOCK_POSITION, 5);
+            atArmAngle = this.driveThroughArmPosition(ArmConstants.UNLOCK_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             // If past the bumper danger, move to the compact position.
             if (atArmAngle) {

@@ -47,18 +47,20 @@ public class CompactPoseCommand extends ArmBaseCommand {
 
         case MOVE_TO_OVER_INTAKE:
 
-            atArmAngle = this.driveToArmPosition(ArmConstants.OVER_INTAKE, 5);
+            atArmAngle = this.driveThroughArmPosition(ArmConstants.OVER_INTAKE, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             if (atArmAngle) {
                 logStateTransition("Move to over intake", "Arm ground");
                 state = State.MOVE_TO_OVER_BUMPER;
             }
-        break;
+            break;
 
         case MOVE_TO_OVER_BUMPER:
 
             // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.OVER_BUMPER_POSITION, 5);
+            atArmAngle = this.driveThroughArmPosition(ArmConstants.OVER_BUMPER_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             // If past the bumper danger, move to the compact position.
             if (atArmAngle) {
@@ -72,7 +74,8 @@ public class CompactPoseCommand extends ArmBaseCommand {
         case MOVE_TO_UNLOCK:
 
             // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.UNLOCK_POSITION, 5);
+            atArmAngle = this.driveThroughArmPosition(ArmConstants.UNLOCK_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             // If past the bumper danger, move to the compact position.
             if (atArmAngle) {
@@ -86,7 +89,8 @@ public class CompactPoseCommand extends ArmBaseCommand {
         case MOVE_TO_COMPACT:
 
             // Move to the requested angle with a tolerance of 2 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.COMPACT_ARM_POSITION, 2);
+            atArmAngle = this.driveToArmPosition(ArmConstants.COMPACT_ARM_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                2);
 
             // If past the bumper danger, move to the intake position.
             if (atArmAngle) {

@@ -1,8 +1,8 @@
 package frc.robot.commands.arm;
 
-import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.LoggingCommand;
+import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
@@ -82,7 +82,8 @@ public class IntakeCommand extends ArmBaseCommand {
             break;
 
         case WAIT_FOR_ARM:
-            boolean atArmPosition = this.driveThroughArmPosition(Constants.ArmConstants.NOTE_INTAKE_CLEARANCE_POSITION, 5);
+            boolean atArmPosition = this.driveThroughArmPosition(Constants.ArmConstants.NOTE_INTAKE_CLEARANCE_POSITION,
+                ArmConstants.DEFAULT_LINK_TOLERANCE_DEG, ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
             if (atArmPosition) {
                 if (armSubsystem.isNoteDetected()) {
                     armSubsystem.setIntakeSpeed(Constants.ArmConstants.INTAKE_NOTE_REVERSAL_REVERSE_SPEED);

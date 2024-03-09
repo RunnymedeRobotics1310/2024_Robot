@@ -83,11 +83,13 @@ public class AimSpeakerCommand extends ArmBaseCommand {
             Rotation2d gDSSA = hughVisionSubsystem.getDynamicSpeakerShooterAngle(getShooterXY);
 
             if (gDSSA == null) {
-                atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION, 5);
+                atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION,
+                    ArmConstants.DEFAULT_LINK_TOLERANCE_DEG, ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
             }
             else {
                 atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_ARM_POSITION.linkAngle,
-                    gDSSA.getDegrees() - ArmConstants.SHOOTER_AIM_DIFFERENCE, 5);
+                    gDSSA.getDegrees() - ArmConstants.SHOOTER_AIM_DIFFERENCE, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                    ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
             }
 
 
@@ -100,7 +102,8 @@ public class AimSpeakerCommand extends ArmBaseCommand {
         case MOVE_TO_OVER_BUMPER:
 
             // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.OVER_BUMPER_POSITION, 5);
+            atArmAngle = this.driveToArmPosition(ArmConstants.OVER_BUMPER_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             // If past the bumper danger, move to the speaker position.
 
@@ -116,7 +119,8 @@ public class AimSpeakerCommand extends ArmBaseCommand {
         case MOVE_TO_UNLOCK:
 
             // Move to the requested angle with a tolerance of 5 deg
-            atArmAngle = this.driveToArmPosition(ArmConstants.UNLOCK_POSITION, 5);
+            atArmAngle = this.driveToArmPosition(ArmConstants.UNLOCK_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             // If past the bumper danger, move to the compact position.
             if (atArmAngle) {
