@@ -102,26 +102,16 @@ public class ArmSubsystem extends SubsystemBase {
         return Math.round(intakeMotor.getEncoder().getVelocity() * 100) / 100.0;
     }
 
-    // This relies on 206.3 being the link angle. This should probably be changed to use different
-    // link angles as well.
     // todo: fixme: specify unit in either javadoc or method name
+    // changed to use static link pose and aim from link pose 
     public Translation2d getShooterXY() {
+
         double shooterAngle = getAimAngle() - 90;
-
-
-
-        double yDifference  = 0.20955 * (Math.sin(shooterAngle));
-        double xDifference  = 0.20955 * (Math.sin(90 - shooterAngle));
-
-
-
+        double yDifference  = 0.20955 * (Math.cos(shooterAngle));
+        double xDifference  = 0.20955 * (Math.sin(shooterAngle));
         double shooterX     = ArmConstants.AIM_X_SHOOTING - xDifference;
         double shooterY     = ArmConstants.AIM_Y_SHOOTING + yDifference;
-
-
-
-        return new Translation2d(shooterX, shooterY);
-
+        // return new Translation2d(shooterX, shooterY);
     }
 
     private boolean isLinkAtLowerLimit() {
