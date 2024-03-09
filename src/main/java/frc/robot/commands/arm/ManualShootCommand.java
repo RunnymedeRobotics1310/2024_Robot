@@ -62,7 +62,7 @@ public class ManualShootCommand extends ArmBaseCommand {
 
             shooterSpeed = 0.75;
             armSubsystem.setShooterSpeed(shooterSpeed);
-            if (((armSubsystem.getShooterEncoderSpeed())) >= 120) {
+            if (((armSubsystem.getShooterEncoderSpeed())) >= 1310) {
                 state = State.START_INTAKE;
             }
 
