@@ -55,6 +55,7 @@ public class AimAmpCommand extends ArmBaseCommand {
                 logStateTransition("Start Shooter", "Arm at Shoot Amp position");
                 state = State.SET_SHOOTER_SPEED;
             }
+            break;
 
 
         case MOVE_TO_OVER_BUMPER:

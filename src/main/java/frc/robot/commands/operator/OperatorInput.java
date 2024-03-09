@@ -15,12 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.CompactPoseCommand;
-import frc.robot.commands.arm.IntakeCommand;
-import frc.robot.commands.arm.IntakeEjectCommand;
-import frc.robot.commands.arm.ManualShootCommand;
-import frc.robot.commands.arm.ShShShakeItOffCommand;
-import frc.robot.commands.arm.StartIntakeCommand2;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.auto.PlanBAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
@@ -29,6 +24,7 @@ import frc.robot.commands.auto.Score2SpeakerAutoCommand;
 import frc.robot.commands.auto.Score2_5AmpAutoCommand;
 import frc.robot.commands.auto.Score3SpeakerAutoCommand;
 import frc.robot.commands.auto.Score4SpeakerAutoCommand;
+import frc.robot.commands.climb.MaxClimbCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.ResetOdometryCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
@@ -121,6 +117,8 @@ public class OperatorInput {
         return isShift() && operatorController.getAButton();
     }
 
+    public boolean isClimbPosition() {  return isShift() && operatorController.getBButton(); }
+
     public double getDriverControllerAxis(Stick stick, Axis axis) {
 
         return switch (stick) {
@@ -205,6 +203,9 @@ public class OperatorInput {
         new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
 
         new Trigger(this::isShakeItOff).whileTrue(new ShShShakeItOffCommand(arm));
+
+        // TODO: Uncomment AmpPositionCommand when link is fixed
+        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb)/*.alongWith(new AmpPositionCommand(arm))*/);
 
         // Test Drive to 2,2,20
         // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,
