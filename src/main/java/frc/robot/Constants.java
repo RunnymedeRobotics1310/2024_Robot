@@ -361,7 +361,7 @@ public final class Constants {
         public enum AutoPattern {
             DO_NOTHING,
             SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP,
-            SCORE_1_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
+            SCORE_1_SPEAKER, SCORE_2_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
             PLAN_B
         }
     }
@@ -495,11 +495,8 @@ public final class Constants {
         public static final double      ARM_MIN_ANGLE_SUM                  = 180;
         public static final double      ARM_MAX_ANGLE_SUM                  = 310;
 
-        public static final double      AIM_X_SHOOTING                     = 0.133615525529;
-        /**
-         * TODO:add the distance from center of robot to the arm's base to AIM_X_SHOOTING
-         */
-        public static final double      AIM_Y_SHOOTING                     = 0.273952425424;
+        public static final double      AIM_X_SHOOTING                     = 0.254;
+        public static final double      AIM_Y_SHOOTING                     = 0.61595;
 
         public static final double      SHOOTER_AIM_DIFFERENCE             = 47.9;
 
