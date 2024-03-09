@@ -189,7 +189,7 @@ public class OperatorInput {
         // hugh));
 
         // Compact
-        new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
+        //new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
         new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeCommand(arm, jackman));
@@ -206,7 +206,7 @@ public class OperatorInput {
         // Aim Speaker
         // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
-        new Trigger(operatorController::getXButton).onTrue(RotateToTargetCommand.createRotateToSourceCommand(drive, hugh));
+        new Trigger(driverController::getXButton).onTrue(RotateToTargetCommand.createRotateToSourceCommand(drive, hugh));
 
         // Shoot
         new Trigger(operatorController::getBButton).onTrue((new ManualShootCommand(arm)));
