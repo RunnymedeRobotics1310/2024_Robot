@@ -521,9 +521,10 @@ public final class Constants {
         public static final int    RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 60;
         public static final int    LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 61;
 
-        public static final double MAX_ROBOT_LIFT_SPEED          = .5;
+        public static final double MAX_ROBOT_LIFT_SPEED          = .75;
         public static final double RAISE_CLIMBERS_SPEED          = .75;
         public static final double LOWER_CLIMBERS_SPEED          = .75;
+        public static final double INITIALIZE_CLIMBERS_SPEED     = 0.1;
 
         public static final double CLIMB_MAX                     = 120;
         // encoder values
@@ -535,10 +536,10 @@ public final class Constants {
 
         // Slow Zones
 
-        public static final double SLOW_SPEED                    = 0.1;
-        public static final int    BOTTOM_SLOW_ZONE              = 25;
+        public static final double SLOW_SPEED                    = 0.15;
+        public static final int    BOTTOM_SLOW_ZONE              = 15;
 
-        public static final int    TOP_SLOW_ZONE                 = 90;
+        public static final int    TOP_SLOW_ZONE                 = 110;
 
     }
 }

@@ -21,8 +21,8 @@ public class TelemetryConfig {
         telemetryClimbChooser.addOption("Enabled", true);
         telemetryClimbChooser.setDefaultOption("Disabled", false);
 
-        telemetryDriveChooser.addOption("Enabled", true);
-        telemetryDriveChooser.setDefaultOption("Disabled", false);
+        telemetryDriveChooser.setDefaultOption("Enabled", true);
+        telemetryDriveChooser.addOption("Disabled", false);
 
         telemetryHughChooser.addOption("Enabled", true);
         telemetryHughChooser.setDefaultOption("Disabled", false);

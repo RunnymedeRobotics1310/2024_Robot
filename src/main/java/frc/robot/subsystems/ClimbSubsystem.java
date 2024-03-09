@@ -139,7 +139,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
         }
 
         // Slow zones
-        if (climbSpeed > ClimbConstants.SLOW_SPEED
+        if (Math.abs(climbSpeed) > ClimbConstants.SLOW_SPEED
             && (climbEncoder < ClimbConstants.BOTTOM_SLOW_ZONE || climbEncoder > ClimbConstants.TOP_SLOW_ZONE)) {
             return Math.signum(climbSpeed) * ClimbConstants.SLOW_SPEED;
         }
@@ -156,7 +156,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
                 rightEncoderInitialized = true;
             }
             else {
-                rightClimbSpeed = -ClimbConstants.LOWER_CLIMBERS_SPEED;
+                rightClimbSpeed = -ClimbConstants.INITIALIZE_CLIMBERS_SPEED;
             }
         }
 
@@ -167,7 +167,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
                 leftEncoderInitialized = true;
             }
             else {
-                leftClimbSpeed = -ClimbConstants.LOWER_CLIMBERS_SPEED;
+                leftClimbSpeed = -ClimbConstants.INITIALIZE_CLIMBERS_SPEED;
             }
         }
     }
