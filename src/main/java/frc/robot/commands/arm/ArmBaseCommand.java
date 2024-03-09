@@ -48,8 +48,8 @@ public abstract class ArmBaseCommand extends LoggingCommand {
      * target, {@code false}
      * otherwise
      */
-    public boolean driveThroughArmPosition(ArmPosition targetArmPosition, double targetAngleTolerance) {
-        return driveThroughArmPosition(targetArmPosition.linkAngle, targetArmPosition.aimAngle, targetAngleTolerance);
+    public boolean driveThroughArmPosition(ArmPosition targetArmPosition, double linkTolerance, double aimTolerance) {
+        return driveThroughArmPosition(targetArmPosition.linkAngle, targetArmPosition.aimAngle, linkTolerance, aimTolerance);
     }
 
     /**
@@ -69,13 +69,15 @@ public abstract class ArmBaseCommand extends LoggingCommand {
      * target, {@code false}
      * otherwise
      */
-    public boolean driveThroughArmPosition(double targetLinkAngle, double targetAimAngle, double targetAngleTolerance) {
+    public boolean driveThroughArmPosition(double targetLinkAngle, double targetAimAngle, double linkTolerance,
+        double aimTolerance) {
 
         double currentLinkAngle = armSubsystem.getLinkAngle();
         double currentAimAngle  = armSubsystem.getAimAngle();
 
         // The angle tolerance cannot be set less than the AT_TARGET constant
-        targetAngleTolerance = Math.max(ArmConstants.AT_TARGET_DEG, targetAngleTolerance);
+        linkTolerance = Math.max(ArmConstants.AT_TARGET_DEG, linkTolerance);
+        aimTolerance  = Math.max(ArmConstants.AT_TARGET_DEG, aimTolerance);
 
         // If the target has changed, determine whether to move the link and aim up or down
         if (targetArmPosition == null || targetLinkAngle != targetArmPosition.linkAngle
@@ -99,8 +101,9 @@ public abstract class ArmBaseCommand extends LoggingCommand {
 
             transitionStartTimeMillis = System.currentTimeMillis();
 
-            log("Transition through angle : link " + targetLinkAngle + ", " + linkTransitionDirection
-                + ", aim " + targetAimAngle + ", " + aimTransitionDirection + " tolerance " + targetAngleTolerance + "deg");
+            log("Transition through angle : link " + targetLinkAngle + ", " + linkTransitionDirection + ", link tolerance "
+                + linkTolerance
+                + ", aim " + targetAimAngle + ", " + aimTransitionDirection + " aim tolerance " + aimTolerance + "deg");
         }
 
         /*
@@ -219,24 +222,24 @@ public abstract class ArmBaseCommand extends LoggingCommand {
          */
         boolean linkAtTarget = false;
         if (linkTransitionDirection == Direction.UP) {
-            if (currentLinkAngle >= targetLinkAngle - targetAngleTolerance) {
+            if (currentLinkAngle >= targetLinkAngle - linkTolerance) {
                 linkAtTarget = true;
             }
         }
         else {
-            if (currentLinkAngle <= targetLinkAngle + targetAngleTolerance) {
+            if (currentLinkAngle <= targetLinkAngle + linkTolerance) {
                 linkAtTarget = true;
             }
         }
 
         boolean aimAtTarget = false;
         if (aimTransitionDirection == Direction.UP) {
-            if (currentAimAngle >= targetAimAngle - targetAngleTolerance) {
+            if (currentAimAngle >= targetAimAngle - aimTolerance) {
                 aimAtTarget = true;
             }
         }
         else {
-            if (currentAimAngle <= targetAimAngle + targetAngleTolerance) {
+            if (currentAimAngle <= targetAimAngle + aimTolerance) {
                 aimAtTarget = true;
             }
         }
@@ -254,10 +257,10 @@ public abstract class ArmBaseCommand extends LoggingCommand {
      * target, {@code false}
      * otherwise
      */
-    public boolean driveToArmPosition(ArmPosition targetArmPosition, double targetAngleTolerance) {
+    public boolean driveToArmPosition(ArmPosition targetArmPosition, double linkTolerance, double aimTolerance) {
         // todo: fixme: set tolerances as a constants in ArmConstants as a Rotation2d to provide
         // clarity into units, or else name parameters to hint at units
-        return driveToArmPosition(targetArmPosition.linkAngle, targetArmPosition.aimAngle, targetAngleTolerance);
+        return driveToArmPosition(targetArmPosition.linkAngle, targetArmPosition.aimAngle, linkTolerance, aimTolerance);
     }
 
     /**
@@ -271,15 +274,16 @@ public abstract class ArmBaseCommand extends LoggingCommand {
      * target, {@code false}
      * otherwise
      */
-    public boolean driveToArmPosition(double targetLinkAngle, double targetAimAngle, double targetAngleTolerance) {
+    public boolean driveToArmPosition(double targetLinkAngle, double targetAimAngle, double linkTolerance, double aimTolerance) {
 
         double currentLinkAngle = armSubsystem.getLinkAngle();
         double currentAimAngle  = armSubsystem.getAimAngle();
 
         // The angle tolerance cannot be set less than the AT_TARGET constant
-        targetAngleTolerance = Math.max(ArmConstants.AT_TARGET_DEG, targetAngleTolerance);
+        linkTolerance     = Math.max(ArmConstants.AT_TARGET_DEG, linkTolerance);
+        aimTolerance      = Math.max(ArmConstants.AT_TARGET_DEG, aimTolerance);
 
-        targetArmPosition    = new ArmPosition(targetLinkAngle, targetAimAngle);
+        targetArmPosition = new ArmPosition(targetLinkAngle, targetAimAngle);
 
         // Calculate the errors
 
@@ -351,7 +355,7 @@ public abstract class ArmBaseCommand extends LoggingCommand {
             linkSpeed *= -1.0;
         }
 
-        aimSpeed  = calcAimOmega(targetAimAngle, targetAngleTolerance);
+        aimSpeed  = calcAimOmega(targetAimAngle, aimTolerance);
 
 
         // Adjust the output speeds by compensating for gravity.
@@ -364,8 +368,8 @@ public abstract class ArmBaseCommand extends LoggingCommand {
         armSubsystem.setAimPivotSpeed(aimSpeed);
 
         // Determine if the arm is within the requested range
-        if (Math.abs(linkAngleError) <= targetAngleTolerance
-            && Math.abs(aimAngleError) <= targetAngleTolerance) {
+        if (Math.abs(linkAngleError) <= linkTolerance
+            && Math.abs(aimAngleError) <= aimTolerance) {
 
             return true;
         }

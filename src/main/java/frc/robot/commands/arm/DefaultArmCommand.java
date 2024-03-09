@@ -1,20 +1,20 @@
 package frc.robot.commands.arm;
 
-import frc.robot.Constants;
-import frc.robot.commands.LoggingCommand;
-import frc.robot.commands.operator.OperatorInput;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.vision.JackmanVisionSubsystem;
-
 import static frc.robot.commands.operator.OperatorInput.Axis.Y;
 import static frc.robot.commands.operator.OperatorInput.Stick.LEFT;
 import static frc.robot.commands.operator.OperatorInput.Stick.RIGHT;
 
-public class DefaultArmCommand extends LoggingCommand {
+import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.operator.OperatorInput;
+import frc.robot.subsystems.ArmSubsystem;
+
+public class DefaultArmCommand extends ArmBaseCommand {
 
     private final ArmSubsystem  armSubsystem;
     private final OperatorInput operatorInput;
 
+    private double              linkAngle = -1;
+    private double              aimAngle  = -1;
 
     /**
      * Creates a new ExampleCommand.
@@ -22,6 +22,7 @@ public class DefaultArmCommand extends LoggingCommand {
      * @param armSubsystem The subsystem used by this command.
      */
     public DefaultArmCommand(OperatorInput operatorInput, ArmSubsystem armSubsystem) {
+        super(armSubsystem);
 
         this.operatorInput = operatorInput;
         this.armSubsystem  = armSubsystem;
@@ -34,6 +35,8 @@ public class DefaultArmCommand extends LoggingCommand {
     @Override
     public void initialize() {
         logCommandStart();
+        aimAngle  = armSubsystem.getAimAngle();
+        linkAngle = armSubsystem.getLinkAngle();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -41,12 +44,15 @@ public class DefaultArmCommand extends LoggingCommand {
     public void execute() {
 
         if (!operatorInput.isShift()) {
+            aimAngle  = armSubsystem.getAimAngle();
+            linkAngle = armSubsystem.getLinkAngle();
             setLinkMotorSpeed(operatorInput.getOperatorControllerAxis(LEFT, Y) * 0.3);
             setAimMotorSpeed(operatorInput.getOperatorControllerAxis(RIGHT, Y) * 0.3);
+
         }
         else {
-            setLinkMotorSpeed(0);
-            setAimMotorSpeed(0);
+            driveToArmPosition(linkAngle, aimAngle, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
         }
     }
 
