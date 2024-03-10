@@ -15,7 +15,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.IntakeBackwardsCommand;
+import frc.robot.commands.arm.IntakeCommand;
+import frc.robot.commands.arm.IntakeEjectCommand;
+import frc.robot.commands.arm.LinkToSourceCommand;
+import frc.robot.commands.arm.ManualShootCommand;
+import frc.robot.commands.arm.ShShShakeItOffCommand;
+import frc.robot.commands.arm.SimpleAmpPositionCommand;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.PlanBAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
@@ -241,7 +247,7 @@ public class OperatorInput {
         new Trigger(() -> operatorController.getPOV() == 180)
             .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
 
-        new Trigger(operatorController::getXButton).onTrue(new SimpleAmpPositionCommand(arm));
+        new Trigger(operatorController::getXButton).whileTrue(new SimpleAmpPositionCommand(arm));
 
     }
 
