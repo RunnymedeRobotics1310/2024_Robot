@@ -435,7 +435,7 @@ public final class Constants {
         public static final double      AIM_ABSOLUTE_ENCODER_DEG_PER_VOLT  = 43;
         // Increasing aim offset by 78 to account for a change that happened on Saturday Mar 9. New
         // measurement added March 10th at 11:20am
-        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 61.3 + 78;
+        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 61.3 - 78;
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
