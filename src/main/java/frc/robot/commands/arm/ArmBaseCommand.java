@@ -347,6 +347,7 @@ public abstract class ArmBaseCommand extends LoggingCommand {
             }
         }
 
+
         if (aimAngleError < 0) {
             aimSpeed *= -1.0;
         }
@@ -355,7 +356,10 @@ public abstract class ArmBaseCommand extends LoggingCommand {
             linkSpeed *= -1.0;
         }
 
-        // aimSpeed = calcAimOmega(targetAimAngle, aimTolerance);
+        // Override the aim speed with a PID if in the SLOW Zone
+        if (Math.abs(aimAngleError) <= ArmConstants.SLOW_ARM_ZONE_DEG) {
+            aimSpeed = calcAimOmega(aimAngleError, aimTolerance);
+        }
 
 
         // Adjust the output speeds by compensating for gravity.
@@ -460,17 +464,10 @@ public abstract class ArmBaseCommand extends LoggingCommand {
     }
 
 
-    public double calcAimOmega(double targetAngle, double tolerance) {
+    public double calcAimOmega(double aimAngleError, double tolerance) {
 
-        double kP           = ArmConstants.AIM_PID_P;
-        double currentAngle = armSubsystem.getAimAngle();
+        double kP = ArmConstants.AIM_PID_P;
 
-        double error        = targetAngle - currentAngle;
-
-        if (Math.abs(error) < tolerance) {
-            return 0;
-        }
-
-        return error * kP;
+        return aimAngleError * kP;
     }
 }
