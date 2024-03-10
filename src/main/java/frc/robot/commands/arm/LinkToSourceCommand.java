@@ -3,6 +3,8 @@ package frc.robot.commands.arm;
 import frc.robot.Constants.ArmPosition;
 import frc.robot.subsystems.ArmSubsystem;
 
+import static frc.robot.Constants.ArmConstants.SOURCE_INTAKE_POSE;
+
 public class LinkToSourceCommand extends ArmBaseCommand {
 
     // todo fixme: use constants for all
@@ -19,17 +21,16 @@ public class LinkToSourceCommand extends ArmBaseCommand {
         logCommandStart();
     }
 
-    ArmPosition sourceIntake = new ArmPosition(200, 35);
 
     @Override
     public void execute() {
-        driveToArmPosition(sourceIntake, 5, 50);
+        driveToArmPosition(SOURCE_INTAKE_POSE, 5, 50);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return driveToArmPosition(sourceIntake, 5, 50);
+        return driveToArmPosition(SOURCE_INTAKE_POSE, 5, 50);
     }
 
     // Called once the command ends or is interrupted.

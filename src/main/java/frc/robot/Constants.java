@@ -463,6 +463,9 @@ public final class Constants {
         public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108);     // Unfinished
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
 
+        public static final ArmPosition SOURCE_INTAKE_POSE                 = new ArmPosition(200, 35);
+
+
         // todo: fixme: indicate units in doc or constant name for all of these settings
         public static final double      FAST_AIM_SPEED                     = .4;
         public static final double      SLOW_AIM_SPEED                     = .2;
