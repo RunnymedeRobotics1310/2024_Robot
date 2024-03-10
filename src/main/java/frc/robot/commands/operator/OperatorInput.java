@@ -232,6 +232,7 @@ public class OperatorInput {
         autoPatternChooser.addOption("2 Amp", Constants.AutoConstants.AutoPattern.SCORE_2_AMP);
         autoPatternChooser.addOption("2.5 Amp", Constants.AutoConstants.AutoPattern.SCORE_2_5_AMP);
 
+        autoPatternChooser.addOption("1 Speaker Stay", Constants.AutoConstants.AutoPattern.SCORE_1_SPEAKER_STAY);
         autoPatternChooser.addOption("1 Speaker", Constants.AutoConstants.AutoPattern.SCORE_1_SPEAKER);
         autoPatternChooser.addOption("2 Speaker", Constants.AutoConstants.AutoPattern.SCORE_2_SPEAKER);
         autoPatternChooser.addOption("3 Speaker", Constants.AutoConstants.AutoPattern.SCORE_3_SPEAKER);
@@ -251,6 +252,7 @@ public class OperatorInput {
         case SCORE_1_AMP -> new ExitZoneAutoCommand(drive, arm, hugh);
         case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman);
+        case SCORE_1_SPEAKER_STAY-> new Score1SpeakerStayAutoCommand(drive, arm, hugh);
         case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh);
         case SCORE_2_SPEAKER -> new Score2SpeakerAutoCommand(drive, arm, hugh, jackman);
         case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman);
