@@ -358,6 +358,19 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "10,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/1310/VisionHugh/PoseConf",
+              "_title": "/SmartDashboard/1310/VisionHugh/PoseConf",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
