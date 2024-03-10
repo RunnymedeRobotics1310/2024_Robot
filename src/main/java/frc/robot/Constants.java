@@ -433,7 +433,9 @@ public final class Constants {
         public static final int         AIM_ABSOLUTE_ENCODER_ANALOG_PORT   = 2;
         // Encoder constants to convert from Volts to Deg
         public static final double      AIM_ABSOLUTE_ENCODER_DEG_PER_VOLT  = 43;
-        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 61.3;
+        // Increasing aim offset by 78 to account for a change that happened on Saturday Mar 9. New
+        // measurement added March 10th at 11:20am
+        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 61.3 + 78;
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
@@ -445,8 +447,8 @@ public final class Constants {
         /*
          * Key Arm Positions
          */
-        // re-measured Mar 10, 2024 9:30am
-        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185.65, 113);
+        // aim re-measured Mar 10, 2024 9:30am (was 35, set to 113) - diff - 78
+        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185.65, 35);
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 144);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 104);
@@ -460,8 +462,8 @@ public final class Constants {
         public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0);    // Unfinished
         public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(183, 45);      // Unfinished
 
-        // re-measured Mar 10, 2024 9:30am 2.4% arm
-        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(200, 186);
+        // re-measured Mar 10, 2024 9:30am 2.4% arm (was 108, changed to 186; diff 78)
+        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(200, 108);
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
 
         public static final ArmPosition SOURCE_INTAKE_POSE                 = new ArmPosition(200, 35);
