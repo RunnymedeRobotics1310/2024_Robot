@@ -9,6 +9,8 @@ import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Climbing;
 import frc.robot.telemetry.Telemetry;
 
+import static frc.robot.Constants.ClimbConstants.TOP_SLOW_ZONE;
+
 public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     // Lights Subsystem
@@ -139,9 +141,17 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
         }
 
         // Slow zones
-        if (Math.abs(climbSpeed) > ClimbConstants.SLOW_SPEED
-            && (climbEncoder < ClimbConstants.BOTTOM_SLOW_ZONE || climbEncoder > ClimbConstants.TOP_SLOW_ZONE)) {
-            return Math.signum(climbSpeed) * ClimbConstants.SLOW_SPEED;
+        if (climbSpeed > 0) {
+            // going up
+            if (climbEncoder > TOP_SLOW_ZONE && climbSpeed > ClimbConstants.SLOW_SPEED) {
+                return ClimbConstants.SLOW_SPEED;
+            }
+        }
+        else {
+            // going down
+            if (climbEncoder < ClimbConstants.BOTTOM_SLOW_ZONE && climbSpeed < -ClimbConstants.SLOW_SPEED) {
+                return -ClimbConstants.SLOW_SPEED;
+            }
         }
 
         return climbSpeed;
