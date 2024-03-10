@@ -128,6 +128,10 @@ public class OperatorInput {
         return isShift() && operatorController.getBButton();
     }
 
+    public boolean isManualShoot() {
+        return !isShift() && operatorController.getBButton();
+    }
+
     public double getDriverControllerAxis(Stick stick, Axis axis) {
 
         return switch (stick) {
@@ -189,7 +193,8 @@ public class OperatorInput {
         // hugh));
 
         // Compact
-        //new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
+        // new Trigger(() -> driverController.getXButton() ||
+        // operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
         new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeCommand(arm, jackman));
@@ -209,7 +214,7 @@ public class OperatorInput {
         new Trigger(driverController::getXButton).onTrue(RotateToTargetCommand.createRotateToSourceCommand(drive, hugh));
 
         // Shoot
-        new Trigger(operatorController::getBButton).onTrue((new ManualShootCommand(arm)));
+        new Trigger(this::isManualShoot).onTrue((new ManualShootCommand(arm)));
 
         new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
 
