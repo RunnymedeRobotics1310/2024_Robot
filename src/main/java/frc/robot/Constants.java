@@ -445,7 +445,8 @@ public final class Constants {
         /*
          * Key Arm Positions
          */
-        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185.65, 35);
+        // re-measured Mar 10, 2024 9:30am
+        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185.65, 113);
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 144);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 104);
@@ -459,8 +460,12 @@ public final class Constants {
         public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0);    // Unfinished
         public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(183, 45);      // Unfinished
 
-        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108);     // Unfinished
+        // re-measured Mar 10, 2024 9:30am 2.4% arm
+        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(200, 186);
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
+
+        public static final ArmPosition SOURCE_INTAKE_POSE                 = new ArmPosition(200, 35);
+
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
         public static final double      FAST_AIM_SPEED                     = .4;
