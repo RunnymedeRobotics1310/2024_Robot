@@ -112,7 +112,7 @@ public final class Constants {
              * Standard drive speed factor. Regular teleop drive will use this factor of the max
              * translational speed.
              */
-            public static final double GENERAL_SPEED_FACTOR               = .5;
+            public static final double GENERAL_SPEED_FACTOR               = .6;
 
             /**
              * Maximum drive speed factor. When boosting, this factor will be multiplied against the
