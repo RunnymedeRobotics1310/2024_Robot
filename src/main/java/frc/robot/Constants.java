@@ -360,8 +360,9 @@ public final class Constants {
 
         public enum AutoPattern {
             DO_NOTHING,
-            SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP,
-            SCORE_1_SPEAKER_STAY, SCORE_1_SPEAKER, SCORE_2_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
+            EXIT_ZONE, SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP,
+            SCORE_1_SPEAKER_STAY,
+            SCORE_1_SPEAKER, SCORE_2_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
             PLAN_B
         }
     }
@@ -409,7 +410,7 @@ public final class Constants {
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the link motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_LINK                       = true;
+        public static final boolean     DISABLE_LINK                       = false;
         /**
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the aim motor is not functioning correctly.
@@ -433,19 +434,21 @@ public final class Constants {
         public static final int         AIM_ABSOLUTE_ENCODER_ANALOG_PORT   = 2;
         // Encoder constants to convert from Volts to Deg
         public static final double      AIM_ABSOLUTE_ENCODER_DEG_PER_VOLT  = 43;
-        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 61.3;
+        // Increasing aim offset by 78 to account for a change that happened on Saturday Mar 9. New
+        // measurement added March 10th at 11:20am
+        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 61.3 - 78;
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
         /*
          * ARM PID CONTROLS
          */
-        public static final double      AIM_PID_P                          = 0.05;
-
+        public static final double      AIM_PID_P                          = 0.02;
 
         /*
          * Key Arm Positions
          */
+        // aim re-measured Mar 10, 2024 9:30am (was 35, set to 113) - diff - 78
         public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185.65, 35);
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 144);
 
@@ -460,8 +463,12 @@ public final class Constants {
         public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0);    // Unfinished
         public static final ArmPosition SHOOT_SPEAKER_STATIC_ARM_POSITION  = new ArmPosition(183, 45);      // Unfinished
 
-        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(190, 108);     // Unfinished
+        // re-measured Mar 10, 2024 9:30am 2.4% arm (was 108, changed to 186; diff 78)
+        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(200, 108);
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
+
+        public static final ArmPosition SOURCE_INTAKE_POSE                 = new ArmPosition(200, 35);
+
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
         public static final double      FAST_AIM_SPEED                     = .4;
@@ -506,7 +513,7 @@ public final class Constants {
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
          */
-        public static final double      MAX_AIM_HOLD                       = 0.1;                           // 0.03;
+        public static final double      MAX_AIM_HOLD                       = 0.15;                          // 0.03;
 
 
         /**
@@ -521,9 +528,10 @@ public final class Constants {
         public static final int    RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 60;
         public static final int    LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 61;
 
-        public static final double MAX_ROBOT_LIFT_SPEED          = .5;
+        public static final double MAX_ROBOT_LIFT_SPEED          = 1;
         public static final double RAISE_CLIMBERS_SPEED          = .75;
         public static final double LOWER_CLIMBERS_SPEED          = .75;
+        public static final double INITIALIZE_CLIMBERS_SPEED     = 0.1;
 
         public static final double CLIMB_MAX                     = 120;
         // encoder values
@@ -535,10 +543,10 @@ public final class Constants {
 
         // Slow Zones
 
-        public static final double SLOW_SPEED                    = 0.1;
-        public static final int    BOTTOM_SLOW_ZONE              = 25;
+        public static final double SLOW_SPEED                    = 0.15;
+        public static final int    BOTTOM_SLOW_ZONE              = 15;
 
-        public static final int    TOP_SLOW_ZONE                 = 90;
+        public static final int    TOP_SLOW_ZONE                 = 110;
 
     }
 }

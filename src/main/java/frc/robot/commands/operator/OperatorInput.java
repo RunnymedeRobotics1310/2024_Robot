@@ -15,11 +15,17 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.IntakeBackwardsCommand;
+import frc.robot.commands.arm.IntakeCommand;
+import frc.robot.commands.arm.IntakeEjectCommand;
+import frc.robot.commands.arm.LinkToSourceCommand;
+import frc.robot.commands.arm.ManualShootCommand;
+import frc.robot.commands.arm.ShShShakeItOffCommand;
+import frc.robot.commands.arm.SimpleAmpPositionCommand;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.climb.MaxClimbCommand;
-import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.ResetOdometryCommand;
+import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.commands.swervedrive.ZeroGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -110,7 +116,13 @@ public class OperatorInput {
         return isShift() && operatorController.getAButton();
     }
 
-    public boolean isClimbPosition() {  return isShift() && operatorController.getBButton(); }
+    public boolean isClimbPosition() {
+        return isShift() && operatorController.getBButton();
+    }
+
+    public boolean isManualShoot() {
+        return !isShift() && operatorController.getBButton();
+    }
 
     public double getDriverControllerAxis(Stick stick, Axis axis) {
 
@@ -173,14 +185,15 @@ public class OperatorInput {
         // hugh));
 
         // Compact
-        new Trigger(() -> driverController.getXButton() || operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
+        // new Trigger(() -> driverController.getXButton() ||
+        // operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
         new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeCommand(arm, jackman));
 
         // Vision note pickup
-        new Trigger(driverController::getBButton).onTrue(new StartIntakeCommand2(arm, jackman)
-            .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
+        new Trigger(driverController::getBButton).onTrue(new LinkToSourceCommand(arm));
+        // .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
 
         new Trigger(driverController::getAButton).onTrue(new IntakeBackwardsCommand(arm));
 
@@ -190,15 +203,21 @@ public class OperatorInput {
         // Aim Speaker
         // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
+        new Trigger(driverController::getXButton).onTrue(RotateToTargetCommand.createRotateToSourceCommand(drive, hugh));
+
         // Shoot
-        new Trigger(operatorController::getBButton).onTrue((new ManualShootCommand(arm)));
+        new Trigger(this::isManualShoot).onTrue((new ManualShootCommand(arm)));
 
         new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
 
         new Trigger(this::isShakeItOff).whileTrue(new ShShShakeItOffCommand(arm));
 
         // TODO: Uncomment AmpPositionCommand when link is fixed
-        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb)/*.alongWith(new AmpPositionCommand(arm))*/);
+        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb)/*
+                                                                             * .alongWith(new
+                                                                             * AmpPositionCommand(
+                                                                             * arm))
+                                                                             */);
 
         // Test Drive to 2,2,20
         // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,
@@ -220,6 +239,8 @@ public class OperatorInput {
         new Trigger(() -> operatorController.getPOV() == 180)
             .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
 
+        new Trigger(operatorController::getXButton).whileTrue(new SimpleAmpPositionCommand(arm));
+
     }
 
     public void initAutoSelectors() {
@@ -228,6 +249,7 @@ public class OperatorInput {
 
         autoPatternChooser.setDefaultOption("Do Nothing", Constants.AutoConstants.AutoPattern.DO_NOTHING);
 
+        autoPatternChooser.addOption("Exit Zone", Constants.AutoConstants.AutoPattern.EXIT_ZONE);
         autoPatternChooser.addOption("1 Amp", Constants.AutoConstants.AutoPattern.SCORE_1_AMP);
         autoPatternChooser.addOption("2 Amp", Constants.AutoConstants.AutoPattern.SCORE_2_AMP);
         autoPatternChooser.addOption("2.5 Amp", Constants.AutoConstants.AutoPattern.SCORE_2_5_AMP);
@@ -249,7 +271,8 @@ public class OperatorInput {
     public Command getAutonomousCommand() {
 
         return switch (autoPatternChooser.getSelected()) {
-        case SCORE_1_AMP -> new ExitZoneAutoCommand(drive, arm, hugh);
+        case EXIT_ZONE -> new ExitZoneAutoCommand(drive);
+        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh);
         case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_1_SPEAKER_STAY-> new Score1SpeakerStayAutoCommand(drive, arm, hugh);

@@ -33,8 +33,8 @@ public class Score1SpeakerAutoCommand extends SequentialCommandGroup {
         addCommands(new ManualShootCommand(arm));
 
         /* Exit Zone */
-         addCommands(new DriveToPositionCommand(swerve, blueTransitPose, redTransitPose));
-         addCommands(new DriveToPositionCommand(swerve, blueFinishPose, redFinishPose));
+        addCommands(new DriveToPositionCommand(swerve, blueTransitPose, redTransitPose));
+        addCommands(new DriveToPositionCommand(swerve, blueFinishPose, redFinishPose));
 
         // tell people we're done
         addCommands(new LogMessageCommand("Auto Complete"));

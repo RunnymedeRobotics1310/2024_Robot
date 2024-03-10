@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.ClimbConstants.TOP_SLOW_ZONE;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
@@ -45,10 +47,13 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
         this.unsafeMode = unsafeMode;
     }
 
-    public boolean isClimbAtMax() {
+    public boolean isRightClimbAtMax() {
 
-        return leftClimbMotor.getEncoder().getPosition() >= ClimbConstants.CLIMB_MAX
-            && rightClimbMotor.getEncoder().getPosition() >= ClimbConstants.CLIMB_MAX;
+        return rightClimbMotor.getEncoder().getPosition() >= ClimbConstants.CLIMB_MAX;
+    }
+
+    public boolean isLeftClimbAtMax() {
+        return leftClimbMotor.getEncoder().getPosition() >= ClimbConstants.CLIMB_MAX;
     }
 
     @Override
@@ -56,17 +61,17 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
         if (unsafeMode || (leftEncoderInitialized && rightEncoderInitialized)) {
 
-            // if everything is initialized, check safety then turn the motors
+            // if everything is initialized, check safety then set motors to appropriate values.
             checkClimbSafety();
-
-            leftClimbMotor.set(leftClimbSpeed);
-            rightClimbMotor.set(rightClimbSpeed);
         }
         else {
 
-            // init the encoders.
+            // init the encoders. Set motors speeds to appropriate values.
             initEncoders();
         }
+
+        leftClimbMotor.set(leftClimbSpeed);
+        rightClimbMotor.set(rightClimbSpeed);
 
 
         setLightingPattern();
@@ -106,8 +111,8 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     private void checkClimbSafety() {
 
-        rightClimbSpeed = checkClimbSafety(rightClimbSpeed, leftClimbMotor.getEncoder().getPosition());
-        leftClimbSpeed  = checkClimbSafety(leftClimbSpeed, rightClimbMotor.getEncoder().getPosition());
+        rightClimbSpeed = checkClimbSafety(rightClimbSpeed, rightClimbMotor.getEncoder().getPosition());
+        leftClimbSpeed  = checkClimbSafety(leftClimbSpeed, leftClimbMotor.getEncoder().getPosition());
 
     }
 
@@ -136,16 +141,25 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
         }
 
         // Slow zones
-        if (climbSpeed > ClimbConstants.SLOW_SPEED
-            && (climbEncoder < ClimbConstants.BOTTOM_SLOW_ZONE || climbEncoder > ClimbConstants.TOP_SLOW_ZONE)) {
-            return Math.signum(climbSpeed) * ClimbConstants.SLOW_SPEED;
+        if (climbSpeed > 0) {
+            // going up
+            if (climbEncoder > TOP_SLOW_ZONE && climbSpeed > ClimbConstants.SLOW_SPEED) {
+                return ClimbConstants.SLOW_SPEED;
+            }
+        }
+        else {
+            // going down
+            if (climbEncoder < ClimbConstants.BOTTOM_SLOW_ZONE && climbSpeed < -ClimbConstants.SLOW_SPEED) {
+                return -ClimbConstants.SLOW_SPEED;
+            }
         }
 
         return climbSpeed;
     }
 
     public void initEncoders() {
-        log("Init encoders. Right:" + rightEncoderInitialized + " Left:" + leftEncoderInitialized);
+        // log("Init encoders. Right:" + rightEncoderInitialized + " Left:" +
+        // leftEncoderInitialized);
         if (!rightEncoderInitialized) {
             if (rightAllTheWayDown()) {
                 rightClimbMotor.getEncoder().setPosition(0);
@@ -153,8 +167,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
                 rightEncoderInitialized = true;
             }
             else {
-                log("Setting right climb in initEncoders to " + -ClimbConstants.LOWER_CLIMBERS_SPEED);
-                rightClimbMotor.set(-ClimbConstants.LOWER_CLIMBERS_SPEED);
+                rightClimbSpeed = -ClimbConstants.INITIALIZE_CLIMBERS_SPEED;
             }
         }
 
@@ -165,8 +178,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
                 leftEncoderInitialized = true;
             }
             else {
-                log("Setting left climb in initEncoders to " + -ClimbConstants.LOWER_CLIMBERS_SPEED);
-                leftClimbMotor.set(-ClimbConstants.LOWER_CLIMBERS_SPEED);
+                leftClimbSpeed = -ClimbConstants.INITIALIZE_CLIMBERS_SPEED;
             }
         }
     }

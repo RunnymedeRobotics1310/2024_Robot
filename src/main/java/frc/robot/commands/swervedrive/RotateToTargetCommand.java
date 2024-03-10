@@ -27,6 +27,10 @@ public class RotateToTargetCommand extends BaseDriveCommand {
         return new RotateToTargetCommand(swerve, hugh, BotTarget.BLUE_SPEAKER, BotTarget.RED_SPEAKER);
     }
 
+    public static RotateToTargetCommand createRotateToSourceCommand(SwerveSubsystem swerve, HughVisionSubsystem hugh) {
+        return new RotateToTargetCommand(swerve, hugh, BotTarget.BLUE_SOURCE, BotTarget.RED_SOURCE);
+    }
+
     /**
      * Turn the robot to face the vision target specified
      * 
