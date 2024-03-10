@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.ClimbConstants.TOP_SLOW_ZONE;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
@@ -8,8 +10,6 @@ import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Climbing;
 import frc.robot.telemetry.Telemetry;
-
-import static frc.robot.Constants.ClimbConstants.TOP_SLOW_ZONE;
 
 public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
@@ -158,7 +158,8 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
     }
 
     public void initEncoders() {
-        log("Init encoders. Right:" + rightEncoderInitialized + " Left:" + leftEncoderInitialized);
+        // log("Init encoders. Right:" + rightEncoderInitialized + " Left:" +
+        // leftEncoderInitialized);
         if (!rightEncoderInitialized) {
             if (rightAllTheWayDown()) {
                 rightClimbMotor.getEncoder().setPosition(0);

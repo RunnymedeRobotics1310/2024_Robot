@@ -355,7 +355,7 @@ public abstract class ArmBaseCommand extends LoggingCommand {
             linkSpeed *= -1.0;
         }
 
-        aimSpeed  = calcAimOmega(targetAimAngle, aimTolerance);
+        // aimSpeed = calcAimOmega(targetAimAngle, aimTolerance);
 
 
         // Adjust the output speeds by compensating for gravity.
