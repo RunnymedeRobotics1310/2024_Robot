@@ -1,2 +1,4 @@
 workspace.xml
 aws.xml
+# GitHub Copilot persisted chat sessions
+/copilot/chatSessions

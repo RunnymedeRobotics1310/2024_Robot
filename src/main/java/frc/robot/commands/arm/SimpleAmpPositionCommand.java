@@ -11,7 +11,7 @@ public class SimpleAmpPositionCommand extends ArmBaseCommand {
     @Override
     public void execute() {
         driveToArmPosition(Constants.ArmConstants.SHOOT_AMP_ARM_POSITION, Constants.ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
-                Constants.ArmConstants.DEFAULT_AIM_TOLERANCE_DEG)
+            Constants.ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
     }
 
     @Override
