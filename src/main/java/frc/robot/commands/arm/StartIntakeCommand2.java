@@ -1,9 +1,7 @@
 package frc.robot.commands.arm;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 // Start Intake
 // Move Aim/Arm
@@ -13,12 +11,10 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
         MOVE_TO_UNLOCK, EXTEND_AIM, EXTEND_BOTH, MOVE_TO_INTAKE, FINISHED
     };
 
-    private State                        state = State.MOVE_TO_UNLOCK;
-    private final JackmanVisionSubsystem m_jackmanVisionSubsystem;
+    private State state = State.MOVE_TO_UNLOCK;
 
-    public StartIntakeCommand2(ArmSubsystem armSubsystem, JackmanVisionSubsystem jackmanVisionSubsystem) {
+    public StartIntakeCommand2(ArmSubsystem armSubsystem) {
         super(armSubsystem);
-        this.m_jackmanVisionSubsystem = jackmanVisionSubsystem;
     }
 
     @Override
@@ -139,10 +135,6 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
         armSubsystem.stop();
 
         logCommandEnd(interrupted);
-
-        if (!interrupted) {
-            CommandScheduler.getInstance().schedule(new IntakeCommand(armSubsystem, m_jackmanVisionSubsystem));
-        }
     }
 
 }

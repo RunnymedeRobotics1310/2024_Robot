@@ -1,60 +1,47 @@
 package frc.robot.commands.test;
 
+import static frc.robot.commands.test.SystemTestCommand.Motor.NONE;
+
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.subsystems.lighting.pattern.TestMode;
-import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.telemetry.Telemetry;
-
-import static frc.robot.commands.test.SystemTestCommand.Motor.*;
 
 public class SystemTestCommand extends LoggingCommand {
 
     public enum Motor {
         NONE,
-        FRONT_LEFT_DRIVE, FRONT_LEFT_TURN,
-        BACK_LEFT_DRIVE, BACK_LEFT_TURN,
-        BACK_RIGHT_DRIVE, BACK_RIGHT_TURN,
-        FRONT_RIGHT_DRIVE, FRONT_RIGHT_TURN,
         AIM, LINK, LINK_AND_AIM,
         SHOOTER, SHOOTER_TOP, SHOOTER_BOTTOM,
         INTAKE,
         CLIMB_LEFT, CLIMB_RIGHT
     }
 
-    private final OperatorInput     oi;
-    private final XboxController    controller;
-    private final SwerveSubsystem   drive;
-    private final ArmSubsystem      armSubsystem;
-    private final ClimbSubsystem    climbSubsystem;
-    private final LightingSubsystem lighting;
+    private final OperatorInput  oi;
+    private final XboxController controller;
+    private final ArmSubsystem   armSubsystem;
+    private final ClimbSubsystem climbSubsystem;
 
 
-    private boolean                 enabled             = false;
-    private Motor                   selectedMotor       = NONE;
-    private double                  motorSpeed;
-    private double                  motor2Speed;
-    private Rotation2d              angle;
+    private boolean              enabled             = false;
+    private Motor                selectedMotor       = NONE;
+    private double               motorSpeed;
+    private double               motor2Speed;
+    private Rotation2d           angle;
 
-    private boolean                 previousLeftBumper  = false;
-    private boolean                 previousRightBumper = false;
+    private boolean              previousLeftBumper  = false;
+    private boolean              previousRightBumper = false;
 
-    public SystemTestCommand(OperatorInput oi, SwerveSubsystem drive, ArmSubsystem armSubsystem, ClimbSubsystem climbSubsystem,
-        LightingSubsystem lighting) {
+    public SystemTestCommand(OperatorInput oi, ArmSubsystem armSubsystem, ClimbSubsystem climbSubsystem) {
+
         this.oi             = oi;
         this.controller     = oi.getRawDriverController();
-        this.drive          = drive;
         this.armSubsystem   = armSubsystem;
         this.climbSubsystem = climbSubsystem;
-        this.lighting       = lighting;
-        addRequirements(drive, armSubsystem);
+        addRequirements(armSubsystem, climbSubsystem);
     }
 
     @Override
@@ -78,7 +65,6 @@ public class SystemTestCommand extends LoggingCommand {
         enabled = true;
         climbSubsystem.setUnsafeMode(true);
         updateDashboard();
-        lighting.addPattern(TestMode.getInstance());
     }
 
 
@@ -220,54 +206,6 @@ public class SystemTestCommand extends LoggingCommand {
         switch (selectedMotor) {
         case NONE:
             break;
-        case FRONT_LEFT_DRIVE: {
-            double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
-            angle = Rotation2d.fromDegrees(0);
-            drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_LEFT, new SwerveModuleState(mps, angle));
-            break;
-        }
-        case FRONT_LEFT_TURN: {
-            motorSpeed = 0;
-            angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
-            drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_LEFT, new SwerveModuleState(0, angle));
-            break;
-        }
-        case BACK_LEFT_DRIVE: {
-            double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
-            angle = Rotation2d.fromDegrees(0);
-            drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_LEFT, new SwerveModuleState(mps, angle));
-            break;
-        }
-        case BACK_LEFT_TURN: {
-            motorSpeed = 0;
-            angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
-            drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_LEFT, new SwerveModuleState(0, angle));
-            break;
-        }
-        case BACK_RIGHT_DRIVE: {
-            double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
-            angle = Rotation2d.fromDegrees(0);
-            drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_RIGHT, new SwerveModuleState(mps, angle));
-            break;
-        }
-        case BACK_RIGHT_TURN: {
-            motorSpeed = 0;
-            angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
-            drive.setModuleStateForTestMode(Constants.Swerve.Module.BACK_RIGHT, new SwerveModuleState(0, angle));
-            break;
-        }
-        case FRONT_RIGHT_DRIVE: {
-            double mps = motorSpeed * Constants.Swerve.Chassis.MAX_MODULE_SPEED_MPS;
-            angle = Rotation2d.fromDegrees(0);
-            drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_RIGHT, new SwerveModuleState(mps, angle));
-            break;
-        }
-        case FRONT_RIGHT_TURN: {
-            motorSpeed = 0;
-            angle      = new Rotation2d(controller.getLeftX(), controller.getLeftY());
-            drive.setModuleStateForTestMode(Constants.Swerve.Module.FRONT_RIGHT, new SwerveModuleState(0, angle));
-            break;
-        }
         case LINK: {
             angle = Rotation2d.fromDegrees(armSubsystem.getLinkAngle());
             armSubsystem.setArmPivotTestSpeeds(motorSpeed, 0);
@@ -304,6 +242,7 @@ public class SystemTestCommand extends LoggingCommand {
         }
     }
 
+    @Override
     public boolean isFinished() {
 
         // Wait 1/2 second before finishing.
@@ -328,7 +267,6 @@ public class SystemTestCommand extends LoggingCommand {
         stopAllMotors();
         climbSubsystem.setUnsafeMode(false);
         enabled = false;
-        lighting.removePattern(TestMode.class);
         updateDashboard();
         super.end(interrupted);
     }
@@ -336,8 +274,8 @@ public class SystemTestCommand extends LoggingCommand {
     private void stopAllMotors() {
         motorSpeed  = 0;
         motor2Speed = 0;
-        angle       = Rotation2d.fromDegrees(1310);
-        drive.stop();
+        armSubsystem.stop();
+        climbSubsystem.stop();
     }
 
     private void updateDashboard() {

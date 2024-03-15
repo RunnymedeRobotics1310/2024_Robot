@@ -7,24 +7,11 @@ package frc.robot;
 import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static frc.robot.Constants.Swerve.Chassis.TRACK_WIDTH_METRES;
 import static frc.robot.Constants.Swerve.Chassis.WHEEL_BASE_METRES;
-import static frc.robot.subsystems.vision.PoseConfidence.HIGH;
-import static frc.robot.subsystems.vision.PoseConfidence.LOW;
-import static frc.robot.subsystems.vision.PoseConfidence.MEDIUM;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.subsystems.lighting.LightstripRegion;
-import frc.robot.subsystems.lighting.pattern.Default;
-import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
-import frc.robot.subsystems.vision.PoseConfidence;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -310,52 +297,6 @@ public final class Constants {
 
     }
 
-    public static final class VisionConstants {
-        /** Time to switch pipelines and acquire a new vision target */
-        public static final double  VISION_SWITCH_TIME_SEC         = .25;
-
-        // todo: correct this
-        public static Translation2d CAMERA_LOC_REL_TO_ROBOT_CENTER = new Translation2d(0, 30);
-
-        /**
-         * Utility method (STATIC) to map confidence and pose difference to a matrix of estimated
-         * standard
-         * deviations. The returned matrix values have been tuned based on the input and are not
-         * dynamically calculated.
-         *
-         * @param confidence rating from the vision subsystem
-         * @param poseDifferenceMetres difference between estimated pose and pose from vision
-         * @return matrix of standard deviations, or null if values are too far out of bounds
-         */
-        public static Matrix<N3, N1> getVisionStandardDeviation(PoseConfidence confidence, double poseDifferenceMetres) {
-            double xyMetresStds;
-            double degreesStds;
-
-            // todo: measure / tune these values
-            if (confidence == HIGH) {
-                xyMetresStds = 0.05;
-                degreesStds  = 2;
-            }
-            else if (confidence == MEDIUM || poseDifferenceMetres < 0.5) {
-                xyMetresStds = 0.15;
-                degreesStds  = 6;
-                // temporarily disable
-                return null;
-            }
-            else if (confidence == LOW || poseDifferenceMetres < 0.8) {
-                xyMetresStds = 0.30;
-                degreesStds  = 12;
-                // temporarily disable
-                return null;
-            }
-            else { // Covers the Confidence.NONE case
-                return null;
-            }
-
-            return VecBuilder.fill(xyMetresStds, xyMetresStds, Units.degreesToRadians(degreesStds));
-        }
-    }
-
     public static final class AutoConstants {
 
         public enum AutoPattern {
@@ -365,22 +306,6 @@ public final class Constants {
             SCORE_1_SPEAKER, SCORE_2_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
             PLAN_B
         }
-    }
-
-    public static final class LightingConstants {
-        public static final int        LIGHT_STRING_PWM_PORT = 9;
-        public static final int        LIGHT_STRIP_LENGTH    = 60;
-
-        public static final Color      NOTE_ORANGE           = new Color(255, 20, 0);
-
-        public static LightstripRegion VISPOSE               = new LightstripRegion(
-            "Vision",
-            0, 24,
-            VisionConfidenceNone.class);
-        public static LightstripRegion SIGNAL                = new LightstripRegion(
-            "Signal",
-            24, LIGHT_STRIP_LENGTH - 1,
-            Default.class);
     }
 
     public static final class ShooterConstants {

@@ -1,11 +1,6 @@
 package frc.robot.commands.operator;
 
-import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,41 +10,20 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.IntakeBackwardsCommand;
-import frc.robot.commands.arm.IntakeCommand;
-import frc.robot.commands.arm.IntakeEjectCommand;
-import frc.robot.commands.arm.LinkToSourceCommand;
-import frc.robot.commands.arm.ManualShootCommand;
-import frc.robot.commands.arm.ShShShakeItOffCommand;
-import frc.robot.commands.arm.SimpleAmpPositionCommand;
-import frc.robot.commands.auto.*;
-import frc.robot.commands.climb.MaxClimbCommand;
-import frc.robot.commands.swervedrive.ResetOdometryCommand;
-import frc.robot.commands.swervedrive.RotateToTargetCommand;
-import frc.robot.commands.swervedrive.ZeroGyroCommand;
+import frc.robot.commands.arm.StartIntakeCommand2;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.subsystems.lighting.pattern.Enabled;
-import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
-import frc.robot.subsystems.vision.JackmanVisionSubsystem;
-import frc.robot.telemetry.Telemetry;
 
 /**
  * The DriverController exposes all driver functions
  */
 public class OperatorInput {
 
-    private final SwerveSubsystem                                      drive;
     private final ArmSubsystem                                         arm;
-    private final LightingSubsystem                                    lighting;
-    private final HughVisionSubsystem                                  hugh;
     private final ClimbSubsystem                                       climb;
-    private final JackmanVisionSubsystem                               jackman;
     private final XboxController                                       driverController;
-    private final XboxController                                       operatorController;
+//    private final XboxController                                       operatorController;
 
     private final SendableChooser<Constants.AutoConstants.AutoPattern> autoPatternChooser = new SendableChooser<>();
 
@@ -70,26 +44,18 @@ public class OperatorInput {
      * @param operatorControllerPort on the driver station which the aux joystick is
      * plugged into
      */
-    public OperatorInput(int driverControllerPort, int operatorControllerPort, SwerveSubsystem drive, ArmSubsystem arm,
-        ClimbSubsystem climb, HughVisionSubsystem hugh, JackmanVisionSubsystem jackman, LightingSubsystem lighting) {
-        this.drive         = drive;
+    public OperatorInput(int driverControllerPort, int operatorControllerPort, ArmSubsystem arm,
+        ClimbSubsystem climb) {
 
-        this.arm           = arm;
-        this.lighting      = lighting;
-        this.hugh          = hugh;
-        this.climb         = climb;
-        this.jackman       = jackman;
+        this.arm         = arm;
+        this.climb       = climb;
 
-        driverController   = new RunnymedeGameController(driverControllerPort);
-        operatorController = new RunnymedeGameController(operatorControllerPort);
+        driverController = new RunnymedeGameController(driverControllerPort);
+        // operatorController = new RunnymedeGameController(operatorControllerPort);
     }
 
     public XboxController getRawDriverController() {
         return driverController;
-    }
-
-    public int getDriverPOV() {
-        return driverController.getPOV();
     }
 
     public boolean isDriverLeftBumper() {
@@ -105,23 +71,77 @@ public class OperatorInput {
     }
 
     public boolean isCancel() {
-        return (driverController.getStartButton() || operatorController.getStartButton());
+        return (driverController.getStartButton()); // || operatorController.getStartButton());
     }
 
-    public boolean isShift() {
-        return operatorController.getRightBumper();
+//    public boolean isShift() {
+//        return operatorController.getRightBumper();
+//    }
+//
+//    public boolean isShakeItOff() {
+//        return isShift() && operatorController.getAButton();
+//    }
+//
+//    public boolean isClimbPosition() {
+//        return isShift() && operatorController.getBButton();
+//    }
+//
+//    public boolean isManualShoot() {
+//        return !isShift() && operatorController.getBButton();
+//    }
+
+    public double getLeftClimbSpeed() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
-    public boolean isShakeItOff() {
-        return isShift() && operatorController.getAButton();
+    public double getRightClimbSpeed() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
-    public boolean isClimbPosition() {
-        return isShift() && operatorController.getBButton();
+    /**
+     * Get the aim adjustment.
+     * This method will be called every 20ms (50Hz)
+     *
+     * @return 20ms adjustment
+     */
+    public double getAimAdjust() {
+
+        double degreeAdjust = 10.0 / 50.0; // 10 deg/sec / 50 Hz
+
+        if (driverController.getPOV() == 90) {
+            return degreeAdjust;
+        }
+
+        // pov left/right for aim adjust
+        if (driverController.getPOV() == 270) {
+            return -degreeAdjust;
+        }
+
+        return 0;
     }
 
-    public boolean isManualShoot() {
-        return !isShift() && operatorController.getBButton();
+    /**
+     * Get the link adjustment.
+     * This method will be called every 20ms (50Hz)
+     *
+     * @return 20ms adjustment
+     */
+    public double getLinkAdjust() {
+
+        double degreeAdjust = 10.0 / 50.0; // 10 deg/sec / 50 Hz
+
+        if (driverController.getPOV() == 0) {
+            return degreeAdjust;
+        }
+
+        // pov left/right for aim adjust
+        if (driverController.getPOV() == 180) {
+            return -degreeAdjust;
+        }
+
+        return 0;
     }
 
     public double getDriverControllerAxis(Stick stick, Axis axis) {
@@ -139,20 +159,20 @@ public class OperatorInput {
 
     }
 
-    public double getOperatorControllerAxis(Stick stick, Axis axis) {
-
-        return switch (stick) {
-        case LEFT -> switch (axis) {
-        case X -> operatorController.getLeftX();
-        case Y -> operatorController.getLeftY();
-        };
-        case RIGHT -> switch (axis) {
-        case X -> operatorController.getRightX();
-        case Y -> operatorController.getRightY();
-        };
-        };
-
-    }
+//    public double getOperatorControllerAxis(Stick stick, Axis axis) {
+//
+//        return switch (stick) {
+//        case LEFT -> switch (axis) {
+//        case X -> operatorController.getLeftX();
+//        case Y -> operatorController.getLeftY();
+//        };
+//        case RIGHT -> switch (axis) {
+//        case X -> operatorController.getRightX();
+//        case Y -> operatorController.getRightY();
+//        };
+//        };
+//
+//    }
 
 
     /**
@@ -166,18 +186,12 @@ public class OperatorInput {
      */
     public void configureTriggerBindings() {
 
-        // Run when enabled
-        new Trigger(RobotController::isSysActive).onTrue(new InstantCommand(() -> lighting.addPattern(Enabled.getInstance())));
-
         // Activate test mode
         new Trigger(() -> !DriverStation.isFMSAttached() && driverController.getBackButton() && driverController.getStartButton())
-            .onTrue(new SystemTestCommand(this, drive, arm, climb, lighting));
+            .onTrue(new SystemTestCommand(this, arm, climb));
 
         // Cancel all systems
-        new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
-
-        // zero gyro
-        new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
+        new Trigger(this::isCancel).onTrue(new CancelCommand(this, arm, climb));
 
         // Rotate to speaker
         // new
@@ -188,14 +202,8 @@ public class OperatorInput {
         // new Trigger(() -> driverController.getXButton() ||
         // operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
-        // Start Intake
-        new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeCommand(arm, jackman));
 
-        // Vision note pickup
-        new Trigger(driverController::getBButton).onTrue(new LinkToSourceCommand(arm));
-        // .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
-
-        new Trigger(driverController::getAButton).onTrue(new IntakeBackwardsCommand(arm));
+        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand2(arm));
 
         // Aim Amp
         // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
@@ -203,22 +211,20 @@ public class OperatorInput {
         // Aim Speaker
         // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
-        new Trigger(driverController::getXButton).onTrue(RotateToTargetCommand.createRotateToSourceCommand(drive, hugh));
-
         // Shoot
-        new Trigger(this::isManualShoot).onTrue((new ManualShootCommand(arm)));
-
-        new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
-
-        new Trigger(this::isShakeItOff).whileTrue(new ShShShakeItOffCommand(arm));
+//        new Trigger(this::isManualShoot).onTrue((new ManualShootCommand(arm)));
+//
+//        new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
+//
+//        new Trigger(this::isShakeItOff).whileTrue(new ShShShakeItOffCommand(arm));
 
         // TODO: Uncomment AmpPositionCommand when link is fixed
-        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb)/*
-                                                                             * .alongWith(new
-                                                                             * AmpPositionCommand(
-                                                                             * arm))
-                                                                             */);
-
+//        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb)/*
+//                                                                             * .alongWith(new
+//                                                                             * AmpPositionCommand(
+//                                                                             * arm))
+//                                                                             */);
+//
         // Test Drive to 2,2,20
         // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,
         // BLUE_2_2_20, RED_2_2_20));
@@ -229,23 +235,11 @@ public class OperatorInput {
 
         // setpose for practice fields
 
-        // in front of speaker
-        new Trigger(() -> operatorController.getPOV() == 0)
-            .onTrue(new ResetOdometryCommand(drive,
-                new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(), 1.6, new Rotation2d()),
-                new Pose2d(Constants.BotTarget.RED_SPEAKER.getLocation().getX(), 16.54 - 1.6, new Rotation2d())));
-
-        // in front of amp
-        new Trigger(() -> operatorController.getPOV() == 180)
-            .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
-
-        new Trigger(operatorController::getXButton).whileTrue(new SimpleAmpPositionCommand(arm));
 
     }
 
     public void initAutoSelectors() {
 
-        Telemetry.auto.autoPatternChooser = autoPatternChooser;
 
         autoPatternChooser.setDefaultOption("Do Nothing", Constants.AutoConstants.AutoPattern.DO_NOTHING);
 
@@ -271,16 +265,6 @@ public class OperatorInput {
     public Command getAutonomousCommand() {
 
         return switch (autoPatternChooser.getSelected()) {
-        case EXIT_ZONE -> new ExitZoneAutoCommand(drive);
-        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh);
-        case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman);
-        case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman);
-        case SCORE_1_SPEAKER_STAY-> new Score1SpeakerStayAutoCommand(drive, arm, hugh);
-        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh);
-        case SCORE_2_SPEAKER -> new Score2SpeakerAutoCommand(drive, arm, hugh, jackman);
-        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman);
-        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman);
-        case PLAN_B -> new PlanBAutoCommand(drive);
         default -> new InstantCommand();
         };
     }

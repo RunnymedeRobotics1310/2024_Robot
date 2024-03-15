@@ -7,46 +7,42 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.telemetry.Telemetry;
 
 
 public class ArmSubsystem extends RunnymedeSubsystemBase {
 
-    private final LightingSubsystem lighting;
-
-    private final CANSparkMax       linkMotor            = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax  linkMotor            = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax       aimMotor             = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax  aimMotor             = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
 
-    private final CANSparkMax       intakeMotor          = new CANSparkMax(ArmConstants.INTAKE_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax  intakeMotor          = new CANSparkMax(ArmConstants.INTAKE_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax       shooterBottomMotor   = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax  shooterBottomMotor   = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax       shooterTopMotor      = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
+    private final CANSparkMax  shooterTopMotor      = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
         MotorType.kBrushless);
 
-    private final DigitalInput      linkLowerLimitSwitch = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
+    private final DigitalInput linkLowerLimitSwitch = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
 
-    private final DigitalInput      noteDetector         = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
+    private final DigitalInput noteDetector         = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
 
-    private final AnalogInput       linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
-    private final AnalogInput       aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private final AnalogInput  linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private final AnalogInput  aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
 
-    private double                  linkPivotSpeed       = 0;
-    private double                  aimPivotSpeed        = 0;
-    private double                  intakeSpeed          = 0;
-    private double                  shooterSpeed         = 0;
+    private double             linkPivotSpeed       = 0;
+    private double             aimPivotSpeed        = 0;
+    private double             intakeSpeed          = 0;
+    private double             shooterSpeed         = 0;
 
-    private boolean                 safetyEnabled        = false;
-    private long                    safetyStartTime      = 0;
+    private boolean            safetyEnabled        = false;
+    private long               safetyStartTime      = 0;
 
-    private boolean                 armSafetyMode        = true;
+    private boolean            armSafetyMode        = true;
 
-    public ArmSubsystem(LightingSubsystem lightingSubsystem) {
+    public ArmSubsystem() {
 
-        this.lighting = lightingSubsystem;
     }
 
 

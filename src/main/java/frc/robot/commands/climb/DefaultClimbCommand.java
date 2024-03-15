@@ -1,10 +1,5 @@
 package frc.robot.commands.climb;
 
-import static frc.robot.commands.operator.OperatorInput.Axis.Y;
-import static frc.robot.commands.operator.OperatorInput.Stick.LEFT;
-import static frc.robot.commands.operator.OperatorInput.Stick.RIGHT;
-
-import frc.robot.Constants.ClimbConstants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -40,21 +35,9 @@ public class DefaultClimbCommand extends LoggingCommand {
     @Override
     public void execute() {
 
-
-        // Pull the robot up (arms down, -ve motor speed) using operator triggers
-        // NOTE: Left trigger is already negative.
-        if (operatorInput.isShift()) {
-            leftClimbSpeed  = operatorInput.getOperatorControllerAxis(LEFT, Y) * ClimbConstants.MAX_ROBOT_LIFT_SPEED;
-            rightClimbSpeed = operatorInput.getOperatorControllerAxis(RIGHT, Y) * ClimbConstants.MAX_ROBOT_LIFT_SPEED;
-        }
-        else {
-            leftClimbSpeed  = 0;
-            rightClimbSpeed = 0;
-        }
-        // Bumpers lift the arms up in order to catch the chain
-
-        climbSubsystem.setClimbSpeeds(leftClimbSpeed, rightClimbSpeed);
-
+        climbSubsystem.setClimbSpeeds(
+            operatorInput.getLeftClimbSpeed(),
+            operatorInput.getRightClimbSpeed());
     }
 
     // Returns true when the command should end.

@@ -7,40 +7,33 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.ClimbConstants;
-import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.subsystems.lighting.pattern.Climbing;
 import frc.robot.telemetry.Telemetry;
 
 public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
-    // Lights Subsystem
-    private final LightingSubsystem lighting;
 
-    private final CANSparkMax       leftClimbMotor          = new CANSparkMax(
+    private final CANSparkMax  leftClimbMotor          = new CANSparkMax(
         ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
 
-    private final CANSparkMax       rightClimbMotor         = new CANSparkMax(
+    private final CANSparkMax  rightClimbMotor         = new CANSparkMax(
         ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final DigitalInput      rightClimbLimitSwitch   = new DigitalInput(
+    private final DigitalInput rightClimbLimitSwitch   = new DigitalInput(
         ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_2);
-    private final DigitalInput      leftClimbLimitSwitch    = new DigitalInput(
+    private final DigitalInput leftClimbLimitSwitch    = new DigitalInput(
         ClimbConstants.CLIMB_LIMIT_SWITCH_DIO_PORT_3);
 
-    private double                  rightClimbSpeed         = 0;
-    private double                  leftClimbSpeed          = 0;
+    private double             rightClimbSpeed         = 0;
+    private double             leftClimbSpeed          = 0;
 
-    private boolean                 rightEncoderInitialized = false;
-    private boolean                 leftEncoderInitialized  = false;
+    private boolean            rightEncoderInitialized = false;
+    private boolean            leftEncoderInitialized  = false;
 
-    private boolean                 unsafeMode              = false;
+    private boolean            unsafeMode              = false;
 
 
-    public ClimbSubsystem(LightingSubsystem lightingSubsystem) {
-
-        this.lighting = lightingSubsystem;
-
+    public ClimbSubsystem() {
     }
 
     public void setUnsafeMode(boolean unsafeMode) {
@@ -72,9 +65,6 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
         leftClimbMotor.set(leftClimbSpeed);
         rightClimbMotor.set(rightClimbSpeed);
-
-
-        setLightingPattern();
 
         Telemetry.climb.leftClimbSpeed    = leftClimbSpeed;
         Telemetry.climb.leftClimbEncoder  = leftClimbMotor.getEncoder().getPosition();
@@ -183,15 +173,5 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
         }
     }
 
-    private void setLightingPattern() {
-        if (rightEncoderInitialized && leftEncoderInitialized) {
-            if (Math.abs(leftClimbSpeed) > 0 || Math.abs(rightClimbSpeed) > 0) {
-                lighting.addPattern(Climbing.getInstance());
-            }
-            else {
-                lighting.removePattern(Climbing.class);
-            }
-        }
-    }
 
 }
