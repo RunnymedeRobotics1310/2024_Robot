@@ -10,6 +10,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -115,6 +116,13 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
      * @return The robot's pose
      */
     public abstract Pose2d getPose();
+
+    /**
+     * Return the gyro rotation for the robot, with yaw adjusted for the configured offset
+     *
+     * @return adjusted rotation3d from the gyro
+     */
+    public abstract Rotation3d getGyroRotation3d();
 
     /**
      * Resets the gyro angle to zero and resets odometry to the same position, but

@@ -6,6 +6,7 @@ import java.io.File;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -94,6 +95,11 @@ public class YagslSubsystem extends SwerveSubsystem {
     @Override
     protected void addVisionMeasurement(Pose2d robotPose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
         swerveDrive.addVisionMeasurement(robotPose, timestamp, visionMeasurementStdDevs);
+    }
+
+    @Override
+    public Rotation3d getGyroRotation3d() {
+        return swerveDrive.getGyroRotation3d();
     }
 
     @Override

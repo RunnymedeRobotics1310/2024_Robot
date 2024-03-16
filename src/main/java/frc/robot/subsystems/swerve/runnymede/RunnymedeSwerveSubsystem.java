@@ -179,6 +179,11 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
         return swerveDrivePoseEstimator.getEstimatedPosition();
     }
 
+    @Override
+    public Rotation3d getGyroRotation3d() {
+        return gyro.getRotation3d().minus(gyroOffset);
+    }
+
     private Pose2d[] getModulePoses(Pose2d robotPose) {
         return Arrays.stream(modules).map(m -> {
             Transform2d tx = new Transform2d(m.getLocation(), m.getState().angle);
