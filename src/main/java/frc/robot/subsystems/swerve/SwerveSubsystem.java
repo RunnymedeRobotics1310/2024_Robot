@@ -68,7 +68,9 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
         Telemetry.swerve.swerve_robot_chassis_speeds = safeVelocity;
 
-        driveRawRobotOriented(safeVelocity);
+        if (!Constants.Swerve.DISABLED) {
+            driveRawRobotOriented(safeVelocity);
+        }
     }
 
     /**
