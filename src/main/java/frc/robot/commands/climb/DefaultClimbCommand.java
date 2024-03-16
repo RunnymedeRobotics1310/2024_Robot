@@ -40,17 +40,18 @@ public class DefaultClimbCommand extends BaseClimbCommand {
     @Override
     public void execute() {
 
-        if (operatorInput.isOperatorLeftBumper()) {
-            climbFlat(ClimbConstants.MAX_ROBOT_LIFT_SPEED);
-            return;
-        }
 
 
         // Pull the robot up (arms down, -ve motor speed) using operator triggers
         // NOTE: Left trigger is already negative.
         if (operatorInput.isShift()) {
-            leftClimbSpeed  = operatorInput.getOperatorControllerAxis(LEFT, Y) * ClimbConstants.MAX_ROBOT_LIFT_SPEED;
-            rightClimbSpeed = operatorInput.getOperatorControllerAxis(RIGHT, Y) * ClimbConstants.MAX_ROBOT_LIFT_SPEED;
+            if (operatorInput.isOperatorLeftBumper()) {
+                climbFlat(-ClimbConstants.MAX_ROBOT_LIFT_SPEED);
+                return;
+            } else {
+                leftClimbSpeed  = operatorInput.getOperatorControllerAxis(LEFT, Y) * ClimbConstants.MAX_ROBOT_LIFT_SPEED;
+                rightClimbSpeed = operatorInput.getOperatorControllerAxis(RIGHT, Y) * ClimbConstants.MAX_ROBOT_LIFT_SPEED;
+            }
         }
         else {
             leftClimbSpeed  = 0;

@@ -15,10 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.AimAmpCommand;
-import frc.robot.commands.arm.EjectNoteCommand;
-import frc.robot.commands.arm.ShootCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.PlanBAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
@@ -242,8 +239,11 @@ public class OperatorInput {
         // hugh));
 
         // Compact
-        // new Trigger(() -> driverController.getXButton() ||
-        // operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
+        new Trigger(driverController::getXButton).onTrue(new CompactCommand(arm));
+
+        new Trigger(operatorController::getYButton).onTrue(new ShootSpeakerFromPodiumCommand(arm));
+
+        new Trigger(operatorController::getXButton).onTrue(new ShootSpeakerFromAnywhereCommand(arm,drive,hugh));
 
         // Start Intake
         new Trigger(() -> operatorController.getPOV() == 270).onTrue(new StartIntakeCommand(arm));
@@ -260,7 +260,7 @@ public class OperatorInput {
         // Aim Speaker
         // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
 
-        new Trigger(driverController::getXButton).onTrue(RotateToTargetCommand.createRotateToSourceCommand(drive, hugh));
+        // new Trigger(driverController::getXButton).onTrue(RotateToTargetCommand.createRotateToSourceCommand(drive, hugh));
 
         // Shoot
         new Trigger(this::isManualShoot).onTrue((new ShootCommand(arm)));
@@ -294,7 +294,7 @@ public class OperatorInput {
         new Trigger(() -> operatorController.getPOV() == 180)
             .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
 
-        new Trigger(operatorController::getXButton).whileTrue(new AimAmpCommand(arm));
+        //new Trigger(operatorController::getXButton).whileTrue(new AimAmpCommand(arm));
 
     }
 

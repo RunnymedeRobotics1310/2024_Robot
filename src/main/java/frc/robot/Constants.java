@@ -83,7 +83,8 @@ public final class Constants {
              */
 
             // todo: this needs to be increased
-            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(35);
+            public static final Rotation2d ROTATION_SLOW_ZONE = Rotation2d.fromDegrees(20);
+            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(10);
             public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(360);
             public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2 = Rotation2d.fromRotations(1310).getRadians();
             public static final Rotation2d ROTATION_DECELERATION_DISTANCE         = Rotation2d.fromDegrees(5);
