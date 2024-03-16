@@ -43,6 +43,12 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
 
     public ArmSubsystem() {
 
+        linkMotor.setInverted(false);
+        aimMotor.setInverted(true);
+
+        linkMotor.getEncoder().setPosition(0);
+        aimMotor.getEncoder().setPosition(0);
+
     }
 
 
@@ -57,8 +63,14 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         // The aim encoder should wrap at 4V.
         double aimEncoderVoltage = getAimAbsoluteEncoderVoltage();
 
-        if (aimEncoderVoltage > 4) {
-            aimEncoderVoltage -= 5.0;
+        double motorEncoderValue = aimMotor.getEncoder().getPosition();
+
+        // NOTE: the aim encoder can wrap at high angles (trap)
+        // We need to add 5V if the encoder value is high.
+        // It will not wrap twice
+        // FIXME test these values
+        if (motorEncoderValue > 100 && aimEncoderVoltage < 2.5) {
+            aimEncoderVoltage += 5;
         }
 
         // The conversion from volts to degrees
@@ -92,9 +104,14 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         return shooterBottomMotor.getEncoder().getVelocity();
     }
 
+
     // todo: fixme: specify unit in either javadoc or method name
     public double getIntakeEncoderSpeed() {
         return Math.round(intakeMotor.getEncoder().getVelocity() * 100) / 100.0;
+    }
+
+    public double getIntakePosition() {
+        return intakeMotor.getEncoder().getPosition();
     }
 
     // todo: fixme: specify unit in either javadoc or method name
@@ -136,7 +153,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     }
 
     public boolean isLinkAtLowerLimit() {
-        return !linkLowerLimitSwitch.get();
+        return !linkLowerLimitSwitch.get() || getLinkAngle() < ArmConstants.LINK_MIN_DEGREES;
     }
 
 
@@ -149,13 +166,20 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     // linkSpeedRPM, etc)
     public void setArmPivotTestSpeeds(double linkSpeed, double aimSpeed) {
 
-        armSafetyMode       = false;
+        armSafetyMode = true;
 
-        this.linkPivotSpeed = linkSpeed;
-        this.aimPivotSpeed  = aimSpeed;
+        if (!armSafetyMode) {
 
-        linkMotor.set(linkSpeed);
-        aimMotor.set(aimSpeed);
+            this.linkPivotSpeed = linkSpeed;
+            this.aimPivotSpeed  = aimSpeed;
+
+            linkMotor.set(linkSpeed);
+            aimMotor.set(aimSpeed);
+        }
+        else {
+            setLinkPivotSpeed(linkSpeed);
+            setAimPivotSpeed(aimSpeed);
+        }
     }
 
     // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or

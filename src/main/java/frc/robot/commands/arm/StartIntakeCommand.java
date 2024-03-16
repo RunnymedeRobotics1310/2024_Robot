@@ -1,19 +1,21 @@
 package frc.robot.commands.arm;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
 // Start Intake
 // Move Aim/Arm
-public class StartIntakeCommand2 extends ArmBaseCommand {
+public class StartIntakeCommand extends ArmBaseCommand {
 
     private enum State {
-        MOVE_TO_UNLOCK, EXTEND_AIM, EXTEND_BOTH, MOVE_TO_INTAKE, FINISHED
+        MOVE_TO_UNLOCK, EXTEND_AIM, EXTEND_BOTH, MOVE_TO_INTAKE, START_INTAKE, FINISHED
     };
 
     private State state = State.MOVE_TO_UNLOCK;
 
-    public StartIntakeCommand2(ArmSubsystem armSubsystem) {
+    public StartIntakeCommand(ArmSubsystem armSubsystem) {
         super(armSubsystem);
     }
 
@@ -33,13 +35,16 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
             state = State.MOVE_TO_UNLOCK;
             logStateTransition("Start -> Unlock", "Arm Locked, aim angle " + armSubsystem.getAimAngle());
         }
-        else if (armSubsystem.getAimAngle() < ArmConstants.OVER_BUMPER_POSITION.aimAngle) {
+        else if (armSubsystem.isLinkAtLowerLimit()) {
+            state = State.MOVE_TO_INTAKE;
+            logStateTransition("Start -> Extend Both", "Arm past bumper, aim angle " + armSubsystem.getAimAngle());
+        }
+        else {
             state = State.EXTEND_BOTH;
-            logStateTransition("Start -> Extend Both", "Arm over bumper, aim angle " + armSubsystem.getAimAngle());
+            logStateTransition("Start -> Extend Both", "Arm past bumper, aim angle " + armSubsystem.getAimAngle());
         }
 
         logCommandStart(state.name());
-
     }
 
     @Override
@@ -47,6 +52,7 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
 
         // If there is a note detected, then there is nothing to do
         if (armSubsystem.isNoteDetected()) {
+            state = State.FINISHED;
             return;
         }
 
@@ -70,8 +76,8 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
         case EXTEND_AIM:
 
             // Start by extending the aim
-            armSubsystem.setLinkPivotSpeed(0);
-            armSubsystem.setAimPivotSpeed(.3);
+            armSubsystem.setLinkPivotSpeed(-.4);
+            armSubsystem.setAimPivotSpeed(.4);
 
             // Once the arm has extended by 15 deg, then start a sychro movement
             if (armSubsystem.getAimAngle() > ArmConstants.COMPACT_ARM_POSITION.aimAngle + 5) {
@@ -84,11 +90,12 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
         case EXTEND_BOTH:
 
             // Start by extending the aim
-            armSubsystem.setLinkPivotSpeed(-1);
-            armSubsystem.setAimPivotSpeed(.3);
+            armSubsystem.setLinkPivotSpeed(-9.0);
+            armSubsystem.setAimPivotSpeed(.75);
+            armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
 
             // Once the aim has reached the target, then stop the aim.
-            if (armSubsystem.getAimAngle() > ArmConstants.INTAKE_ARM_POSITION.aimAngle + 0) {
+            if (armSubsystem.getAimAngle() > ArmConstants.INTAKE_ARM_POSITION.aimAngle) {
 
                 logStateTransition("Extend Both -> Move to intake", "Aim at " + armSubsystem.getAimAngle());
                 state = State.MOVE_TO_INTAKE;
@@ -100,12 +107,29 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
         case MOVE_TO_INTAKE:
 
             // Start by extending the aim
-            armSubsystem.setLinkPivotSpeed(-1);
-            armSubsystem.setAimPivotSpeed(0);
+            armSubsystem.setLinkPivotSpeed(-.6);
+            armSubsystem.setAimPivotSpeed(-0.3);
+            armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
 
             // Rest the aim on the hard stop
-            if (armSubsystem.isLinkAtLowerLimit()) {
-                logStateTransition("Move to Intake -> Finished", "At intake position");
+            // Wait at least .2 seconds
+            if (armSubsystem.isLinkAtLowerLimit() && isStateTimeoutExceeded(.1)) {
+                logStateTransition("Move to Intake -> Start Intake", "At intake position");
+                state = State.START_INTAKE;
+            }
+
+            break;
+
+        case START_INTAKE:
+
+            // Start by extending the aim
+            armSubsystem.setLinkPivotSpeed(0);
+            armSubsystem.setAimPivotSpeed(0);
+            armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
+
+            // Stop when the note is detected
+            if (armSubsystem.isNoteDetected()) {
+                logStateTransition("Start Intake -> Finish", "Note detected");
                 state = State.FINISHED;
             }
 
@@ -122,7 +146,7 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
 
         // If the arm is in position, then this command ends
         if (state == State.FINISHED) {
-            setFinishReason("At Intake Position");
+            setFinishReason("At Intake Position - Note Detected");
             return true;
         }
 
@@ -135,6 +159,11 @@ public class StartIntakeCommand2 extends ArmBaseCommand {
         armSubsystem.stop();
 
         logCommandEnd(interrupted);
-    }
 
+        if (!interrupted) {
+            if (DriverStation.isTeleop()) {
+                CommandScheduler.getInstance().schedule(new CompactCommand(armSubsystem));
+            }
+        }
+    }
 }

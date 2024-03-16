@@ -31,6 +31,26 @@ public abstract class ArmBaseCommand extends LoggingCommand {
         targetArmPosition = armPosition;
     }
 
+    public boolean isAtArmPosition(ArmPosition armPosition, double tolerance) {
+
+        double  currentLinkAngle = armSubsystem.getLinkAngle();
+        double  currentAimAngle  = armSubsystem.getAimAngle();
+
+        /*
+         * Determine if we are at or past the target
+         */
+        boolean linkAtTarget     = false;
+        if (Math.abs(currentLinkAngle - armPosition.linkAngle) <= tolerance) {
+            linkAtTarget = true;
+        }
+
+        boolean aimAtTarget = false;
+        if (Math.abs(currentAimAngle - armPosition.aimAngle) <= tolerance) {
+            aimAtTarget = true;
+        }
+
+        return linkAtTarget && aimAtTarget;
+    }
 
     /**
      * Drive through arm position

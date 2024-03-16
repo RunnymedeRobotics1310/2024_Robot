@@ -140,22 +140,6 @@ public class SystemTestCommand extends LoggingCommand {
             motorSpeed  = 0;
             motor2Speed = 0;
         }
-        else if (leftTrigger > 0 && rightTrigger > 0) {
-
-            // If both triggers are pressed, then stop the motor
-            motorSpeed  = 0;
-            motor2Speed = 0;
-        }
-        else if (leftTrigger > 0) {
-
-            motorSpeed  = -leftTrigger;
-            motor2Speed = -leftTrigger;
-        }
-        else if (rightTrigger > 0) {
-
-            motorSpeed  = rightTrigger;
-            motor2Speed = rightTrigger;
-        }
         else {
 
             // No triggers are pressed, use the POV to control the motor speed

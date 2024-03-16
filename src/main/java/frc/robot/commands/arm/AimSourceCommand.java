@@ -5,11 +5,11 @@ import frc.robot.subsystems.ArmSubsystem;
 
 import static frc.robot.Constants.ArmConstants.SOURCE_INTAKE_POSE;
 
-public class LinkToSourceCommand extends ArmBaseCommand {
+public class AimSourceCommand extends ArmBaseCommand {
 
     // todo fixme: use constants for all
 
-    public LinkToSourceCommand(ArmSubsystem armSubsystem) {
+    public AimSourceCommand(ArmSubsystem armSubsystem) {
 
         super(armSubsystem);
     }

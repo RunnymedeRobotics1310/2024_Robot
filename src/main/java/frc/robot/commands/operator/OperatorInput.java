@@ -10,7 +10,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.StartIntakeCommand2;
+import frc.robot.commands.arm.AimAmpCommand;
+import frc.robot.commands.arm.CompactCommand;
+import frc.robot.commands.arm.EjectNoteCommand;
+import frc.robot.commands.arm.ShootCommand;
+import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -203,7 +208,17 @@ public class OperatorInput {
         // operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
 
-        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand2(arm));
+        new Trigger(driverController::getAButton).onTrue(new StartIntakeCommand(arm));
+
+        new Trigger(driverController::getBButton).onTrue(new AimAmpCommand(arm));
+
+        new Trigger(driverController::getXButton).onTrue(new CompactCommand(arm));
+
+        new Trigger(driverController::getYButton).onTrue(new ShootSpeakerFromPodiumCommand(arm));
+
+        new Trigger(() -> driverController.getRightTriggerAxis() > .5).onTrue(new ShootCommand(arm));
+
+        new Trigger(() -> driverController.getLeftTriggerAxis() > .5).whileTrue(new EjectNoteCommand(arm));
 
         // Aim Amp
         // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
