@@ -20,22 +20,14 @@ import frc.robot.telemetry.Telemetry;
  */
 public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
-    private static final long          LED_MODE_PIPELINE                    = 0;
-    private static final long          LED_MODE_OFF                         = 1;
-    @SuppressWarnings("unused")
-    private static final long          LED_MODE_BLINK                       = 2;
-    @SuppressWarnings("unused")
-    private static final long          LED_MODE_ON                          = 3;
-
     private static final long          CAM_MODE_VISION                      = 0;
     private static final long          CAM_MODE_DRIVER                      = 1;
 
     // configure more pipelines here
     @SuppressWarnings("unused")
-    private static final long          PIPELINE_RETROREFLECTIVE_NOTE_DETECT = 1;
     private static final long          PIPELINE_APRIL_TAG_DETECT            = 0;
+    private static final long          PIPELINE_RETROREFLECTIVE_NOTE_DETECT = 1;
     private static final long          PIPELINE_VISUAL                      = 2;
-
 
     private static final double        TARGET_ALIGNMENT_THRESHOLD           = 7.5;
 
@@ -43,7 +35,6 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         .getTable("limelight-hugh");
 
     // inputs/configs
-    NetworkTableEntry                  ledMode                              = table.getEntry("ledMode");
     NetworkTableEntry                  camMode                              = table.getEntry("camMode");
     NetworkTableEntry                  pipeline                             = table.getEntry("pipeline");
 
@@ -98,12 +89,9 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
     private static final double        SPEAKER_TAG_DELTA                    = 0.565868;
 
-    private boolean                    isEnabled                            = DriverStation.isEnabled();
-
     public HughVisionSubsystem() {
         this.pipeline.setNumber(PIPELINE_APRIL_TAG_DETECT);
         this.camMode.setNumber(CAM_MODE_VISION);
-        setLedMode(isEnabled);
     }
 
     @Override
@@ -131,28 +119,8 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         Telemetry.hugh.isAlignedWithTarget    = isAlignedWithTarget();
         Telemetry.hugh.targetOffset           = getTargetOffset();
         // Telemetry.hugh.aprilTagInfo = aprilTagInfoArrayToString(visibleTags);
-
-        // Toggle the LED mode if it's changed since last we looked
-        boolean enabledNow = DriverStation.isEnabled();
-        if (this.isEnabled != enabledNow) {
-            this.isEnabled = enabledNow;
-            setLedMode(enabledNow);
-        }
     }
 
-    /**
-     * Sets the LED on when enabled, off when disabled
-     * 
-     * @param enabled
-     */
-    private void setLedMode(boolean enabled) {
-        if (enabled) {
-            ledMode.setNumber(LED_MODE_ON);
-        }
-        else {
-            ledMode.setNumber(LED_MODE_OFF);
-        }
-    }
 
     /**
      * Get the limelight coordinates for the target (i.e. with respect to the limelight origin, NOT
