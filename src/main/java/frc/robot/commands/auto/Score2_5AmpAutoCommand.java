@@ -34,14 +34,14 @@ public class Score2_5AmpAutoCommand extends SequentialCommandGroup {
 
         /* Note 2 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
-        addCommands(new StartIntakeCommand(armSubsystem, jackman)
+        addCommands(new StartIntakeCommand(armSubsystem)
             .deadlineWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, .5)));
         addCommands(new DriveToPositionCommand(swerve, SCORE_BLUE_AMP, SCORE_RED_AMP));
         addCommands(new FakeScoreAmpCommand());
 
         /* Note 3 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
-        addCommands(new StartIntakeCommand(armSubsystem, jackman)
+        addCommands(new StartIntakeCommand(armSubsystem)
             .deadlineWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, .5)));
 
         /* Exit zone & finish at amp */

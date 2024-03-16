@@ -39,7 +39,7 @@ public class Score2AmpAutoCommand extends SequentialCommandGroup {
 
         /* Note 2 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
-        addCommands(new StartIntakeCommand(armSubsystem, jackman)
+        addCommands(new StartIntakeCommand(armSubsystem)
             .deadlineWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, .5)));
         addCommands(new DriveToPositionCommand(swerve, SCORE_BLUE_AMP, SCORE_RED_AMP));
         addCommands(new FakeScoreAmpCommand());
