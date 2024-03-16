@@ -58,6 +58,8 @@ public class OperatorInput {
     private final XboxController                                       operatorController;
 
     private final SendableChooser<Constants.AutoConstants.AutoPattern> autoPatternChooser = new SendableChooser<>();
+    private final SendableChooser<Constants.AutoConstants.Delay> delayChooser = new SendableChooser<>();
+    private double delay;
 
     public enum Stick {
         LEFT, RIGHT
@@ -314,8 +316,31 @@ public class OperatorInput {
         autoPatternChooser.addOption("4 Speaker", Constants.AutoConstants.AutoPattern.SCORE_4_SPEAKER);
 
         autoPatternChooser.addOption("Plan B", Constants.AutoConstants.AutoPattern.PLAN_B);
-    }
 
+
+        Telemetry.auto.delayChooser = delayChooser;
+
+        delayChooser.setDefaultOption("No Delay", Constants.AutoConstants.Delay.NO_DELAY);
+        delayChooser.addOption("1/2 Seconds", Constants.AutoConstants.Delay.WAIT_0_5_SECOND);
+        delayChooser.addOption("1 Second", Constants.AutoConstants.Delay.WAIT_1_SECOND);
+        delayChooser.addOption("1 1/2 Seconds", Constants.AutoConstants.Delay.WAIT_1_5_SECONDS);
+        delayChooser.addOption("2 Seconds", Constants.AutoConstants.Delay.WAIT_2_SECONDS);
+        delayChooser.addOption("2 1/2 Seconds", Constants.AutoConstants.Delay.WAIT_2_5_SECONDS);
+        delayChooser.addOption("3 Seconds", Constants.AutoConstants.Delay.WAIT_3_SECONDS);
+        delayChooser.addOption("5 Seconds", Constants.AutoConstants.Delay.WAIT_5_SECONDS);
+
+
+        delay = switch (delayChooser.getSelected()) {
+            case WAIT_0_5_SECOND -> 0.5;
+            case WAIT_1_SECOND -> 1;
+            case WAIT_1_5_SECONDS -> 1.5;
+            case WAIT_2_SECONDS -> 2;
+            case WAIT_2_5_SECONDS -> 2.5;
+            case WAIT_3_SECONDS -> 3;
+            case WAIT_5_SECONDS -> 5;
+            default -> 0;
+        };
+    }
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -324,16 +349,16 @@ public class OperatorInput {
     public Command getAutonomousCommand() {
 
         return switch (autoPatternChooser.getSelected()) {
-        case EXIT_ZONE -> new ExitZoneAutoCommand(drive);
-        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh);
-        case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman);
-        case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman);
-        case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, hugh);
-        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh);
-        case SCORE_2_SPEAKER -> new Score2SpeakerAutoCommand(drive, arm, hugh, jackman);
-        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman);
-        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman);
-        case PLAN_B -> new PlanBAutoCommand(drive);
+        case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);
+        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh, delay);
+        case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman, delay);
+        case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman, delay);
+        case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, hugh, delay);
+        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh, delay);
+        case SCORE_2_SPEAKER -> new Score2SpeakerAutoCommand(drive, arm, hugh, jackman, delay);
+        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman, delay);
+        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman, delay);
+        case PLAN_B -> new PlanBAutoCommand(drive, delay);
         default -> new InstantCommand();
         };
     }

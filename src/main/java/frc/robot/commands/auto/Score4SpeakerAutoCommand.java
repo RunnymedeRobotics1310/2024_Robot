@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BotTarget;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
@@ -20,13 +21,14 @@ import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 public class Score4SpeakerAutoCommand extends SequentialCommandGroup {
 
     public Score4SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
-        JackmanVisionSubsystem jackman) {
+        JackmanVisionSubsystem jackman, double delay) {
 
         final Pose2d blueFinishPose = new Pose2d(new Translation2d(3.5, 7), new Rotation2d());
         final Pose2d redFinishPose  = new Pose2d(new Translation2d(13.04, 7), new Rotation2d());
 
 
         addCommands(new LogMessageCommand("Starting Auto"));
+        addCommands(new WaitCommand(delay));
 
         /* ***AUTO PATTERN*** */
 

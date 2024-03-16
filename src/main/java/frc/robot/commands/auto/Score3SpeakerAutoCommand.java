@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BotTarget;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
@@ -23,7 +24,7 @@ import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
 
     public Score3SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
-        JackmanVisionSubsystem jackman) {
+        JackmanVisionSubsystem jackman, double delay) {
 
 
         Pose2d blueFinishPose = new Pose2d(new Translation2d(3.5, BLUE_NOTE_VALJEAN.getLocation().getY()),
@@ -33,7 +34,7 @@ public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
 
 
         addCommands(new LogMessageCommand("Starting Auto"));
-
+        addCommands(new WaitCommand(delay));
 
         // TODO: replace FakeScoreSpeakerCommand
 

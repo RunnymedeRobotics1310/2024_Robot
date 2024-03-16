@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.swervedrive.DriveRobotOrientedCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.ResetOdometryCommand;
@@ -15,7 +16,7 @@ import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
 
 public class PlanBAutoCommand extends SequentialCommandGroup {
 
-    public PlanBAutoCommand(SwerveSubsystem swerve) {
+    public PlanBAutoCommand(SwerveSubsystem swerve, double delay) {
 
         Pose2d blueFinishPose = new Pose2d(4, 7.7, new Rotation2d(90));
         Pose2d redFinishPose  = new Pose2d(12.54, 7.4, new Rotation2d());
@@ -25,6 +26,7 @@ public class PlanBAutoCommand extends SequentialCommandGroup {
         //Start this auto in corner.
         addCommands(new LogMessageCommand("Starting Auto"));
         addCommands(new ResetOdometryCommand(swerve, blueStartPose, redStartPose));
+        addCommands(new WaitCommand(delay));
 
         addCommands(new DriveToPositionCommand(swerve, SCORE_BLUE_AMP, SCORE_RED_AMP, 1));
         addCommands(new DriveRobotOrientedCommand(swerve, new Translation2d(-.1, 0), new Rotation2d()));

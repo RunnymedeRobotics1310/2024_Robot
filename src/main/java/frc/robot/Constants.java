@@ -370,6 +370,13 @@ public final class Constants {
             SCORE_1_SPEAKER, SCORE_2_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
             PLAN_B
         }
+
+        public enum Delay {
+            NO_DELAY, WAIT_0_5_SECOND,
+            WAIT_1_SECOND, WAIT_1_5_SECONDS,
+            WAIT_2_SECONDS, WAIT_2_5_SECONDS,
+            WAIT_3_SECONDS, WAIT_5_SECONDS
+        }
     }
 
     public static final class LightingConstants {

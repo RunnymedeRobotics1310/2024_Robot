@@ -4,6 +4,7 @@ package frc.robot.commands.auto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BotTarget;
 import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.auto.stubs.FakeScoreAmpCommand;
@@ -22,9 +23,10 @@ import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
 public class Score2_5AmpAutoCommand extends SequentialCommandGroup {
 
     public Score2_5AmpAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
-        JackmanVisionSubsystem jackman) {
+        JackmanVisionSubsystem jackman, double delay) {
 
         addCommands(new LogMessageCommand("Starting Auto"));
+        addCommands(new WaitCommand(delay));
 
         // TODO: replace FaKeScoreAmpCommand
 

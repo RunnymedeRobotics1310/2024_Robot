@@ -10,8 +10,10 @@ public class Auto {
     }
 
     public Sendable autoPatternChooser = null;
+    public Sendable delayChooser = null;
 
     public void post() {
         SmartDashboard.putData(PREFIX + "Auto Pattern", autoPatternChooser);
+        SmartDashboard.putData(PREFIX + "Delay", delayChooser);
     }
 }
