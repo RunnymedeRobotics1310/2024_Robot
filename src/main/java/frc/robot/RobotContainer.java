@@ -60,7 +60,7 @@ public class RobotContainer {
 
         drive.setDefaultCommand(new TeleopDriveCommand(drive, lighting, operatorInput));
         arm.setDefaultCommand(new DefaultArmCommand(operatorInput, arm));
-        climb.setDefaultCommand(new DefaultClimbCommand(operatorInput, climb));
+        climb.setDefaultCommand(new DefaultClimbCommand(operatorInput, climb, drive));
 
         operatorInput.configureTriggerBindings();
         operatorInput.initAutoSelectors();

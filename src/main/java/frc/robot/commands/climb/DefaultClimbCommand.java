@@ -7,24 +7,24 @@ import static frc.robot.commands.operator.OperatorInput.Stick.RIGHT;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.commands.operator.OperatorInput;
+import frc.robot.commands.swervedrive.BaseDriveCommand;
 import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
-public class DefaultClimbCommand extends LoggingCommand {
+public class DefaultClimbCommand extends BaseClimbCommand {
 
-    private final ClimbSubsystem climbSubsystem;
-    private final OperatorInput  operatorInput;
-    double                       leftClimbSpeed  = 0;
-    double                       rightClimbSpeed = 0;
+    private final OperatorInput operatorInput;
+    double                      leftClimbSpeed  = 0;
+    double                      rightClimbSpeed = 0;
 
     /**
      * Creates a new ExampleCommand.
      *
      * @param climbSubsystem The subsystem used by this command.
      */
-    public DefaultClimbCommand(OperatorInput operatorInput, ClimbSubsystem climbSubsystem) {
-
-        this.operatorInput  = operatorInput;
-        this.climbSubsystem = climbSubsystem;
+    public DefaultClimbCommand(OperatorInput operatorInput, ClimbSubsystem climbSubsystem, SwerveSubsystem swerve) {
+        super(climbSubsystem, swerve);
+        this.operatorInput = operatorInput;
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(climbSubsystem);

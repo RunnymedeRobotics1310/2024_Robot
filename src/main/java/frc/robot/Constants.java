@@ -553,5 +553,6 @@ public final class Constants {
 
         public static final int    TOP_SLOW_ZONE                 = 110;
 
+        public static final double METRES_PER_ENCODER_COUNT      = 0.6 / 120;
     }
 }

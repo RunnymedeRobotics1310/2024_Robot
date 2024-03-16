@@ -3,11 +3,9 @@ package frc.robot.commands.climb;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
-public class MaxClimbCommand extends LoggingCommand {
-
-    private final ClimbSubsystem climbSubsystem;
-
+public class MaxClimbCommand extends BaseClimbCommand {
 
     private enum State {
         RAISE_CLIMB, WAIT_FOR_CLIMB, FINISHED
@@ -20,18 +18,8 @@ public class MaxClimbCommand extends LoggingCommand {
      *
      * @param climbSubsystem The subsystem used by this command.
      */
-    public MaxClimbCommand(ClimbSubsystem climbSubsystem) {
-
-        this.climbSubsystem = climbSubsystem;
-
-        // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(climbSubsystem);
-    }
-
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
-        logCommandStart();
+    public MaxClimbCommand(ClimbSubsystem climbSubsystem, SwerveSubsystem drive) {
+        super(climbSubsystem, drive);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

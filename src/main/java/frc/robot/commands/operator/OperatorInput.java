@@ -213,11 +213,11 @@ public class OperatorInput {
         new Trigger(this::isShakeItOff).whileTrue(new ShShShakeItOffCommand(arm));
 
         // TODO: Uncomment AmpPositionCommand when link is fixed
-        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb)/*
-                                                                             * .alongWith(new
-                                                                             * AmpPositionCommand(
-                                                                             * arm))
-                                                                             */);
+        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb, drive)/*
+                                                                                    * .alongWith(new
+                                                                                    * AmpPositionCommand(
+                                                                                    * arm))
+                                                                                    */);
 
         // Test Drive to 2,2,20
         // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,
@@ -275,7 +275,7 @@ public class OperatorInput {
         case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh);
         case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman);
-        case SCORE_1_SPEAKER_STAY-> new Score1SpeakerStayAutoCommand(drive, arm, hugh);
+        case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, hugh);
         case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh);
         case SCORE_2_SPEAKER -> new Score2SpeakerAutoCommand(drive, arm, hugh, jackman);
         case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman);
