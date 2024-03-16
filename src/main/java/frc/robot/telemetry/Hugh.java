@@ -28,6 +28,7 @@ public class Hugh {
     public boolean             isAlignedWithTarget    = false;
     public Rotation2d          targetOffset           = null;
     public String              aprilTagInfo           = null;
+    public double               shooterAngle = Double.MIN_VALUE;
 
     void post() {
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/BotTarget", botTarget.toString());
@@ -48,5 +49,6 @@ public class Hugh {
         SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionHugh/AlignedWithTarget", isAlignedWithTarget);
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/TargetOffset",
             targetOffset == null ? "null" : targetOffset.toString());
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/shooterAngle", shooterAngle);
     }
 }

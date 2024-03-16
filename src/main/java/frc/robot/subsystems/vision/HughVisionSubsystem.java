@@ -118,6 +118,7 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         Telemetry.hugh.distanceToTargetMetres = getDistanceToTargetMetres();
         Telemetry.hugh.isAlignedWithTarget    = isAlignedWithTarget();
         Telemetry.hugh.targetOffset           = getTargetOffset();
+        Telemetry.hugh.shooterAngle           = getDynamicSpeakerShooterAngle(new Translation2d(0, 0)).getDegrees();
         // Telemetry.hugh.aprilTagInfo = aprilTagInfoArrayToString(visibleTags);
     }
 
@@ -448,7 +449,8 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
      * so you should not use this function to set the arm angle
      * 
      * @param shooterXY
-     * @return return the angle the shooter needs to be at relative to the speaker's wall
+     * @return Angle the aim needs to be at relative to the floor - which needs some math done
+     * to handle link angle not being 180.
      */
     // todo: fixme: return rotation2d for consistency with other APIs and to eliminate unit
     // ambiguity
@@ -459,13 +461,15 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
             return null;
         }
 
-        double shooterHeight                            = shooterXY.getY();
-        double shooterDistanceOffsetFromMiddleOfBot     = shooterXY.getX();
+        // TODO: Use dynamic shooter location once available.  For now it's based on 185deg link
+        double shooterHeight                            = 0.77;
+        double shooterDistanceOffsetFromMiddleOfBot     = 0.30;
+
         double shooterDistanceToWall                    = distanceToTargetMeters - shooterDistanceOffsetFromMiddleOfBot;
         double heightDifferenceBetweenShooterAndSpeaker = 2.12 - shooterHeight;
         double oppOverAdj                               = heightDifferenceBetweenShooterAndSpeaker / shooterDistanceToWall;
         double preCalculatedShooterAngle                = Math.atan(oppOverAdj);
-        double dynamicSpeakerShooterAngle               = 90 - preCalculatedShooterAngle;
+        double dynamicSpeakerShooterAngle               = 90 - Math.toDegrees(preCalculatedShooterAngle);
         return Rotation2d.fromDegrees(dynamicSpeakerShooterAngle);
     }
 
