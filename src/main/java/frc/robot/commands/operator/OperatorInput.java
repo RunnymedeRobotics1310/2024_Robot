@@ -221,6 +221,8 @@ public class OperatorInput {
      */
     public void configureTriggerBindings() {
 
+        new Trigger(() -> driverController.getRightTriggerAxis() > 0.5).onTrue(new StartIntakeCommand(arm));
+
         // Run when enabled
         new Trigger(RobotController::isSysActive).onTrue(new InstantCommand(() -> lighting.addPattern(Enabled.getInstance())));
 
