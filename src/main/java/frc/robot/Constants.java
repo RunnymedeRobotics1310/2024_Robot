@@ -530,29 +530,31 @@ public final class Constants {
 
     public static final class ClimbConstants {
 
-        public static final int    RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 60;
-        public static final int    LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 61;
+        public static final int        RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 60;
+        public static final int        LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 61;
 
-        public static final double MAX_ROBOT_LIFT_SPEED          = 1;
-        public static final double RAISE_CLIMBERS_SPEED          = .75;
-        public static final double LOWER_CLIMBERS_SPEED          = .75;
-        public static final double INITIALIZE_CLIMBERS_SPEED     = 0.1;
+        public static final double     MAX_ROBOT_LIFT_SPEED          = 1;
+        public static final double     RAISE_CLIMBERS_SPEED          = .75;
+        public static final double     LOWER_CLIMBERS_SPEED          = .75;
+        public static final double     INITIALIZE_CLIMBERS_SPEED     = 0.1;
 
-        public static final double CLIMB_MAX                     = 120;
+        public static final double     CLIMB_MAX                     = 120;
         // encoder values
 
-        public static final double CLIMB_MIN                     = 3;
+        public static final double     CLIMB_MIN                     = 3;
 
-        public static final int    CLIMB_LIMIT_SWITCH_DIO_PORT_2 = 2;
-        public static final int    CLIMB_LIMIT_SWITCH_DIO_PORT_3 = 3;
+        public static final int        CLIMB_LIMIT_SWITCH_DIO_PORT_2 = 2;
+        public static final int        CLIMB_LIMIT_SWITCH_DIO_PORT_3 = 3;
 
         // Slow Zones
 
-        public static final double SLOW_SPEED                    = 0.15;
-        public static final int    BOTTOM_SLOW_ZONE              = 15;
+        public static final double     SLOW_SPEED                    = 0.15;
+        public static final int        BOTTOM_SLOW_ZONE              = 15;
 
-        public static final int    TOP_SLOW_ZONE                 = 110;
+        public static final int        TOP_SLOW_ZONE                 = 110;
 
-        public static final double METRES_PER_ENCODER_COUNT      = 0.6 / 120;
+        public static final double     METRES_PER_ENCODER_COUNT      = 0.6 / 120;
+
+        public static final Rotation2d LEVEL_CLIMB_TOLERANCE         = Rotation2d.fromDegrees(3);
     }
 }

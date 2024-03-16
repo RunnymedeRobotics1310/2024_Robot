@@ -100,6 +100,10 @@ public class OperatorInput {
         return driverController.getRightBumper();
     }
 
+    public boolean isOperatorLeftBumper() {
+        return operatorController.getLeftBumper();
+    }
+
     public boolean isDriveFacingSpeaker() {
         return driverController.getYButton();
     }
