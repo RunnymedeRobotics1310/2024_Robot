@@ -17,7 +17,7 @@ abstract class BaseClimbCommand extends LoggingCommand {
     }
 
     protected void climbFlat(double speed) {
-        if (speed < 0) {
+        if (speed > 0) {
             // going up only.
             return;
         }
@@ -28,8 +28,8 @@ abstract class BaseClimbCommand extends LoggingCommand {
 
         if (Math.abs(rollRadians) > Constants.ClimbConstants.LEVEL_CLIMB_TOLERANCE.getRadians()) {
             if (rollRadians > 0) {
-                // right is too high
-                if (climbSubsystem.isRightClimbAtMax()) {
+                // right is too low
+                if (climbSubsystem.rightAllTheWayDown()) {
                     right = 0;
                 }
                 else {
@@ -37,8 +37,8 @@ abstract class BaseClimbCommand extends LoggingCommand {
                 }
             }
             else {
-                // left is too high
-                if (climbSubsystem.isLeftClimbAtMax()) {
+                // right is too high
+                if (climbSubsystem.leftAllTheWayDown()) {
                     left = 0;
                 }
                 else {

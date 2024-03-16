@@ -87,11 +87,11 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     }
 
-    private boolean leftAllTheWayDown() {
+    public boolean leftAllTheWayDown() {
         return leftClimbLimitSwitch.get() == false;
     }
 
-    private boolean rightAllTheWayDown() {
+    public boolean rightAllTheWayDown() {
         return rightClimbLimitSwitch.get() == false;
     }
 

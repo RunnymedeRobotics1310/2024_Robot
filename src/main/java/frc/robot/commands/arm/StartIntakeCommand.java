@@ -113,7 +113,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
             // Rest the aim on the hard stop
             // Wait at least .2 seconds
-            if (armSubsystem.isLinkAtLowerLimit() && isStateTimeoutExceeded(.1)) {
+            if (armSubsystem.isLinkAtLowerLimit() && isStateTimeoutExceeded(.2)) {
                 logStateTransition("Move to Intake -> Start Intake", "At intake position");
                 state = State.START_INTAKE;
             }

@@ -62,11 +62,14 @@ public abstract class BaseDriveCommand extends LoggingCommand {
 
         double targetRad  = normalizeRotation(target).getRadians();
         double currentRad = normalizeRotation(current).getRadians();
+        double errorRad = targetRad - currentRad;
+        //double outputRad = Math.signum(errorRad) * MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
+        double outputRad = Math.signum(errorRad) * Rotation2d.fromDegrees(40).getRadians();
 
         // log("target: " + targetRad + "current: " + currentRad);
 
-        if (Math.abs(targetRad - currentRad) < ROTATION_TOLERANCE.getRadians()) {
-            return new Rotation2d();
+        if (Math.abs(errorRad) < ROTATION_TOLERANCE.getRadians()) {
+            outputRad = 0;
         }
 
 //        if (targetRad - currentRad <= ROTATION_DECELERATION_DISTANCE.getRadians()) {
@@ -76,15 +79,11 @@ public abstract class BaseDriveCommand extends LoggingCommand {
 //            headingPidRad.setConstraints(fastConstraints);
 //        }
 
+//        double outputRad = headingPidRad.calculate(currentRad, targetRad);
 
 
-        double outputRad = headingPidRad.calculate(currentRad, targetRad);
-
-        if (outputRad == 0) {
-            outputRad = 0;
-        }
-        else if (Math.abs(outputRad) < MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians()) {
-            outputRad = Math.signum(outputRad) * MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
+        else if (Math.abs(errorRad) < ROTATION_SLOW_ZONE.getRadians()) {
+            outputRad = Math.signum(errorRad) * MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
         }
 
         return Rotation2d.fromRadians(outputRad);
