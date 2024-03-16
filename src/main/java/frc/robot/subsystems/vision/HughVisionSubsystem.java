@@ -118,7 +118,8 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         Telemetry.hugh.distanceToTargetMetres = getDistanceToTargetMetres();
         Telemetry.hugh.isAlignedWithTarget    = isAlignedWithTarget();
         Telemetry.hugh.targetOffset           = getTargetOffset();
-        Telemetry.hugh.shooterAngle           = getDynamicSpeakerShooterAngle(new Translation2d(0, 0)).getDegrees();
+        Rotation2d r = getDynamicSpeakerShooterAngle(new Translation2d(0, 0));
+        Telemetry.hugh.shooterAngle           = r == null ? Double.MIN_VALUE : r.getDegrees();
         // Telemetry.hugh.aprilTagInfo = aprilTagInfoArrayToString(visibleTags);
     }
 
