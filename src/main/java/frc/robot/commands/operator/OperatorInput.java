@@ -15,13 +15,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.IntakeBackwardsCommand;
-import frc.robot.commands.arm.IntakeCommand;
-import frc.robot.commands.arm.IntakeEjectCommand;
-import frc.robot.commands.arm.LinkToSourceCommand;
-import frc.robot.commands.arm.ManualShootCommand;
-import frc.robot.commands.arm.ShShShakeItOffCommand;
-import frc.robot.commands.arm.SimpleAmpPositionCommand;
+import frc.robot.commands.arm.AimAmpCommand;
+import frc.robot.commands.arm.EjectNoteCommand;
+import frc.robot.commands.arm.ShootCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.PlanBAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
@@ -247,13 +244,13 @@ public class OperatorInput {
         // operatorController.getXButton()).onTrue(new CompactPoseCommand(arm));
 
         // Start Intake
-        new Trigger(() -> operatorController.getPOV() == 270).onTrue(new IntakeCommand(arm, jackman));
+        new Trigger(() -> operatorController.getPOV() == 270).onTrue(new StartIntakeCommand(arm));
 
         // Vision note pickup
-        new Trigger(driverController::getBButton).onTrue(new LinkToSourceCommand(arm));
+//        new Trigger(driverController::getBButton).onTrue(new LinkToSourceCommand(arm));
         // .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
 
-        new Trigger(driverController::getAButton).onTrue(new IntakeBackwardsCommand(arm));
+//        new Trigger(driverController::getAButton).onTrue(new IntakeBackwardsCommand(arm));
 
         // Aim Amp
         // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
@@ -264,11 +261,9 @@ public class OperatorInput {
         new Trigger(driverController::getXButton).onTrue(RotateToTargetCommand.createRotateToSourceCommand(drive, hugh));
 
         // Shoot
-        new Trigger(this::isManualShoot).onTrue((new ManualShootCommand(arm)));
+        new Trigger(this::isManualShoot).onTrue((new ShootCommand(arm)));
 
-        new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new IntakeEjectCommand(arm));
-
-        new Trigger(this::isShakeItOff).whileTrue(new ShShShakeItOffCommand(arm));
+        new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new EjectNoteCommand(arm));
 
         // TODO: Uncomment AmpPositionCommand when link is fixed
         new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb, drive)/*
@@ -297,7 +292,7 @@ public class OperatorInput {
         new Trigger(() -> operatorController.getPOV() == 180)
             .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
 
-        new Trigger(operatorController::getXButton).whileTrue(new SimpleAmpPositionCommand(arm));
+        new Trigger(operatorController::getXButton).whileTrue(new AimAmpCommand(arm));
 
     }
 

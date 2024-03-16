@@ -8,12 +8,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.BotTarget;
-import frc.robot.commands.arm.ManualShootCommand;
+import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.auto.stubs.FakeScoreSpeakerCommand;
-import frc.robot.commands.auto.stubs.FakeVisionNotePickupCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
@@ -47,21 +44,21 @@ public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
         addCommands(new DriveToPositionCommand(swerve,
             BotTarget.BLUE_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(1.6, 0)),
             BotTarget.RED_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(-1.6, 0))));
-        addCommands(new ManualShootCommand(armSubsystem));
+        addCommands(new ShootCommand(armSubsystem));
 
         /* Note 3 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
-        addCommands(new StartIntakeCommand(armSubsystem, jackman)
-                .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
+        addCommands(new StartIntakeCommand(armSubsystem)
+            .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
-        addCommands(new ManualShootCommand(armSubsystem));
+        addCommands(new ShootCommand(armSubsystem));
 
         /* Note 4 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
-        addCommands(new StartIntakeCommand(armSubsystem, jackman)
-                .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
+        addCommands(new StartIntakeCommand(armSubsystem)
+            .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
-        addCommands(new ManualShootCommand(armSubsystem));
+        addCommands(new ShootCommand(armSubsystem));
 
         /* Exit Zone */
         addCommands(new DriveToPositionCommand(swerve, blueFinishPose, redFinishPose));

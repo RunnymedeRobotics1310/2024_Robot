@@ -1,10 +1,8 @@
 package frc.robot.commands.auto;
 
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.arm.ManualShootCommand;
+import frc.robot.commands.arm.ShootCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
@@ -23,7 +21,7 @@ public class Score1SpeakerStayAutoCommand extends SequentialCommandGroup {
         // IMPORTANT: line up with speaker
 
         // addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
-        addCommands(new ManualShootCommand(arm));
+        addCommands(new ShootCommand(arm));
 
 
         // tell people we're done

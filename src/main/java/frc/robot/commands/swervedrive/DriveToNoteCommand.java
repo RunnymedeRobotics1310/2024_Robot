@@ -3,7 +3,6 @@ package frc.robot.commands.swervedrive;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants;
-import frc.robot.commands.arm.IntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -11,18 +10,18 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class DriveToNoteCommand extends BaseDriveCommand {
     private final JackmanVisionSubsystem jackman;
-    private final ArmSubsystem arm;
-    private long intakeStartTime;
-    private boolean startTimeSet = false;
-    private double speedMPS;
+    private final ArmSubsystem           arm;
+    private long                         intakeStartTime;
+    private boolean                      startTimeSet = false;
+    private double                       speedMPS;
 
     // todo: fixme: specify unit in speed param name (e.g. speedRPM, speedDegPerSec, etc.)
     public DriveToNoteCommand(SwerveSubsystem drive, ArmSubsystem arm, JackmanVisionSubsystem jackman, double speedMPS) {
 
         super(drive);
-        this.jackman = jackman;
-        this.speedMPS   = speedMPS;
-        this.arm     = arm;
+        this.jackman  = jackman;
+        this.speedMPS = speedMPS;
+        this.arm      = arm;
         addRequirements(jackman);
     }
 
@@ -49,7 +48,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
         if (arm.getIntakeEncoderSpeed() >= 10 && !startTimeSet) {
             intakeStartTime = System.currentTimeMillis();
-            startTimeSet = true;
+            startTimeSet    = true;
         }
 
         // return when note is detected
