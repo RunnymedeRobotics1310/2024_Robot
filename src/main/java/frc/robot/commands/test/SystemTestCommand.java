@@ -54,7 +54,7 @@ public class SystemTestCommand extends LoggingCommand {
         this.armSubsystem   = armSubsystem;
         this.climbSubsystem = climbSubsystem;
         this.lighting       = lighting;
-        addRequirements(drive, armSubsystem);
+        addRequirements(drive, armSubsystem, climbSubsystem);
     }
 
     @Override
@@ -153,22 +153,6 @@ public class SystemTestCommand extends LoggingCommand {
             // If the X button is pressed, reset the motor speed to zero
             motorSpeed  = 0;
             motor2Speed = 0;
-        }
-        else if (leftTrigger > 0 && rightTrigger > 0) {
-
-            // If both triggers are pressed, then stop the motor
-            motorSpeed  = 0;
-            motor2Speed = 0;
-        }
-        else if (leftTrigger > 0) {
-
-            motorSpeed  = -leftTrigger;
-            motor2Speed = -leftTrigger;
-        }
-        else if (rightTrigger > 0) {
-
-            motorSpeed  = rightTrigger;
-            motor2Speed = rightTrigger;
         }
         else {
 
@@ -338,6 +322,8 @@ public class SystemTestCommand extends LoggingCommand {
         motor2Speed = 0;
         angle       = Rotation2d.fromDegrees(1310);
         drive.stop();
+        armSubsystem.stop();
+        climbSubsystem.stop();
     }
 
     private void updateDashboard() {

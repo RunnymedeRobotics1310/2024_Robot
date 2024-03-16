@@ -22,7 +22,16 @@ import frc.robot.commands.arm.LinkToSourceCommand;
 import frc.robot.commands.arm.ManualShootCommand;
 import frc.robot.commands.arm.ShShShakeItOffCommand;
 import frc.robot.commands.arm.SimpleAmpPositionCommand;
-import frc.robot.commands.auto.*;
+import frc.robot.commands.auto.ExitZoneAutoCommand;
+import frc.robot.commands.auto.PlanBAutoCommand;
+import frc.robot.commands.auto.Score1AmpAutoCommand;
+import frc.robot.commands.auto.Score1SpeakerAutoCommand;
+import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
+import frc.robot.commands.auto.Score2AmpAutoCommand;
+import frc.robot.commands.auto.Score2SpeakerAutoCommand;
+import frc.robot.commands.auto.Score2_5AmpAutoCommand;
+import frc.robot.commands.auto.Score3SpeakerAutoCommand;
+import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.climb.MaxClimbCommand;
 import frc.robot.commands.swervedrive.ResetOdometryCommand;
 import frc.robot.commands.swervedrive.RotateToTargetCommand;
@@ -126,6 +135,51 @@ public class OperatorInput {
 
     public boolean isManualShoot() {
         return !isShift() && operatorController.getBButton();
+    }
+
+
+    /**
+     * Get the aim adjustment.
+     * This method will be called every 20ms (50Hz)
+     *
+     * @return 20ms adjustment
+     */
+    public double getAimAdjust() {
+
+        double degreeAdjust = 10.0 / 50.0; // 10 deg/sec / 50 Hz
+
+        if (driverController.getPOV() == 90) {
+            return degreeAdjust;
+        }
+
+        // pov left/right for aim adjust
+        if (driverController.getPOV() == 270) {
+            return -degreeAdjust;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Get the link adjustment.
+     * This method will be called every 20ms (50Hz)
+     *
+     * @return 20ms adjustment
+     */
+    public double getLinkAdjust() {
+
+        double degreeAdjust = 10.0 / 50.0; // 10 deg/sec / 50 Hz
+
+        if (driverController.getPOV() == 0) {
+            return degreeAdjust;
+        }
+
+        // pov left/right for aim adjust
+        if (driverController.getPOV() == 180) {
+            return -degreeAdjust;
+        }
+
+        return 0;
     }
 
     public double getDriverControllerAxis(Stick stick, Axis axis) {

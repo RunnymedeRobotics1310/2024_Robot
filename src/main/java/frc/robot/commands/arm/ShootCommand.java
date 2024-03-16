@@ -1,66 +1,109 @@
 package frc.robot.commands.arm;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 // Shoot. That's it.
 public class ShootCommand extends ArmBaseCommand {
 
     private enum State {
-        START_INTAKE, STOP_INTAKE
+        REVERSE_NOTE, START_SHOOTER, START_FEEDER, FINISHED
     };
 
-    private State                 state       = State.START_INTAKE;
-    private final SwerveSubsystem drive;
+    private State  state               = State.REVERSE_NOTE;
 
-    private long                  startTimeMs = 0;
+    private double startIntakePosition = 0;
 
-    public ShootCommand(ArmSubsystem armSubsystem, SwerveSubsystem drive) {
+    public ShootCommand(ArmSubsystem armSubsystem) {
 
         super(armSubsystem);
-        addRequirements(drive);
-        this.drive = drive;
     }
 
     @Override
     public void initialize() {
-        // If there is no note detected, then why are we aiming?
-        if (!armSubsystem.isNoteDetected()) {
-            log(" No note detected in robot. ShootCommand cancelled");
-            return;
-        }
 
-        drive.stop();
-        logCommandStart();
+        state               = State.REVERSE_NOTE;
 
+        startIntakePosition = armSubsystem.getIntakePosition();
+
+        logCommandStart("Intake Position " + startIntakePosition);
     }
 
     @Override
     public void execute() {
 
-        double intakeSpeed = 0;
+        double intakeSpeed  = 0;
+        double shooterSpeed = 0;
 
         switch (state) {
 
-        case START_INTAKE:
+        case REVERSE_NOTE:
 
-            intakeSpeed = 1;
-            armSubsystem.setIntakeSpeed(intakeSpeed);
-            startTimeMs = System.currentTimeMillis();
-            if (((System.currentTimeMillis() - startTimeMs) / 1000.0d) > 1) {
-                state = State.STOP_INTAKE;
+            armSubsystem.setShooterSpeed(-0.1);
+            armSubsystem.setIntakeSpeed(-0.3);
+
+            // Reverse the note for a number of rotations
+            if (Math.abs(armSubsystem.getIntakePosition() - startIntakePosition) > 2) {
+                logStateTransition("Reverse -> Start Shooter", "Shooter Reversed");
+                state = State.START_SHOOTER;
             }
 
             break;
 
-        case STOP_INTAKE:
+        case START_SHOOTER:
 
-            intakeSpeed = 0;
-            armSubsystem.setIntakeSpeed(intakeSpeed);
+            armSubsystem.setIntakeSpeed(0);
+            armSubsystem.setShooterSpeed(.75);
 
+            // Wait for the shooter to get up to speed
+            if (isStateTimeoutExceeded(.5)) {
+                logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getShooterEncoderSpeed());
+                state = State.START_FEEDER;
+            }
+
+            break;
+
+        case START_FEEDER:
+
+            armSubsystem.setIntakeSpeed(1);
+
+            if (isStateTimeoutExceeded(.5)) {
+                logStateTransition("Shoot -> Finished", "Shot fired");
+                state = State.FINISHED;
+            }
+            break;
+
+        default:
             break;
         }
     }
 
+    @Override
+    public boolean isFinished() {
+
+        if (state == State.FINISHED) {
+            return true;
+        }
+        return false;
+    }
+
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+
+        armSubsystem.setIntakeSpeed(0);
+        armSubsystem.setShooterSpeed(0);
+
+        logCommandEnd(interrupted);
+
+        if (!interrupted) {
+            if (DriverStation.isTeleop()) {
+                CommandScheduler.getInstance().schedule(new CompactCommand(armSubsystem));
+            }
+
+        }
+    }
 
 }
