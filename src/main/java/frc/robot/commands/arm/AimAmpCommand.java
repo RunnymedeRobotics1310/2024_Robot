@@ -63,6 +63,14 @@ public class AimAmpCommand extends ArmBaseCommand {
             // Move to the requested angle with a tolerance of 5 deg
             atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_AMP_ARM_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
                 ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
+            if (atArmAngle) {
+                state = State.FINISHED;
+            }
+
+            break;
+
+        case FINISHED:
+            break;
 
         default:
             break;

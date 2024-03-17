@@ -353,9 +353,9 @@ public class OperatorInput {
 
         return switch (autoPatternChooser.getSelected()) {
         case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);
-        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh, delay);
-        case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman, delay);
-        case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman, delay);
+        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, arm, hugh, lighting, delay);
+        case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman, lighting, delay);
+        case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman, lighting, delay);
         case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, hugh, lighting, delay);
         case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh, lighting, delay);
         case SCORE_2_SPEAKER -> new Score2SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
