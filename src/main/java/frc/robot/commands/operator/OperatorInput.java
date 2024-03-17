@@ -111,6 +111,10 @@ public class OperatorInput {
         return driverController.getYButton();
     }
 
+    public boolean isDriveFacingChain() {
+        return driverController.getAButton();
+    }
+
     public boolean isCancel() {
         return (driverController.getStartButton() || operatorController.getStartButton());
     }

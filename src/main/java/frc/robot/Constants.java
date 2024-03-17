@@ -321,6 +321,13 @@ public final class Constants {
 
     }
 
+    public static final class FieldConstants {
+        public static final double FIELD_WIDTH_METRES  = 16.54;
+        public static final double FIELD_LENGTH_METRES = 8.02;
+
+        public static final double WING_LENGTH_METRES  = 5.0;  // todo: confirm
+    }
+
     public static final class VisionConstants {
         /** Time to switch pipelines and acquire a new vision target */
         public static final double  VISION_SWITCH_TIME_SEC         = .25;

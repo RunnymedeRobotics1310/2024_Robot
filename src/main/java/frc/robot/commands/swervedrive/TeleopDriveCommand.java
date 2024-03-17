@@ -14,6 +14,7 @@ import static frc.robot.commands.operator.OperatorInput.Stick.RIGHT;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -89,6 +90,8 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             ? Constants.BotTarget.BLUE_SPEAKER.getLocation().toTranslation2d()
             : Constants.BotTarget.RED_SPEAKER.getLocation().toTranslation2d();
 
+        final boolean       faceChain                    = oi.isDriveFacingChain();
+
         // Compute boost factor
         final boolean       isSlow                       = oi.isDriverLeftBumper();
         final boolean       isFast                       = oi.isDriverRightBumper();
@@ -114,18 +117,27 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             // Save previous heading for when we are finished steering.
             headingSetpoint = swerve.getPose().getRotation();
         }
-        else if (rawDesiredHeadingDeg > -1) {
-            modeForDebug  = "Jumping to POV";
+        else if (faceChain || rawDesiredHeadingDeg > -1) {
+            modeForDebug  = faceChain ? "Jumping to Chain" : "Jumping to POV";
             lockOnSpeaker = false;
-            // User wants to jump to POV
-            // POV coordinates don't match field coordinates. POV is CW+ and field is CCW+. Also,
-            // POV 0 is 90 degrees on the field (for blue alliance, and -90 for red).
-            // Invert and rotate as required.
-            // BLUE field = MOD(-POV + 360, 360)
-            // RED field = MOD(-POV + 180 + 360, 360)
-            double correctedHeadingDeg = ((rawDesiredHeadingDeg * -1) + (invert ? 180 : 0) + 360) % 360;
-            Telemetry.drive.teleop_correctedHeadingDeg = correctedHeadingDeg;
-            Rotation2d desiredHeading = Rotation2d.fromDegrees(correctedHeadingDeg);
+            final Rotation2d desiredHeading;
+            if (faceChain) {
+                // User wants to jump to a direction that faces the chain that is closest to the
+                // robot
+                desiredHeading = getChainHeading(swerve.getPose(), alliance);
+            }
+            else {
+                // User wants to jump to POV
+                // POV coordinates don't match field coordinates. POV is CW+ and field is CCW+.
+                // Also,
+                // POV 0 is 90 degrees on the field (for blue alliance, and -90 for red).
+                // Invert and rotate as required.
+                // BLUE field = MOD(-POV + 360, 360)
+                // RED field = MOD(-POV + 180 + 360, 360)
+                double correctedHeadingDeg = ((rawDesiredHeadingDeg * -1) + (invert ? 180 : 0) + 360) % 360;
+                Telemetry.drive.teleop_correctedHeadingDeg = correctedHeadingDeg;
+                desiredHeading                             = Rotation2d.fromDegrees(correctedHeadingDeg);
+            }
 
             omega           = computeOmega(desiredHeading);
             // Save the previous heading for when the jump is done
@@ -214,5 +226,41 @@ public class TeleopDriveCommand extends BaseDriveCommand {
 
         // convert to vector
         return new Translation2d(magnitude, angle);
+    }
+
+    private static Rotation2d getChainHeading(Pose2d pose, Alliance alliance) {
+
+        if (alliance == Alliance.Blue) {
+            if (pose.getY() > Constants.FieldConstants.WING_LENGTH_METRES) {
+                // center stage
+                return Rotation2d.fromDegrees(180);
+            }
+            else {
+                if (pose.getX() > Constants.FieldConstants.FIELD_WIDTH_METRES / 2) {
+                    // stage left
+                    return Rotation2d.fromDegrees(60);
+                }
+                else {
+                    // stage right
+                    return Rotation2d.fromDegrees(-60);
+                }
+            }
+        }
+        else {
+            if (pose.getY() < Constants.FieldConstants.FIELD_LENGTH_METRES - Constants.FieldConstants.WING_LENGTH_METRES) {
+                // center stage
+                return Rotation2d.fromDegrees(180);
+            }
+            else {
+                if (pose.getX() < Constants.FieldConstants.FIELD_WIDTH_METRES / 2) {
+                    // stage left
+                    return Rotation2d.fromDegrees(60);
+                }
+                else {
+                    // stage right
+                    return Rotation2d.fromDegrees(-60);
+                }
+            }
+        }
     }
 }
