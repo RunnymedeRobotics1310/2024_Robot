@@ -395,18 +395,23 @@ public final class Constants {
 
     public static final class LightingConstants {
         public static final int        LIGHT_STRING_PWM_PORT = 9;
-        public static final int        LIGHT_STRIP_LENGTH    = 60;
+        public static final int        LIGHT_STRIP_LENGTH    = 44;
 
         public static final Color      NOTE_ORANGE           = new Color(255, 20, 0);
 
-        public static LightstripRegion VISPOSE               = new LightstripRegion(
-            "Vision",
-            0, 24,
+        public static LightstripRegion VISPOSE1              = new LightstripRegion(
+            "Vision1",
+            0, 5,
             VisionConfidenceNone.class);
         public static LightstripRegion SIGNAL                = new LightstripRegion(
             "Signal",
-            24, LIGHT_STRIP_LENGTH - 1,
+            5, 39,
             Default.class);
+        public static LightstripRegion VISPOSE2              = new LightstripRegion(
+            "Vision2",
+            39, 43,
+            VisionConfidenceNone.class);
+
     }
 
     public static final class ShooterConstants {

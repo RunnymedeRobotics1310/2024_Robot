@@ -2,7 +2,7 @@ package frc.robot.subsystems.lighting.pattern;
 
 import edu.wpi.first.wpilibj.util.Color;
 
-import static frc.robot.Constants.LightingConstants.VISPOSE1;
+import static frc.robot.Constants.LightingConstants.VISPOSE2;
 
 /**
  * Light signal to display when robot vision pose measurements have a no confidence.
@@ -13,16 +13,16 @@ import static frc.robot.Constants.LightingConstants.VISPOSE1;
  * @see VisionConfidenceMedium
  * @see VisionConfidenceLow
  */
-public class VisionConfidenceNone extends LightingPattern {
+public class VisionConfidenceNone2 extends LightingPattern {
 
-    private static final LightingPattern INSTANCE = new VisionConfidenceNone();
+    private static final LightingPattern INSTANCE = new VisionConfidenceNone2();
 
     public static LightingPattern getInstance() {
         return INSTANCE;
     }
 
-    private VisionConfidenceNone() {
-        super(VISPOSE1);
+    private VisionConfidenceNone2() {
+        super(VISPOSE2);
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setLED(i, Color.kViolet);
         }

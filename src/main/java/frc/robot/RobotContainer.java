@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
-import static frc.robot.Constants.LightingConstants.VISPOSE;
-
 import java.io.File;
 
 import edu.wpi.first.wpilibj.Filesystem;
@@ -24,6 +21,8 @@ import frc.robot.subsystems.swerve.yagsl.YagslSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
+import static frc.robot.Constants.LightingConstants.*;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -40,7 +39,7 @@ public class RobotContainer {
 
     private final HughVisionSubsystem    hugh          = new HughVisionSubsystem();
     private final JackmanVisionSubsystem jackman       = new JackmanVisionSubsystem();
-    private final LightingSubsystem      lighting      = new LightingSubsystem(SIGNAL, VISPOSE);
+    private final LightingSubsystem      lighting      = new LightingSubsystem(VISPOSE1, SIGNAL, VISPOSE2);
     private final ArmSubsystem           arm           = new ArmSubsystem(lighting);
     private final ClimbSubsystem         climb         = new ClimbSubsystem(lighting);
     private final File                   yagslConfig   = new File(Filesystem.getDeployDirectory(), "swerve/neo");

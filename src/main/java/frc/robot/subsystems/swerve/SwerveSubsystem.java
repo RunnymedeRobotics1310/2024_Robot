@@ -20,10 +20,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.subsystems.RunnymedeSubsystemBase;
 import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.subsystems.lighting.pattern.VisionConfidenceHigh;
-import frc.robot.subsystems.lighting.pattern.VisionConfidenceLow;
-import frc.robot.subsystems.lighting.pattern.VisionConfidenceMedium;
-import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
+import frc.robot.subsystems.lighting.pattern.*;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.VisionPositionInfo;
 import frc.robot.telemetry.Telemetry;
@@ -170,15 +167,19 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
         switch (visPose.poseConfidence()) {
         case HIGH:
             lightingSubsystem.setPattern(VisionConfidenceHigh.getInstance());
+            lightingSubsystem.setPattern(VisionConfidenceHigh2.getInstance());
             break;
         case MEDIUM:
             lightingSubsystem.setPattern(VisionConfidenceMedium.getInstance());
+            lightingSubsystem.setPattern(VisionConfidenceMedium2.getInstance());
             break;
         case LOW:
             lightingSubsystem.setPattern(VisionConfidenceLow.getInstance());
+            lightingSubsystem.setPattern(VisionConfidenceLow2.getInstance());
             break;
         case NONE:
             lightingSubsystem.setPattern(VisionConfidenceNone.getInstance());
+            lightingSubsystem.setPattern(VisionConfidenceNone2.getInstance());
             break;
         }
 
