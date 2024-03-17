@@ -436,12 +436,12 @@ public final class Constants {
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the link motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_LINK                       = true;
+        public static final boolean     DISABLE_LINK                       = false;
         /**
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the aim motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_AIM                        = true;
+        public static final boolean     DISABLE_AIM                        = false;
 
         public static final int         LINK_MOTOR_CAN_ADDRESS             = 40;
         public static final int         AIM_MOTOR_CAN_ADDRESS              = 41;
