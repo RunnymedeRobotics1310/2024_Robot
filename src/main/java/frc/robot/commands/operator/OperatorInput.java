@@ -231,10 +231,10 @@ public class OperatorInput {
         // vision note pickup
         new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5)
             .onTrue(new DriveToNoteCommand(drive, arm, jackman, Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS)
-                .deadlineWith(new StartIntakeCommand(arm)));
+                .deadlineWith(new StartIntakeCommand(arm, lighting)));
 
         // start intake
-        new Trigger(() -> driverController.getRightTriggerAxis() > 0.5).onTrue(new StartIntakeCommand(arm));
+        new Trigger(() -> driverController.getRightTriggerAxis() > 0.5).onTrue(new StartIntakeCommand(arm, lighting));
 
         // zero gyro
         new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
@@ -264,13 +264,13 @@ public class OperatorInput {
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getXButton())
-            .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, hugh));
+            .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, hugh, lighting));
 
         // podium shot
-        new Trigger(operatorController::getYButton).onTrue(new ShootSpeakerFromPodiumCommand(arm));
+        new Trigger(operatorController::getYButton).onTrue(new ShootSpeakerFromPodiumCommand(arm, lighting));
 
         // shoot
-        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootCommand(arm));
+        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootCommand(arm, lighting));
 
         // set pose at speaker
         new Trigger(() -> this.isShift() && operatorController.getBButton())
@@ -356,11 +356,11 @@ public class OperatorInput {
         case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, hugh, delay);
         case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman, delay);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman, delay);
-        case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, hugh, delay);
-        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh, delay);
-        case SCORE_2_SPEAKER -> new Score2SpeakerAutoCommand(drive, arm, hugh, jackman, delay);
-        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman, delay);
-        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman, delay);
+        case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, hugh, lighting, delay);
+        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh, lighting, delay);
+        case SCORE_2_SPEAKER -> new Score2SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
+        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
+        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
         case PLAN_B -> new PlanBAutoCommand(drive, delay);
         default -> new InstantCommand();
         };

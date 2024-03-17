@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.Shooting;
 
 /**
  * Move arm to speaker shoot pose
@@ -18,14 +20,17 @@ public class ShootSpeakerFromPodiumCommand extends ArmBaseCommand {
     private State state               = State.MOVE_TO_UNLOCK;
     double        intakeStartPosition = 0;
     long          shooterStartTime    = 0;
+    private LightingSubsystem lighting;
 
-    public ShootSpeakerFromPodiumCommand(ArmSubsystem armSubsystem) {
+    public ShootSpeakerFromPodiumCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting) {
         super(armSubsystem);
+        this.lighting = lighting;
     }
 
     @Override
     public void initialize() {
 
+        lighting.addPattern(Shooting.getInstance());
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
             log("No note detected in robot. AimSpeakerCommand cancelled");
@@ -130,6 +135,7 @@ public class ShootSpeakerFromPodiumCommand extends ArmBaseCommand {
     @Override
     public void end(boolean interrupted) {
 
+        lighting.removePattern(Shooting.class);
         armSubsystem.setAimPivotSpeed(0);
         armSubsystem.setLinkPivotSpeed(0);
 

@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.Climbing;
+import frc.robot.subsystems.lighting.pattern.Intaking;
+import frc.robot.subsystems.lighting.pattern.Shooting;
 import frc.robot.telemetry.Telemetry;
 
 
@@ -43,6 +46,8 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     private long                    safetyStartTime      = 0;
 
     private boolean                 armSafetyMode        = true;
+    private boolean shooterLigntsEnabled = false;
+    private boolean intakeLightsEnabled = false;
 
     public ArmSubsystem(LightingSubsystem lightingSubsystem) {
 
@@ -432,5 +437,6 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         return;
     }
 
-
 }
+
+

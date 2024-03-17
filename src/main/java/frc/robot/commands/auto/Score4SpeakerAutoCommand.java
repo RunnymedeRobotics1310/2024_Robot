@@ -14,6 +14,7 @@ import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
 import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
@@ -21,7 +22,7 @@ import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 public class Score4SpeakerAutoCommand extends SequentialCommandGroup {
 
     public Score4SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
-        JackmanVisionSubsystem jackman, double delay) {
+                                    JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
         final Pose2d blueFinishPose = new Pose2d(new Translation2d(3.5, 7), new Rotation2d());
         final Pose2d redFinishPose  = new Pose2d(new Translation2d(13.04, 7), new Rotation2d());
@@ -40,30 +41,30 @@ public class Score4SpeakerAutoCommand extends SequentialCommandGroup {
         addCommands(new DriveToPositionCommand(swerve,
             BotTarget.BLUE_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(1.6, 0)),
             BotTarget.RED_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(-1.6, 0))));
-        addCommands(new ShootCommand(armSubsystem));
+        addCommands(new ShootCommand(armSubsystem, lighting));
 
 
         /* Note 2 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_WOLVERINE, BotTarget.RED_NOTE_WOLVERINE));
-        addCommands(new StartIntakeCommand(armSubsystem)
+        addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
-        addCommands(new ShootCommand(armSubsystem));
+        addCommands(new ShootCommand(armSubsystem, lighting));
 
 
         /* Note 3 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
-        addCommands(new StartIntakeCommand(armSubsystem)
+        addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
-        addCommands(new ShootCommand(armSubsystem));
+        addCommands(new ShootCommand(armSubsystem, lighting));
 
         /* Note 4 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
-        addCommands(new StartIntakeCommand(armSubsystem)
+        addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
-        addCommands(new ShootCommand(armSubsystem));
+        addCommands(new ShootCommand(armSubsystem, lighting));
 
         /* Exit Zone */
         addCommands(new DriveToPositionCommand(swerve, blueFinishPose, redFinishPose));

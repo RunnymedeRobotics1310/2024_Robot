@@ -7,8 +7,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.Shooting;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
+import frc.robot.telemetry.Light;
 
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
@@ -24,20 +27,23 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
     private SwerveSubsystem swerveSubsystem;
     private HughVisionSubsystem hughVisionSubsystem;
+    private LightingSubsystem lighting;
 
     private State state               = State.MOVE_TO_UNLOCK;
     double        intakeStartPosition = 0;
     long          shooterStartTime    = 0;
 
-    public ShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem, HughVisionSubsystem hughVisionSubsystem) {
+    public ShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem, HughVisionSubsystem hughVisionSubsystem, LightingSubsystem lighting) {
         super(armSubsystem);
         this.swerveSubsystem = swerveSubsystem;
         this.hughVisionSubsystem = hughVisionSubsystem;
+        this.lighting = lighting;
+        addRequirements(swerveSubsystem, hughVisionSubsystem);
     }
 
     @Override
     public void initialize() {
-
+        lighting.addPattern(Shooting.getInstance());
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
             log("No note detected in robot. AimSpeakerCommand cancelled");
@@ -155,6 +161,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
     @Override
     public void end(boolean interrupted) {
+        lighting.removePattern(Shooting.class);
 
         armSubsystem.setAimPivotSpeed(0);
         armSubsystem.setLinkPivotSpeed(0);

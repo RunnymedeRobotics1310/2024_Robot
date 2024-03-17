@@ -3,6 +3,8 @@ package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.Shooting;
 
 // Shoot. That's it.
 public class ShootCommand extends ArmBaseCommand {
@@ -12,12 +14,14 @@ public class ShootCommand extends ArmBaseCommand {
     };
 
     private State  state               = State.REVERSE_NOTE;
+    private LightingSubsystem lighting;
 
     private double startIntakePosition = 0;
 
-    public ShootCommand(ArmSubsystem armSubsystem) {
+    public ShootCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting) {
 
         super(armSubsystem);
+        this.lighting = lighting;
     }
 
     @Override
@@ -28,6 +32,7 @@ public class ShootCommand extends ArmBaseCommand {
         startIntakePosition = armSubsystem.getIntakePosition();
 
         logCommandStart("Intake Position " + startIntakePosition);
+        lighting.addPattern(Shooting.getInstance());
     }
 
     @Override
@@ -95,7 +100,7 @@ public class ShootCommand extends ArmBaseCommand {
 
         armSubsystem.setIntakeSpeed(0);
         armSubsystem.setShooterSpeed(0);
-
+        lighting.removePattern(Shooting.class);
         logCommandEnd(interrupted);
 
         if (!interrupted) {

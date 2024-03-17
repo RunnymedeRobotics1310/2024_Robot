@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.Intaking;
 
 // Start Intake
 // Move Aim/Arm
@@ -14,14 +16,17 @@ public class StartIntakeCommand extends ArmBaseCommand {
     };
 
     private State state = State.MOVE_TO_UNLOCK;
+    private LightingSubsystem lighting;
 
-    public StartIntakeCommand(ArmSubsystem armSubsystem) {
+    public StartIntakeCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting) {
         super(armSubsystem);
+        this.lighting = lighting;
     }
 
     @Override
     public void initialize() {
 
+        lighting.addPattern(Intaking.getInstance());
         // If there is a note inside the robot, then do not start this command
         if (armSubsystem.isNoteDetected()) {
             log("Note detected in robot. StartIntakeCommand cancelled");
@@ -157,7 +162,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
     public void end(boolean interrupted) {
 
         armSubsystem.stop();
-
+        lighting.removePattern(Intaking.class);
         logCommandEnd(interrupted);
 
         if (!interrupted) {
