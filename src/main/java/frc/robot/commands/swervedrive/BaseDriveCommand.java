@@ -60,53 +60,45 @@ public abstract class BaseDriveCommand extends LoggingCommand {
      */
     private Rotation2d computeOmega(Rotation2d target, Rotation2d current) {
 
-        double targetRad  = normalizeRotation(target).getRadians();
-        double currentRad = normalizeRotation(current).getRadians();
-        double errorRad = targetRad - currentRad;
-        //double outputRad = Math.signum(errorRad) * MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
-        double outputRad = Math.signum(errorRad) * Rotation2d.fromDegrees(40).getRadians();
+        double targetRad  = normalizeRotation(target.getRadians());
+        double currentRad = normalizeRotation(current.getRadians());
 
-        // log("target: " + targetRad + "current: " + currentRad);
+        double errorRad   = targetRad - currentRad;
+        errorRad = normalizeRotation(errorRad);
+        double       absErrRad = Math.abs(errorRad);
+        double       errSignum = Math.signum(errorRad);
 
-        if (Math.abs(errorRad) < ROTATION_TOLERANCE.getRadians()) {
-            outputRad = 0;
+        final double omegaRad;
+        if (absErrRad < ROTATION_TOLERANCE.getRadians()) {
+            omegaRad = 0;
+        }
+        else if (absErrRad < ROTATION_SLOW_ZONE.getRadians()) {
+            omegaRad = errSignum * MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
+        }
+        else {
+            omegaRad = errSignum * MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC.getRadians();
         }
 
-//        if (targetRad - currentRad <= ROTATION_DECELERATION_DISTANCE.getRadians()) {
-////            headingPidRad.setConstraints(slowConstraints);
-//        }
-//        else {
-//            headingPidRad.setConstraints(fastConstraints);
-//        }
+        log(String.format("omega: %.2f", omegaRad));
 
-//        double outputRad = headingPidRad.calculate(currentRad, targetRad);
-
-
-        else if (Math.abs(errorRad) < ROTATION_SLOW_ZONE.getRadians()) {
-            outputRad = Math.signum(errorRad) * MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
-        }
-
-        return Rotation2d.fromRadians(outputRad);
+        return Rotation2d.fromRadians(omegaRad);
     }
 
     /**
      * Ensure that rotation error is between -pi and pi radians.
      */
-    private static Rotation2d normalizeRotation(Rotation2d input) {
+    private static double normalizeRotation(double radians) {
 
-        double errorRadians = input.getRadians();
+        radians = radians % (2 * Math.PI);
 
-        errorRadians = errorRadians % (2 * Math.PI);
-
-        if (errorRadians > Math.PI) {
-            errorRadians -= (2 * Math.PI);
+        if (radians > Math.PI) {
+            radians -= (2 * Math.PI);
         }
-        else if (errorRadians < -Math.PI) {
-            errorRadians += (2 * Math.PI);
+        else if (radians < -Math.PI) {
+            radians += (2 * Math.PI);
         }
 
-        return Rotation2d.fromRadians(errorRadians);
-
+        return radians;
     }
 
     /**

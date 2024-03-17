@@ -83,9 +83,10 @@ public final class Constants {
              */
 
             // todo: this needs to be increased
-            public static final Rotation2d ROTATION_SLOW_ZONE                     = Rotation2d.fromDegrees(20);
-            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(10);
+            public static final Rotation2d ROTATION_SLOW_ZONE                     = Rotation2d.fromDegrees(35);
+            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(45);
             public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(360);
+            public static final Rotation2d MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC   = Rotation2d.fromDegrees(205);
             public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2 = Rotation2d.fromRotations(1310).getRadians();
             public static final Rotation2d ROTATION_DECELERATION_DISTANCE         = Rotation2d.fromDegrees(5);
             public static final Rotation2d ROTATION_TOLERANCE                     = Rotation2d.fromDegrees(2);
@@ -435,12 +436,12 @@ public final class Constants {
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the link motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_LINK                       = false;
+        public static final boolean     DISABLE_LINK                       = true;
         /**
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the aim motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_AIM                        = false;
+        public static final boolean     DISABLE_AIM                        = true;
 
         public static final int         LINK_MOTOR_CAN_ADDRESS             = 40;
         public static final int         AIM_MOTOR_CAN_ADDRESS              = 41;

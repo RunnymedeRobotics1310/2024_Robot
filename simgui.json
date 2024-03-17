@@ -42,6 +42,7 @@
       "/SmartDashboard/1310 Auto Pattern": "String Chooser",
       "/SmartDashboard/1310/Auto Pattern": "String Chooser",
       "/SmartDashboard/1310/Auto/Selected Pattern": "String Chooser",
+      "/SmartDashboard/1310/Delay": "String Chooser",
       "/SmartDashboard/1310/Telemetry - Arm": "String Chooser",
       "/SmartDashboard/1310/Telemetry/Arm": "String Chooser",
       "/SmartDashboard/1310/Telemetry/Auto": "String Chooser",
