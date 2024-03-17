@@ -83,7 +83,7 @@ public final class Constants {
              */
 
             // todo: this needs to be increased
-            public static final Rotation2d ROTATION_SLOW_ZONE = Rotation2d.fromDegrees(20);
+            public static final Rotation2d ROTATION_SLOW_ZONE                     = Rotation2d.fromDegrees(20);
             public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(10);
             public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(360);
             public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2 = Rotation2d.fromRotations(1310).getRadians();
@@ -306,13 +306,18 @@ public final class Constants {
 
     public static final class UsefulPoses {
 
-        public static final Pose2d SCORE_BLUE_AMP = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.8,
+        public static final Pose2d SCORE_BLUE_AMP        = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.8,
             Rotation2d.fromDegrees(90)));
-        public static final Pose2d SCORE_RED_AMP  = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.8,
+        public static final Pose2d SCORE_RED_AMP         = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.8,
             Rotation2d.fromDegrees(90)));
 
-        public static final Pose2d BLUE_2_2_20    = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
-        public static final Pose2d RED_2_2_20     = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
+        public static final Pose2d START_AT_BLUE_SPEAKER = new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(),
+            1.6, new Rotation2d());
+        public static final Pose2d START_AT_RED_SPEAKER  = new Pose2d(Constants.BotTarget.RED_SPEAKER.getLocation().getX(),
+            16.54 - 1.6, new Rotation2d());
+
+        public static final Pose2d BLUE_2_2_20           = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
+        public static final Pose2d RED_2_2_20            = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
 
     }
 

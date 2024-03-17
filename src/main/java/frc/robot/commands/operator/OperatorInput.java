@@ -1,7 +1,5 @@
 package frc.robot.commands.operator;
 
-import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,9 +25,7 @@ import frc.robot.commands.auto.Score2_5AmpAutoCommand;
 import frc.robot.commands.auto.Score3SpeakerAutoCommand;
 import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.climb.MaxClimbCommand;
-import frc.robot.commands.swervedrive.ResetOdometryCommand;
-import frc.robot.commands.swervedrive.RotateToTargetCommand;
-import frc.robot.commands.swervedrive.ZeroGyroCommand;
+import frc.robot.commands.swervedrive.*;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -39,6 +35,8 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.telemetry.Telemetry;
+
+import static frc.robot.Constants.UsefulPoses.*;
 
 /**
  * The DriverController exposes all driver functions
@@ -55,8 +53,8 @@ public class OperatorInput {
     private final XboxController                                       operatorController;
 
     private final SendableChooser<Constants.AutoConstants.AutoPattern> autoPatternChooser = new SendableChooser<>();
-    private final SendableChooser<Constants.AutoConstants.Delay> delayChooser = new SendableChooser<>();
-    private double delay;
+    private final SendableChooser<Constants.AutoConstants.Delay>       delayChooser       = new SendableChooser<>();
+    private double                                                     delay;
 
     public enum Stick {
         LEFT, RIGHT
@@ -120,19 +118,6 @@ public class OperatorInput {
     public boolean isShift() {
         return operatorController.getRightBumper();
     }
-
-    public boolean isShakeItOff() {
-        return isShift() && operatorController.getAButton();
-    }
-
-    public boolean isClimbPosition() {
-        return isShift() && operatorController.getBButton();
-    }
-
-    public boolean isManualShoot() {
-        return !isShift() && operatorController.getBButton();
-    }
-
 
     /**
      * Get the aim adjustment.
@@ -220,83 +205,93 @@ public class OperatorInput {
      */
     public void configureTriggerBindings() {
 
-        new Trigger(() -> driverController.getRightTriggerAxis() > 0.5).onTrue(new StartIntakeCommand(arm));
+        //
+        // GLOBAL & COMMON COMMANDS
+        //
 
         // Run when enabled
         new Trigger(RobotController::isSysActive).onTrue(new InstantCommand(() -> lighting.addPattern(Enabled.getInstance())));
+
+        // score trap command
+        new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5
+            && driverController.getRightTriggerAxis() > 0.5
+            && operatorController.getLeftTriggerAxis() > 0.5
+            && operatorController.getRightTriggerAxis() > 0.5).onTrue(new ScoreTrapCommand(arm));
+
+
+
+        //
+        // DRIVER CONTROLLER BINDINGS
+        //
+
+        // vision note pickup
+        new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5)
+            .onTrue(new DriveToNoteCommand(drive, arm, jackman, Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS)
+                .deadlineWith(new StartIntakeCommand(arm)));
+
+        // start intake
+        new Trigger(() -> driverController.getRightTriggerAxis() > 0.5).onTrue(new StartIntakeCommand(arm));
+
+        // zero gyro
+        new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
 
         // Activate test mode
         new Trigger(() -> !DriverStation.isFMSAttached() && driverController.getBackButton() && driverController.getStartButton())
             .onTrue(new SystemTestCommand(this, drive, arm, climb, lighting));
 
-        // Cancel all systems
+        // cancel command (driver)
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
-        // zero gyro
-        new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
+        // align amp
+        new Trigger(driverController::getBButton)
+            .onTrue(new DriveToPositionCommand(drive, Constants.UsefulPoses.SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
 
-        // Rotate to speaker
-        // new
-        // Trigger(driverController::getBButton).onTrue(RotateToTargetCommand.createRotateToSpeakerCommand(drive,
-        // hugh));
-
-        // Compact
+        // compact
         new Trigger(driverController::getXButton).onTrue(new CompactCommand(arm));
 
+
+
+        //
+        // OPERATOR CONTROLLER BINDINGS
+        //
+
+        // cancel command (operator)
+        new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
+
+        // rotate aim shoot
+        new Trigger(operatorController::getXButton).onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, hugh));
+
+        // podium shot
         new Trigger(operatorController::getYButton).onTrue(new ShootSpeakerFromPodiumCommand(arm));
 
-        new Trigger(operatorController::getXButton).onTrue(new ShootSpeakerFromAnywhereCommand(arm,drive,hugh));
+        // shoot
+        new Trigger(operatorController::getBButton).onTrue(new ShootCommand(arm));
 
-        // Start Intake
-        new Trigger(() -> operatorController.getPOV() == 270).onTrue(new StartIntakeCommand(arm));
+        // set pose at speaker
+        new Trigger(() -> this.isShift() && operatorController.getBButton())
+            .onTrue(new ResetOdometryCommand(
+                drive, START_AT_BLUE_SPEAKER, START_AT_RED_SPEAKER));
 
-        // Vision note pickup
-//        new Trigger(driverController::getBButton).onTrue(new LinkToSourceCommand(arm));
-        // .alongWith(new DriveToNoteCommand(drive, arm, jackman, 0.25)));
+        // set pose at amp
+        new Trigger(() -> this.isShift() && operatorController.getAButton())
+            .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, SCORE_RED_AMP));
 
-//        new Trigger(driverController::getAButton).onTrue(new IntakeBackwardsCommand(arm));
 
-        // Aim Amp
-        // new Trigger(operatorController::getAButton).onTrue(new AimAmpCommand(arm));
+        // climbers up
+        new Trigger(() -> this.isShift() && operatorController.getPOV() == 0)
+            .onTrue(new MaxClimbCommand(climb, drive));
 
-        // Aim Speaker
-        // new Trigger(operatorController::getYButton).onTrue(new AimSpeakerCommand(arm, hugh));
+        // aim amp
+        new Trigger(() -> operatorController.getPOV() == 270)
+            .onTrue(new AimAmpCommand(arm));
 
-        // new Trigger(driverController::getXButton).onTrue(RotateToTargetCommand.createRotateToSourceCommand(drive, hugh));
+        // eject
+        new Trigger(() -> operatorController.getPOV() == 90)
+            .onTrue(new EjectNoteCommand(arm));
 
-        // Shoot
-        new Trigger(this::isManualShoot).onTrue((new ShootCommand(arm)));
-
-        new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new EjectNoteCommand(arm));
-
-        // TODO: Uncomment AmpPositionCommand when link is fixed
-        new Trigger(this::isClimbPosition).onTrue(new MaxClimbCommand(climb, drive)/*
-                                                                                    * .alongWith(new
-                                                                                    * AmpPositionCommand(
-                                                                                    * arm))
-                                                                                    */);
-
-        // Test Drive to 2,2,20
-        // new Trigger(driverController::getXButton).onTrue(new DriveToPositionCommand(drive,
-        // BLUE_2_2_20, RED_2_2_20));
-
-        // Climbs Up pov 0
-        // Climbs Down pov 180
-        // Trap pov 90
-
-        // setpose for practice fields
-
-        // in front of speaker
-        new Trigger(() -> operatorController.getPOV() == 0)
-            .onTrue(new ResetOdometryCommand(drive,
-                new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(), 1.6, new Rotation2d()),
-                new Pose2d(Constants.BotTarget.RED_SPEAKER.getLocation().getX(), 16.54 - 1.6, new Rotation2d())));
-
-        // in front of amp
+        // aim source
         new Trigger(() -> operatorController.getPOV() == 180)
-            .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
-
-        //new Trigger(operatorController::getXButton).whileTrue(new AimAmpCommand(arm));
+            .onTrue(new AimSourceCommand(arm));
 
     }
 
@@ -333,16 +328,17 @@ public class OperatorInput {
 
 
         delay = switch (delayChooser.getSelected()) {
-            case WAIT_0_5_SECOND -> 0.5;
-            case WAIT_1_SECOND -> 1;
-            case WAIT_1_5_SECONDS -> 1.5;
-            case WAIT_2_SECONDS -> 2;
-            case WAIT_2_5_SECONDS -> 2.5;
-            case WAIT_3_SECONDS -> 3;
-            case WAIT_5_SECONDS -> 5;
-            default -> 0;
+        case WAIT_0_5_SECOND -> 0.5;
+        case WAIT_1_SECOND -> 1;
+        case WAIT_1_5_SECONDS -> 1.5;
+        case WAIT_2_SECONDS -> 2;
+        case WAIT_2_5_SECONDS -> 2.5;
+        case WAIT_3_SECONDS -> 3;
+        case WAIT_5_SECONDS -> 5;
+        default -> 0;
         };
     }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -364,5 +360,4 @@ public class OperatorInput {
         default -> new InstantCommand();
         };
     }
-
 }
