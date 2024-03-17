@@ -54,7 +54,7 @@ public class CompactCommand extends ArmBaseCommand {
 
             armSubsystem.setLinkPivotSpeed(.5);
 
-            if (armSubsystem.getLinkAngle() > ArmConstants.INTAKE_ARM_POSITION.linkAngle + 2) {
+            if (armSubsystem.getLinkAngle() > ArmConstants.INTAKE_ARM_POSITION.linkAngle + 4) {
                 logStateTransition("Lift Link -> Move Both", "Link at " + armSubsystem.getLinkAngle());
                 state = State.MOVE_BOTH;
             }
