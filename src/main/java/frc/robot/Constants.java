@@ -557,7 +557,7 @@ public final class Constants {
 
         public static final double     MAX_ROBOT_LIFT_SPEED          = 1;
         public static final double     RAISE_CLIMBERS_SPEED          = .75;
-        public static final double     LOWER_CLIMBERS_SPEED          = .75;
+        public static final double     MIN_LOWER_CLIMBERS_SPEED      = .75;
         public static final double     INITIALIZE_CLIMBERS_SPEED     = 0.1;
 
         public static final double     CLIMB_MAX                     = 120;
