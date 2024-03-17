@@ -79,7 +79,7 @@ public abstract class BaseDriveCommand extends LoggingCommand {
             omegaRad = errSignum * MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC.getRadians();
         }
 
-        log(String.format("omega: %.2f", omegaRad));
+        // log(String.format("omega: %.2f", omegaRad));
 
         return Rotation2d.fromRadians(omegaRad);
     }
