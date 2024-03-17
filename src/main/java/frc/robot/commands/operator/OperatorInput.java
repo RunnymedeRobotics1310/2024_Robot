@@ -263,13 +263,14 @@ public class OperatorInput {
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
         // rotate aim shoot
-        new Trigger(operatorController::getXButton).onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, hugh));
+        new Trigger(() -> !this.isShift() && operatorController.getXButton())
+            .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, hugh));
 
         // podium shot
         new Trigger(operatorController::getYButton).onTrue(new ShootSpeakerFromPodiumCommand(arm));
 
         // shoot
-        new Trigger(operatorController::getBButton).onTrue(new ShootCommand(arm));
+        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootCommand(arm));
 
         // set pose at speaker
         new Trigger(() -> this.isShift() && operatorController.getBButton())
