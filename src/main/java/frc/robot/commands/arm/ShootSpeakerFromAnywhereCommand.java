@@ -122,7 +122,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             armSubsystem.setShooterSpeed(.75);
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            if (isStateTimeoutExceeded(.5) && atArmAngle) {
+            if (isStateTimeoutExceeded(.75) && atArmAngle) {
                 logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getShooterEncoderSpeed());
                 state = State.START_FEEDER;
             }
@@ -177,7 +177,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         if (!interrupted) {
             if (DriverStation.isTeleop()) {
-                CommandScheduler.getInstance().schedule(new CompactCommand(armSubsystem));
+//                CommandScheduler.getInstance().schedule(new CompactCommand(armSubsystem));
             }
 
         }
