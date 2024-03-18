@@ -25,6 +25,7 @@ import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.*;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.VisionPositionInfo;
+import frc.robot.subsystems.vision.PoseConfidence;
 import frc.robot.telemetry.Telemetry;
 
 public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
@@ -162,30 +163,11 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
         // ignore unreliable info from vision subsystem
         if (visPose == null) {
-            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
+            updateLighting(null);
             return;
         }
 
-        switch (visPose.poseConfidence()) {
-        case HIGH:
-            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
-            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
-            break;
-        case MEDIUM:
-            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceMedium.getInstance());
-            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceMedium.getInstance());
-            break;
-        case LOW:
-            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceLow.getInstance());
-            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceLow.getInstance());
-            break;
-        case NONE:
-            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
-            break;
-        }
-
+        updateLighting(visPose.poseConfidence());
 
         // convert camera pose to robot pose
         Pose2d         robotPose = new Pose2d(visPose.pose().getTranslation().minus(CAMERA_LOC_REL_TO_ROBOT_CENTER),
@@ -198,14 +180,40 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
         // ignore drastically different data
         if (stds == null) {
-            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
+            updateLighting(null);
             return;
         }
 
         double timeInSeconds = Timer.getFPGATimestamp() - (visPose.latencyMillis() / 1000);
 
         this.addVisionMeasurement(visPose.pose(), timeInSeconds, stds);
+    }
+
+    private void updateLighting(PoseConfidence confidence) {
+        if (confidence == null) {
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
+        }
+        else {
+            switch (confidence) {
+            case HIGH:
+                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
+                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
+                break;
+            case MEDIUM:
+                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceMedium.getInstance());
+                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceMedium.getInstance());
+                break;
+            case LOW:
+                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceLow.getInstance());
+                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceLow.getInstance());
+                break;
+            case NONE:
+                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
+                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
+                break;
+            }
+        }
     }
 
     public abstract void updateTelemetry();
