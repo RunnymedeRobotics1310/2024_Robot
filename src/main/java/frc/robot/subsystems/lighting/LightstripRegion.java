@@ -8,18 +8,18 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LightstripRegion {
-    public String                                  name;
-    public int                                     start;
-    public int                                     end;
+    public final String                            name;
+    public final int                               start;
+    public final int                               length;
 
     private final Class<? extends LightingPattern> defaultPatternClass;
     private LightingPattern                        _defaultPattern;
     private final Map<String, LightingPattern>     activePatterns;
 
-    public LightstripRegion(String name, int start, int end, Class<? extends LightingPattern> defaultPatternClass) {
+    public LightstripRegion(String name, int start, int length, Class<? extends LightingPattern> defaultPatternClass) {
         this.name                = name;
         this.start               = start;
-        this.end                 = end;
+        this.length              = length;
         this.defaultPatternClass = defaultPatternClass;
         this.activePatterns      = new LinkedHashMap<>();
     }
@@ -40,12 +40,8 @@ public class LightstripRegion {
         return _defaultPattern;
     }
 
-    public int getLength() {
-        return end - start;
-    }
-
     public AddressableLEDBuffer createBuffer() {
-        return new AddressableLEDBuffer(getLength());
+        return new AddressableLEDBuffer(this.length);
     }
 
     public void addPattern(LightingPattern pattern) {

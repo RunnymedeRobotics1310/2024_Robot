@@ -8,6 +8,8 @@ import frc.robot.subsystems.RunnymedeSubsystemBase;
 import frc.robot.subsystems.lighting.pattern.LightingPattern;
 import frc.robot.telemetry.Telemetry;
 
+import java.util.ArrayList;
+
 public class LightingSubsystem extends RunnymedeSubsystemBase {
 
     private final AddressableLED       ledStrip;
@@ -20,6 +22,8 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
         this.regions = regions;
         ledStrip     = new AddressableLED(Constants.LightingConstants.LIGHT_STRING_PWM_PORT);
         ledBuffer    = new AddressableLEDBuffer(Constants.LightingConstants.LIGHT_STRIP_LENGTH);
+
+        validateConfiguration(regions);
 
         ledStrip.setLength(ledBuffer.getLength());
         ledStrip.setData(ledBuffer);
@@ -131,6 +135,28 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
         }
         else {
             ledStrip.setData(ledBuffer);
+        }
+    }
+
+    private static void validateConfiguration(LightstripRegion... regions) {
+        ArrayList<Boolean> check = new ArrayList<>(Constants.LightingConstants.LIGHT_STRIP_LENGTH);
+        for (int i = 0; i < Constants.LightingConstants.LIGHT_STRIP_LENGTH; i++) {
+            check.add(false);
+        }
+
+        for (LightstripRegion region : regions) {
+            for (int i = region.start; i < region.start + region.length; i++) {
+                if (check.get(i)) {
+                    throw new IllegalArgumentException("Lightstrip regions overlap at index " + i);
+                }
+                check.set(i, true);
+            }
+        }
+        for (int i = 0; i < check.size(); i++) {
+            if (!check.get(i)) {
+                throw new IllegalArgumentException(
+                    "Lightstrip regions do not cover the entire lightstrip. No value found for LED " + i);
+            }
         }
     }
 }
