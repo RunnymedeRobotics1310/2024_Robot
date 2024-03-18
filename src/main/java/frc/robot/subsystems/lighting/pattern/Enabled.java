@@ -40,7 +40,7 @@ public class Enabled extends LightingPattern {
     }
 
     @Override
-    public AddressableLEDBuffer periodic() {
+    public AddressableLEDBuffer getBuffer() {
 
         if (rslFlashCount >= 0) {
             return flashRSL();

@@ -67,7 +67,7 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
         for (LightstripRegion region : regions) {
 
             LightingPattern      pattern = region.getPattern();
-            AddressableLEDBuffer buffer  = pattern.periodic();
+            AddressableLEDBuffer buffer  = pattern.getBuffer();
             for (int i = 0; i < buffer.getLength(); i++) {
                 ledBuffer.setLED(region.start + i, buffer.getLED(i));
             }

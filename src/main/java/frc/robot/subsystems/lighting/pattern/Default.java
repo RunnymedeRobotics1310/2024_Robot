@@ -40,7 +40,7 @@ public class Default extends LightingPattern {
     }
 
     @Override
-    public AddressableLEDBuffer periodic() {
+    public AddressableLEDBuffer getBuffer() {
         if (getRunnymedeAlliance() == Red) {
             return RED_BUFFER;
         }

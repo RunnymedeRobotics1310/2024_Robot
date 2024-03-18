@@ -43,7 +43,7 @@ public class Intaking extends LightingPattern {
         }
     }
 
-    public AddressableLEDBuffer periodic() {
+    public AddressableLEDBuffer getBuffer() {
         if (RobotController.getRSLState()) {
             return buffer;
         }

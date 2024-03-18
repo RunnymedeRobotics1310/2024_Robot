@@ -1,7 +1,6 @@
 package frc.robot.subsystems.lighting.pattern;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.lighting.LightstripRegion;
 
 public abstract class LightingPattern {
@@ -17,16 +16,7 @@ public abstract class LightingPattern {
         return region;
     }
 
-    public AddressableLEDBuffer periodic() {
+    public AddressableLEDBuffer getBuffer() {
         return buffer;
-    }
-
-    /**
-     * Clear the entire LED strip
-     */
-    protected final void clearLEDs() {
-        for (int i = 0; i < buffer.getLength(); i++) {
-            buffer.setLED(i, Color.kBlack);
-        }
     }
 }
