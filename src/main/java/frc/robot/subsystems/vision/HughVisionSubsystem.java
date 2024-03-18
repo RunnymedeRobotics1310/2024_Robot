@@ -463,8 +463,8 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         }
 
         // TODO: Use dynamic shooter location once available.  For now it's based on 185deg link
-        double shooterHeight                            = 0.77;
-        double shooterDistanceOffsetFromMiddleOfBot     = 0.30;
+        double shooterHeight                            = 0.80;
+        double shooterDistanceOffsetFromMiddleOfBot     = 0.345;
 
         double shooterDistanceToWall                    = distanceToTargetMeters - shooterDistanceOffsetFromMiddleOfBot;
         double heightDifferenceBetweenShooterAndSpeaker = 2.12 - shooterHeight;
