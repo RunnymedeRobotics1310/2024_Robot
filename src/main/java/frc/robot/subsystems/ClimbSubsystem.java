@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.ClimbConstants.TOP_SLOW_ZONE;
+import static frc.robot.Constants.LightingConstants.SIGNAL;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -186,7 +187,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
     private void setLightingPattern() {
         if (rightEncoderInitialized && leftEncoderInitialized) {
             if (Math.abs(leftClimbSpeed) > 0 || Math.abs(rightClimbSpeed) > 0) {
-                lighting.addPattern(Climbing.getInstance());
+                lighting.addPattern(SIGNAL, Climbing.getInstance());
             }
             else {
                 lighting.removePattern(Climbing.class);

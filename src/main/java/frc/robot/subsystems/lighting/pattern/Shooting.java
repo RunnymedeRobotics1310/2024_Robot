@@ -22,7 +22,7 @@ public class Shooting extends LightingPattern {
     }
 
     private Shooting() {
-        super(SIGNAL);
+        super(SIGNAL.length);
         // For every pixel
         for (var i = 0; i < buffer.getLength(); i++) {
             // Calculate the hue - hue is easier for rainbows because the color

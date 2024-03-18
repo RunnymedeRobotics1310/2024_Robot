@@ -13,6 +13,7 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.telemetry.Light;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 /**
@@ -25,25 +26,26 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         MOVE_TO_UNLOCK, REVERSE_NOTE, START_SHOOTER, START_FEEDER, FINISHED
     };
 
-    private SwerveSubsystem swerveSubsystem;
+    private SwerveSubsystem     swerveSubsystem;
     private HughVisionSubsystem hughVisionSubsystem;
-    private LightingSubsystem lighting;
+    private LightingSubsystem   lighting;
 
-    private State state               = State.MOVE_TO_UNLOCK;
-    double        intakeStartPosition = 0;
-    long          shooterStartTime    = 0;
+    private State               state               = State.MOVE_TO_UNLOCK;
+    double                      intakeStartPosition = 0;
+    long                        shooterStartTime    = 0;
 
-    public ShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem, HughVisionSubsystem hughVisionSubsystem, LightingSubsystem lighting) {
+    public ShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem,
+        HughVisionSubsystem hughVisionSubsystem, LightingSubsystem lighting) {
         super(armSubsystem);
-        this.swerveSubsystem = swerveSubsystem;
+        this.swerveSubsystem     = swerveSubsystem;
         this.hughVisionSubsystem = hughVisionSubsystem;
-        this.lighting = lighting;
+        this.lighting            = lighting;
         addRequirements(swerveSubsystem, hughVisionSubsystem);
     }
 
     @Override
     public void initialize() {
-        lighting.addPattern(Shooting.getInstance());
+        lighting.addPattern(SIGNAL, Shooting.getInstance());
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
             log("No note detected in robot. AimSpeakerCommand cancelled");
@@ -107,10 +109,10 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
             // Drive to the arm position at the same time
             double linkAngle = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
-            // TODO:  Supply real arm position
+            // TODO: Supply real arm position
             Rotation2d shooterAngle = hughVisionSubsystem.getDynamicSpeakerShooterAngle(new Translation2d(0, 0));
             double angle = shooterAngle.getDegrees();
-            double aimAngle = angle-(linkAngle-180);
+            double aimAngle = angle - (linkAngle - 180);
             Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
 
             atArmAngle = this.driveToArmPosition(armPositionNew,

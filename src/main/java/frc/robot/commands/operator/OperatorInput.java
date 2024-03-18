@@ -36,6 +36,7 @@ import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.telemetry.Telemetry;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.Constants.UsefulPoses.*;
 
 /**
@@ -214,7 +215,8 @@ public class OperatorInput {
         //
 
         // Run when enabled
-        new Trigger(RobotController::isSysActive).onTrue(new InstantCommand(() -> lighting.addPattern(Enabled.getInstance())));
+        new Trigger(RobotController::isSysActive)
+            .onTrue(new InstantCommand(() -> lighting.addPattern(SIGNAL, Enabled.getInstance())));
 
         // score trap command
         new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5

@@ -1,20 +1,18 @@
 package frc.robot.subsystems.lighting;
 
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.subsystems.lighting.pattern.LightingPattern;
 import frc.robot.telemetry.Telemetry;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class LightstripRegion {
-    public final String                            name;
-    public final int                               start;
-    public final int                               length;
+    public final String                                  name;
+    public final int                                     start;
+    public final int                                     length;
 
-    private final Class<? extends LightingPattern> defaultPatternClass;
-    private LightingPattern                        _defaultPattern;
-    private final Map<String, LightingPattern>     activePatterns;
+    private final Class<? extends LightingPattern>       defaultPatternClass;
+    private LightingPattern                              _defaultPattern;
+    private final LinkedHashMap<String, LightingPattern> activePatterns;
 
     public LightstripRegion(String name, int start, int length, Class<? extends LightingPattern> defaultPatternClass) {
         this.name                = name;
@@ -40,11 +38,16 @@ public class LightstripRegion {
         return _defaultPattern;
     }
 
-    public AddressableLEDBuffer createBuffer() {
-        return new AddressableLEDBuffer(this.length);
-    }
-
     public void addPattern(LightingPattern pattern) {
+
+        // If the pattern doesn't fit, log a warning and ignore it.
+        if (pattern.length != length) {
+            Telemetry.light.lightstripRegionWarning = String.format(
+                "Pattern %s has a length of %d but the region %s has a length of %d.  IGNORING PATTERN.",
+                pattern.getClass().getSimpleName(), pattern.length, name, length);
+            return;
+        }
+
         // don't put the default pattern into the map
         String key = pattern.getClass().getName();
         if (key.equals(getDefaultPattern().getClass().getName())) {
@@ -55,6 +58,7 @@ public class LightstripRegion {
         if (activePatterns.containsKey(key)) {
             LightingPattern p = activePatterns.get(key);
             // reorder in map to end.
+            activePatterns.remove(key);
             activePatterns.put(key, p);
         }
         else {
@@ -83,7 +87,7 @@ public class LightstripRegion {
             return activePatterns.values().iterator().next();
         }
 
-        // more than one - return the first one and log a warning
+        // more than one - return the last one and log a warning
         LightingPattern result = null;
         StringBuilder   errmsg = new StringBuilder("More than one active pattern for region ").append(name).append(": ");
         for (LightingPattern pattern : activePatterns.values()) {
@@ -100,4 +104,5 @@ public class LightstripRegion {
         return result;
 
     }
+
 }

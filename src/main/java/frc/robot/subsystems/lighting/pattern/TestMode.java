@@ -18,7 +18,7 @@ public class TestMode extends LightingPattern {
     }
 
     private TestMode() {
-        super(SIGNAL);
+        super(SIGNAL.length);
         for (int i = 0; i < buffer.getLength(); i++) {
             if (i % 2 == 0) {
                 buffer.setLED(i, Color.kRed);

@@ -24,7 +24,7 @@ public class InShootingRange extends LightingPattern {
 
 
     private InShootingRange() {
-        super(SIGNAL);
+        super(SIGNAL.length);
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setLED(i, NOTE_ORANGE);
         }

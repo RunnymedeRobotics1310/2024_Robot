@@ -34,25 +34,15 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
     /**
      * Set the specified pattern as the only active pattern in its region
      */
-    public void setPattern(LightingPattern pattern) {
-        for (LightstripRegion region : regions) {
-            if (pattern.getRegion() == region) {
-                region.setPattern(pattern);
-                break;
-            }
-        }
+    public void setPattern(LightstripRegion region, LightingPattern pattern) {
+        region.setPattern(pattern);
     }
 
     /**
      * Add a pattern to its region
      */
-    public void addPattern(LightingPattern pattern) {
-        for (LightstripRegion region : regions) {
-            if (pattern.getRegion() == region) {
-                region.addPattern(pattern);
-                break;
-            }
-        }
+    public void addPattern(LightstripRegion region, LightingPattern pattern) {
+        region.addPattern(pattern);
     }
 
     /**

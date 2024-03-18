@@ -13,6 +13,7 @@ import frc.robot.subsystems.lighting.pattern.TestMode;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.telemetry.Telemetry;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.commands.test.SystemTestCommand.Motor.*;
 
 public class SystemTestCommand extends LoggingCommand {
@@ -78,7 +79,7 @@ public class SystemTestCommand extends LoggingCommand {
         enabled = true;
         climbSubsystem.setUnsafeMode(true);
         updateDashboard();
-        lighting.addPattern(TestMode.getInstance());
+        lighting.addPattern(SIGNAL, TestMode.getInstance());
     }
 
 

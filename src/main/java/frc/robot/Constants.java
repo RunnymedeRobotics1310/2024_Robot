@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.lighting.LightstripRegion;
 import frc.robot.subsystems.lighting.pattern.Default;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
-import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone2;
 import frc.robot.subsystems.vision.PoseConfidence;
 
 /**
@@ -410,8 +409,8 @@ public final class Constants {
             Default.class);
         public static LightstripRegion VISPOSE2              = new LightstripRegion(
             "Vision2",
-            37, 5,
-            VisionConfidenceNone2.class);
+            37, VISPOSE1.length,
+            VisionConfidenceNone.class);
 
     }
 

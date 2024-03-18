@@ -23,7 +23,7 @@ public class Climbing extends LightingPattern {
     }
 
     private Climbing() {
-        super(SIGNAL);
+        super(SIGNAL.length);
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setLED(i, Color.kGreen);
         }

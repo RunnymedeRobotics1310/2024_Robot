@@ -22,7 +22,7 @@ public class VisionConfidenceMedium extends LightingPattern {
     }
 
     private VisionConfidenceMedium() {
-        super(VISPOSE1);
+        super(VISPOSE1.length);
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setLED(i, Color.kCyan);
         }

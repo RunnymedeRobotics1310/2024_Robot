@@ -19,8 +19,8 @@ import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
  */
 public class Default extends LightingPattern {
 
-    private static final AddressableLEDBuffer RED_BUFFER  = SIGNAL.createBuffer();
-    private static final AddressableLEDBuffer BLUE_BUFFER = SIGNAL.createBuffer();
+    private static final AddressableLEDBuffer RED_BUFFER  = new AddressableLEDBuffer(SIGNAL.length);
+    private static final AddressableLEDBuffer BLUE_BUFFER = new AddressableLEDBuffer(SIGNAL.length);
     static {
         for (int i = 0; i < RED_BUFFER.getLength(); i++) {
             RED_BUFFER.setLED(i, Color.kRed);
@@ -36,7 +36,7 @@ public class Default extends LightingPattern {
     }
 
     private Default() {
-        super(SIGNAL);
+        super(SIGNAL.length);
     }
 
     @Override

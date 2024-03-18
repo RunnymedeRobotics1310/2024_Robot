@@ -1,5 +1,7 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.Constants.LightingConstants.VISPOSE1;
+import static frc.robot.Constants.LightingConstants.VISPOSE2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATION_ACCELERATION_RAD_PER_SEC2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_ACCELERATION_MPS2;
 import static frc.robot.Constants.VisionConstants.CAMERA_LOC_REL_TO_ROBOT_CENTER;
@@ -160,26 +162,27 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
         // ignore unreliable info from vision subsystem
         if (visPose == null) {
-            lightingSubsystem.setPattern(VisionConfidenceNone.getInstance());
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
             return;
         }
 
         switch (visPose.poseConfidence()) {
         case HIGH:
-            lightingSubsystem.setPattern(VisionConfidenceHigh.getInstance());
-            lightingSubsystem.setPattern(VisionConfidenceHigh2.getInstance());
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
             break;
         case MEDIUM:
-            lightingSubsystem.setPattern(VisionConfidenceMedium.getInstance());
-            lightingSubsystem.setPattern(VisionConfidenceMedium2.getInstance());
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceMedium.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceMedium.getInstance());
             break;
         case LOW:
-            lightingSubsystem.setPattern(VisionConfidenceLow.getInstance());
-            lightingSubsystem.setPattern(VisionConfidenceLow2.getInstance());
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceLow.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceLow.getInstance());
             break;
         case NONE:
-            lightingSubsystem.setPattern(VisionConfidenceNone.getInstance());
-            lightingSubsystem.setPattern(VisionConfidenceNone2.getInstance());
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
             break;
         }
 
@@ -195,7 +198,8 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
         // ignore drastically different data
         if (stds == null) {
-            lightingSubsystem.setPattern(VisionConfidenceNone.getInstance());
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
             return;
         }
 

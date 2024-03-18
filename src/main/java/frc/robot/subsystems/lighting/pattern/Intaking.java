@@ -35,8 +35,8 @@ public class Intaking extends LightingPattern {
     private final AddressableLEDBuffer offBuffer;
 
     private Intaking(Color on, Color off) {
-        super(SIGNAL);
-        offBuffer = SIGNAL.createBuffer();
+        super(SIGNAL.length);
+        offBuffer = new AddressableLEDBuffer(SIGNAL.length);
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setLED(i, on);
             offBuffer.setLED(i, off);

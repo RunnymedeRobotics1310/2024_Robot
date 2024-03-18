@@ -7,6 +7,8 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
+
 /**
  * Move arm to speaker shoot pose
  * Set shooter speed (distance based)
@@ -17,9 +19,9 @@ public class ShootSpeakerFromPodiumCommand extends ArmBaseCommand {
         MOVE_TO_UNLOCK, REVERSE_NOTE, START_SHOOTER, START_FEEDER, FINISHED
     };
 
-    private State state               = State.MOVE_TO_UNLOCK;
-    double        intakeStartPosition = 0;
-    long          shooterStartTime    = 0;
+    private State             state               = State.MOVE_TO_UNLOCK;
+    double                    intakeStartPosition = 0;
+    long                      shooterStartTime    = 0;
     private LightingSubsystem lighting;
 
     public ShootSpeakerFromPodiumCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting) {
@@ -30,7 +32,7 @@ public class ShootSpeakerFromPodiumCommand extends ArmBaseCommand {
     @Override
     public void initialize() {
 
-        lighting.addPattern(Shooting.getInstance());
+        lighting.addPattern(SIGNAL, Shooting.getInstance());
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
             log("No note detected in robot. AimSpeakerCommand cancelled");

@@ -6,6 +6,8 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
+
 // Shoot. That's it.
 public class ShootCommand extends ArmBaseCommand {
 
@@ -13,10 +15,10 @@ public class ShootCommand extends ArmBaseCommand {
         REVERSE_NOTE, START_SHOOTER, START_FEEDER, FINISHED
     };
 
-    private State  state               = State.REVERSE_NOTE;
+    private State             state               = State.REVERSE_NOTE;
     private LightingSubsystem lighting;
 
-    private double startIntakePosition = 0;
+    private double            startIntakePosition = 0;
 
     public ShootCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting) {
 
@@ -32,7 +34,7 @@ public class ShootCommand extends ArmBaseCommand {
         startIntakePosition = armSubsystem.getIntakePosition();
 
         logCommandStart("Intake Position " + startIntakePosition);
-        lighting.addPattern(Shooting.getInstance());
+        lighting.addPattern(SIGNAL, Shooting.getInstance());
     }
 
     @Override

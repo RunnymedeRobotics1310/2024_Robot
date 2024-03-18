@@ -1,5 +1,6 @@
 package frc.robot.commands.swervedrive;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.Constants.ShooterConstants.SPEAKER_SHOT_RANGE_METRES;
 import static frc.robot.Constants.Swerve.Chassis.GENERAL_SPEED_FACTOR;
 import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATIONAL_VELOCITY_PER_SEC;
@@ -167,7 +168,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         }
 
         if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < SPEAKER_SHOT_RANGE_METRES) {
-            lighting.addPattern(InShootingRange.getInstance());
+            lighting.addPattern(SIGNAL, InShootingRange.getInstance());
         }
         else {
             lighting.removePattern(InShootingRange.class);

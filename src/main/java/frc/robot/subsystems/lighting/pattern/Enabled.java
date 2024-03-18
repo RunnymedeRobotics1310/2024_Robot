@@ -18,8 +18,8 @@ public class Enabled extends LightingPattern {
     static {
 
         // Static initializer for the RSL flash buffer
-        RSL_ON  = SIGNAL.createBuffer();
-        RSL_OFF = SIGNAL.createBuffer();
+        RSL_ON  = new AddressableLEDBuffer(SIGNAL.length);
+        RSL_OFF = new AddressableLEDBuffer(SIGNAL.length);
 
         for (int i = 0; i < RSL_ON.getLength(); i++) {
             RSL_ON.setLED(i, RSL_COLOR);
@@ -35,7 +35,7 @@ public class Enabled extends LightingPattern {
     private boolean prevRslState = false;
 
     private Enabled() {
-        super(SIGNAL);
+        super(SIGNAL.length);
         rslFlashCount = 5;
     }
 

@@ -7,6 +7,8 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Intaking;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
+
 // Start Intake
 // Move Aim/Arm
 public class StartIntakeCommand extends ArmBaseCommand {
@@ -15,7 +17,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
         MOVE_TO_UNLOCK, EXTEND_AIM, EXTEND_BOTH, MOVE_TO_INTAKE, START_INTAKE, FINISHED
     };
 
-    private State state = State.MOVE_TO_UNLOCK;
+    private State             state = State.MOVE_TO_UNLOCK;
     private LightingSubsystem lighting;
 
     public StartIntakeCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting) {
@@ -26,7 +28,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
     @Override
     public void initialize() {
 
-        lighting.addPattern(Intaking.getInstance());
+        lighting.addPattern(SIGNAL, Intaking.getInstance());
         // If there is a note inside the robot, then do not start this command
         if (armSubsystem.isNoteDetected()) {
             log("Note detected in robot. StartIntakeCommand cancelled");
