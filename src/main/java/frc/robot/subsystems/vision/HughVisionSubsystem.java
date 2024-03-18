@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Constants;
 import frc.robot.Constants.BotTarget;
 import frc.robot.subsystems.RunnymedeSubsystemBase;
 import frc.robot.telemetry.Telemetry;
@@ -467,7 +468,7 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         double shooterDistanceOffsetFromMiddleOfBot     = 0.345;
 
         double shooterDistanceToWall                    = distanceToTargetMeters - shooterDistanceOffsetFromMiddleOfBot;
-        double heightDifferenceBetweenShooterAndSpeaker = 2.12 - shooterHeight;
+        double heightDifferenceBetweenShooterAndSpeaker = BotTarget.BLUE_SPEAKER.getLocation().getZ() - shooterHeight;
         double oppOverAdj                               = heightDifferenceBetweenShooterAndSpeaker / shooterDistanceToWall;
         double preCalculatedShooterAngle                = Math.atan(oppOverAdj);
         double dynamicSpeakerShooterAngle               = 90 - Math.toDegrees(preCalculatedShooterAngle);
