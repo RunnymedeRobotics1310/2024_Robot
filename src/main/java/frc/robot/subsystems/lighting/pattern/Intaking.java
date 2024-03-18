@@ -20,7 +20,7 @@ import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
  */
 public class Intaking extends LightingPattern {
 
-    private static final LightingPattern RED  = new Intaking(NOTE_ORANGE, Color.kFirstRed);
+    private static final LightingPattern RED  = new Intaking(NOTE_ORANGE, Color.kRed);
     private static final LightingPattern BLUE = new Intaking(NOTE_ORANGE, Color.kFirstBlue);
 
     public static LightingPattern getInstance() {

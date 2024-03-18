@@ -23,7 +23,7 @@ public class Default extends LightingPattern {
     private static final AddressableLEDBuffer BLUE_BUFFER = SIGNAL.createBuffer();
     static {
         for (int i = 0; i < RED_BUFFER.getLength(); i++) {
-            RED_BUFFER.setLED(i, Color.kFirstRed);
+            RED_BUFFER.setLED(i, Color.kRed);
             BLUE_BUFFER.setLED(i, Color.kFirstBlue);
         }
     }
