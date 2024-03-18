@@ -1,6 +1,7 @@
 package frc.robot.subsystems.lighting;
 
 import frc.robot.subsystems.lighting.pattern.LightingPattern;
+import frc.robot.subsystems.lighting.pattern.NoPattern;
 import frc.robot.telemetry.Telemetry;
 
 import java.util.LinkedHashMap;
@@ -9,33 +10,15 @@ public class LightstripRegion {
     public final String                                  name;
     public final int                                     start;
     public final int                                     length;
-
-    private final Class<? extends LightingPattern>       defaultPatternClass;
-    private LightingPattern                              _defaultPattern;
     private final LinkedHashMap<String, LightingPattern> activePatterns;
+    public final NoPattern                               blank;
 
-    public LightstripRegion(String name, int start, int length, Class<? extends LightingPattern> defaultPatternClass) {
-        this.name                = name;
-        this.start               = start;
-        this.length              = length;
-        this.defaultPatternClass = defaultPatternClass;
-        this.activePatterns      = new LinkedHashMap<>();
-    }
-
-    /**
-     * Lazy initialization of the default pattern
-     */
-    private LightingPattern getDefaultPattern() {
-        if (_defaultPattern == null) {
-            try {
-                _defaultPattern = (LightingPattern) defaultPatternClass.getMethod("getInstance").invoke(null);
-            }
-            catch (Exception e) {
-                throw new IllegalArgumentException(
-                    "Configuration error - cannot create default lighting pattern for region " + name + ": " + e, e);
-            }
-        }
-        return _defaultPattern;
+    public LightstripRegion(String name, int start, int length) {
+        this.name           = name;
+        this.start          = start;
+        this.length         = length;
+        this.activePatterns = new LinkedHashMap<>();
+        this.blank          = new NoPattern(length);
     }
 
     public void addPattern(LightingPattern pattern) {
@@ -48,11 +31,7 @@ public class LightstripRegion {
             return;
         }
 
-        // don't put the default pattern into the map
         String key = pattern.getClass().getName();
-        if (key.equals(getDefaultPattern().getClass().getName())) {
-            return;
-        }
         // reuse previous pattern if already there, to preserve state of an
         // active pattern
         if (activePatterns.containsKey(key)) {
@@ -77,9 +56,9 @@ public class LightstripRegion {
 
     public LightingPattern getPattern() {
 
-        // none - return the default
+        // none - return an empty pattern
         if (activePatterns.isEmpty()) {
-            return getDefaultPattern();
+            return blank;
         }
 
         // just one - return it

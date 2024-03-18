@@ -22,8 +22,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.lighting.LightstripRegion;
-import frc.robot.subsystems.lighting.pattern.Default;
-import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
 import frc.robot.subsystems.vision.PoseConfidence;
 
 /**
@@ -394,23 +392,14 @@ public final class Constants {
     }
 
     public static final class LightingConstants {
-        public static final int        LIGHT_STRING_PWM_PORT = 9;
-        public static final int        LIGHT_STRIP_LENGTH    = 42;
+        public static final int        PWM_PORT     = 9;
+        public static final int        STRIP_LENGTH = 42;
 
-        public static final Color      NOTE_ORANGE           = new Color(255, 20, 0);
+        public static final Color      NOTE_ORANGE  = new Color(255, 20, 0);
 
-        public static LightstripRegion VISPOSE1              = new LightstripRegion(
-            "Vision1",
-            0, 5,
-            VisionConfidenceNone.class);
-        public static LightstripRegion SIGNAL                = new LightstripRegion(
-            "Signal",
-            5, 32,
-            Default.class);
-        public static LightstripRegion VISPOSE2              = new LightstripRegion(
-            "Vision2",
-            37, VISPOSE1.length,
-            VisionConfidenceNone.class);
+        public static LightstripRegion VISPOSE1     = new LightstripRegion("Vision1", 0, 5);
+        public static LightstripRegion SIGNAL       = new LightstripRegion("Signal", 5, 32);
+        public static LightstripRegion VISPOSE2     = new LightstripRegion("Vision2", 37, VISPOSE1.length);
 
     }
 

@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 
+import static edu.wpi.first.wpilibj.DriverStation.Alliance.Red;
 import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 /**
  * Light signal to display for a few seconds when the robot is enabled. This pattern
@@ -13,17 +15,25 @@ import static frc.robot.Constants.LightingConstants.SIGNAL;
 public class Enabled extends LightingPattern {
 
     private static final Color                RSL_COLOR = new Color(255, 20, 0);
+
+
     private static final AddressableLEDBuffer RSL_ON;
     private static final AddressableLEDBuffer RSL_OFF;
+    private static final AddressableLEDBuffer RED_BUFFER;
+    private static final AddressableLEDBuffer BLUE_BUFFER;
     static {
 
         // Static initializer for the RSL flash buffer
-        RSL_ON  = new AddressableLEDBuffer(SIGNAL.length);
-        RSL_OFF = new AddressableLEDBuffer(SIGNAL.length);
+        RSL_ON      = new AddressableLEDBuffer(SIGNAL.length);
+        RSL_OFF     = new AddressableLEDBuffer(SIGNAL.length);
+        RED_BUFFER  = new AddressableLEDBuffer(SIGNAL.length);
+        BLUE_BUFFER = new AddressableLEDBuffer(SIGNAL.length);
 
-        for (int i = 0; i < RSL_ON.getLength(); i++) {
+        for (int i = 0; i < SIGNAL.length; i++) {
             RSL_ON.setLED(i, RSL_COLOR);
             RSL_OFF.setLED(i, Color.kBlack);
+            RED_BUFFER.setLED(i, Color.kRed);
+            BLUE_BUFFER.setLED(i, Color.kFirstBlue);
         }
     }
 
@@ -42,11 +52,17 @@ public class Enabled extends LightingPattern {
     @Override
     public AddressableLEDBuffer getBuffer() {
 
-        if (rslFlashCount >= 0) {
+        if (rslFlashCount > 0) {
             return flashRSL();
         }
-        return RSL_OFF;
-
+        else {
+            if (getRunnymedeAlliance() == Red) {
+                return RED_BUFFER;
+            }
+            else {
+                return BLUE_BUFFER;
+            }
+        }
     }
 
     /**

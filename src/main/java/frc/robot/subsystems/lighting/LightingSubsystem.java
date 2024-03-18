@@ -20,8 +20,8 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
     public LightingSubsystem(LightstripRegion... regions) {
 
         this.regions = regions;
-        ledStrip     = new AddressableLED(Constants.LightingConstants.LIGHT_STRING_PWM_PORT);
-        ledBuffer    = new AddressableLEDBuffer(Constants.LightingConstants.LIGHT_STRIP_LENGTH);
+        ledStrip     = new AddressableLED(Constants.LightingConstants.PWM_PORT);
+        ledBuffer    = new AddressableLEDBuffer(Constants.LightingConstants.STRIP_LENGTH);
 
         validateConfiguration(regions);
 
@@ -129,8 +129,8 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
     }
 
     private static void validateConfiguration(LightstripRegion... regions) {
-        ArrayList<Boolean> check = new ArrayList<>(Constants.LightingConstants.LIGHT_STRIP_LENGTH);
-        for (int i = 0; i < Constants.LightingConstants.LIGHT_STRIP_LENGTH; i++) {
+        ArrayList<Boolean> check = new ArrayList<>(Constants.LightingConstants.STRIP_LENGTH);
+        for (int i = 0; i < Constants.LightingConstants.STRIP_LENGTH; i++) {
             check.add(false);
         }
 
