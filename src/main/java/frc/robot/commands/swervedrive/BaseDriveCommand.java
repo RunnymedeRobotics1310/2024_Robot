@@ -1,14 +1,11 @@
 package frc.robot.commands.swervedrive;
 
 import static frc.robot.Constants.Swerve.Chassis.*;
-import static frc.robot.Constants.Swerve.Chassis.HeadingPIDConfig.*;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.Swerve.Chassis.VelocityPIDConfig;
 import frc.robot.RunnymedeUtils;
 import frc.robot.commands.LoggingCommand;
@@ -16,21 +13,11 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.telemetry.Telemetry;
 
 public abstract class BaseDriveCommand extends LoggingCommand {
-    protected final SwerveSubsystem            swerve;
-    private final ProfiledPIDController        headingPidRad;
-    private final TrapezoidProfile.Constraints fastConstraints = new TrapezoidProfile.Constraints(
-        MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians(),
-        MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
-    private final TrapezoidProfile.Constraints slowConstraints = new TrapezoidProfile.Constraints(
-        Rotation2d.fromDegrees(30).getRadians(), MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
+    protected final SwerveSubsystem swerve;
 
     public BaseDriveCommand(SwerveSubsystem swerve) {
         this.swerve = swerve;
         addRequirements(swerve);
-
-        headingPidRad = new ProfiledPIDController(P, I, D, fastConstraints);
-        headingPidRad.setTolerance(ROTATION_TOLERANCE.getRadians());
-        headingPidRad.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     /**
@@ -58,7 +45,7 @@ public abstract class BaseDriveCommand extends LoggingCommand {
      * @return The required rotation speed of the robot
      * @see frc.robot.Constants.Swerve.Chassis.HeadingPIDConfig
      */
-    private Rotation2d computeOmega(Rotation2d target, Rotation2d current) {
+    private static Rotation2d computeOmega(Rotation2d target, Rotation2d current) {
 
         double targetRad  = normalizeRotation(target.getRadians());
         double currentRad = normalizeRotation(current.getRadians());
