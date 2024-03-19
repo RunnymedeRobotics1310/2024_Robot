@@ -220,7 +220,8 @@ public final class Constants {
                 BACK_RIGHT.driveCANID                   = 30;
                 BACK_RIGHT.angleCANID                   = 31;
                 BACK_RIGHT.encoderCANID                 = 32;
-                BACK_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.414551).getDegrees();
+//                BACK_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.414551).getDegrees();
+                BACK_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.782715).getDegrees();
             }
 
             public static final Module FRONT_LEFT = new Module();
