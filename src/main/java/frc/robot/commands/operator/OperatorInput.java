@@ -250,7 +250,7 @@ public class OperatorInput {
 
         // align amp
         new Trigger(driverController::getBButton)
-            .onTrue(new DriveToPositionCommand(drive, Constants.UsefulPoses.SCORE_BLUE_AMP, Constants.UsefulPoses.SCORE_RED_AMP));
+            .onTrue(new DriveToScoreAmpCommand(drive));
 
         // compact
         new Trigger(driverController::getXButton).onTrue(new CompactCommand(arm));
@@ -294,7 +294,7 @@ public class OperatorInput {
 
         // eject
         new Trigger(() -> operatorController.getPOV() == 90)
-            .onTrue(new EjectNoteCommand(arm));
+            .whileTrue(new EjectNoteCommand(arm));
 
         // aim source
         new Trigger(() -> operatorController.getPOV() == 180)

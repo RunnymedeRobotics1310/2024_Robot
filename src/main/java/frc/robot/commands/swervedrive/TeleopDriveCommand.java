@@ -239,11 +239,11 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             else {
                 if (pose.getX() > Constants.FieldConstants.FIELD_WIDTH_METRES / 2) {
                     // stage left
-                    return Rotation2d.fromDegrees(60);
+                    return Rotation2d.fromDegrees(-60);
                 }
                 else {
                     // stage right
-                    return Rotation2d.fromDegrees(-60);
+                    return Rotation2d.fromDegrees(60);
                 }
             }
         }
@@ -255,11 +255,11 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             else {
                 if (pose.getX() < Constants.FieldConstants.FIELD_WIDTH_METRES / 2) {
                     // stage left
-                    return Rotation2d.fromDegrees(60);
+                    return Rotation2d.fromDegrees(-60);
                 }
                 else {
                     // stage right
-                    return Rotation2d.fromDegrees(-60);
+                    return Rotation2d.fromDegrees(60);
                 }
             }
         }
