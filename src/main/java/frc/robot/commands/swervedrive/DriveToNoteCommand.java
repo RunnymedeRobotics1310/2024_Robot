@@ -29,14 +29,12 @@ public class DriveToNoteCommand extends BaseDriveCommand {
         addRequirements(jackman);
     }
 
-    public void initialize() {
-        logCommandStart();
-    }
-
+    @Override
     public void execute() {
         super.execute();
 
         Rotation2d robotRelativeOffset = jackman.getNoteOffset();
+        finished = false;
 
         if (robotRelativeOffset == null) {
             log("no note detect, aborting");
@@ -47,9 +45,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
             finished = true;
         }
 
-        if (finished) {
-            return;
-        }
+
 
         double setSpeed = speedMPS;
 
@@ -65,7 +61,18 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
     @Override
     public boolean isFinished() {
+        log("finished");
         return finished;
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        if (interrupted) {
+            log("interrupted!");
+        }
+
+    }
+
 }
 
