@@ -13,7 +13,11 @@ public class DriveToNoteCommand extends BaseDriveCommand {
     private final ArmSubsystem           arm;
     private long                         intakeStartTime;
     private boolean                      startTimeSet = false;
-    private double                       speedMPS;
+    private final double                 speedMPS;
+
+    private boolean                      finished     = false;
+
+
 
     // todo: fixme: specify unit in speed param name (e.g. speedRPM, speedDegPerSec, etc.)
     public DriveToNoteCommand(SwerveSubsystem drive, ArmSubsystem arm, JackmanVisionSubsystem jackman, double speedMPS) {
@@ -25,39 +29,43 @@ public class DriveToNoteCommand extends BaseDriveCommand {
         addRequirements(jackman);
     }
 
+    public void initialize() {
+        logCommandStart();
+    }
+
     public void execute() {
         super.execute();
 
         Rotation2d robotRelativeOffset = jackman.getNoteOffset();
 
-        if (robotRelativeOffset != null) {
-
-            if (Math.abs(robotRelativeOffset.getDegrees()) > 10) {
-                speedMPS = 0;
-            }
-
-            Rotation2d omega = computeOmega(robotRelativeOffset);
-            swerve.driveRobotOriented(new ChassisSpeeds(speedMPS, 0, omega.getRadians()));
+        if (robotRelativeOffset == null) {
+            log("no note detect, aborting");
+            finished = true;
         }
+        if (arm.isNoteDetected()) {
+            log("note detect, finishing");
+            finished = true;
+        }
+
+        if (finished) {
+            return;
+        }
+
+        double setSpeed = speedMPS;
+
+        if (Math.abs(robotRelativeOffset.getDegrees()) > 10) {
+            setSpeed = 0;
+        }
+
+        Rotation2d omega = computeOmega(robotRelativeOffset);
+        swerve.driveRobotOriented(new ChassisSpeeds(setSpeed, 0, omega.getRadians()));
+
 
     }
 
     @Override
     public boolean isFinished() {
-        Rotation2d robotRelativeOffset = jackman.getNoteOffset();
-
-        if (arm.getIntakeEncoderSpeed() >= 10 && !startTimeSet) {
-            intakeStartTime = System.currentTimeMillis();
-            startTimeSet    = true;
-        }
-
-        // return when note is detected
-        if (System.currentTimeMillis() - intakeStartTime >= Constants.ArmConstants.INTAKE_SPINUP_WINDOW) {
-            if (arm.getIntakeEncoderSpeed() <= 400 || arm.isNoteDetected()) {
-                return true;
-            }
-        }
-        return false;
+        return finished;
     }
 }
 
