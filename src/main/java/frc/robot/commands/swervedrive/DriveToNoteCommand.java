@@ -21,8 +21,6 @@ public class DriveToNoteCommand extends BaseDriveCommand {
     private boolean                      startTimeSet = false;
     private final double                 speedMPS;
 
-    private boolean                      finished     = false;
-
 
 
     // todo: fixme: specify unit in speed param name (e.g. speedRPM, speedDegPerSec, etc.)
@@ -41,7 +39,6 @@ public class DriveToNoteCommand extends BaseDriveCommand {
     public void initialize() {
         super.initialize();
         lighting.addPattern(SIGNAL, IntakeWithVision.getInstance());
-        finished = false;
     }
 
 
@@ -50,48 +47,38 @@ public class DriveToNoteCommand extends BaseDriveCommand {
         super.execute();
 
         Rotation2d robotRelativeOffset = jackman.getNoteOffset();
-        finished = false;
 
-        if (robotRelativeOffset == null) {
-            log("no note detect, aborting");
-            finished = true;
+        if (robotRelativeOffset != null) {
+            double setSpeed = speedMPS;
+
+            if (Math.abs(robotRelativeOffset.getDegrees()) > 10) {
+                setSpeed = 0;
+            }
+
+            Rotation2d omega = computeOmega(robotRelativeOffset);
+            swerve.driveRobotOriented(new ChassisSpeeds(setSpeed, 0, omega.getRadians()));
         }
-        if (arm.isNoteDetected()) {
-            log("note detect, finishing");
-            finished = true;
-        }
-
-        if (finished) {
-            return;
-        }
-
-        double setSpeed = speedMPS;
-
-        if (Math.abs(robotRelativeOffset.getDegrees()) > 10) {
-            setSpeed = 0;
-        }
-
-        Rotation2d omega = computeOmega(robotRelativeOffset);
-        swerve.driveRobotOriented(new ChassisSpeeds(setSpeed, 0, omega.getRadians()));
-
 
     }
 
     @Override
     public boolean isFinished() {
-        log("finished: " + finished);
-        return finished;
+        Rotation2d robotRelativeOffset = jackman.getNoteOffset();
+        if (robotRelativeOffset == null) {
+            log("no note detect, aborting");
+            return true;
+        }
+        if (arm.isNoteDetected()) {
+            log("note detect, finishing");
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
         lighting.removePattern(IntakeWithVision.class);
-
-        if (interrupted) {
-            log("interrupted!");
-        }
-
     }
 
 }

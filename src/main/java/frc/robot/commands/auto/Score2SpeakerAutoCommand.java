@@ -51,8 +51,9 @@ public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
         /* Note 3 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_WOLVERINE, BotTarget.RED_NOTE_WOLVERINE));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .alongWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25)));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+            .alongWith(new WaitCommand(0.250))
+            .andThen(new DriveToPositionCommand(swerve, BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d(),
+                RED_NOTE_WOLVERINE.getLocation().toTranslation2d())));
         addCommands(new ShootCommand(armSubsystem, lighting));
 
         /* Exit Zone */
