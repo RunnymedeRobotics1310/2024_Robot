@@ -8,6 +8,7 @@ import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.IntakeWithVision;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+import swervelib.SwerveDrive;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 
@@ -48,15 +49,19 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
         Rotation2d robotRelativeOffset = jackman.getNoteOffset();
 
+
         if (robotRelativeOffset != null) {
             double setSpeed = speedMPS;
 
-            if (Math.abs(robotRelativeOffset.getDegrees()) > 10) {
-                setSpeed = 0;
+            if (Math.abs(robotRelativeOffset.getDegrees()) > 5) {
+                Rotation2d omega = computeOmega(robotRelativeOffset);
+                swerve.driveRobotOriented(new ChassisSpeeds(setSpeed, 0, omega.getRadians()));
+
             }
 
-            Rotation2d omega = computeOmega(robotRelativeOffset);
-            swerve.driveRobotOriented(new ChassisSpeeds(setSpeed, 0, omega.getRadians()));
+            else {
+                swerve.driveRobotOriented(new ChassisSpeeds(setSpeed, 0, 0));
+            }
         }
 
     }
@@ -79,6 +84,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         lighting.removePattern(IntakeWithVision.class);
+        swerve.stop();
     }
 
 }

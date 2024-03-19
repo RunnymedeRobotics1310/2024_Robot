@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BotTarget;
+import frc.robot.commands.arm.CompactCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
@@ -52,11 +53,12 @@ public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
 
         /* Note 3 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_WOLVERINE, BotTarget.RED_NOTE_WOLVERINE));
-        addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new WaitCommand(1.3)));
-        addCommands(new DriveToPositionCommand(swerve, BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d(),
-            RED_NOTE_WOLVERINE.getLocation().toTranslation2d())
+        addCommands(new WaitCommand(1.3)
             .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
+        addCommands(new StartIntakeCommand(armSubsystem, lighting)
+            .deadlineWith(new DriveToPositionCommand(swerve, BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d(),
+                RED_NOTE_WOLVERINE.getLocation().toTranslation2d())));
+        addCommands(new CompactCommand(armSubsystem));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
