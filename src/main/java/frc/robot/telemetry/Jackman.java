@@ -14,6 +14,7 @@ public class Jackman {
     public double  camMode             = -1310.0;
     public double  ledMode             = -1310.0;
     public double  pipeline            = -1310.0;
+    public double  noteOffset          = -1310.0;
 
     void post() {
         SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionJackman/Target Found", isVisionTargetFound);
@@ -24,5 +25,6 @@ public class Jackman {
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/Cam Mode", camMode);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/LED mode", ledMode);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/Pipeline", pipeline);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionJackman/NoteOffset", noteOffset);
     }
 }

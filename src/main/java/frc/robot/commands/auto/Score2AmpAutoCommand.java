@@ -26,7 +26,7 @@ import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 public class Score2AmpAutoCommand extends SequentialCommandGroup {
 
     public Score2AmpAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
-                                JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
+        JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
         Pose2d blueFinishPose = new Pose2d(4, 7.0, new Rotation2d(90));
         Pose2d redFinishPose  = new Pose2d(12.54, 7.0, new Rotation2d());
@@ -46,7 +46,7 @@ public class Score2AmpAutoCommand extends SequentialCommandGroup {
         /* Note 2 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, .5)));
+            .deadlineWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, .5)));
         addCommands(new DriveToPositionCommand(swerve, SCORE_BLUE_AMP, SCORE_RED_AMP));
         addCommands(new AimAmpCommand(armSubsystem));
         addCommands(new ShootCommand(armSubsystem, lighting));

@@ -24,7 +24,7 @@ import static frc.robot.Constants.BotTarget.*;
 public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
 
     public Score2SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
-                                    JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
+        JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
 
         Pose2d blueFinishPose     = new Pose2d(4, 1.5, new Rotation2d());
@@ -51,7 +51,7 @@ public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
         /* Note 3 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_WOLVERINE, BotTarget.RED_NOTE_WOLVERINE));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .alongWith(new DriveToNoteCommand(swerve, armSubsystem, jackman, 0.25)));
+            .alongWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootCommand(armSubsystem, lighting));
 

@@ -111,7 +111,11 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             double linkAngle = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
             // TODO: Supply real arm position
             Rotation2d shooterAngle = hughVisionSubsystem.getDynamicSpeakerShooterAngle(new Translation2d(0, 0));
-            double angle = shooterAngle.getDegrees();
+            // TODO: Replace this default 45 angle with a field location based one
+            double angle = 45;
+            if (shooterAngle != null) {
+                angle = shooterAngle.getDegrees();
+            }
             double aimAngle = angle - (linkAngle - 180);
             Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
 
