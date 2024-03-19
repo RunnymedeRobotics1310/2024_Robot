@@ -359,10 +359,10 @@
               "_showGlyph": false
             }
           },
-          "10,3": {
+          "11,1": {
             "size": [
-              1,
-              1
+              5,
+              3
             ],
             "content": {
               "_type": "Text View",
@@ -377,9 +377,9 @@
     }
   ],
   "windowGeometry": {
-    "x": 0.0,
-    "y": 44.0,
-    "width": 1902.0,
+    "x": 12.0,
+    "y": 6.0,
+    "width": 1904.0,
     "height": 971.0
   }
 }
