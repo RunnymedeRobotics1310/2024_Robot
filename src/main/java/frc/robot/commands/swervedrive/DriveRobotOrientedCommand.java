@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
+import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
+
 public class DriveRobotOrientedCommand extends BaseDriveCommand {
 
     private final Translation2d robotRelativeTranslation;
@@ -37,7 +39,7 @@ public class DriveRobotOrientedCommand extends BaseDriveCommand {
     @Override
     public void execute() {
         super.execute();
-        driveToFieldPose(desiredPose);
+        driveToFieldPose(desiredPose, MAX_TRANSLATION_SPEED_MPS);
     }
 
     @Override

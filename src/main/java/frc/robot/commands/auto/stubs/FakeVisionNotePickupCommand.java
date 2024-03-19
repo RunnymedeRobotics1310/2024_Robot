@@ -10,6 +10,7 @@ import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.DriveToPositionFacingCommand;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
+import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class FakeVisionNotePickupCommand extends BaseDriveCommand {
@@ -60,7 +61,7 @@ public class FakeVisionNotePickupCommand extends BaseDriveCommand {
     @Override
     public void execute() {
         super.execute();
-        driveToFieldPose(new Pose2d(location, heading));
+        driveToFieldPose(new Pose2d(location, heading), MAX_TRANSLATION_SPEED_MPS);
     }
 
     @Override

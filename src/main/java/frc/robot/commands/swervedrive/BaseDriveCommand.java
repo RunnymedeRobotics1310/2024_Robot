@@ -148,15 +148,6 @@ public abstract class BaseDriveCommand extends LoggingCommand {
     }
 
     /**
-     * Drive as fast as safely possible to the specified pose.
-     *
-     * @param desiredPose the desired location on the field
-     */
-    protected final void driveToFieldPose(Pose2d desiredPose) {
-        driveToFieldPose(desiredPose, MAX_TRANSLATION_SPEED_MPS);
-    }
-
-    /**
      * Drive as fast as safely possible to the specified pose, up ot the max speed specified.
      *
      * @param desiredPose the desired location on the field

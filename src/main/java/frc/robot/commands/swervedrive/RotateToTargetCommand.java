@@ -1,5 +1,6 @@
 package frc.robot.commands.swervedrive;
 
+import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
 import static frc.robot.Constants.Swerve.Chassis.ROTATION_TOLERANCE;
 import static frc.robot.RunnymedeUtils.format;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
@@ -83,7 +84,7 @@ public class RotateToTargetCommand extends BaseDriveCommand {
             // log("Heading to speaker: " + heading + " from location " +
             // swerve.getPose().getTranslation() + " for speaker " + speaker);
             Pose2d     targetPose = new Pose2d(swerve.getPose().getTranslation(), heading);
-            driveToFieldPose(targetPose);
+            driveToFieldPose(targetPose, MAX_TRANSLATION_SPEED_MPS);
         }
         else {
             // log("vision");
