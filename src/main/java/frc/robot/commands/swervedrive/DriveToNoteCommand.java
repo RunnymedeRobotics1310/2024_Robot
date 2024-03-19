@@ -4,12 +4,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.IntakeWithVision;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+
+import static frc.robot.Constants.LightingConstants.SIGNAL;
 
 
 public class DriveToNoteCommand extends BaseDriveCommand {
     private final JackmanVisionSubsystem jackman;
+
+    private final LightingSubsystem      lighting;
     private final ArmSubsystem           arm;
     private long                         intakeStartTime;
     private boolean                      startTimeSet = false;
@@ -20,14 +26,24 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
 
     // todo: fixme: specify unit in speed param name (e.g. speedRPM, speedDegPerSec, etc.)
-    public DriveToNoteCommand(SwerveSubsystem drive, ArmSubsystem arm, JackmanVisionSubsystem jackman, double speedMPS) {
+    public DriveToNoteCommand(SwerveSubsystem drive, LightingSubsystem lighting, ArmSubsystem arm, JackmanVisionSubsystem jackman,
+        double speedMPS) {
 
         super(drive);
+        this.lighting = lighting;
         this.jackman  = jackman;
         this.speedMPS = speedMPS;
         this.arm      = arm;
         addRequirements(jackman);
     }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+        lighting.addPattern(SIGNAL, IntakeWithVision.getInstance());
+        finished = false;
+    }
+
 
     @Override
     public void execute() {
@@ -45,7 +61,9 @@ public class DriveToNoteCommand extends BaseDriveCommand {
             finished = true;
         }
 
-
+        if (finished) {
+            return;
+        }
 
         double setSpeed = speedMPS;
 
@@ -61,13 +79,15 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
     @Override
     public boolean isFinished() {
-        log("finished");
+        log("finished: " + finished);
         return finished;
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+        lighting.removePattern(IntakeWithVision.class);
+
         if (interrupted) {
             log("interrupted!");
         }

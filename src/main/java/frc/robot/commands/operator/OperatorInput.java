@@ -232,7 +232,7 @@ public class OperatorInput {
 
         // vision note pickup
         new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5)
-            .onTrue(new DriveToNoteCommand(drive, arm, jackman, Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS)
+            .onTrue(new DriveToNoteCommand(drive, lighting, arm, jackman, Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS)
                 .deadlineWith(new StartIntakeCommand(arm, lighting)));
 
         // start intake
