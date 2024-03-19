@@ -43,10 +43,10 @@ public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
 
         /* Note 1 */
         // back up to not hit the speaker while rotating
+        addCommands(new ShootCommand(armSubsystem, lighting));
         addCommands(new DriveToPositionCommand(swerve,
             BotTarget.BLUE_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(1.6, 0)),
             BotTarget.RED_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(-1.6, 0))));
-        addCommands(new ShootCommand(armSubsystem, lighting));
 
         /* Note 3 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
