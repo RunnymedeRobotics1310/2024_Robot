@@ -18,6 +18,17 @@ public class CompactCommand extends ArmBaseCommand {
         super(armSubsystem);
     }
 
+    /**
+     * Set the state and log the transition
+     *
+     * @param newState State to transition to
+     * @param reason   Reason for the transition for logging
+     */
+    private void setStateAndLog(State newState, String reason) {
+        logStateTransition(newState.name(), reason);
+        state = newState;
+    }
+
     @Override
     public void initialize() {
 
@@ -28,14 +39,20 @@ public class CompactCommand extends ArmBaseCommand {
 
             if (armSubsystem.getAimAngle() <= ArmConstants.COMPACT_ARM_POSITION.aimAngle
                 && armSubsystem.getLinkAngle() >= ArmConstants.COMPACT_ARM_POSITION.linkAngle) {
-                state = State.LOCK;
+                setStateAndLog(State.LOCK, "Arm already near compact.  Lock it");
             }
             else {
-                state = State.LOCKED;
+                setStateAndLog(State.LOCKED, "Arm already in locked compact");
             }
         }
         else {
-            state = State.LIFT_LINK_10_DEG;
+            //
+            if (armSubsystem.getLinkAngle() < ArmConstants.LINK_EXTENDED_THRESHOLD) {
+                setStateAndLog(State.LIFT_LINK_10_DEG, "Link is low, lift before adjusting aim");
+            }
+            else {
+                setStateAndLog(State.MOVE_BOTH, "Move arm to compact position");
+            }
         }
 
         // Stop all arm motors to turn off the shooter and intake.
@@ -55,8 +72,8 @@ public class CompactCommand extends ArmBaseCommand {
             armSubsystem.setLinkPivotSpeed(.5);
 
             if (armSubsystem.getLinkAngle() > ArmConstants.INTAKE_ARM_POSITION.linkAngle + 4) {
-                logStateTransition("Lift Link -> Move Both", "Link at " + armSubsystem.getLinkAngle());
-                state = State.MOVE_BOTH;
+                logStateTransition("Lift Link -> Move Both", );
+                setStateAndLog(State.MOVE_BOTH, "Link lifted, Link at" + armSubsystem.getLinkAngle());
             }
             break;
 
@@ -93,7 +110,7 @@ public class CompactCommand extends ArmBaseCommand {
 
                 logStateTransition("Move Both -> Lock",
                     "Link" + armSubsystem.getLinkAngle() + ", Aim " + armSubsystem.getAimAngle());
-                state = State.LOCK;
+                setStateAndLog(State.LOCK, "In position, let's lock it");
             }
             break;
 
@@ -107,8 +124,7 @@ public class CompactCommand extends ArmBaseCommand {
 
                 armSubsystem.setLinkPivotSpeed(0);
 
-                logStateTransition("Locked", "Arm locked");
-                state = State.LOCKED;
+                setStateAndLog(State.LOCKED, "In position, let's lock it");
             }
 
             break;

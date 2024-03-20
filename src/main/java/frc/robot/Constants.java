@@ -499,6 +499,7 @@ public final class Constants {
 
         public static final ArmPosition SOURCE_INTAKE_POSE                 = new ArmPosition(200, 35);
 
+        public static final double      LINK_EXTENDED_THRESHOLD            = 150;
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
         public static final double      FAST_AIM_SPEED                     = .7;
