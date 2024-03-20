@@ -6,11 +6,10 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.subsystems.lighting.pattern.Climbing;
-import frc.robot.subsystems.lighting.pattern.Intaking;
-import frc.robot.subsystems.lighting.pattern.Shooting;
 import frc.robot.telemetry.Telemetry;
 
 
@@ -37,6 +36,8 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     private final AnalogInput       linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
     private final AnalogInput       aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
 
+    private final Relay             trapRelease          = new Relay(ArmConstants.TRAP_RELEASE_RELAY_PORT);
+
     private double                  linkPivotSpeed       = 0;
     private double                  aimPivotSpeed        = 0;
     private double                  intakeSpeed          = 0;
@@ -44,15 +45,17 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
 
     private boolean                 safetyEnabled        = false;
     private long                    safetyStartTime      = 0;
+    private long                    trapReleaseStartTime = 0;
 
     private boolean                 armSafetyMode        = true;
-    private boolean shooterLigntsEnabled = false;
-    private boolean intakeLightsEnabled = false;
+    private boolean                 shooterLigntsEnabled = false;
+    private boolean                 intakeLightsEnabled  = false;
+    private boolean                 trapReleased         = false;
 
     public ArmSubsystem(LightingSubsystem lightingSubsystem) {
 
         this.lighting = lightingSubsystem;
-        
+
         linkMotor.setInverted(false);
         aimMotor.setInverted(true);
 
@@ -269,6 +272,13 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
             }
         }
 
+        // Turn trap off after 200 millis
+        if (trapReleased) {
+
+            if (System.currentTimeMillis() - trapReleaseStartTime >= 200) {
+                trapRelease.set(Value.kOff);
+            }
+        }
         /*
          * Update the SmartDashboard
          */
@@ -286,6 +296,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         Telemetry.arm.aimAbsoluteEncoderVoltage  = getAimAbsoluteEncoderVoltage();
         Telemetry.arm.noteDetected               = isNoteDetected();
         Telemetry.arm.safetyEnabled              = safetyEnabled;
+        Telemetry.arm.trapReleased               = trapReleased;
 
         // Update the lights
         updateLights();
@@ -435,6 +446,26 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
             }
         }
         return;
+    }
+
+
+    public double getShooterPosition() {
+
+        return shooterTopMotor.getEncoder().getPosition();
+
+    }
+
+
+    public void releaseTrap() {
+        // TODO: fixme: write trap release code
+
+        if (trapReleased) {
+            return;
+        }
+
+        trapRelease.set(Value.kOn);
+        trapReleased         = true;
+        trapReleaseStartTime = System.currentTimeMillis();
     }
 
 }

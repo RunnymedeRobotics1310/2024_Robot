@@ -1,7 +1,11 @@
 package frc.robot.commands.operator;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
+import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
+import static frc.robot.Constants.UsefulPoses.START_AT_BLUE_SPEAKER;
+import static frc.robot.Constants.UsefulPoses.START_AT_RED_SPEAKER;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
@@ -13,7 +17,16 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.AimAmpCommand;
+import frc.robot.commands.arm.AimSourceCommand;
+import frc.robot.commands.arm.CompactCommand;
+import frc.robot.commands.arm.EjectNoteCommand;
+import frc.robot.commands.arm.ScoreTrapCommand;
+import frc.robot.commands.arm.ShootCommand;
+import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
+import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
+import frc.robot.commands.arm.ShootTrapCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.PlanBAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
@@ -25,7 +38,10 @@ import frc.robot.commands.auto.Score2_5AmpAutoCommand;
 import frc.robot.commands.auto.Score3SpeakerAutoCommand;
 import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.climb.MaxClimbCommand;
-import frc.robot.commands.swervedrive.*;
+import frc.robot.commands.swervedrive.DriveToNoteCommand;
+import frc.robot.commands.swervedrive.DriveToScoreAmpCommand;
+import frc.robot.commands.swervedrive.ResetOdometryCommand;
+import frc.robot.commands.swervedrive.ZeroGyroCommand;
 import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -35,9 +51,6 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.telemetry.Telemetry;
-
-import static frc.robot.Constants.LightingConstants.SIGNAL;
-import static frc.robot.Constants.UsefulPoses.*;
 
 /**
  * The DriverController exposes all driver functions
@@ -264,12 +277,17 @@ public class OperatorInput {
         // cancel command (operator)
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
+        // Trap (temp?)
+        new Trigger(() -> operatorController.getBackButton() && operatorController.getYButton())
+            .onTrue(new ShootTrapCommand(arm, climb));
+
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getXButton())
             .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, hugh, lighting));
 
         // podium shot
-        new Trigger(operatorController::getYButton).onTrue(new ShootSpeakerFromPodiumCommand(arm, lighting));
+        new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
+            .onTrue(new ShootSpeakerFromPodiumCommand(arm, lighting));
 
         // shoot
         new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootCommand(arm, lighting));

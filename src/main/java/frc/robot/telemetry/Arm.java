@@ -19,6 +19,7 @@ public class Arm {
     public double  aimAbsoluteEncoderVoltage  = -1310.0;
     public boolean noteDetected               = false;
     public boolean safetyEnabled              = false;
+    public boolean trapReleased               = false;
 
     void post() {
         SmartDashboard.putBoolean(Telemetry.PREFIX + "Arm/Safety", safetyEnabled);
@@ -38,6 +39,8 @@ public class Arm {
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Aim/Speed", aimPivotSpeed);
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Aim/Angle", aimAngle);
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Aim/Absolute Encoder Voltage", aimAbsoluteEncoderVoltage);
+
+        SmartDashboard.putBoolean(Telemetry.PREFIX + "Arm/Trap/Released", trapReleased);
 
     }
 }

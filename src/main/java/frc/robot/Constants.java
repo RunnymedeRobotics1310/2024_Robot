@@ -461,6 +461,8 @@ public final class Constants {
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
+        public static final int         TRAP_RELEASE_RELAY_PORT            = 0;
+
         /*
          * ARM PID CONTROLS
          */
@@ -481,12 +483,12 @@ public final class Constants {
         // Transition position - above the lock position (arm not caught on stops)
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
-        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0);    // Unfinished
+        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0); // Unfinished
         public static final ArmPosition SHOOT_SPEAKER_PODIUM_ARM_POSITION  = new ArmPosition(196, 42);
 
         // re-measured Mar 10, 2024 9:30am 2.4% arm (was 108, changed to 186; diff 78)
         public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(200, 108);
-        public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(206.3, 102.92);
+        public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(134, 167);
 
         public static final ArmPosition SOURCE_INTAKE_POSE                 = new ArmPosition(200, 35);
 
@@ -517,6 +519,7 @@ public final class Constants {
 
         public static final double      SHOOTER_SPEAKER_SPEED              = 0.75;
         public static final double      SHOOTER_AMP_SPEED                  = 0.2;
+        public static final double      INTAKE_TRAP_SPEED                  = -0.5;
 
         public static final double      LINK_MAX_DEGREES                   = 215;
         public static final double      LINK_MIN_DEGREES                   = 116;
@@ -525,7 +528,7 @@ public final class Constants {
         public static final double      AIM_MIN_DEGREES                    = 25;
 
         public static final double      ARM_MIN_ANGLE_SUM                  = 180;
-        public static final double      ARM_MAX_ANGLE_SUM                  = 311;
+        public static final double      ARM_MAX_ANGLE_SUM                  = 320;
 
         public static final double      AIM_X_SHOOTING                     = 0.254;
         public static final double      AIM_Y_SHOOTING                     = 0.61595;
@@ -535,14 +538,14 @@ public final class Constants {
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
          */
-        public static final double      MAX_AIM_HOLD                       = 0.03;                          // 0.03;
+        public static final double      MAX_AIM_HOLD                       = 0.03;                       // 0.03;
 
 
         /**
          * Amount of output required to hold the Link Pivot when the Link and Aim are parallel to
          * the ground
          */
-        public static final double      MAX_LINK_HOLD                      = 0.02;                          // 0.04;
+        public static final double      MAX_LINK_HOLD                      = 0.02;                       // 0.04;
     }
 
     public static final class ClimbConstants {
