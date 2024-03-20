@@ -11,7 +11,6 @@ import frc.robot.commands.arm.CompactCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
 import frc.robot.commands.swervedrive.RotateToTargetCommand;

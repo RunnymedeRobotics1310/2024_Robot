@@ -461,7 +461,7 @@ public final class Constants {
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
-        public static final int         TRAP_RELEASE_RELAY_PORT            = 0;
+        public static final int         TRAP_RELEASE_DIO_PORT              = 9;
 
         /*
          * ARM PID CONTROLS
