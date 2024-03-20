@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
 import frc.robot.Constants.ArmConstants;
@@ -36,7 +37,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     private final AnalogInput       linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
     private final AnalogInput       aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
 
-    private final Relay             trapRelease          = new Relay(ArmConstants.TRAP_RELEASE_RELAY_PORT);
+    private final DigitalOutput     trapRelease          = new DigitalOutput(ArmConstants.TRAP_RELEASE_DIO_PORT);
 
     private double                  linkPivotSpeed       = 0;
     private double                  aimPivotSpeed        = 0;
@@ -50,7 +51,6 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     private boolean                 armSafetyMode        = true;
     private boolean                 shooterLigntsEnabled = false;
     private boolean                 intakeLightsEnabled  = false;
-    private boolean                 trapReleased         = false;
 
     public ArmSubsystem(LightingSubsystem lightingSubsystem) {
 
@@ -273,10 +273,9 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         }
 
         // Turn trap off after 200 millis
-        if (trapReleased) {
-
+        if (trapReleased()) {
             if (System.currentTimeMillis() - trapReleaseStartTime >= 200) {
-                trapRelease.set(Value.kOff);
+                trapRelease.set(false);
             }
         }
         /*
@@ -296,7 +295,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         Telemetry.arm.aimAbsoluteEncoderVoltage  = getAimAbsoluteEncoderVoltage();
         Telemetry.arm.noteDetected               = isNoteDetected();
         Telemetry.arm.safetyEnabled              = safetyEnabled;
-        Telemetry.arm.trapReleased               = trapReleased;
+        Telemetry.arm.trapReleased               = trapReleased();
 
         // Update the lights
         updateLights();
@@ -455,16 +454,18 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
 
     }
 
+    private boolean trapReleased() {
+        return trapRelease.get();
+    }
 
     public void releaseTrap() {
         // TODO: fixme: write trap release code
 
-        if (trapReleased) {
+        if (trapReleased()) {
             return;
         }
 
-        trapRelease.set(Value.kOn);
-        trapReleased         = true;
+        trapRelease.set(true);
         trapReleaseStartTime = System.currentTimeMillis();
     }
 
