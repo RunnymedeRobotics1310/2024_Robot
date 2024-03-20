@@ -11,9 +11,7 @@ import frc.robot.commands.arm.CompactCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.swervedrive.DriveToPositionCommand;
-import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
-import frc.robot.commands.swervedrive.RotateToTargetCommand;
+import frc.robot.commands.swervedrive.*;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -55,8 +53,7 @@ public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
         addCommands(new WaitCommand(1.3)
             .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToPositionCommand(swerve, BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d(),
-                RED_NOTE_WOLVERINE.getLocation().toTranslation2d())));
+            .deadlineWith(new DriveRobotOrientedCommand(swerve, new Translation2d(1, 0), new Rotation2d(0, 0), 1)));
         addCommands(new CompactCommand(armSubsystem));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
