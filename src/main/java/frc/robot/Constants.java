@@ -115,7 +115,7 @@ public final class Constants {
              * Important: the robot needs to be able to stop instantly at this
              * speed, so don't make it too high!
              */
-            public static final double MIN_TRANSLATION_SPEED_MPS          = 0.1;
+            public static final double MIN_TRANSLATION_SPEED_MPS          = 1.0;
             public static final double TRANSLATION_TOLERANCE_METRES       = 0.02;
             public static final double DECEL_FROM_MAX_TO_STOP_DIST_METRES = 1.9;
             public static final double MAX_TRANSLATION_ACCELERATION_MPS2  = 8;
