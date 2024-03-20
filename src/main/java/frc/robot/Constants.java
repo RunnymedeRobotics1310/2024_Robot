@@ -109,6 +109,13 @@ public final class Constants {
              * consider 1-2 for development and 2-3 for competitions.
              */
             public static final double MAX_TRANSLATION_SPEED_MPS          = 4.42;
+            /**
+             * The minimum speed that the robot will translate. This existss to ensure
+             * that the speed doesn't drop below a threshold where it is useful.
+             * Important: the robot needs to be able to stop instantly at this
+             * speed, so don't make it too high!
+             */
+            public static final double MIN_TRANSLATION_SPEED_MPS          = 0.1;
             public static final double TRANSLATION_TOLERANCE_METRES       = 0.02;
             public static final double DECEL_FROM_MAX_TO_STOP_DIST_METRES = 1.9;
             public static final double MAX_TRANSLATION_ACCELERATION_MPS2  = 8;
@@ -461,7 +468,7 @@ public final class Constants {
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
-        public static final int         TRAP_RELEASE_RELAY_PORT            = 0;
+        public static final int         TRAP_RELEASE_DIO_PORT              = 9;
 
         /*
          * ARM PID CONTROLS

@@ -113,25 +113,16 @@ public abstract class BaseDriveCommand extends LoggingCommand {
         if (maxSpeed > MAX_TRANSLATION_SPEED_MPS) {
             maxSpeed = MAX_TRANSLATION_SPEED_MPS;
         }
-        else {
-            // todo: remoe this option entirely
-            maxSpeed = MAX_TRANSLATION_SPEED_MPS;
+
+        // ensure that we have enough room to decelerate
+        double decelDistance  = DECEL_FROM_MAX_TO_STOP_DIST_METRES;
+        double decelDistRatio = absDistMetres / decelDistance;
+        if (decelDistRatio < 1) {
+            maxSpeed *= decelDistRatio;
         }
 
-        double xSign         = Math.signum(translationToTravel.getX());
-        double ySign         = Math.signum(translationToTravel.getY());
 
-        double decelDistance = Math.abs(DECEL_FROM_MAX_TO_STOP_DIST_METRES);
-
-        // TODO: This logic below is incorrect. Delay this optimization until we figure it out.
-        // double decelDistRatio = absDistMetres / DECEL_FROM_MAX_TO_STOP_DIST_METRES;
-        // if (decelDistRatio < 1) {
-        // decelDistance = decelDistance * decelDistRatio;
-        // }
-
-
-        final double speed;
-
+        double speed;
         if (absDistMetres >= decelDistance) {
             // cruising
             speed = maxSpeed;
@@ -142,9 +133,16 @@ public abstract class BaseDriveCommand extends LoggingCommand {
             speed = maxSpeed * pctToGo * VelocityPIDConfig.P;
         }
 
+        // Confirm speed is not too slow to move
+        if (speed < MIN_TRANSLATION_SPEED_MPS) {
+            speed = MIN_TRANSLATION_SPEED_MPS;
+        }
+
 
         Rotation2d angle = translationToTravel.getAngle();
 
+        double     xSign = Math.signum(translationToTravel.getX());
+        double     ySign = Math.signum(translationToTravel.getY());
         return new Translation2d(xSign * speed * Math.abs(angle.getCos()), ySign * speed * Math.abs(angle.getSin()));
     }
 
