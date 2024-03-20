@@ -12,19 +12,34 @@ public class DriveRobotOrientedCommand extends BaseDriveCommand {
     private final Translation2d robotRelativeTranslation;
     private final Rotation2d    robotRelativeHeading;
     private Pose2d              desiredPose = null;
+    private double speed = 0;
+
+    /**
+     * Drive at speed given in the direction specified at the heading specified
+     * 
+     * @param swerve drive subsystem
+     * @param robotRelativeTranslation a translation relative to the robot
+     * @param robotRelativeHeading the FIELD-ORIENTED heading to face
+     * @param speed the speed to drive at
+     */
+    public DriveRobotOrientedCommand(SwerveSubsystem swerve, Translation2d robotRelativeTranslation,
+        Rotation2d robotRelativeHeading, double speed) {
+        super(swerve);
+        this.robotRelativeTranslation = robotRelativeTranslation;
+        this.robotRelativeHeading     = robotRelativeHeading;
+        this.speed = speed;
+    }
 
     /**
      * Drive as fast as possible in the direction specified at the heading specified
-     * 
+     *
      * @param swerve drive subsystem
      * @param robotRelativeTranslation a translation relative to the robot
      * @param robotRelativeHeading the FIELD-ORIENTED heading to face
      */
     public DriveRobotOrientedCommand(SwerveSubsystem swerve, Translation2d robotRelativeTranslation,
-        Rotation2d robotRelativeHeading) {
-        super(swerve);
-        this.robotRelativeTranslation = robotRelativeTranslation;
-        this.robotRelativeHeading     = robotRelativeHeading;
+                                     Rotation2d robotRelativeHeading) {
+        this(swerve, robotRelativeTranslation, robotRelativeHeading, MAX_TRANSLATION_SPEED_MPS);
     }
 
     @Override
@@ -39,7 +54,7 @@ public class DriveRobotOrientedCommand extends BaseDriveCommand {
     @Override
     public void execute() {
         super.execute();
-        driveToFieldPose(desiredPose, MAX_TRANSLATION_SPEED_MPS);
+        driveToFieldPose(desiredPose, speed);
     }
 
     @Override
