@@ -53,9 +53,9 @@ public class DriveToNoteCommand extends BaseDriveCommand {
         if (robotRelativeOffset != null) {
             double setSpeed = speedMPS;
 
-            if (Math.abs(robotRelativeOffset.getDegrees()) > 5) {
-                Rotation2d omega = computeOmega(robotRelativeOffset);
-                swerve.driveRobotOriented(new ChassisSpeeds(setSpeed, 0, omega.getRadians()));
+            if (Math.abs(robotRelativeOffset.getDegrees()) > 7) {
+                Rotation2d omega = computeOmegaForOffset(robotRelativeOffset);
+                swerve.driveRobotOriented(new ChassisSpeeds(0, 0, -omega.getRadians()));
 
             }
 
