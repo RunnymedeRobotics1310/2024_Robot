@@ -129,7 +129,7 @@
           "0,0": {
             "size": [
               6,
-              4
+              6
             ],
             "content": {
               "_type": "Camera Stream",
@@ -250,6 +250,19 @@
               "_type": "Network Table Tree",
               "_source0": "network_table:///SmartDashboard/1310/Climb",
               "_title": "SmartDashboard/1310/Climb",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,4": {
+            "size": [
+              5,
+              7
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/1310/VisionHugh",
+              "_title": "SmartDashboard/1310/VisionHugh",
               "_glyph": 148,
               "_showGlyph": false
             }
