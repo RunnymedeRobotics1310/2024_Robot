@@ -49,7 +49,7 @@ public final class Constants {
         /**
          * Kill switch for the drive subsystem. Useful when testing other subsystems.
          */
-        public static final boolean DISABLED = false;
+        public static final boolean DISABLED = true;
 
         public static final class Chassis {
 
@@ -218,7 +218,7 @@ public final class Constants {
                 BACK_LEFT.driveCANID                   = 35;
                 BACK_LEFT.angleCANID                   = 36;
                 BACK_LEFT.encoderCANID                 = 37;
-                BACK_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.918945).getDegrees();
+                BACK_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.920166).getDegrees();
             }
 
             public static final Module BACK_RIGHT = new Module();
@@ -230,8 +230,8 @@ public final class Constants {
                 BACK_RIGHT.driveCANID                   = 30;
                 BACK_RIGHT.angleCANID                   = 31;
                 BACK_RIGHT.encoderCANID                 = 32;
-                BACK_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.284424).getDegrees();
-//                0.588867
+                BACK_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.573730).getDegrees();
+                // 0.588867
             }
 
             public static final Module FRONT_LEFT = new Module();
@@ -243,7 +243,7 @@ public final class Constants {
                 FRONT_LEFT.driveCANID                   = 10;
                 FRONT_LEFT.angleCANID                   = 11;
                 FRONT_LEFT.encoderCANID                 = 12;
-                FRONT_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.617432).getDegrees();
+                FRONT_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.617676).getDegrees();
             }
 
             public static final Module FRONT_RIGHT = new Module();
@@ -255,7 +255,7 @@ public final class Constants {
                 FRONT_RIGHT.driveCANID                   = 20;
                 FRONT_RIGHT.angleCANID                   = 21;
                 FRONT_RIGHT.encoderCANID                 = 22;
-                FRONT_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.030518).getDegrees();
+                FRONT_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.032471).getDegrees();
             }
         }
     }
