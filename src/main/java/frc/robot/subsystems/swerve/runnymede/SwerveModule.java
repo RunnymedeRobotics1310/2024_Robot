@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.telemetry.Telemetry;
 
-public class SwerveModule {
+class SwerveModule {
 
     private final String                name;
     private final Translation2d         location;
@@ -24,7 +24,7 @@ public class SwerveModule {
      * TODO: periodically update neo encoder from absolute encoder
      * TODO: figure out how to handle brownouts.
      */
-    public SwerveModule(Constants.Swerve.Module cfg, Constants.Swerve.Motor driveCfg, Constants.Swerve.Motor angleCfg) {
+    SwerveModule(Constants.Swerve.Module cfg, Constants.Swerve.Motor driveCfg, Constants.Swerve.Motor angleCfg) {
         this.name     = cfg.name;
         this.location = cfg.locationMetres;
         driveMotor    = new DriveMotor(cfg.driveCANID, driveCfg, cfg.wheelRadiusMetres);
@@ -36,15 +36,15 @@ public class SwerveModule {
         updateInternalEncoder();
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public Translation2d getLocation() {
+    Translation2d getLocation() {
         return location;
     }
 
-    public SwerveModulePosition getPosition() {
+    SwerveModulePosition getPosition() {
         if (RobotBase.isSimulation()) {
             return sim.getPosition();
         }
@@ -53,7 +53,7 @@ public class SwerveModule {
         }
     }
 
-    public SwerveModuleState getState() {
+    SwerveModuleState getState() {
         if (RobotBase.isSimulation()) {
             return sim.getState();
         }
@@ -64,7 +64,7 @@ public class SwerveModule {
         }
     }
 
-    public void setDesiredState(SwerveModuleState desiredState) {
+    void setDesiredState(SwerveModuleState desiredState) {
         if (RobotBase.isSimulation()) {
             sim.setDesiredState(desiredState);
         }
@@ -95,7 +95,7 @@ public class SwerveModule {
         Telemetry.swerve.getModule(name).angleDegrees         = desiredState.angle.getDegrees();
     }
 
-    private void updateInternalEncoder() {
+    void updateInternalEncoder() {
         double angle = encoder.getAbsolutePositionInDegrees();
         if (encoder.readingError) {
             throw new IllegalStateException("Absolute encoder " + encoder.getDeviceId() + " could not be read.");
@@ -104,7 +104,7 @@ public class SwerveModule {
     }
 
 
-    public void updateTelemetry() {
+    void updateTelemetry() {
         Telemetry.swerve.getModule(name).absoluteEncoderPositionDegrees = encoder.getAbsolutePositionInDegrees();
         Telemetry.swerve.getModule(name).angleMotorPosition             = angleMotor.getPosition();
         Telemetry.swerve.getModule(name).driveMotorPosition             = driveMotor.getDistanceMetres();

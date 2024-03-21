@@ -1,11 +1,10 @@
 package frc.robot.subsystems.swerve.runnymede;
 
-
 import com.revrobotics.CANSparkBase;
 
 import frc.robot.Constants;
 
-public class DriveMotor extends SparkMaxNeoMotor {
+class DriveMotor extends SparkMaxNeoMotor {
 
     /**
      * Configure the SparkMAX and its integrated PIDF (PID + feed forward) control.
