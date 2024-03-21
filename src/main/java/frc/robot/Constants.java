@@ -49,7 +49,7 @@ public final class Constants {
         /**
          * Kill switch for the drive subsystem. Useful when testing other subsystems.
          */
-        public static final boolean DISABLED = true;
+        public static final boolean DISABLED = false;
 
         public static final class Chassis {
 
