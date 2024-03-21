@@ -48,20 +48,20 @@ public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
             BotTarget.RED_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(-1.6, 0))));
 
 
-        /* Note 3 */
+        /* Note 2 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_WOLVERINE, BotTarget.RED_NOTE_WOLVERINE));
-        addCommands(new WaitCommand(1.3)
-            .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
-        addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveRobotOrientedCommand(swerve, new Translation2d(1, 0), new Rotation2d(0, 0), 1)));
-        addCommands(new CompactCommand(armSubsystem));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
-        addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+//        addCommands(new WaitCommand(1.3)
+//            .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
+//        addCommands(new StartIntakeCommand(armSubsystem, lighting)
+//            .deadlineWith(new DriveRobotOrientedCommand(swerve, new Translation2d(1, 0), new Rotation2d(0, 0), 1)));
+//        addCommands(new CompactCommand(armSubsystem));
+//        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+//        addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         /* Exit Zone */
-
-        addCommands(new DriveToPositionCommand(swerve, blueTransitionPose, redTransitionPose));
-        addCommands(new DriveToPositionCommand(swerve, blueFinishPose, redFinishPose));
+//
+//        addCommands(new DriveToPositionCommand(swerve, blueTransitionPose, redTransitionPose));
+//        addCommands(new DriveToPositionCommand(swerve, blueFinishPose, redFinishPose));
 
         // tell people we're done
         addCommands(new LogMessageCommand("Auto Complete"));
