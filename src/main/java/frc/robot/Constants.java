@@ -562,6 +562,8 @@ public final class Constants {
 
     public static final class ClimbConstants {
 
+        public static final boolean    DISABLED                      = true;
+
         public static final int        RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 60;
         public static final int        LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 61;
 

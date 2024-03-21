@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.ClimbConstants.DISABLED;
 import static frc.robot.Constants.ClimbConstants.TOP_SLOW_ZONE;
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 
@@ -71,9 +72,10 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
             initEncoders();
         }
 
-        leftClimbMotor.set(leftClimbSpeed);
-        rightClimbMotor.set(rightClimbSpeed);
-
+        if (!DISABLED) {
+            leftClimbMotor.set(leftClimbSpeed);
+            rightClimbMotor.set(rightClimbSpeed);
+        }
 
         setLightingPattern();
 
