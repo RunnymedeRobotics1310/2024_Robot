@@ -25,12 +25,18 @@ public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
     public Score2SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
         JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
+        Pose2d blueNote2Pose      = new Pose2d(
+            BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(-0.48, 0.48)), new Rotation2d());
+        Pose2d redNote2Pose       = new Pose2d(
+            RED_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(0.48, 0.48)), new Rotation2d());
+
 
         Pose2d blueFinishPose     = new Pose2d(4, 1.5, new Rotation2d());
         Pose2d redFinishPose      = new Pose2d(12.54, 1.8, new Rotation2d());
 
         Pose2d blueTransitionPose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
         Pose2d redTransitionPose  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
+
 
 
         addCommands(new LogMessageCommand("Starting Auto"));
@@ -50,13 +56,13 @@ public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
 
         /* Note 2 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_WOLVERINE, BotTarget.RED_NOTE_WOLVERINE));
-//        addCommands(new WaitCommand(1.3)
-//            .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
-//        addCommands(new StartIntakeCommand(armSubsystem, lighting)
-//            .deadlineWith(new DriveRobotOrientedCommand(swerve, new Translation2d(1, 0), new Rotation2d(0, 0), 1)));
-//        addCommands(new CompactCommand(armSubsystem));
-//        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
-//        addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+        addCommands(new WaitCommand(1.3)
+            .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
+        addCommands(new StartIntakeCommand(armSubsystem, lighting)
+            .deadlineWith(new DriveToPositionCommand(swerve, blueNote2Pose, redNote2Pose)));
+        addCommands(new CompactCommand(armSubsystem));
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+        addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         /* Exit Zone */
 //
