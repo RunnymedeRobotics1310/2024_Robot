@@ -169,19 +169,22 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
         updateLighting(visPose.poseConfidence());
 
-        // convert camera pose to robot pose
-        Pose2d         robotPose = new Pose2d(visPose.pose().getTranslation().minus(CAMERA_LOC_REL_TO_ROBOT_CENTER),
-            visPose.pose().getRotation());
+        Pose2d         odoPose = getPose();
 
         // how different is vision data from estimated data?
-        double         delta_m   = getPose().getTranslation().getDistance(robotPose.getTranslation());
+        double         delta_m = getPose().getTranslation().getDistance(visPose.pose().getTranslation());
 
-        Matrix<N3, N1> stds      = getVisionStandardDeviation(visPose.poseConfidence(), delta_m);
+        Matrix<N3, N1> stds    = getVisionStandardDeviation(visPose.poseConfidence(), delta_m);
 
         // ignore drastically different data
         if (stds == null) {
             updateLighting(null);
             return;
+        }
+
+        if (delta_m > 0.3) {
+            log(String.format("Vision data is too different from odometry: %2f m", delta_m) + " odo: "
+                + format(odoPose) + " vis: " + format(visPose.pose()));
         }
 
         double timeInSeconds = Timer.getFPGATimestamp() - (visPose.latencyMillis() / 1000);
