@@ -15,10 +15,7 @@ import frc.robot.commands.arm.CompactCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.swervedrive.DriveRobotOrientedCommand;
-import frc.robot.commands.swervedrive.DriveToPositionCommand;
-import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
-import frc.robot.commands.swervedrive.RotateToTargetCommand;
+import frc.robot.commands.swervedrive.*;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -32,8 +29,8 @@ public class Score2SpeakerVisualAutoCommand extends SequentialCommandGroup {
 
 
         // In this case we need to adjust the pose and take off 70cm (on a diagonal from where the bot will start by speaker) so it doesn't ram the podium
-        Pose2d blueNote2Pose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(-0.48, 0.48)), new Rotation2d());
-        Pose2d redNote2Pose  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(0.48, 0.48)), new Rotation2d());
+        Translation2d blueNote2Loc = BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(-0.48, 0.48));
+        Translation2d redNote2Loc  = RED_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(0.48, 0.48));
 
         // Transition Away from Stage/Podium before moving to final
         Pose2d blueTransitionPose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
@@ -62,7 +59,7 @@ public class Score2SpeakerVisualAutoCommand extends SequentialCommandGroup {
         addCommands(new WaitCommand(1.3)
                 .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-                .deadlineWith(new DriveToPositionCommand(swerve, blueNote2Pose, redNote2Pose, Constants.Swerve.Chassis.NOTE_PICKUP_TRANSLATION_SPEED_MPS)));
+                .deadlineWith(new DriveToPositionFacingCommand(swerve, blueNote2Loc, redNote2Loc)));
         addCommands(new CompactCommand(armSubsystem));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));

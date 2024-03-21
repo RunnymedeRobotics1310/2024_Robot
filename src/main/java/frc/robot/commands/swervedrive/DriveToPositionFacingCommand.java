@@ -3,30 +3,56 @@ package frc.robot.commands.swervedrive;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
 import static frc.robot.RunnymedeUtils.format;
+import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class DriveToPositionFacingCommand extends BaseDriveCommand {
 
 
-    private final Translation2d positionToDriveToward;
-    private final Translation2d positionToFace;
+    private final Translation2d redPositionToDriveToward;
+    private final Translation2d redPositionToFace;
+    private final Translation2d bluePositionToDriveToward;
+    private final Translation2d bluePositionToFace;
+
+    private Translation2d positionToDriveToward;
+    private Translation2d positionToFace;
 
     /**
      * Drive as fast as possible to the specified location while facing another specified position.
      * Useful while driving one way and locking on another target.
      */
-    public DriveToPositionFacingCommand(SwerveSubsystem swerve, Translation2d positionToDriveToward,
-        Translation2d positionToFace) {
+    public DriveToPositionFacingCommand(SwerveSubsystem swerve, Translation2d redPositionToDriveToward,
+        Translation2d redPositionToFace, Translation2d bluePositionToDriveToward, Translation2d bluePositionToFace) {
         super(swerve);
-        this.positionToDriveToward = positionToDriveToward;
-        this.positionToFace        = positionToFace;
+        this.redPositionToDriveToward = redPositionToDriveToward;
+        this.redPositionToFace = redPositionToFace;
+        this.bluePositionToDriveToward = bluePositionToDriveToward;
+        this.bluePositionToFace = bluePositionToFace;
+    }
+
+    /**
+     * Drive as fast as possible to the specified location while facing another specified position.
+     * Useful while driving one way and locking on another target.
+     */
+    public DriveToPositionFacingCommand(SwerveSubsystem swerve, Translation2d redPositionToDriveAndFaceToward,
+                                        Translation2d bluePositionToDriveAndFaceToward) {
+        this(swerve, redPositionToDriveAndFaceToward, redPositionToDriveAndFaceToward, bluePositionToDriveAndFaceToward, bluePositionToDriveAndFaceToward);
     }
 
     @Override
     public void initialize() {
+        if (getRunnymedeAlliance() == DriverStation.Alliance.Blue) {
+            positionToDriveToward = bluePositionToDriveToward;
+            positionToFace = bluePositionToFace;
+        } else {
+            positionToDriveToward = redPositionToDriveToward;
+            positionToFace = redPositionToFace;
+        }
+
         logCommandStart("drive: " + format(positionToDriveToward) + " face: " + format(positionToFace));
     }
 
