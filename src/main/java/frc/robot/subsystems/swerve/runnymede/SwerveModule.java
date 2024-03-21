@@ -11,6 +11,8 @@ import frc.robot.telemetry.Telemetry;
 
 class SwerveModule {
 
+    private final int                   INTERNAL_ENCODER_UPDATE_FREQ = 10;
+    private int                         internalEncoderUpdateCount   = 0;
     private final String                name;
     private final Translation2d         location;
     private final DriveMotor            driveMotor;
@@ -21,8 +23,6 @@ class SwerveModule {
     /**
      * Constructs a SwerveModule with a drive motor, turning motor, drive encoder and turning
      * encoder.
-     * TODO: periodically update neo encoder from absolute encoder
-     * TODO: figure out how to handle brownouts.
      */
     SwerveModule(Constants.Swerve.Module cfg, Constants.Swerve.Motor driveCfg, Constants.Swerve.Motor angleCfg) {
         this.name     = cfg.name;
@@ -96,13 +96,18 @@ class SwerveModule {
     }
 
     void updateInternalEncoder() {
-        double angle = encoder.getAbsolutePositionInDegrees();
-        if (encoder.readingError) {
-            throw new IllegalStateException("Absolute encoder " + encoder.getDeviceId() + " could not be read.");
-        }
-        angleMotor.setInternalEncoderPositionDegrees(angle);
-    }
 
+        if (internalEncoderUpdateCount++ >= INTERNAL_ENCODER_UPDATE_FREQ) {
+            internalEncoderUpdateCount = 0;
+            double angle = encoder.getAbsolutePositionInDegrees();
+            if (encoder.readingError) {
+                System.out.println("Absolute encoder " + encoder.getDeviceId() + " could not be read.");
+            }
+            else {
+                angleMotor.setInternalEncoderPositionDegrees(angle);
+            }
+        }
+    }
 
     void updateTelemetry() {
         Telemetry.swerve.getModule(name).absoluteEncoderPositionDegrees = encoder.getAbsolutePositionInDegrees();
