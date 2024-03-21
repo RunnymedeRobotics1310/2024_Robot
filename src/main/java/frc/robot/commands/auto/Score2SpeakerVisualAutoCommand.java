@@ -34,8 +34,8 @@ public class Score2SpeakerVisualAutoCommand extends SequentialCommandGroup {
         Pose2d blueFinishPose     = new Pose2d(4, 1.5, new Rotation2d());
         Pose2d redFinishPose      = new Pose2d(12.54, 1.8, new Rotation2d());
 
-        Pose2d blueTransitionPose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d(), new Rotation2d());
-        Pose2d redTransitionPose  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().toTranslation2d(), new Rotation2d());
+        Pose2d blueTransitionPose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(-0.48, 0.48)), new Rotation2d());
+        Pose2d redTransitionPose  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(0.48, 0.48)), new Rotation2d());
 
         addCommands(new LogMessageCommand("Starting Auto"));
         addCommands(new WaitCommand(delay));
@@ -53,10 +53,11 @@ public class Score2SpeakerVisualAutoCommand extends SequentialCommandGroup {
 
 
         /* Note 3 */
-        addCommands(new WaitCommand(0.7)
+        addCommands(new WaitCommand(1.3)
                 .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
                 .deadlineWith(new DriveToPositionCommand(swerve, blueTransitionPose, redTransitionPose, Constants.Swerve.Chassis.NOTE_PICKUP_TRANSLATION_SPEED_MPS)));
+        addCommands(new CompactCommand(armSubsystem));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 

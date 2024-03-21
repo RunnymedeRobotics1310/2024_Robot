@@ -54,6 +54,7 @@ public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
 //            .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
 //        addCommands(new StartIntakeCommand(armSubsystem, lighting)
 //            .deadlineWith(new DriveRobotOrientedCommand(swerve, new Translation2d(1, 0), new Rotation2d(0, 0), 1)));
+//        addCommands(new CompactCommand(armSubsystem));
 //        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
 //        addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
