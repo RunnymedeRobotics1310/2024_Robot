@@ -22,7 +22,7 @@ public class CompactCommand extends ArmBaseCommand {
      * Set the state and log the transition
      *
      * @param newState State to transition to
-     * @param reason   Reason for the transition for logging
+     * @param reason Reason for the transition for logging
      */
     private void setStateAndLog(State newState, String reason) {
         logStateTransition(newState.name(), reason);

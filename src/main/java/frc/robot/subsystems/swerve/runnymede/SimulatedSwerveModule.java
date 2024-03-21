@@ -5,9 +5,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 
-
-
-public class SimulatedSwerveModule {
+class SimulatedSwerveModule {
     private final Timer       timer = new Timer();
     private double            dt;
     private double            fakePos;
@@ -15,7 +13,7 @@ public class SimulatedSwerveModule {
     private double            lastTime;
     private SwerveModuleState state;
 
-    public SimulatedSwerveModule() {
+    SimulatedSwerveModule() {
         this.timer.start();
         this.lastTime  = this.timer.get();
         this.state     = new SwerveModuleState(0.0, Rotation2d.fromDegrees(0.0));
@@ -24,7 +22,7 @@ public class SimulatedSwerveModule {
         this.dt        = 0.0;
     }
 
-    public void setDesiredState(SwerveModuleState desiredState) {
+    void setDesiredState(SwerveModuleState desiredState) {
         this.dt         = this.timer.get() - this.lastTime;
         this.lastTime   = this.timer.get();
         this.state      = desiredState;
@@ -32,11 +30,11 @@ public class SimulatedSwerveModule {
         this.fakePos   += this.fakeSpeed * this.dt;
     }
 
-    public SwerveModulePosition getPosition() {
+    SwerveModulePosition getPosition() {
         return new SwerveModulePosition(this.fakePos, this.state.angle);
     }
 
-    public SwerveModuleState getState() {
+    SwerveModuleState getState() {
         return this.state;
     }
 }

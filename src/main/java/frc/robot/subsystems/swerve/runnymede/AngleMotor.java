@@ -1,20 +1,18 @@
 package frc.robot.subsystems.swerve.runnymede;
 
-
-
 import com.revrobotics.CANSparkBase;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants;
 
-public class AngleMotor extends SparkMaxNeoMotor {
+class AngleMotor extends SparkMaxNeoMotor {
 
 
     /**
      * Configure the SparkMAX and its integrated PIDF (PID + feed forward) control.
      *
      * @param canBusId bus id
-     * @param cfg      motor configuration
+     * @param cfg motor configuration
      * @{link https://docs.revrobotics.com/sparkmax/operating-modes/closed-loop-control}
      */
     AngleMotor(int canBusId, Constants.Swerve.Motor cfg) {
@@ -28,9 +26,12 @@ public class AngleMotor extends SparkMaxNeoMotor {
         // configure integrated encoder
         final double turnConversionFactor = 1 / (cfg.gearRatio * 360);
         configureSparkMax(() -> encoder.setPositionConversionFactor(turnConversionFactor));
-        configureSparkMax(() -> encoder.setVelocityConversionFactor(turnConversionFactor / 60)); // todo: check 60
+        configureSparkMax(() -> encoder.setVelocityConversionFactor(turnConversionFactor / 60)); // todo:
+                                                                                                 // check
+                                                                                                 // 60
 
-        pid.setFeedbackDevice(encoder); // Configure feedback of the PID controller as the integrated encoder.
+        pid.setFeedbackDevice(encoder); // Configure feedback of the PID controller as the
+                                        // integrated encoder.
         configureSparkMax(() -> pid.setP(cfg.p, 0));
         configureSparkMax(() -> pid.setI(cfg.i, 0));
         configureSparkMax(() -> pid.setD(cfg.d, 0));
@@ -54,7 +55,7 @@ public class AngleMotor extends SparkMaxNeoMotor {
     /**
      * Set the integrated encoder position
      *
-     * @param position Integrated encoder position  - degrees for turning motor
+     * @param position Integrated encoder position - degrees for turning motor
      */
     void setInternalEncoderPositionDegrees(double position) {
         if (encoder.getPosition() != position) {
@@ -64,9 +65,7 @@ public class AngleMotor extends SparkMaxNeoMotor {
 
 
     void setReferenceDegrees(double setpoint, double feedforward) {
-        configureSparkMax(() ->
-                pid.setReference(setpoint, CANSparkBase.ControlType.kPosition, 0, feedforward)
-        );
+        configureSparkMax(() -> pid.setReference(setpoint, CANSparkBase.ControlType.kPosition, 0, feedforward));
 
     }
 }
