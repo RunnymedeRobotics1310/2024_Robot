@@ -57,7 +57,6 @@ public class Score2SpeakerVisualAutoCommand extends SequentialCommandGroup {
                 .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
                 .deadlineWith(new DriveToPositionCommand(swerve, blueTransitionPose, redTransitionPose, Constants.Swerve.Chassis.NOTE_PICKUP_TRANSLATION_SPEED_MPS)));
-        addCommands(new CompactCommand(armSubsystem));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 

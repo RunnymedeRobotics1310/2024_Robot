@@ -116,7 +116,7 @@ public class CompactCommand extends ArmBaseCommand {
         case LOCK:
 
             armSubsystem.setLinkPivotSpeed(-.2);
-            armSubsystem.setAimPivotSpeed(0);
+            armSubsystem.setAimPivotSpeed(-.1);
 
             // If past the bumper danger, move to the intake position.
             if (this.isStateTimeoutExceeded(.2)) {
