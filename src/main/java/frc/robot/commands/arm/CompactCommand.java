@@ -72,7 +72,6 @@ public class CompactCommand extends ArmBaseCommand {
             armSubsystem.setLinkPivotSpeed(.5);
 
             if (armSubsystem.getLinkAngle() > ArmConstants.INTAKE_ARM_POSITION.linkAngle + 4) {
-                logStateTransition("Lift Link -> Move Both", );
                 setStateAndLog(State.MOVE_BOTH, "Link lifted, Link at" + armSubsystem.getLinkAngle());
             }
             break;
@@ -98,7 +97,7 @@ public class CompactCommand extends ArmBaseCommand {
                 aimSpeed = 0;
             }
             // Slow Mode for Aim
-            else if (armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle + 12) {
+            else if (armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle + 8) {
                 aimSpeed = -.1;
             }
 
@@ -124,7 +123,7 @@ public class CompactCommand extends ArmBaseCommand {
 
                 armSubsystem.setLinkPivotSpeed(0);
 
-                setStateAndLog(State.LOCKED, "In position, let's lock it");
+                setStateAndLog(State.LOCKED, "In locked position");
             }
 
             break;

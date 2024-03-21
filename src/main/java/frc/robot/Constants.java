@@ -109,6 +109,9 @@ public final class Constants {
              * consider 1-2 for development and 2-3 for competitions.
              */
             public static final double MAX_TRANSLATION_SPEED_MPS          = 4.42;
+
+            public static final double NOTE_PICKUP_TRANSLATION_SPEED_MPS  = 2;
+
             /**
              * The minimum speed that the robot will translate. This existss to ensure
              * that the speed doesn't drop below a threshold where it is useful.
@@ -386,7 +389,7 @@ public final class Constants {
             DO_NOTHING,
             EXIT_ZONE, SCORE_1_AMP, SCORE_2_AMP, SCORE_2_5_AMP,
             SCORE_1_SPEAKER_STAY,
-            SCORE_1_SPEAKER, SCORE_2_SPEAKER, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
+            SCORE_1_SPEAKER, SCORE_2_SPEAKER, SCORE_2_SPEAKER_VISION, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
             PLAN_B
         }
 
