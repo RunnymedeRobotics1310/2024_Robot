@@ -31,11 +31,18 @@ public class Score2SpeakerVisualAutoCommand extends SequentialCommandGroup {
                                           JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
 
+        // In this case we need to adjust the pose and take off 70cm (on a diagonal from where the bot will start by speaker) so it doesn't ram the podium
+        Pose2d blueNote2Pose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(-0.48, 0.48)), new Rotation2d());
+        Pose2d redNote2Pose  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(0.48, 0.48)), new Rotation2d());
+
+        // Transition Away from Stage/Podium before moving to final
+        Pose2d blueTransitionPose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
+        Pose2d redTransitionPose  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
+
+        // Final resting place
         Pose2d blueFinishPose     = new Pose2d(4, 1.5, new Rotation2d());
         Pose2d redFinishPose      = new Pose2d(12.54, 1.8, new Rotation2d());
 
-        Pose2d blueTransitionPose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(-0.48, 0.48)), new Rotation2d());
-        Pose2d redTransitionPose  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(0.48, 0.48)), new Rotation2d());
 
         addCommands(new LogMessageCommand("Starting Auto"));
         addCommands(new WaitCommand(delay));
@@ -51,17 +58,17 @@ public class Score2SpeakerVisualAutoCommand extends SequentialCommandGroup {
             BotTarget.BLUE_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(1.6, 0)),
             BotTarget.RED_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(-1.6, 0))));
 
-
-        /* Note 3 */
+        /* Note 2 */
         addCommands(new WaitCommand(1.3)
                 .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-                .deadlineWith(new DriveToPositionCommand(swerve, blueTransitionPose, redTransitionPose, Constants.Swerve.Chassis.NOTE_PICKUP_TRANSLATION_SPEED_MPS)));
+                .deadlineWith(new DriveToPositionCommand(swerve, blueNote2Pose, redNote2Pose, Constants.Swerve.Chassis.NOTE_PICKUP_TRANSLATION_SPEED_MPS)));
         addCommands(new CompactCommand(armSubsystem));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         /* Exit Zone */
+        addCommands(new DriveToPositionCommand(swerve, blueTransitionPose, redTransitionPose));
         addCommands(new DriveToPositionCommand(swerve, blueFinishPose, redFinishPose));
 
         // tell people we're done
