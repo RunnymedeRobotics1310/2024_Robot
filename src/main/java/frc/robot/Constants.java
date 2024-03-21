@@ -361,18 +361,18 @@ public final class Constants {
 
             // todo: measure / tune these values
             if (confidence == HIGH) {
-                xyMetresStds = 0.05;
-                degreesStds  = 2;
+                xyMetresStds = 1.0 * poseDifferenceMetres;
+                degreesStds  = 20;
             }
             else if (confidence == MEDIUM || poseDifferenceMetres < 0.5) {
-                xyMetresStds = 0.15;
-                degreesStds  = 6;
+                xyMetresStds = 2 * poseDifferenceMetres;
+                degreesStds  = 40;
                 // temporarily disable
                 return null;
             }
             else if (confidence == LOW || poseDifferenceMetres < 0.8) {
-                xyMetresStds = 0.30;
-                degreesStds  = 12;
+                xyMetresStds = 3 * poseDifferenceMetres;
+                degreesStds  = 60;
                 // temporarily disable
                 return null;
             }
