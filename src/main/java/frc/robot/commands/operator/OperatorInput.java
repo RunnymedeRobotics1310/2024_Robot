@@ -28,7 +28,6 @@ import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
 import frc.robot.commands.arm.ShootTrapCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
-import frc.robot.commands.auto.PlanBAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
@@ -339,7 +338,6 @@ public class OperatorInput {
         autoPatternChooser.addOption("3 Speaker", Constants.AutoConstants.AutoPattern.SCORE_3_SPEAKER);
         autoPatternChooser.addOption("4 Speaker", Constants.AutoConstants.AutoPattern.SCORE_4_SPEAKER);
 
-        autoPatternChooser.addOption("Plan B", Constants.AutoConstants.AutoPattern.PLAN_B);
 
 
         Telemetry.auto.delayChooser = delayChooser;
@@ -384,7 +382,6 @@ public class OperatorInput {
         case SCORE_2_SPEAKER_VISION -> new Score2SpeakerVisualAutoCommand(drive, arm, hugh, jackman, lighting, delay);
         case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
         case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
-        case PLAN_B -> new PlanBAutoCommand(drive, delay);
         default -> new InstantCommand();
         };
     }
