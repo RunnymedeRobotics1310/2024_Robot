@@ -102,10 +102,9 @@ public abstract class BaseDriveCommand extends LoggingCommand {
     private static Translation2d computeVelocity(Translation2d translationToTravel, double maxSpeed) {
 
         double distanceMetres = translationToTravel.getNorm();
-        double absDistMetres  = Math.abs(distanceMetres);
 
         // don't worry about tiny translations
-        if (absDistMetres < TRANSLATION_TOLERANCE_METRES) {
+        if (distanceMetres < TRANSLATION_TOLERANCE_METRES) {
             return new Translation2d();
         }
 
@@ -116,20 +115,20 @@ public abstract class BaseDriveCommand extends LoggingCommand {
 
         // ensure that we have enough room to decelerate
         double decelDistance  = DECEL_FROM_MAX_TO_STOP_DIST_METRES;
-        double decelDistRatio = absDistMetres / decelDistance;
+        double decelDistRatio = distanceMetres / decelDistance;
         if (decelDistRatio < 1) {
             maxSpeed *= decelDistRatio;
         }
 
 
         double speed;
-        if (absDistMetres >= decelDistance) {
+        if (distanceMetres >= decelDistance) {
             // cruising
             speed = maxSpeed;
         }
         else {
             // decelerating
-            double pctToGo = absDistMetres / decelDistance;
+            double pctToGo = distanceMetres / decelDistance;
             speed = maxSpeed * pctToGo * VelocityPIDConfig.P;
         }
 
