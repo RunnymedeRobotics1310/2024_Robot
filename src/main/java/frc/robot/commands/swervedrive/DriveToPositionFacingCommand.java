@@ -18,20 +18,21 @@ public class DriveToPositionFacingCommand extends BaseDriveCommand {
     private final Translation2d bluePositionToDriveToward;
     private final Translation2d bluePositionToFace;
 
-    private Translation2d positionToDriveToward;
-    private Translation2d positionToFace;
+    private Translation2d       positionToDriveToward;
+    private Translation2d       positionToFace;
 
     /**
      * Drive as fast as possible to the specified location while facing another specified position.
      * Useful while driving one way and locking on another target.
      */
-    public DriveToPositionFacingCommand(SwerveSubsystem swerve, Translation2d redPositionToDriveToward,
-        Translation2d redPositionToFace, Translation2d bluePositionToDriveToward, Translation2d bluePositionToFace) {
+    public DriveToPositionFacingCommand(SwerveSubsystem swerve, Translation2d bluePositionToDriveToward,
+        Translation2d bluePositionToFace, Translation2d redPositionToDriveToward,
+        Translation2d redPositionToFace) {
         super(swerve);
-        this.redPositionToDriveToward = redPositionToDriveToward;
-        this.redPositionToFace = redPositionToFace;
+        this.redPositionToDriveToward  = redPositionToDriveToward;
+        this.redPositionToFace         = redPositionToFace;
         this.bluePositionToDriveToward = bluePositionToDriveToward;
-        this.bluePositionToFace = bluePositionToFace;
+        this.bluePositionToFace        = bluePositionToFace;
     }
 
     /**
@@ -39,18 +40,20 @@ public class DriveToPositionFacingCommand extends BaseDriveCommand {
      * Useful while driving one way and locking on another target.
      */
     public DriveToPositionFacingCommand(SwerveSubsystem swerve, Translation2d redPositionToDriveAndFaceToward,
-                                        Translation2d bluePositionToDriveAndFaceToward) {
-        this(swerve, redPositionToDriveAndFaceToward, redPositionToDriveAndFaceToward, bluePositionToDriveAndFaceToward, bluePositionToDriveAndFaceToward);
+        Translation2d bluePositionToDriveAndFaceToward) {
+        this(swerve, redPositionToDriveAndFaceToward, redPositionToDriveAndFaceToward, bluePositionToDriveAndFaceToward,
+            bluePositionToDriveAndFaceToward);
     }
 
     @Override
     public void initialize() {
         if (getRunnymedeAlliance() == DriverStation.Alliance.Blue) {
             positionToDriveToward = bluePositionToDriveToward;
-            positionToFace = bluePositionToFace;
-        } else {
+            positionToFace        = bluePositionToFace;
+        }
+        else {
             positionToDriveToward = redPositionToDriveToward;
-            positionToFace = redPositionToFace;
+            positionToFace        = redPositionToFace;
         }
 
         logCommandStart("drive: " + format(positionToDriveToward) + " face: " + format(positionToFace));
