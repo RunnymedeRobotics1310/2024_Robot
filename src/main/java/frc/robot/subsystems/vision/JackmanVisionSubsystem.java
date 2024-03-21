@@ -87,7 +87,7 @@ public class JackmanVisionSubsystem extends RunnymedeSubsystemBase {
         Telemetry.jackman.ledMode             = ledMode.getDouble(-1.0);
         Telemetry.jackman.pipeline            = pipeline.getDouble(-1.0);
         Rotation2d noteOffset = getNoteOffset();
-        Telemetry.jackman.noteOffset = noteOffset == null ? -1310 : getNoteOffset().getDegrees();
+        Telemetry.jackman.noteOffset = noteOffset == null ? -1310 : noteOffset.getDegrees();
     }
 
     /**
