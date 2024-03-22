@@ -30,6 +30,7 @@ public class ScoreLoadedWolverine extends SequentialCommandGroup {
 
         // wolverine
         addCommands(new DriveToPositionCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED));
+        addCommands(new WaitCommand(1.3).deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(
             new StartIntakeCommand(armSubsystem, lighting)
                 .deadlineWith(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.5)));
