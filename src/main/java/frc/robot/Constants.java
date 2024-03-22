@@ -277,21 +277,21 @@ public final class Constants {
         RED_STAGE(new Translation3d(11.676634, 4.105656, 1.6764)),
 
         // Blue Side Notes
-        BLUE_NOTE_WOLVERINE(new Translation3d(2.9, 4.11, 0)),
-        BLUE_NOTE_BARNUM(new Translation3d(2.9, 5.5, 0)),
-        BLUE_NOTE_VALJEAN(new Translation3d(2.9, 7, 0)),
+        BLUE_NOTE_WOLVERINE(new Translation3d(FieldConstants.BLUE_WOLVERINE.getX(), FieldConstants.BLUE_WOLVERINE.getY(), 0)),
+        BLUE_NOTE_BARNUM(new Translation3d(FieldConstants.BLUE_BARNUM.getX(), FieldConstants.BLUE_BARNUM.getY(), 0)),
+        BLUE_NOTE_VALJEAN(new Translation3d(FieldConstants.BLUE_VALJEAN.getX(), FieldConstants.BLUE_VALJEAN.getY(), 0)),
 
         // Red Side Notes
-        RED_NOTE_WOLVERINE(new Translation3d(13.53, 4.11, 0)),
-        RED_NOTE_BARNUM(new Translation3d(13.53, 5.5, 0)),
-        RED_NOTE_VALJEAN(new Translation3d(13.53, 7, 0)),
+        RED_NOTE_WOLVERINE(new Translation3d(FieldConstants.RED_WOLVERINE.getX(), FieldConstants.RED_WOLVERINE.getY(), 0)),
+        RED_NOTE_BARNUM(new Translation3d(FieldConstants.RED_BARNUM.getX(), FieldConstants.RED_BARNUM.getY(), 0)),
+        RED_NOTE_VALJEAN(new Translation3d(FieldConstants.RED_VALJEAN.getX(), FieldConstants.RED_VALJEAN.getY(), 0)),
 
         // Centre Field Notes
-        CENTRE_NOTE_1(new Translation3d(8.16, 0.75, 0)),
-        CENTRE_NOTE_2(new Translation3d(8.16, 2.43, 0)),
-        CENTRE_NOTE_3(new Translation3d(8.16, 4.11, 0)),
-        CENTRE_NOTE_4(new Translation3d(8.16, 5.79, 0)),
-        CENTRE_NOTE_5(new Translation3d(8.16, 7.47, 0)),
+        CENTRE_NOTE_1(new Translation3d(FieldConstants.CENTRE_NOTE_1.getX(), FieldConstants.CENTRE_NOTE_1.getY(), 0)),
+        CENTRE_NOTE_2(new Translation3d(FieldConstants.CENTRE_NOTE_2.getX(), FieldConstants.CENTRE_NOTE_2.getY(), 0)),
+        CENTRE_NOTE_3(new Translation3d(FieldConstants.CENTRE_NOTE_3.getX(), FieldConstants.CENTRE_NOTE_3.getY(), 0)),
+        CENTRE_NOTE_4(new Translation3d(FieldConstants.CENTRE_NOTE_4.getX(), FieldConstants.CENTRE_NOTE_4.getY(), 0)),
+        CENTRE_NOTE_5(new Translation3d(FieldConstants.CENTRE_NOTE_5.getX(), FieldConstants.CENTRE_NOTE_5.getY(), 0)),
 
         // When No Target is Set
         NONE(new Translation3d(0, 0, 0)),
@@ -339,10 +339,28 @@ public final class Constants {
     }
 
     public static final class FieldConstants {
-        public static final double FIELD_WIDTH_METRES  = 16.54;
-        public static final double FIELD_LENGTH_METRES = 8.02;
+        public static final double        FIELD_WIDTH_METRES  = 16.54;
+        public static final double        FIELD_LENGTH_METRES = 8.02;
+        // TODO: confirm that this is correct
+        public static final double        WING_LENGTH_METRES  = 5.0;
 
-        public static final double WING_LENGTH_METRES  = 5.0;  // todo: confirm
+        // Blue Side Notes
+        public static final Translation2d BLUE_WOLVERINE      = new Translation2d(2.9, 4.11);
+        public static final Translation2d BLUE_BARNUM         = new Translation2d(2.9, 5.5);
+        public static final Translation2d BLUE_VALJEAN        = new Translation2d(2.9, 7);
+
+        // Red Side Notes
+        public static final Translation2d RED_WOLVERINE       = new Translation2d(13.53, 4.11);
+        public static final Translation2d RED_BARNUM          = new Translation2d(13.53, 5.5);
+        public static final Translation2d RED_VALJEAN         = new Translation2d(13.53, 7);
+
+        // Centre Field Notes
+        public static final Translation2d CENTRE_NOTE_1       = new Translation2d(8.16, 0.75);
+        public static final Translation2d CENTRE_NOTE_2       = new Translation2d(8.16, 2.43);
+        public static final Translation2d CENTRE_NOTE_3       = new Translation2d(8.16, 4.11);
+        public static final Translation2d CENTRE_NOTE_4       = new Translation2d(8.16, 5.79);
+        public static final Translation2d CENTRE_NOTE_5       = new Translation2d(8.16, 7.47);
+
     }
 
     public static final class VisionConstants {
