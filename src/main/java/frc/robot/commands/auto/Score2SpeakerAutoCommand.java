@@ -41,9 +41,6 @@ public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
         addCommands(new LogMessageCommand("Starting Auto"));
         addCommands(new WaitCommand(delay));
 
-        // TODO: replace FakeScoreSpeakerCommand
-
-        /* ***AUTO PATTERN*** */
 
         /* Note 1 */
         // back up to not hit the speaker while rotating

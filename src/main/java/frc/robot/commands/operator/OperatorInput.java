@@ -27,16 +27,7 @@ import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
 import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
 import frc.robot.commands.arm.ShootTrapCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.auto.ExitZoneAutoCommand;
-import frc.robot.commands.auto.Score1AmpAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
-import frc.robot.commands.auto.Score2AmpAutoCommand;
-import frc.robot.commands.auto.Score2SpeakerAutoCommand;
-import frc.robot.commands.auto.Score2SpeakerVisualAutoCommand;
-import frc.robot.commands.auto.Score2_5AmpAutoCommand;
-import frc.robot.commands.auto.Score3SpeakerAutoCommand;
-import frc.robot.commands.auto.Score4SpeakerAutoCommand;
+import frc.robot.commands.auto.*;
 import frc.robot.commands.climb.MaxClimbCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToScoreAmpCommand;
@@ -332,6 +323,7 @@ public class OperatorInput {
 
         autoPatternChooser.addOption("1 Speaker Stay", Constants.AutoConstants.AutoPattern.SCORE_1_SPEAKER_STAY);
         autoPatternChooser.addOption("1 Speaker", Constants.AutoConstants.AutoPattern.SCORE_1_SPEAKER);
+        autoPatternChooser.addOption("The Double Down", Constants.AutoConstants.AutoPattern.THE_DOUBLE_DOWN);
         autoPatternChooser.addOption("2 Speaker", Constants.AutoConstants.AutoPattern.SCORE_2_SPEAKER);
         autoPatternChooser.addOption("2 Speaker Vision", Constants.AutoConstants.AutoPattern.SCORE_2_SPEAKER_VISION);
         autoPatternChooser.addOption("3 Speaker", Constants.AutoConstants.AutoPattern.SCORE_3_SPEAKER);
@@ -379,6 +371,7 @@ public class OperatorInput {
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman, lighting, delay);
         case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, hugh, lighting, delay);
         case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh, lighting, delay);
+        case THE_DOUBLE_DOWN -> new TheDoubleDown(drive, arm, lighting, delay);
         case SCORE_2_SPEAKER -> new Score2SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
         case SCORE_2_SPEAKER_VISION -> new Score2SpeakerVisualAutoCommand(drive, arm, hugh, jackman, lighting, delay);
         case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
