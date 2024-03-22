@@ -14,7 +14,8 @@ import frc.robot.subsystems.vision.HughVisionSubsystem;
 
 public class Score1SpeakerAutoCommand extends SequentialCommandGroup {
 
-    public Score1SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem arm, HughVisionSubsystem hugh, LightingSubsystem lighting, double delay) {
+    public Score1SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem arm, HughVisionSubsystem hugh,
+        LightingSubsystem lighting, double delay) {
 
         Pose2d blueFinishPose  = new Pose2d(4, 1.5, new Rotation2d());
         Pose2d redFinishPose   = new Pose2d(12.54, 1.8, new Rotation2d());
@@ -26,13 +27,9 @@ public class Score1SpeakerAutoCommand extends SequentialCommandGroup {
         addCommands(new LogMessageCommand("Starting Auto"));
         addCommands(new WaitCommand(delay));
 
-        /* ***AUTO PATTERN*** */
-
         /* Note 1 */
 
         // IMPORTANT: line up with speaker
-
-        // addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootCommand(arm, lighting));
 
         /* Exit Zone */
