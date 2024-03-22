@@ -30,7 +30,7 @@ public class ScoreLoadedWolverineBarnum extends SequentialCommandGroup {
         addCommands(new ShootCommand(armSubsystem, lighting));
 
         // score wolverine
-        addCommands(new DriveToPositionFacingCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, BLUE_WOLVERINE, IN_FRONT_OF_WOLVERINE_RED, RED_WOLVERINE
+        addCommands(new DriveToPositionCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED));
         addCommands(
             new StartIntakeCommand(armSubsystem, lighting)
                 .deadlineWith(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.5)));
