@@ -31,6 +31,7 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
         // barnum
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         // valjean
