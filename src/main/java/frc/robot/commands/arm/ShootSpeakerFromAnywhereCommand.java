@@ -74,18 +74,18 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
     /**
      * Calculates aim angle based on quadratic equation fit for the following data:
-     * - 1.5 meter distance, angle 40 (by paper measurement, but feels odd. let's try 40)
+     * - 1.5 meter distance, angle 40 (by paper measurement, but feels odd. let's try 43)
      * - 3 meters distance, angle 42
-     * - 5 meters distance, angle 51
+     * - 5 meters distance, angle 53
      *
      * @param distance Distance in meters to target
      * @return aim angle in degrees
      */
     private double calculateAimAngle(double distance) {
         // Coefficients from the quadratic equation fit
-        double a = 0.57142857;
-        double b = -0.57142857;
-        double c = 39.57142857;
+        double a = 0.85714286;
+        double b = -1.85714286;
+        double c = 40.85714286;
 
         // Calculate the angle based on the distance
         return a * Math.pow(distance, 2) + b * distance + c;
