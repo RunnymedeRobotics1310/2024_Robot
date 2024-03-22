@@ -96,10 +96,6 @@ public class CompactCommand extends ArmBaseCommand {
             if (armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle) {
                 aimSpeed = 0;
             }
-            // Slow Mode for Aim
-            else if (armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle + 8) {
-                aimSpeed = -.1;
-            }
 
             armSubsystem.setLinkPivotSpeed(linkSpeed);
             armSubsystem.setAimPivotSpeed(aimSpeed);
@@ -116,7 +112,7 @@ public class CompactCommand extends ArmBaseCommand {
         case LOCK:
 
             armSubsystem.setLinkPivotSpeed(-.2);
-            armSubsystem.setAimPivotSpeed(.1);
+            armSubsystem.setAimPivotSpeed(0);
 
             // If past the bumper danger, move to the intake position.
             if (this.isStateTimeoutExceeded(.2)) {
