@@ -17,16 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.AimAmpCommand;
-import frc.robot.commands.arm.AimSourceCommand;
-import frc.robot.commands.arm.CompactCommand;
-import frc.robot.commands.arm.EjectNoteCommand;
-import frc.robot.commands.arm.ScoreTrapCommand;
-import frc.robot.commands.arm.ShootCommand;
-import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
-import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
-import frc.robot.commands.arm.ShootTrapCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.climb.MaxClimbCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
@@ -256,7 +247,7 @@ public class OperatorInput {
             .onTrue(new DriveToScoreAmpCommand(drive));
 
         // compact
-        new Trigger(driverController::getXButton).onTrue(new CompactCommand(arm));
+        new Trigger(driverController::getXButton).onTrue(new CompactFromIntakeCommand(arm, true));
 
 
 

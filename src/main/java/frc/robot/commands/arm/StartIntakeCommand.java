@@ -174,7 +174,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         if (!interrupted) {
             if (DriverStation.isTeleop()) {
-                CommandScheduler.getInstance().schedule(new CompactCommand(armSubsystem));
+                CommandScheduler.getInstance().schedule(new CompactFromIntakeCommand(armSubsystem, false));
             }
         }
     }
