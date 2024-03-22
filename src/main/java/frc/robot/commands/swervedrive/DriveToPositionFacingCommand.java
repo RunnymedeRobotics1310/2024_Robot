@@ -26,8 +26,7 @@ public class DriveToPositionFacingCommand extends BaseDriveCommand {
      * Useful while driving one way and locking on another target.
      */
     public DriveToPositionFacingCommand(SwerveSubsystem swerve, Translation2d bluePositionToDriveToward,
-        Translation2d bluePositionToFace, Translation2d redPositionToDriveToward,
-        Translation2d redPositionToFace) {
+        Translation2d bluePositionToFace, Translation2d redPositionToDriveToward, Translation2d redPositionToFace) {
         super(swerve);
         this.redPositionToDriveToward  = redPositionToDriveToward;
         this.redPositionToFace         = redPositionToFace;
@@ -39,10 +38,10 @@ public class DriveToPositionFacingCommand extends BaseDriveCommand {
      * Drive as fast as possible to the specified location while facing another specified position.
      * Useful while driving one way and locking on another target.
      */
-    public DriveToPositionFacingCommand(SwerveSubsystem swerve, Translation2d redPositionToDriveAndFaceToward,
-        Translation2d bluePositionToDriveAndFaceToward) {
-        this(swerve, redPositionToDriveAndFaceToward, redPositionToDriveAndFaceToward, bluePositionToDriveAndFaceToward,
-            bluePositionToDriveAndFaceToward);
+    public DriveToPositionFacingCommand(SwerveSubsystem swerve,
+        Translation2d bluePositionToDriveAndFaceToward, Translation2d redPositionToDriveAndFaceToward) {
+        this(swerve, bluePositionToDriveAndFaceToward, bluePositionToDriveAndFaceToward,
+            redPositionToDriveAndFaceToward, redPositionToDriveAndFaceToward);
     }
 
     @Override
