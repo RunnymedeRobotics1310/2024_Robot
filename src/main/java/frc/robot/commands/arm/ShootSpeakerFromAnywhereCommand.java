@@ -1,5 +1,6 @@
 package frc.robot.commands.arm;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,20 +28,19 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     };
 
     private SwerveSubsystem     swerveSubsystem;
-    private HughVisionSubsystem hughVisionSubsystem;
     private LightingSubsystem   lighting;
 
     private State               state               = State.MOVE_TO_UNLOCK;
     double                      intakeStartPosition = 0;
     long                        shooterStartTime    = 0;
+    private Constants.BotTarget botTarget;
 
     public ShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem,
-        HughVisionSubsystem hughVisionSubsystem, LightingSubsystem lighting) {
+        LightingSubsystem lighting) {
         super(armSubsystem);
         this.swerveSubsystem     = swerveSubsystem;
-        this.hughVisionSubsystem = hughVisionSubsystem;
         this.lighting            = lighting;
-        addRequirements(swerveSubsystem, hughVisionSubsystem);
+        addRequirements(swerveSubsystem);
     }
 
     @Override
@@ -65,12 +65,32 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         intakeStartPosition = armSubsystem.getIntakePosition();
 
         if (getRunnymedeAlliance() == DriverStation.Alliance.Blue) {
-            hughVisionSubsystem.setBotTarget(Constants.BotTarget.BLUE_SPEAKER);
+            botTarget = Constants.BotTarget.BLUE_SPEAKER;
         }
         else {
-            hughVisionSubsystem.setBotTarget(Constants.BotTarget.RED_SPEAKER);
+            botTarget = Constants.BotTarget.RED_SPEAKER;
         }
     }
+
+    /**
+     * Calculates aim angle based on quadratic equation fit for the following data:
+     * - 1.5 meter distance, angle 40 (by paper measurement, but feels odd. let's try 40)
+     * - 3 meters distance, angle 42
+     * - 5 meters distance, angle 51
+     *
+     * @param distance Distance in meters to target
+     * @return aim angle in degrees
+     */
+    private double calculateAimAngle(double distance) {
+        // Coefficients from the quadratic equation fit
+        double a = 0.57142857;
+        double b = -0.57142857;
+        double c = 39.57142857;
+
+        // Calculate the angle based on the distance
+        return a * Math.pow(distance, 2) + b * distance + c;
+    }
+
 
     @Override
     public void execute() {
@@ -109,21 +129,28 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
             // Drive to the arm position at the same time
             double linkAngle = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
-            // TODO: Supply real arm position
-            Rotation2d shooterAngle = hughVisionSubsystem.getDynamicSpeakerShooterAngle(new Translation2d(0, 0));
-            // TODO: Replace this default 45 angle with a field location based one
-            double angle = 45;
-            if (shooterAngle != null) {
-                angle = shooterAngle.getDegrees();
-            }
-            double aimAngle = angle - (linkAngle - 180);
+
+            Pose2d botPose = swerveSubsystem.getPose();
+            double distanceToTarget = botPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
+            double aimAngle = calculateAimAngle(distanceToTarget);
             Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
 
             atArmAngle = this.driveToArmPosition(armPositionNew,
                 ArmConstants.DEFAULT_LINK_TOLERANCE_DEG, ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             armSubsystem.setIntakeSpeed(0);
-            armSubsystem.setShooterSpeed(.75);
+
+            double shooterSpeed;
+            if (distanceToTarget < 3.5) {
+                shooterSpeed = 0.75;
+            }
+            else if (distanceToTarget < 4) {
+                shooterSpeed = 0.85;
+            }
+            else {
+                shooterSpeed = 1;
+            }
+            armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
             if (isStateTimeoutExceeded(.75) && atArmAngle) {
@@ -174,8 +201,6 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         armSubsystem.setIntakeSpeed(0);
         armSubsystem.setShooterSpeed(0);
-
-        hughVisionSubsystem.setBotTarget(Constants.BotTarget.ALL);
 
         logCommandEnd(interrupted);
 

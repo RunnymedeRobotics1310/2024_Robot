@@ -264,7 +264,7 @@ public class OperatorInput {
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getXButton())
-            .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, hugh, lighting));
+            .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, lighting));
 
         // podium shot
         new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
