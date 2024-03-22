@@ -322,6 +322,8 @@ public class OperatorInput {
             Constants.AutoConstants.AutoPattern.SCORE_LOADED_WOLVERINE_BARNUM);
         autoPatternChooser.addOption("Loaded + Wolverine + Barnum + Valjean (Speaker)",
             Constants.AutoConstants.AutoPattern.SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN);
+        autoPatternChooser.addOption("Loaded + Barnum + Valjean (Speaker)",
+            Constants.AutoConstants.AutoPattern.SCORE_LOADED_BARNUM_VALJEAN);
         autoPatternChooser.addOption("4 Speaker", Constants.AutoConstants.AutoPattern.SCORE_4_SPEAKER);
 
 
@@ -372,6 +374,7 @@ public class OperatorInput {
         case SCORE_LOADED_WOLVERINE_BARNUM -> new ScoreLoadedWolverineBarnum(drive, arm, hugh, jackman, lighting, delay);
         case SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN ->
             new ScoreLoadedWolverineBarnumValjean(drive, arm, hugh, jackman, lighting, delay);
+        case SCORE_LOADED_BARNUM_VALJEAN -> new ScoreLoadedBarnumValjean(drive, arm, hugh, jackman, lighting, delay);
         case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
         case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
         default -> new InstantCommand();
