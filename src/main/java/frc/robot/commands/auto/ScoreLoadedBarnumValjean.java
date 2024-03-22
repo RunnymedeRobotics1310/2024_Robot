@@ -25,15 +25,15 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
         addCommands(new LogMessageCommand("Starting Auto"));
         addCommands(new WaitCommand(delay));
 
-        // score loaded
+        // loaded
         addCommands(new ShootCommand(armSubsystem, lighting));
 
-        // score barnum
+        // barnum
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
-        // score valjean
+        // valjean
         addCommands(new CompactCommand(armSubsystem)
             .alongWith(new RotateToLocationCommand(swerve, BLUE_VALJEAN, BLUE_VALJEAN)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)

@@ -17,10 +17,10 @@ public class TheDoubleDown extends SequentialCommandGroup {
         addCommands(new LogMessageCommand("Starting Auto"));
         addCommands(new WaitCommand(delay));
 
-        // score loaded
+        // loaded
         addCommands(new ShootCommand(armSubsystem, lighting));
 
-        // score barnum
+        // barnum
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .deadlineWith(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 3)));
         addCommands(new CompactCommand(armSubsystem));

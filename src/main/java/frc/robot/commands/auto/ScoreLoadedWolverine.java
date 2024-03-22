@@ -25,10 +25,10 @@ public class ScoreLoadedWolverine extends SequentialCommandGroup {
         addCommands(new LogMessageCommand("Starting Auto"));
         addCommands(new WaitCommand(delay));
 
-        // note 1
+        // loaded
         addCommands(new ShootCommand(armSubsystem, lighting));
 
-        // note 2
+        // wolverine
         addCommands(new DriveToPositionCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED));
         addCommands(
             new StartIntakeCommand(armSubsystem, lighting)
