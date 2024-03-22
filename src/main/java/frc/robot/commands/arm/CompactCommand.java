@@ -96,6 +96,10 @@ public class CompactCommand extends ArmBaseCommand {
             if (armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle) {
                 aimSpeed = 0;
             }
+            // Slow Mode for Aim
+            else if (armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle + 12) {
+                aimSpeed = -.2;
+            }
 
             armSubsystem.setLinkPivotSpeed(linkSpeed);
             armSubsystem.setAimPivotSpeed(aimSpeed);
