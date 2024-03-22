@@ -68,7 +68,6 @@ public class OperatorInput {
 
     private final SendableChooser<Constants.AutoConstants.AutoPattern> autoPatternChooser = new SendableChooser<>();
     private final SendableChooser<Constants.AutoConstants.Delay>       delayChooser       = new SendableChooser<>();
-    private double                                                     delay;
 
     public enum Stick {
         LEFT, RIGHT
@@ -352,7 +351,17 @@ public class OperatorInput {
         delayChooser.addOption("5 Seconds", Constants.AutoConstants.Delay.WAIT_5_SECONDS);
 
 
-        delay = switch (delayChooser.getSelected()) {
+
+    }
+
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+
+        double delay = switch (delayChooser.getSelected()) {
         case WAIT_0_5_SECOND -> 0.5;
         case WAIT_1_SECOND -> 1;
         case WAIT_1_5_SECONDS -> 1.5;
@@ -362,14 +371,6 @@ public class OperatorInput {
         case WAIT_5_SECONDS -> 5;
         default -> 0;
         };
-    }
-
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand() {
 
         return switch (autoPatternChooser.getSelected()) {
         case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);
