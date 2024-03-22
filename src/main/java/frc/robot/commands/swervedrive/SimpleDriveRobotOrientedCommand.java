@@ -4,10 +4,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class SimpleDriveRobotOrientedCommand extends BaseDriveCommand {
-    private double vX      = 0;
-    private double vY      = 0;
-    private double omega   = 0;
-    private double timeout = 0;
+    private final double vX;
+    private final double vY;
+    private final double omega;
+    private final double timeout;
 
 
     public SimpleDriveRobotOrientedCommand(SwerveSubsystem swerve, double xSpeedMps, double ySpeedMps, double omegaRadPerSec,
@@ -18,7 +18,6 @@ public class SimpleDriveRobotOrientedCommand extends BaseDriveCommand {
         this.omega   = omegaRadPerSec;
         this.timeout = timeout;
     }
-
 
 
     @Override
