@@ -30,7 +30,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
         addCommands(new ShootCommand(armSubsystem, lighting));
 
         // score wolverine
-        addCommands(new DriveToPositionCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED));
+        addCommands(new DriveToPositionFacingCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, BLUE_WOLVERINE, IN_FRONT_OF_WOLVERINE_RED, RED_WOLVERINE
         addCommands(
             new StartIntakeCommand(armSubsystem, lighting)
                 .deadlineWith(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.5)));
@@ -53,7 +53,6 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
             .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, BLUE_VALJEAN)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
-
 
         // end
         addCommands(new LogMessageCommand("Auto Complete"));
