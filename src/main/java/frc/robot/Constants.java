@@ -324,7 +324,7 @@ public final class Constants {
         public static final Pose2d START_AT_BLUE_SPEAKER = new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(),
             1.6, new Rotation2d());
         public static final Pose2d START_AT_RED_SPEAKER  = new Pose2d(Constants.BotTarget.RED_SPEAKER.getLocation().getX(),
-            16.54 - 1.6, new Rotation2d());
+            FieldConstants.FIELD_WIDTH_METRES - 1.6, new Rotation2d());
 
         public static final Pose2d BLUE_2_2_20           = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
         public static final Pose2d RED_2_2_20            = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
