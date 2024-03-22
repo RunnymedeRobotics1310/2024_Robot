@@ -77,7 +77,7 @@ public class RotateToTargetCommand extends BaseDriveCommand {
     public void execute() {
         super.execute();
 
-        Rotation2d targetOffset = hugh.getTargetOffset();
+        Rotation2d targetOffset = null; // hugh.getTargetOffset();
         if (targetOffset == null) {
             Rotation2d heading    = super.getHeadingToFieldPosition(target.getLocation().toTranslation2d())
                 .plus(Rotation2d.fromDegrees(180 * (forwards ? 0 : 1)));
@@ -110,7 +110,7 @@ public class RotateToTargetCommand extends BaseDriveCommand {
 
 
     private boolean isAligned() {
-        Rotation2d targetOffset = hugh.getTargetOffset();
+        Rotation2d targetOffset = null; // hugh.getTargetOffset();
         if (targetOffset == null) {
             Rotation2d heading = super.getHeadingToFieldPosition(target.getLocation().toTranslation2d())
                 .plus(Rotation2d.fromDegrees(180 * (forwards ? 1 : -1)));
