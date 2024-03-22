@@ -5,7 +5,7 @@ aspect_max:20.000000
 aspect_min:0.000000
 black_level:0
 blue_balance:1975
-botfloorsnap:0
+botfloorsnap:1
 botlength:0.78
 bottype:swerve
 botwidth:0.71
@@ -35,7 +35,7 @@ dilation_steps:0
 direction_filter:0
 dual_close_sort_origin:0
 erosion_steps:0
-exposure:100
+exposure:200
 fiducial_backend:umich
 fiducial_decoder_strictness:strict
 fiducial_denoise:0.000000
@@ -44,7 +44,7 @@ fiducial_locfilters:
 fiducial_method:sqpnp
 fiducial_qualitythreshold:2.0
 fiducial_refine:1
-fiducial_resdiv:2
+fiducial_resdiv:3
 fiducial_size:165.1
 fiducial_skip3d:0
 fiducial_type:aprilClassic36h11
@@ -58,7 +58,7 @@ image_source:0
 img_to_show:0
 intersection_filter:0
 invert_hue:0
-lcgain:7
+lcgain:2.1
 multigroup_max:7
 multigroup_min:1
 multigroup_rejector:0
