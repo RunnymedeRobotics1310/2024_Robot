@@ -157,6 +157,11 @@ public class StartIntakeCommand extends ArmBaseCommand {
             return true;
         }
 
+        if (armSubsystem.isNoteDetected()) {
+            setFinishReason("Note Detected - BUT STATE DID NOT CHANGE");
+            return true;
+        }
+
         return false;
     }
 
