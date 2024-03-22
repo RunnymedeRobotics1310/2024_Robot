@@ -3,10 +3,7 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.arm.CompactCommand;
-import frc.robot.commands.arm.ShootCommand;
-import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.swervedrive.*;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
@@ -30,13 +27,15 @@ public class ScoreLoadedWolverine extends SequentialCommandGroup {
 
         // wolverine
         addCommands(new DriveToPositionCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED));
-        addCommands(new WaitCommand(1.3).deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
+        addCommands(new WaitCommand(1.3)
+                .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(
             new StartIntakeCommand(armSubsystem, lighting)
                 .deadlineWith(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.5)));
-        addCommands(new CompactCommand(armSubsystem));
+        addCommands(new CompactFromIntakeCommand(armSubsystem, false));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+        addCommands(new CompactCommand(armSubsystem));
 
         // end
         addCommands(new LogMessageCommand("Auto Complete"));
