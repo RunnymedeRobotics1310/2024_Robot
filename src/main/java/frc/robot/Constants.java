@@ -5,6 +5,8 @@
 package frc.robot;
 
 import static edu.wpi.first.math.util.Units.inchesToMeters;
+import static frc.robot.Constants.BotTarget.BLUE_NOTE_WOLVERINE;
+import static frc.robot.Constants.BotTarget.RED_NOTE_WOLVERINE;
 import static frc.robot.Constants.Swerve.Chassis.TRACK_WIDTH_METRES;
 import static frc.robot.Constants.Swerve.Chassis.WHEEL_BASE_METRES;
 import static frc.robot.subsystems.vision.PoseConfidence.HIGH;
@@ -316,18 +318,23 @@ public final class Constants {
 
     public static final class UsefulPoses {
 
-        public static final Pose2d SCORE_BLUE_AMP        = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.8,
+        public static final Pose2d SCORE_BLUE_AMP             = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.8,
             Rotation2d.fromDegrees(270)));
-        public static final Pose2d SCORE_RED_AMP         = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.8,
+        public static final Pose2d SCORE_RED_AMP              = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.8,
             Rotation2d.fromDegrees(270)));
 
-        public static final Pose2d START_AT_BLUE_SPEAKER = new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(),
+        public static final Pose2d START_AT_BLUE_SPEAKER      = new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(),
             1.6, new Rotation2d());
-        public static final Pose2d START_AT_RED_SPEAKER  = new Pose2d(Constants.BotTarget.RED_SPEAKER.getLocation().getX(),
+        public static final Pose2d START_AT_RED_SPEAKER       = new Pose2d(Constants.BotTarget.RED_SPEAKER.getLocation().getX(),
             FieldConstants.FIELD_WIDTH_METRES - 1.6, new Rotation2d());
 
-        public static final Pose2d BLUE_2_2_20           = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
-        public static final Pose2d RED_2_2_20            = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
+        public static final Pose2d BLUE_2_2_20                = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
+        public static final Pose2d RED_2_2_20                 = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
+
+        public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.5,
+            BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
+        public static final Pose2d IN_FRONT_OF_WOLVERINE_RED  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + 1.5,
+            RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
 
     }
 
