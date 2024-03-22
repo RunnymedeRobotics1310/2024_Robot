@@ -16,9 +16,9 @@ import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import static frc.robot.Constants.UsefulPoses.IN_FRONT_OF_WOLVERINE_BLUE;
 import static frc.robot.Constants.UsefulPoses.IN_FRONT_OF_WOLVERINE_RED;
 
-public class Score2SpeakerAutoCommand extends SequentialCommandGroup {
+public class ScoreLoadedWolverine extends SequentialCommandGroup {
 
-    public Score2SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
+    public ScoreLoadedWolverine(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
         JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
         // start
