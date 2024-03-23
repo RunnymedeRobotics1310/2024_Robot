@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.ClimbConstants.DISABLED;
-import static frc.robot.Constants.ClimbConstants.TOP_SLOW_ZONE;
+import static frc.robot.Constants.ClimbConstants.*;
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -92,6 +91,11 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     public boolean leftAllTheWayDown() {
         return leftClimbLimitSwitch.get() == false;
+    }
+
+    public boolean climbersReadyForTrapShot() {
+        return leftClimbMotor.getEncoder().getPosition() < CLIMB_READY_FOR_TRAP_SHOT && rightClimbMotor.getEncoder().getPosition() < CLIMB_READY_FOR_TRAP_SHOT;
+        }
     }
 
     public boolean rightAllTheWayDown() {

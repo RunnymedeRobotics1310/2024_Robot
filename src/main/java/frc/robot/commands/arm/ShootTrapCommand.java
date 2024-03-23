@@ -39,8 +39,8 @@ public class ShootTrapCommand extends ArmBaseCommand {
 
             climbSubsystem.setClimbSpeeds(-1, -1);
 
-            if (climbSubsystem.leftAllTheWayDown() && climbSubsystem.rightAllTheWayDown()) {
-                logStateTransition("Climb to move arm", "climbs down");
+            if (climbSubsystem.climbersReadyForTrapShot()) {
+                logStateTransition("Climb to move arm", "climbs low enough");
                 state = State.MOVE_ARM;
             }
 

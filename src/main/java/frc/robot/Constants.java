@@ -598,6 +598,8 @@ public final class Constants {
         public static final int        RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 60;
         public static final int        LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 61;
 
+        public static final int CLIMB_READY_FOR_TRAP_SHOT = 15;
+
         public static final double     MAX_ROBOT_LIFT_SPEED          = 1;
         public static final double     RAISE_CLIMBERS_SPEED          = .75;
         public static final double     MIN_LOWER_CLIMBERS_SPEED      = .75;
