@@ -346,11 +346,13 @@ public final class Constants {
         // Blue Side Notes
         public static final Translation2d BLUE_WOLVERINE      = new Translation2d(2.9, 4.11);
         public static final Translation2d BLUE_BARNUM         = new Translation2d(2.9, 5.5);
+        public static final Translation2d BLUE_BARNUM_SHOT    = new Translation2d(3.1, 5.5);
         public static final Translation2d BLUE_VALJEAN        = new Translation2d(2.9, 7);
 
         // Red Side Notes
         public static final Translation2d RED_WOLVERINE       = new Translation2d(13.53, 4.11);
         public static final Translation2d RED_BARNUM          = new Translation2d(13.53, 5.5);
+        public static final Translation2d RED_BARNUM_SHOT     = new Translation2d(13.33, 5.5);
         public static final Translation2d RED_VALJEAN         = new Translation2d(13.53, 7);
 
         // Centre Field Notes
