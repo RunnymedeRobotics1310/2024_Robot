@@ -146,6 +146,19 @@
               "imageWidth": 0,
               "imageHeight": 0
             }
+          },
+          "16,0": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/1310/Delay",
+              "_title": "SmartDashboard/1310/Delay",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
