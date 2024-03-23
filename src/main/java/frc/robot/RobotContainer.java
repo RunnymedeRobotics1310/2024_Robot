@@ -63,6 +63,7 @@ public class RobotContainer {
 
         operatorInput.configureTriggerBindings();
         operatorInput.initAutoSelectors();
+        operatorInput.initTrapShooterSpeedSelectors();
     }
 
     public Command getAutonomousCommand() {
