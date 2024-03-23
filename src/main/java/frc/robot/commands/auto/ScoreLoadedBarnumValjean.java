@@ -30,20 +30,21 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
             .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
+        addCommands(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM_SHOT, RED_BARNUM_SHOT));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh)
             .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         // valjean
         addCommands(new CompactCommand(armSubsystem)
-            .alongWith(new RotateToLocationCommand(swerve, BLUE_VALJEAN, BLUE_VALJEAN)));
+            .alongWith(new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN)));
         // NOTE: THE ABOVE OVER-ROTATES
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, BLUE_VALJEAN, 1.5)));
+            .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, RED_VALJEAN, 1.5)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh)
-                .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
+            .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
-        addCommands( new CompactCommand(armSubsystem));
+        addCommands(new CompactCommand(armSubsystem));
 
 
         // end
