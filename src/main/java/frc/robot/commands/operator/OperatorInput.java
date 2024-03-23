@@ -17,7 +17,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.AimAmpCommand;
+import frc.robot.commands.arm.AimSourceCommand;
+import frc.robot.commands.arm.CompactFromIntakeCommand;
+import frc.robot.commands.arm.EjectNoteCommand;
+import frc.robot.commands.arm.ShootCommand;
+import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
+import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
@@ -52,18 +59,18 @@ import frc.robot.telemetry.Telemetry;
  */
 public class OperatorInput {
 
-    private final SwerveSubsystem                                      drive;
-    private final ArmSubsystem                                         arm;
-    private final LightingSubsystem                                    lighting;
-    private final HughVisionSubsystem                                  hugh;
-    private final ClimbSubsystem                                       climb;
-    private final JackmanVisionSubsystem                               jackman;
-    private final XboxController                                       driverController;
-    private final XboxController                                       operatorController;
+    private final SwerveSubsystem                                              drive;
+    private final ArmSubsystem                                                 arm;
+    private final LightingSubsystem                                            lighting;
+    private final HughVisionSubsystem                                          hugh;
+    private final ClimbSubsystem                                               climb;
+    private final JackmanVisionSubsystem                                       jackman;
+    private final XboxController                                               driverController;
+    private final XboxController                                               operatorController;
 
-    private final SendableChooser<Constants.AutoConstants.AutoPattern> autoPatternChooser = new SendableChooser<>();
-    private final SendableChooser<Constants.AutoConstants.Delay>       delayChooser       = new SendableChooser<>();
-    private final SendableChooser<Constants.ArmConstants.TrapShootMotorSpeeds> trapShootTopMotorSpeedChooser = new SendableChooser<>();
+    private final SendableChooser<Constants.AutoConstants.AutoPattern>         autoPatternChooser               = new SendableChooser<>();
+    private final SendableChooser<Constants.AutoConstants.Delay>               delayChooser                     = new SendableChooser<>();
+    private final SendableChooser<Constants.ArmConstants.TrapShootMotorSpeeds> trapShootTopMotorSpeedChooser    = new SendableChooser<>();
     private final SendableChooser<Constants.ArmConstants.TrapShootMotorSpeeds> trapShootBottomMotorSpeedChooser = new SendableChooser<>();
 
     public enum Stick {
@@ -268,8 +275,9 @@ public class OperatorInput {
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
         // Trap
-        new Trigger(() -> operatorController.getBackButton() && operatorController.getYButton())
-            .onTrue(new ShootTrapFromFloorCommand(arm, lighting, getTrapShootTopMotorSpeed(), getTrapShootBottomMotorSpeed()));
+        // new Trigger(() -> operatorController.getBackButton() && operatorController.getYButton())
+        // .onTrue(new ShootTrapFromFloorCommand(arm, lighting, getTrapShootTopMotorSpeed(),
+        // getTrapShootBottomMotorSpeed()));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getXButton())
@@ -280,7 +288,8 @@ public class OperatorInput {
             .onTrue(new ShootSpeakerFromPodiumCommand(arm, lighting));
 
         // shoot prep
-        //new Trigger(() -> !this.isShift() && operatorController.getAButton()).onTrue(new ShootPrepCommand(arm, lighting));
+        // new Trigger(() -> !this.isShift() && operatorController.getAButton()).onTrue(new
+        // ShootPrepCommand(arm, lighting));
 
         // shoot FIRE
         new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootCommand(arm, lighting));
@@ -383,7 +392,9 @@ public class OperatorInput {
         trapShootBottomMotorSpeedChooser.addOption("1.0", Constants.ArmConstants.TrapShootMotorSpeeds.ONE);
     }
 
-    private double getTrapShootMotorSpeed(SendableChooser<Constants.ArmConstants.TrapShootMotorSpeeds> trapShootMotorSpeedChooser) {
+    private double getTrapShootMotorSpeed(
+        SendableChooser<Constants.ArmConstants.TrapShootMotorSpeeds> trapShootMotorSpeedChooser) {
+
         return switch (trapShootMotorSpeedChooser.getSelected()) {
         case ZERO_ONE -> 0.1;
         case ZERO_TWO -> 0.2;

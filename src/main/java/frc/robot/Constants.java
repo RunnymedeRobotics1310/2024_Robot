@@ -123,7 +123,7 @@ public final class Constants {
             public static final double MIN_TRANSLATION_SPEED_MPS          = 1.0;
             public static final double TRANSLATION_TOLERANCE_METRES       = 0.02;
             public static final double DECEL_FROM_MAX_TO_STOP_DIST_METRES = 1.9;
-            public static final double MAX_TRANSLATION_ACCELERATION_MPS2  = 8;
+            public static final double MAX_TRANSLATION_ACCELERATION_MPS2  = 12;
 
             /**
              * Standard drive speed factor. Regular teleop drive will use this factor of the max
