@@ -239,7 +239,7 @@ public class OperatorInput {
         // vision note pickup
         new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5)
             .onTrue(new StartIntakeCommand(arm, lighting)
-                .deadlineWith(new DriveToNoteCommand(drive, lighting, arm, jackman, 1)));
+                .deadlineWith(new DriveToNoteCommand(drive, lighting, arm, jackman, 2)));
 
         // start intake
         new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
