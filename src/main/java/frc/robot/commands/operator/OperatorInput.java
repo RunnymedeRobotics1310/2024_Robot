@@ -269,7 +269,7 @@ public class OperatorInput {
 
         // Trap
         new Trigger(() -> operatorController.getBackButton() && operatorController.getYButton())
-            .onTrue(new ShootTrapFromFloorCommand(arm, lighting, getTrapShootTopMotorSpeed(), getTrapShootBottomMotorSpeed()));
+            .onTrue(new ShootTrapFromFloorCommand(arm, lighting, this)));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getXButton())

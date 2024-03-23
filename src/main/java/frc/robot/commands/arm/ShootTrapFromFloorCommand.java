@@ -4,6 +4,7 @@ import static frc.robot.Constants.LightingConstants.SIGNAL;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
@@ -20,15 +21,13 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
 
     private double            startIntakePosition = 0;
 
-    private double            topShooterSpeed     = .3;
-    private double            bottomShooterSpeed  = .4;
+    private OperatorInput     operatorInput;
 
-    public ShootTrapFromFloorCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting, double topShooterSpeed, double bottomShooterSpeed) {
+    public ShootTrapFromFloorCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting, OperatorInput operatorInput) {
 
         super(armSubsystem);
         this.lighting = lighting;
-        this.topShooterSpeed = topShooterSpeed;
-        this.bottomShooterSpeed = bottomShooterSpeed;
+        this.operatorInput = operatorInput;
     }
 
     @Override
@@ -66,7 +65,7 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
         case START_SHOOTER:
 
             armSubsystem.setIntakeSpeed(0);
-            armSubsystem.setShooterSpeed(topShooterSpeed, bottomShooterSpeed);
+            armSubsystem.setShooterSpeed(operatorInput.getTrapShootTopMotorSpeed(), operatorInput.getTrapShootBottomMotorSpeed());
 
             // Wait for the shooter to get up to speed
             if (isStateTimeoutExceeded(.5)) {
