@@ -54,7 +54,7 @@ public class ShootPrepFireCommand extends ArmBaseCommand {
             armSubsystem.setIntakeSpeed(-0.3);
 
             // Reverse the note for a number of rotations
-            if (Math.abs(armSubsystem.getIntakePosition() - startIntakePosition) > 2) {
+            if (Math.abs(armSubsystem.getIntakePosition() - startIntakePosition) > 1.5) {
                 setStateAndLog(State.START_SHOOTER, "Shooter Reversed");
             }
 
