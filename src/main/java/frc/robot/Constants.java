@@ -110,7 +110,7 @@ public final class Constants {
              * Practically speaking 4.42 m/s is a good max, but
              * consider 1-2 for development and 2-3 for competitions.
              */
-            public static final double MAX_TRANSLATION_SPEED_MPS          = 4.42;
+            public static final double MAX_TRANSLATION_SPEED_MPS          = MAX_MODULE_SPEED_MPS * 1.00;
 
             public static final double NOTE_PICKUP_TRANSLATION_SPEED_MPS  = 2;
 
