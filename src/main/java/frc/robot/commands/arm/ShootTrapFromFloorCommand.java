@@ -68,7 +68,7 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
             armSubsystem.setShooterSpeed(operatorInput.getTrapShootTopMotorSpeed(), operatorInput.getTrapShootBottomMotorSpeed());
 
             // Wait for the shooter to get up to speed
-            if (isStateTimeoutExceeded(.5)) {
+            if (isStateTimeoutExceeded(.75)) {
                 logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed());
                 state = State.START_FEEDER;
             }

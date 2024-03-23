@@ -95,7 +95,6 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
 
     public boolean climbersReadyForTrapShot() {
         return leftClimbMotor.getEncoder().getPosition() < CLIMB_READY_FOR_TRAP_SHOT && rightClimbMotor.getEncoder().getPosition() < CLIMB_READY_FOR_TRAP_SHOT;
-        }
     }
 
     public boolean rightAllTheWayDown() {
