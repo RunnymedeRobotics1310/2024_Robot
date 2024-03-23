@@ -76,7 +76,7 @@ public class ShootTrapCommand extends ArmBaseCommand {
             armSubsystem.setIntakeSpeed(0.1);
 
             // Reverse the note for a number of rotations
-            if (Math.abs(armSubsystem.getShooterPosition() - startShooterPosition) > 2) {
+            if (Math.abs(armSubsystem.getShooterPosition() - startShooterPosition) > 1) {
                 armSubsystem.stop();
                 logStateTransition("Reverse -> Start Intake", "Shooter Reversed");
                 state = State.START_INTAKE;
