@@ -2,8 +2,6 @@ package frc.robot.commands.arm;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
@@ -65,7 +63,7 @@ public class ShootPrepCommand extends ArmBaseCommand {
 
             // Wait for the shooter to get up to speed
             if (isStateTimeoutExceeded(.5)) {
-                logStateTransition("Done Prep", "Shooter up to speed " + armSubsystem.getShooterEncoderSpeed());
+                logStateTransition("Done Prep", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed());
                 state = State.FINISHED;
             }
 

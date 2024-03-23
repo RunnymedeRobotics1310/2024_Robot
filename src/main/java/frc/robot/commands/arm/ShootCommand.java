@@ -65,7 +65,7 @@ public class ShootCommand extends ArmBaseCommand {
 
             // Wait for the shooter to get up to speed
             if (isStateTimeoutExceeded(.5)) {
-                logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getShooterEncoderSpeed());
+                logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed());
                 state = State.START_FEEDER;
             }
 

@@ -96,7 +96,7 @@ public class ShootSpeakerFromPodiumCommand extends ArmBaseCommand {
 
             // Wait for the shooter to get up to speed and the arm to get into position
             if (isStateTimeoutExceeded(.5) && atArmAngle) {
-                logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getShooterEncoderSpeed());
+                logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed());
                 state = State.START_FEEDER;
             }
 

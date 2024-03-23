@@ -7,8 +7,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
-import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Relay.Value;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.telemetry.Telemetry;
@@ -42,7 +40,8 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     private double                  linkPivotSpeed       = 0;
     private double                  aimPivotSpeed        = 0;
     private double                  intakeSpeed          = 0;
-    private double                  shooterSpeed         = 0;
+    private double                  topShooterSpeed      = 0;
+    private double                  bottomShooterSpeed   = 0;
 
     private boolean                 safetyEnabled        = false;
     private long                    safetyStartTime      = 0;
@@ -113,10 +112,14 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     }
 
     // todo: fixme: specify unit in either javadoc or method name
-    public double getShooterEncoderSpeed() {
+    public double getBottomShooterEncoderSpeed() {
         return shooterBottomMotor.getEncoder().getVelocity();
     }
 
+    // todo: fixme: specify unit in either javadoc or method name
+    public double getTopShooterEncoderSpeed() {
+        return shooterTopMotor.getEncoder().getVelocity();
+    }
 
     // todo: fixme: specify unit in either javadoc or method name
     public double getIntakeEncoderSpeed() {
@@ -228,12 +231,19 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         intakeMotor.set(intakeSpeed);
     }
 
+
+    public void setShooterSpeed(double topShooterSpeed, double bottomShooterSpeed) {
+        this.topShooterSpeed = topShooterSpeed;
+        this.bottomShooterSpeed = bottomShooterSpeed;
+        shooterTopMotor.set(topShooterSpeed);
+        shooterBottomMotor.set(bottomShooterSpeed);
+    }
+
+
     // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
     // linkSpeedRPM, etc)
     public void setShooterSpeed(double shooterSpeed) {
-        this.shooterSpeed = shooterSpeed;
-        shooterTopMotor.set(shooterSpeed);
-        shooterBottomMotor.set(shooterSpeed);
+        this.setShooterSpeed(shooterSpeed, shooterSpeed);
     }
 
     public void stop() {
@@ -284,8 +294,10 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
 
         Telemetry.arm.intakeSpeed                = intakeSpeed;
         Telemetry.arm.intakeEncoderSpeed         = getIntakeEncoderSpeed();
-        Telemetry.arm.shooterSpeed               = shooterSpeed;
-        Telemetry.arm.shooterEncoderSpeed        = getShooterEncoderSpeed();
+        Telemetry.arm.topShooterSpeed            = topShooterSpeed;
+        Telemetry.arm.bottomShooterSpeed         = bottomShooterSpeed;
+        Telemetry.arm.topShooterEncoderSpeed     = getTopShooterEncoderSpeed();
+        Telemetry.arm.bottomShooterEncoderSpeed  = getBottomShooterEncoderSpeed();
         Telemetry.arm.linkPivotSpeed             = linkPivotSpeed;
         Telemetry.arm.linkAngle                  = getLinkAngle();
         Telemetry.arm.linkAbsoluteEncoderVoltage = getLinkAbsoluteEncoderVoltage();
@@ -311,7 +323,8 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
             .append(isLinkAtLowerLimit() ? "LINK LOWER LIMIT" : "")
             .append("Aim ").append(getAimAngle()).append("deg (").append(aimPivotSpeed).append(") ")
             .append("Intake ").append(intakeSpeed).append(", ").append(getIntakeEncoderSpeed()).append(' ')
-            .append("Shooter ").append(shooterSpeed).append(", ").append(getShooterEncoderSpeed()).append(' ')
+            .append("TopShooter ").append(topShooterSpeed).append(", ").append(getBottomShooterEncoderSpeed()).append(' ')
+            .append("BottomShooter ").append(bottomShooterSpeed).append(", ").append(getBottomShooterEncoderSpeed()).append(' ')
             .append("Game Piece ").append(isNoteDetected());
 
         return sb.toString();

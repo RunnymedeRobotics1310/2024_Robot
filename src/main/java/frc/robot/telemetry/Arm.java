@@ -8,8 +8,10 @@ public class Arm {
 
     public double  intakeSpeed                = -1310.0;
     public double  intakeEncoderSpeed         = -1310.0;
-    public double  shooterSpeed               = -1310.0;
-    public double  shooterEncoderSpeed        = -1310.0;
+    public double  topShooterSpeed            = -1310.0;
+    public double  topShooterEncoderSpeed     = -1310.0;
+    public double  bottomShooterSpeed         = -1310.0;
+    public double  bottomShooterEncoderSpeed  = -1310.0;
     public double  linkPivotSpeed             = -1310.0;
     public double  linkAngle                  = -1310.0;
     public double  linkAbsoluteEncoderVoltage = -1310.0;
@@ -28,8 +30,10 @@ public class Arm {
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Intake/Encoder Speed", intakeEncoderSpeed);
         SmartDashboard.putBoolean(Telemetry.PREFIX + "Arm/Intake/Note/Detected", noteDetected);
 
-        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/Motor", shooterSpeed);
-        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/Encoder Speed", shooterEncoderSpeed);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/TopMotor", topShooterSpeed);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/TopEncoder Speed", topShooterEncoderSpeed);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/BottomMotor", bottomShooterSpeed);
+        SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/BottomEncoder Speed", bottomShooterEncoderSpeed);
 
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Link/Speed", linkPivotSpeed);
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Link/Angle", linkAngle);

@@ -1,18 +1,13 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
-import frc.robot.telemetry.Light;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
@@ -154,7 +149,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
             // Wait for the shooter to get up to speed and the arm to get into position
             if (isStateTimeoutExceeded(.75) && atArmAngle) {
-                logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getShooterEncoderSpeed());
+                logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed());
                 state = State.START_FEEDER;
             }
 
