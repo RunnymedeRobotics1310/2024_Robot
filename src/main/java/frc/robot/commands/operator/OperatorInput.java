@@ -270,8 +270,11 @@ public class OperatorInput {
         new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
             .onTrue(new ShootSpeakerFromPodiumCommand(arm, lighting));
 
-        // shoot
-        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootCommand(arm, lighting));
+        // shoot prep
+        new Trigger(() -> !this.isShift() && operatorController.getAButton()).onTrue(new ShootPrepCommand(arm, lighting));
+
+        // shoot FIRE
+        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootFireCommand(arm, lighting));
 
         // set pose at speaker
         new Trigger(() -> this.isShift() && operatorController.getBButton())
@@ -281,7 +284,6 @@ public class OperatorInput {
         // set pose at amp
         new Trigger(() -> this.isShift() && operatorController.getAButton())
             .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, SCORE_RED_AMP));
-
 
         // climbers up
         new Trigger(() -> this.isShift() && operatorController.getPOV() == 0)
