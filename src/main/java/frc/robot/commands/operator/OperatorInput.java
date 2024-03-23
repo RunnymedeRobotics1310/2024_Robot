@@ -17,8 +17,30 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
-import frc.robot.commands.auto.*;
+import frc.robot.commands.arm.AimAmpCommand;
+import frc.robot.commands.arm.AimSourceCommand;
+import frc.robot.commands.arm.CompactFromIntakeCommand;
+import frc.robot.commands.arm.EjectNoteCommand;
+import frc.robot.commands.arm.ShootFireCommand;
+import frc.robot.commands.arm.ShootPrepCommand;
+import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
+import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
+import frc.robot.commands.arm.ShootTrapCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.auto.ExitZoneAutoCommand;
+import frc.robot.commands.auto.Score1AmpAutoCommand;
+import frc.robot.commands.auto.Score1SpeakerAutoCommand;
+import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
+import frc.robot.commands.auto.Score2AmpAutoCommand;
+import frc.robot.commands.auto.Score2SpeakerVisualAutoCommand;
+import frc.robot.commands.auto.Score2_5AmpAutoCommand;
+import frc.robot.commands.auto.Score3SpeakerAutoCommand;
+import frc.robot.commands.auto.Score4SpeakerAutoCommand;
+import frc.robot.commands.auto.ScoreLoadedBarnumValjean;
+import frc.robot.commands.auto.ScoreLoadedWolverine;
+import frc.robot.commands.auto.ScoreLoadedWolverineBarnum;
+import frc.robot.commands.auto.ScoreLoadedWolverineBarnumValjean;
+import frc.robot.commands.auto.TheDoubleDown;
 import frc.robot.commands.climb.MaxClimbCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToScoreAmpCommand;
@@ -192,7 +214,6 @@ public class OperatorInput {
 
     }
 
-
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
      * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
@@ -212,12 +233,6 @@ public class OperatorInput {
         new Trigger(RobotController::isSysActive)
             .onTrue(new InstantCommand(() -> lighting.addPattern(SIGNAL, Enabled.getInstance())));
 
-        // score trap command
-        new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5
-            && driverController.getRightTriggerAxis() > 0.5
-            && operatorController.getLeftTriggerAxis() > 0.5
-            && operatorController.getRightTriggerAxis() > 0.5).onTrue(new ScoreTrapCommand(arm));
-
 
 
         //
@@ -230,7 +245,8 @@ public class OperatorInput {
                 .deadlineWith(new DriveToNoteCommand(drive, lighting, arm, jackman, 1)));
 
         // start intake
-        new Trigger(() -> driverController.getRightTriggerAxis() > 0.5).onTrue(new StartIntakeCommand(arm, lighting));
+        new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
+            .onTrue(new StartIntakeCommand(arm, lighting));
 
         // zero gyro
         new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
@@ -258,7 +274,7 @@ public class OperatorInput {
         // cancel command (operator)
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
-        // Trap (temp?)
+        // Trap
         new Trigger(() -> operatorController.getBackButton() && operatorController.getYButton())
             .onTrue(new ShootTrapCommand(arm, climb));
 
