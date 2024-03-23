@@ -280,10 +280,10 @@ public class OperatorInput {
             .onTrue(new ShootSpeakerFromPodiumCommand(arm, lighting));
 
         // shoot prep
-        new Trigger(() -> !this.isShift() && operatorController.getAButton()).onTrue(new ShootPrepCommand(arm, lighting));
+        //new Trigger(() -> !this.isShift() && operatorController.getAButton()).onTrue(new ShootPrepCommand(arm, lighting));
 
         // shoot FIRE
-        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootFireCommand(arm, lighting));
+        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootCommand(arm, lighting));
 
         // set pose at speaker
         new Trigger(() -> this.isShift() && operatorController.getBButton())
