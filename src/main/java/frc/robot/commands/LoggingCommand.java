@@ -74,12 +74,17 @@ public abstract class LoggingCommand extends Command {
      * @return {@code true} if the current state timeout has been exceeded, {@code false} otherwise
      */
     public boolean isStateTimeoutExceeded(double timeout) {
-        if ((System.currentTimeMillis() - stateStartTime) / 1000.0d > timeout) {
-            return true;
-        }
-        return false;
+        return (System.currentTimeMillis() - stateStartTime) / 1000.0d > timeout;
     }
 
+    /**
+     * Return the number of seconds that have elapsed since the last state change.
+     *
+     * @return Number of seconds since the last state transition
+     */
+    public double getStateElapsedTime() {
+        return (System.currentTimeMillis() - stateStartTime) / 1000.0d;
+    }
 
     /**
      * At command start, log the start time and the state of all subsystems required by this

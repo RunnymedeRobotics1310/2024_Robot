@@ -17,14 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.AimAmpCommand;
-import frc.robot.commands.arm.AimSourceCommand;
-import frc.robot.commands.arm.CompactFromIntakeCommand;
-import frc.robot.commands.arm.EjectNoteCommand;
-import frc.robot.commands.arm.ShootCommand;
-import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
-import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.Score1AmpAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
@@ -106,6 +99,10 @@ public class OperatorInput {
 
     public XboxController getRawDriverController() {
         return driverController;
+    }
+
+    public XboxController getRawOperatorController() {
+        return operatorController;
     }
 
     public int getDriverPOV() {
@@ -287,9 +284,10 @@ public class OperatorInput {
         new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
             .onTrue(new ShootSpeakerFromPodiumCommand(arm, lighting));
 
-        // shoot prep
-        // new Trigger(() -> !this.isShift() && operatorController.getAButton()).onTrue(new
-        // ShootPrepCommand(arm, lighting));
+        // shoot prep - IF YOU CHANGE THE BUTTON THIS IS ON, MUST CHANGE THE BUTTON RELEASE
+        // IN ShootPrepFireCommand as well.
+        new Trigger(() -> !this.isShift() && operatorController.getAButton())
+            .onTrue(new ShootPrepFireCommand(arm, lighting, this));
 
         // shoot FIRE
         new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootCommand(arm, lighting));
