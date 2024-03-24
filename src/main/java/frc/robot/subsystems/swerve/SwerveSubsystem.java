@@ -156,62 +156,18 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
         Telemetry.swerve.swerve_vispose = visPose;
 
         // ignore unreliable info from vision subsystem
-//        if (visPose == null) {
-//            updateLighting(null);
-//            return;
-//        }
-
-//        updateLighting(visPose.poseConfidence());
-
-        Pose2d odoPose = getPose();
-
-        // how different is vision data from estimated data?
-        double delta_m = getPose().getTranslation().getDistance(visPose.pose().getTranslation());
-//
-//        Matrix<N3, N1> stds    = getVisionStandardDeviation(visPose.poseConfidence(), delta_m);
-//
-//        // ignore drastically different data
-//        if (stds == null) {
-//            updateLighting(null);
-//            return;
-//        }
-
-        if (delta_m > 0.3) {
-            log(String.format("Vision data is too different from odometry: %2f m", delta_m) + " odo: "
-                + format(odoPose) + " vis: " + format(visPose.pose()));
+        if (visPose == null) {
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
         }
+        else {
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
 
-        double timeInSeconds = Timer.getFPGATimestamp() - (visPose.latencyMillis() / 1000);
-
-        this.addVisionMeasurement(visPose.pose(), timeInSeconds, null);
+            double timeInSeconds = Timer.getFPGATimestamp() - (visPose.latencyMillis() / 1000);
+            this.addVisionMeasurement(visPose.pose(), timeInSeconds, visPose.deviation());
+        }
     }
-
-//    private void updateLighting(PoseConfidence confidence) {
-//        if (confidence == null) {
-//            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-//            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
-//        }
-//        else {
-//            switch (confidence) {
-//            case HIGH:
-//                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
-//                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
-//                break;
-//            case MEDIUM:
-//                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceMedium.getInstance());
-//                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceMedium.getInstance());
-//                break;
-//            case LOW:
-//                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceLow.getInstance());
-//                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceLow.getInstance());
-//                break;
-//            case NONE:
-//                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-//                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
-//                break;
-//            }
-//        }
-//    }
 
     public abstract void updateTelemetry();
 
