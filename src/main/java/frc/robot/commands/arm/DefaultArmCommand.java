@@ -1,12 +1,12 @@
 package frc.robot.commands.arm;
 
-import frc.robot.Constants.ArmConstants;
-import frc.robot.commands.operator.OperatorInput;
-import frc.robot.subsystems.ArmSubsystem;
-
 import static frc.robot.commands.operator.OperatorInput.Axis.Y;
 import static frc.robot.commands.operator.OperatorInput.Stick.LEFT;
 import static frc.robot.commands.operator.OperatorInput.Stick.RIGHT;
+
+import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.operator.OperatorInput;
+import frc.robot.subsystems.ArmSubsystem;
 
 public class DefaultArmCommand extends ArmBaseCommand {
 
@@ -43,19 +43,19 @@ public class DefaultArmCommand extends ArmBaseCommand {
     @Override
     public void execute() {
 
-        double aimStick = operatorInput.getOperatorControllerAxis(RIGHT, Y);
+        double aimStick  = operatorInput.getOperatorControllerAxis(RIGHT, Y);
         double linkStick = operatorInput.getOperatorControllerAxis(LEFT, Y);
 
         // Hold the arm position by default
         driveToArmPosition(linkAngle, aimAngle, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
             ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
-//        // Adjust the target angle based on the operator inputs.
-//        aimAngle  += operatorInput.getAimAdjust();
-//        linkAngle += operatorInput.getLinkAdjust();
+        // // Adjust the target angle based on the operator inputs.
+        // aimAngle += operatorInput.getAimAdjust();
+        // linkAngle += operatorInput.getLinkAdjust();
 
         if (!operatorInput.isShift() &&
-        (Math.abs(linkStick) > 0 || Math.abs(aimStick) > 0)) {
+            (Math.abs(linkStick) > 0 || Math.abs(aimStick) > 0)) {
             aimAngle  = armSubsystem.getAimAngle();
             linkAngle = armSubsystem.getLinkAngle();
             setLinkMotorSpeed(linkStick * 0.3);
@@ -63,8 +63,10 @@ public class DefaultArmCommand extends ArmBaseCommand {
 
         }
         else {
-            driveToArmPosition(linkAngle, aimAngle, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
-                ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
+            // driveToArmPosition(linkAngle, aimAngle, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
+            // ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
+            setAimMotorSpeed(0);
+            setLinkMotorSpeed(0);
         }
     }
 
