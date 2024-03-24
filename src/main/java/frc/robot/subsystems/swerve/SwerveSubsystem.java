@@ -4,8 +4,6 @@ import static frc.robot.Constants.LightingConstants.VISPOSE1;
 import static frc.robot.Constants.LightingConstants.VISPOSE2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATION_ACCELERATION_RAD_PER_SEC2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_ACCELERATION_MPS2;
-import static frc.robot.Constants.VisionConstants.CAMERA_LOC_REL_TO_ROBOT_CENTER;
-import static frc.robot.Constants.VisionConstants.getVisionStandardDeviation;
 import static frc.robot.RunnymedeUtils.format;
 
 import edu.wpi.first.math.Matrix;
@@ -22,10 +20,10 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.subsystems.RunnymedeSubsystemBase;
 import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.subsystems.lighting.pattern.*;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceHigh;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.VisionPositionInfo;
-import frc.robot.subsystems.vision.PoseConfidence;
 import frc.robot.telemetry.Telemetry;
 
 public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
@@ -153,71 +151,23 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
     /**
      * Update the field relative position of the robot using vision
      * position data returned from the vision subsystem.
-     *
-     * @see frc.robot.Constants.VisionConstants#getVisionStandardDeviation(frc.robot.subsystems.vision.PoseConfidence,
-     * double) fortuning info
      */
     private void updateOdometryWithVisionInfo() {
         VisionPositionInfo visPose = visionSubsystem.getPositionInfo();
         Telemetry.swerve.swerve_vispose = visPose;
 
         // ignore unreliable info from vision subsystem
-//        if (visPose == null) {
-//            updateLighting(null);
-//            return;
-//        }
-
-//        updateLighting(visPose.poseConfidence());
-
-        Pose2d odoPose = getPose();
-
-        // how different is vision data from estimated data?
-        double delta_m = getPose().getTranslation().getDistance(visPose.pose().getTranslation());
-//
-//        Matrix<N3, N1> stds    = getVisionStandardDeviation(visPose.poseConfidence(), delta_m);
-//
-//        // ignore drastically different data
-//        if (stds == null) {
-//            updateLighting(null);
-//            return;
-//        }
-
-        if (delta_m > 0.3) {
-            log(String.format("Vision data is too different from odometry: %2f m", delta_m) + " odo: "
-                + format(odoPose) + " vis: " + format(visPose.pose()));
+        if (visPose == null) {
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
         }
+        else {
+            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
+            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
 
-        double timeInSeconds = Timer.getFPGATimestamp() - (visPose.latencyMillis() / 1000);
-
-        this.addVisionMeasurement(visPose.pose(), timeInSeconds, null);
+            this.addVisionMeasurement(visPose.pose(), visPose.latencySeconds(), visPose.deviation());
+        }
     }
-
-//    private void updateLighting(PoseConfidence confidence) {
-//        if (confidence == null) {
-//            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-//            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
-//        }
-//        else {
-//            switch (confidence) {
-//            case HIGH:
-//                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
-//                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
-//                break;
-//            case MEDIUM:
-//                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceMedium.getInstance());
-//                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceMedium.getInstance());
-//                break;
-//            case LOW:
-//                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceLow.getInstance());
-//                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceLow.getInstance());
-//                break;
-//            case NONE:
-//                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-//                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
-//                break;
-//            }
-//        }
-//    }
 
     public abstract void updateTelemetry();
 
