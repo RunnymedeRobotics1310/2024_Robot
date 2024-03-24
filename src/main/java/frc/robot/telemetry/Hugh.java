@@ -22,6 +22,7 @@ public class Hugh {
     public double              tl                     = -1310.0;
     public double[]            botpost                = null;
     public double              targetAvgDist          = -1310.0;
+    public VisionPositionInfo  visPose                = null;
     public int                 numTags                = -1310;
     public double              distanceToTargetMetres = -1310.0;
     public boolean             isAlignedWithTarget    = false;
@@ -40,6 +41,8 @@ public class Hugh {
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/tl", tl);
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/Botpose", Arrays.toString(botpost));
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/TargetAvgDist", targetAvgDist);
+        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/PoseConf",
+            visPose == null ? PoseConfidence.NONE.toString() : visPose.poseConfidence().toString());
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/NumTags", "" + numTags);
         // SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/AprilTagInfo", aprilTagInfo);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/DistToTarget", distanceToTargetMetres);

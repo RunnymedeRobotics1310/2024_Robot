@@ -365,11 +365,49 @@ public final class Constants {
     }
 
     public static final class VisionConstants {
-        public static final double  MAX_AMBIGUITY                  = .9;
-        public static final double  HIGH_QUALITY_AMBIGUITY         = .01;
+        /** Time to switch pipelines and acquire a new vision target */
+        public static final double  VISION_SWITCH_TIME_SEC         = .25;
 
         // todo: correct this
         public static Translation2d CAMERA_LOC_REL_TO_ROBOT_CENTER = new Translation2d(0, 30);
+
+        /**
+         * Utility method (STATIC) to map confidence and pose difference to a matrix of estimated
+         * standard
+         * deviations. The returned matrix values have been tuned based on the input and are not
+         * dynamically calculated.
+         *
+         * @param confidence rating from the vision subsystem
+         * @param poseDifferenceMetres difference between estimated pose and pose from vision
+         * @return matrix of standard deviations, or null if values are too far out of bounds
+         */
+        public static Matrix<N3, N1> getVisionStandardDeviation(PoseConfidence confidence, double poseDifferenceMetres) {
+            double xyMetresStds;
+            double degreesStds;
+
+            // todo: measure / tune these values
+            if (confidence == HIGH) {
+                xyMetresStds = 1.0 * poseDifferenceMetres;
+                degreesStds  = 20;
+            }
+            else if (confidence == MEDIUM || poseDifferenceMetres < 0.5) {
+                xyMetresStds = 2 * poseDifferenceMetres;
+                degreesStds  = 40;
+                // temporarily disable
+                return null;
+            }
+            else if (confidence == LOW || poseDifferenceMetres < 0.8) {
+                xyMetresStds = 3 * poseDifferenceMetres;
+                degreesStds  = 60;
+                // temporarily disable
+                return null;
+            }
+            else { // Covers the Confidence.NONE case
+                return null;
+            }
+
+            return VecBuilder.fill(xyMetresStds, xyMetresStds, Units.degreesToRadians(degreesStds));
+        }
     }
 
     public static final class AutoConstants {
