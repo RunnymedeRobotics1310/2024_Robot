@@ -159,6 +159,32 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "14,9": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/1310/Arm/Shooter/SetTopMotorTrapSpeed",
+              "_title": "SmartDashboard/1310/Arm/Shooter/SetTopMotorTrapSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "18,9": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/1310/Arm/Shooter/SetBottomMotorTrapSpeed",
+              "_title": "SmartDashboard/1310/Arm/Shooter/SetBottomMotorTrapSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
