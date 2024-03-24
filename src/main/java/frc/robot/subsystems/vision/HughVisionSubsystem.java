@@ -438,7 +438,7 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
         Matrix<N3, N1> deviation = VecBuilder.fill(stdDevRatio, stdDevRatio, 5 * stdDevRatio);
 
-        return new VisionPositionInfo(poseEstimate.pose, poseEstimate.latency, deviation);
+        return new VisionPositionInfo(poseEstimate.pose, poseEstimate.timestampSeconds, deviation);
     }
 
     /**

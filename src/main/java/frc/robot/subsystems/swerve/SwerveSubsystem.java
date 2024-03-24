@@ -151,9 +151,6 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
     /**
      * Update the field relative position of the robot using vision
      * position data returned from the vision subsystem.
-     *
-     * @see frc.robot.Constants.VisionConstants#getVisionStandardDeviation(frc.robot.subsystems.vision.PoseConfidence,
-     * double) fortuning info
      */
     private void updateOdometryWithVisionInfo() {
         VisionPositionInfo visPose = visionSubsystem.getPositionInfo();
@@ -168,8 +165,7 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
             lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
             lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
 
-            double timeInSeconds = Timer.getFPGATimestamp() - (visPose.latencyMillis() / 1000);
-            this.addVisionMeasurement(visPose.pose(), timeInSeconds, visPose.deviation());
+            this.addVisionMeasurement(visPose.pose(), visPose.latencySeconds(), visPose.deviation());
         }
     }
 
