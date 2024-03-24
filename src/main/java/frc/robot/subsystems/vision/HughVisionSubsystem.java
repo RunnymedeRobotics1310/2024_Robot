@@ -148,13 +148,12 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
     public void periodic() {
         // read values periodically and post to smart dashboard periodically
         double[]           bp         = getBotPose();
-        // AprilTagInfo[] visibleTags = getVisibleTagInfo();
+        PoseEstimate       poseEstimate     = getBotPoseEstimate();
         double             avgDist    = getTargetAvgDistance();
         int                numTargets = getNumActiveTargets();
 
         Telemetry.hugh.botTarget              = getBotTarget();
         Telemetry.hugh.priorityId             = getPriorityId();
-        // Telemetry.hugh.targetFound = isCurrentTargetVisible();
         Telemetry.hugh.tid                    = tid.getDouble(-1.0);
         Telemetry.hugh.tx                     = tx.getDouble(-1.0);
         Telemetry.hugh.ty                     = ty.getDouble(-1.0);
@@ -162,15 +161,31 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         Telemetry.hugh.tl                     = tl.getDouble(-1.0);
         Telemetry.hugh.botpost                = bp;
         Telemetry.hugh.targetAvgDist          = avgDist;
-        Telemetry.hugh.numTags                = getNumActiveTargets();
+        Telemetry.hugh.numTags                = poseEstimate.tagCount;
         Telemetry.hugh.distanceToTargetMetres = getDistanceToTargetMetres();
         Telemetry.hugh.isAlignedWithTarget    = isAlignedWithTarget();
         Telemetry.hugh.targetOffset           = getTargetOffset();
         Rotation2d r = getDynamicSpeakerShooterAngle(new Translation2d(0, 0));
         Telemetry.hugh.shooterAngle           = r == null ? Double.MIN_VALUE : r.getDegrees();
-        // Telemetry.hugh.aprilTagInfo = aprilTagInfoArrayToString(visibleTags);
+        Telemetry.hugh.aprilTagInfo           = aprilTagInfoArrayToString(poseEstimate.rawFiducials);
     }
 
+    private String aprilTagInfoArrayToString(RawFiducial[] rawFiducials) {
+        if (rawFiducials == null) {
+            return "null";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (RawFiducial rawFiducial : rawFiducials) {
+            sb.append("[id:").append(rawFiducial.id)
+                    .append(",distToRobot:").append(rawFiducial.distToRobot)
+                    .append(",ambiguity:").append(rawFiducial.ambiguity)
+                    .append(",txnc:").append(rawFiducial.txnc)
+                    .append(",tync:").append(rawFiducial.tync)
+                    .append(",ta:").append(rawFiducial.ta)
+                    .append("]");
+        }
+        return sb.toString();
+    }
 
     /**
      * Get the limelight coordinates for the target (i.e. with respect to the limelight origin, NOT
