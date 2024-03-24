@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -90,6 +94,53 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
     private static final double        SPEAKER_TAG_DELTA                    = 0.565868;
 
+    public static class RawFiducial {
+        public int id;
+        public double txnc;
+        public double tync;
+        public double ta;
+        public double distToCamera;
+        public double distToRobot;
+        public double ambiguity;
+
+
+        public RawFiducial(int id, double txnc, double tync, double ta, double distToCamera, double distToRobot, double ambiguity) {
+            this.id = id;
+            this.txnc = txnc;
+            this.tync = tync;
+            this.ta = ta;
+            this.distToCamera = distToCamera;
+            this.distToRobot = distToRobot;
+            this.ambiguity = ambiguity;
+        }
+    }
+
+    public static class PoseEstimate {
+        public Pose2d pose;
+        public double timestampSeconds;
+        public double latency;
+        public int tagCount;
+        public double tagSpan;
+        public double avgTagDist;
+        public double avgTagArea;
+        public RawFiducial[] rawFiducials;
+
+        public PoseEstimate(Pose2d pose, double timestampSeconds, double latency,
+                            int tagCount, double tagSpan, double avgTagDist,
+                            double avgTagArea, RawFiducial[] rawFiducials) {
+
+            this.pose = pose;
+            this.timestampSeconds = timestampSeconds;
+            this.latency = latency;
+            this.tagCount = tagCount;
+            this.tagSpan = tagSpan;
+            this.avgTagDist = avgTagDist;
+            this.avgTagArea = avgTagArea;
+            this.rawFiducials = rawFiducials;
+        }
+    }
+
+
     public HughVisionSubsystem() {
         this.pipeline.setNumber(PIPELINE_APRIL_TAG_DETECT);
         this.camMode.setNumber(CAM_MODE_VISION);
@@ -102,7 +153,6 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         // AprilTagInfo[] visibleTags = getVisibleTagInfo();
         double             avgDist    = getTargetAvgDistance();
         int                numTargets = getNumActiveTargets();
-        VisionPositionInfo visPos     = getPositionInfo(bp, numTargets, avgDist);
 
         Telemetry.hugh.botTarget              = getBotTarget();
         Telemetry.hugh.priorityId             = getPriorityId();
@@ -114,7 +164,6 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         Telemetry.hugh.tl                     = tl.getDouble(-1.0);
         Telemetry.hugh.botpost                = bp;
         Telemetry.hugh.targetAvgDist          = avgDist;
-        Telemetry.hugh.visPose                = visPos;
         Telemetry.hugh.numTags                = getNumActiveTargets();
         Telemetry.hugh.distanceToTargetMetres = getDistanceToTargetMetres();
         Telemetry.hugh.isAlignedWithTarget    = isAlignedWithTarget();
@@ -304,50 +353,47 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         return new Pose2d(tran2d, r2d);
     }
 
-    /**
-     * Get the position of the robot as computed by the Vision Subsystem. Includes latency data.
-     *
-     * If no valid position can be returned (due to bad or erratic data, blocked view, etc.),
-     * returns null
-     *
-     * @return position info or null
-     * @since 2024-02-10
-     */
-    private VisionPositionInfo getPositionInfo(double[] botPose, int numTargets, double avgTargetDistance) {
-        // If No Pose, No Targets Visible, or Bot is floating in mid air, return null
-        if (botPose == null || numTargets < 1 || botPose[2] > 1) {
-            return null;
+    private static double extractBotPoseEntry(double[] inData, int position){
+        if(inData.length < position+1)
+        {
+            return 0;
         }
+        return inData[position];
+    }
 
-        double         latency        = botPose[6];
-        Pose2d         pose           = toPose2D(botPose);
+    private PoseEstimate getBotPoseEstimate() {
+        var poseArray = botpose_wpiblue.getDoubleArray(new double[0]);
+        var pose = toPose2D(poseArray);
+        double latency = extractBotPoseEntry(poseArray,6);
+        int tagCount = (int)extractBotPoseEntry(poseArray,7);
+        double tagSpan = extractBotPoseEntry(poseArray,8);
+        double tagDist = extractBotPoseEntry(poseArray,9);
+        double tagArea = extractBotPoseEntry(poseArray,10);
+        //getlastchange() in microseconds, ll latency in milliseconds
+        var timestamp = (botpose_wpiblue.getLastChange() / 1000000.0) - (latency/1000.0);
 
-        PoseConfidence poseConfidence = PoseConfidence.NONE;
+        RawFiducial[] rawFiducials = new RawFiducial[tagCount];
+        int valsPerFiducial = 7;
+        int expectedTotalVals = 11 + valsPerFiducial*tagCount;
 
-        if (numTargets == 1) {
-            if (avgTargetDistance <= 2) {
-                poseConfidence = PoseConfidence.HIGH;
-            }
-            else if (avgTargetDistance <= 2.4) {
-                poseConfidence = PoseConfidence.MEDIUM;
-            }
-            else if (avgTargetDistance <= 2.8) {
-                poseConfidence = PoseConfidence.LOW;
-            }
+        if (poseArray.length != expectedTotalVals) {
+            // Don't populate fiducials
         }
-        else { // numTargets > 1
-            if (avgTargetDistance <= 5) {
-                poseConfidence = PoseConfidence.HIGH;
-            }
-            else if (avgTargetDistance <= 6) {
-                poseConfidence = PoseConfidence.MEDIUM;
-            }
-            else if (avgTargetDistance <= 7) {
-                poseConfidence = PoseConfidence.LOW;
+        else{
+            for(int i = 0; i < tagCount; i++) {
+                int baseIndex = 11 + (i * valsPerFiducial);
+                int id = (int)poseArray[baseIndex];
+                double txnc = poseArray[baseIndex + 1];
+                double tync = poseArray[baseIndex + 2];
+                double ta = poseArray[baseIndex + 3];
+                double distToCamera = poseArray[baseIndex + 4];
+                double distToRobot = poseArray[baseIndex + 5];
+                double ambiguity = poseArray[baseIndex + 6];
+                rawFiducials[i] = new RawFiducial(id, txnc, tync, ta, distToCamera, distToRobot, ambiguity);
             }
         }
 
-        return new VisionPositionInfo(pose, latency, poseConfidence);
+        return new PoseEstimate(pose, timestamp,latency,tagCount,tagSpan,tagDist,tagArea,rawFiducials);
     }
 
     /**
@@ -366,7 +412,33 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
      * @since 2024-02-10
      */
     public VisionPositionInfo getPositionInfo() {
-        return getPositionInfo(getBotPose(), getNumActiveTargets(), getTargetAvgDistance());
+        PoseEstimate poseEstimate = getBotPoseEstimate();
+
+        // If pose is 0,0 or no tags in view, we don't actually have data - return null
+        if ((poseEstimate.pose.getX() == 0 && poseEstimate.pose.getY() == 0)
+                || poseEstimate.rawFiducials.length == 0) {
+            return null;
+        }
+
+        // Get the "best" tag - assuming the first one is the best - TBD TODO
+        RawFiducial rawFiducial = poseEstimate.rawFiducials[0];
+
+        if (rawFiducial.ambiguity > Constants.VisionConstants.MAX_AMBIGUITY) {
+            return null;
+        }
+
+        double stdDevRatio;
+
+        // If the ambiguity is very low, use the data as is
+        if (rawFiducial.ambiguity < Constants.VisionConstants.HIGH_QUALITY_AMBIGUITY) {
+            stdDevRatio = .01;
+        } else {
+            stdDevRatio = Math.pow(rawFiducial.distToRobot,2) / 2;
+        }
+
+        Matrix<N3, N1> deviation = VecBuilder.fill(stdDevRatio, stdDevRatio, 5 * stdDevRatio);
+
+        return new VisionPositionInfo(poseEstimate.pose, poseEstimate.latency, deviation);
     }
 
     /**
@@ -539,4 +611,6 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
     public String toString() {
         return "Hugh Vision Subsystem";
     }
+
+
 }
