@@ -587,7 +587,7 @@ public final class Constants {
         public static final double      MAX_LINK_HOLD                      = 0.02;                       // 0.04;
 
         public enum TrapShootMotorSpeeds {
-            ZERO_ONE, ZERO_TWO, ZERO_THREE, ZERO_FOUR, ZERO_FIVE, ZERO_SIX, ZERO_SEVEN, ZERO_EIGHT, ZERO_NINE, ONE
+            ZERO_ONE, ZERO_ONE5, ZERO_TWO,ZERO_TWO5, ZERO_THREE, ZERO_THREE5, ZERO_FOUR, ZERO_FOUR5, ZERO_FIVE, ZERO_FIVE5, ZERO_SIX, ZERO_SIX5, ZERO_SEVEN, ZERO_EIGHT, ZERO_NINE, ONE
         }
     }
 

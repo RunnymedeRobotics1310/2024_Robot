@@ -239,7 +239,7 @@ public class OperatorInput {
         // vision note pickup
         new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5)
             .onTrue(new StartIntakeCommand(arm, lighting)
-                .deadlineWith(new DriveToNoteCommand(drive, lighting, arm, jackman, 1)));
+                .deadlineWith(new DriveToNoteCommand(drive, lighting, arm, jackman, 2)));
 
         // start intake
         new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
@@ -286,13 +286,10 @@ public class OperatorInput {
         new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
             .onTrue(new ShootSpeakerFromPodiumCommand(arm, lighting));
 
-        // shoot prep - IF YOU CHANGE THE BUTTON THIS IS ON, MUST CHANGE THE BUTTON RELEASE
-        // IN ShootPrepFireCommand as well.
-        new Trigger(() -> !this.isShift() && operatorController.getAButton())
-            .onTrue(new ShootPrepFireCommand(arm, lighting, this));
-
         // shoot FIRE
-        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootCommand(arm, lighting));
+        // IF YOU CHANGE THE BUTTON THIS IS ON, MUST CHANGE THE BUTTON RELEASE
+        // IN ShootPrepFireCommand as well.
+        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootPrepFireCommand(arm, lighting, this));
 
         // set pose at speaker
         new Trigger(() -> this.isShift() && operatorController.getBButton())
@@ -368,10 +365,16 @@ public class OperatorInput {
         trapShootTopMotorSpeedChooser.setDefaultOption("0.3", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_THREE);
 
         trapShootTopMotorSpeedChooser.addOption("0.1", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_ONE);
+        trapShootTopMotorSpeedChooser.addOption("0.15", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_ONE5);
         trapShootTopMotorSpeedChooser.addOption("0.2", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_TWO);
+        trapShootTopMotorSpeedChooser.addOption("0.25", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_TWO5);
+        trapShootTopMotorSpeedChooser.addOption("0.35", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_THREE5);
         trapShootTopMotorSpeedChooser.addOption("0.4", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FOUR);
+        trapShootTopMotorSpeedChooser.addOption("0.45", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FOUR5);
         trapShootTopMotorSpeedChooser.addOption("0.5", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FIVE);
+        trapShootTopMotorSpeedChooser.addOption("0.55", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FIVE5);
         trapShootTopMotorSpeedChooser.addOption("0.6", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SIX);
+        trapShootTopMotorSpeedChooser.addOption("0.65", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SIX5);
         trapShootTopMotorSpeedChooser.addOption("0.7", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SEVEN);
         trapShootTopMotorSpeedChooser.addOption("0.8", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_EIGHT);
         trapShootTopMotorSpeedChooser.addOption("0.9", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_NINE);
@@ -382,10 +385,16 @@ public class OperatorInput {
         trapShootBottomMotorSpeedChooser.setDefaultOption("0.4", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FOUR);
 
         trapShootBottomMotorSpeedChooser.addOption("0.1", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_ONE);
+        trapShootBottomMotorSpeedChooser.addOption("0.15", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_ONE5);
         trapShootBottomMotorSpeedChooser.addOption("0.2", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_TWO);
+        trapShootBottomMotorSpeedChooser.addOption("0.25", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_TWO5);
         trapShootBottomMotorSpeedChooser.addOption("0.3", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_THREE);
+        trapShootBottomMotorSpeedChooser.addOption("0.35", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_THREE5);
+        trapShootBottomMotorSpeedChooser.addOption("0.45", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FOUR5);
         trapShootBottomMotorSpeedChooser.addOption("0.5", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FIVE);
+        trapShootBottomMotorSpeedChooser.addOption("0.55", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FIVE5);
         trapShootBottomMotorSpeedChooser.addOption("0.6", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SIX);
+        trapShootBottomMotorSpeedChooser.addOption("0.65", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SIX5);
         trapShootBottomMotorSpeedChooser.addOption("0.7", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SEVEN);
         trapShootBottomMotorSpeedChooser.addOption("0.8", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_EIGHT);
         trapShootBottomMotorSpeedChooser.addOption("0.9", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_NINE);
@@ -397,11 +406,17 @@ public class OperatorInput {
 
         return switch (trapShootMotorSpeedChooser.getSelected()) {
         case ZERO_ONE -> 0.1;
+        case ZERO_ONE5 -> 0.15;
         case ZERO_TWO -> 0.2;
+        case ZERO_TWO5 -> 0.25;
         case ZERO_THREE -> 0.3;
+        case ZERO_THREE5 -> 0.35;
         case ZERO_FOUR -> 0.4;
+        case ZERO_FOUR5 -> 0.45;
         case ZERO_FIVE -> 0.5;
+        case ZERO_FIVE5 -> 0.55;
         case ZERO_SIX -> 0.6;
+        case ZERO_SIX5 -> 0.65;
         case ZERO_SEVEN -> 0.7;
         case ZERO_EIGHT -> 0.8;
         case ZERO_NINE -> 0.9;

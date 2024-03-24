@@ -189,7 +189,7 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
         double timeInSeconds = Timer.getFPGATimestamp() - (visPose.latencyMillis() / 1000);
 
-        this.addVisionMeasurement(visPose.pose(), timeInSeconds, stds);
+        this.addVisionMeasurement(visPose.pose(), timeInSeconds, null);
     }
 
     private void updateLighting(PoseConfidence confidence) {
