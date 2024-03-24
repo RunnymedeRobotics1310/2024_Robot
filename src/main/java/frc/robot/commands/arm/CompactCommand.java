@@ -37,13 +37,13 @@ public class CompactCommand extends ArmBaseCommand {
         // If we are close to the locked position, there is nothing to do.
         if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, 4)) {
 
-            if (armSubsystem.getAimAngle() <= ArmConstants.COMPACT_ARM_POSITION.aimAngle
-                && armSubsystem.getLinkAngle() >= ArmConstants.COMPACT_ARM_POSITION.linkAngle) {
-                setStateAndLog(State.LOCK, "Arm already near compact.  Lock it");
-            }
-            else {
-                setStateAndLog(State.LOCKED, "Arm already in locked compact");
-            }
+            // if (armSubsystem.getAimAngle() <= ArmConstants.COMPACT_ARM_POSITION.aimAngle
+            // && armSubsystem.getLinkAngle() >= ArmConstants.COMPACT_ARM_POSITION.linkAngle) {
+            // setStateAndLog(State.LOCK, "Arm already near compact. Lock it");
+            // }
+            // else {
+            setStateAndLog(State.LOCKED, "Arm already in locked compact");
+            // }
         }
         else {
             //
@@ -119,7 +119,7 @@ public class CompactCommand extends ArmBaseCommand {
             armSubsystem.setAimPivotSpeed(0);
 
             // If past the bumper danger, move to the intake position.
-            if (this.isStateTimeoutExceeded(.2)) {
+            if (this.isStateTimeoutExceeded(.1)) {
 
                 armSubsystem.setLinkPivotSpeed(0);
 

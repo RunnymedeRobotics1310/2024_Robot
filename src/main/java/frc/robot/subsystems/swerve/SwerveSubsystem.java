@@ -4,7 +4,6 @@ import static frc.robot.Constants.LightingConstants.VISPOSE1;
 import static frc.robot.Constants.LightingConstants.VISPOSE2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATION_ACCELERATION_RAD_PER_SEC2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_ACCELERATION_MPS2;
-import static frc.robot.Constants.VisionConstants.CAMERA_LOC_REL_TO_ROBOT_CENTER;
 import static frc.robot.Constants.VisionConstants.getVisionStandardDeviation;
 import static frc.robot.RunnymedeUtils.format;
 
@@ -22,10 +21,13 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.subsystems.RunnymedeSubsystemBase;
 import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.subsystems.lighting.pattern.*;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceHigh;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceLow;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceMedium;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
 import frc.robot.subsystems.vision.HughVisionSubsystem;
-import frc.robot.subsystems.vision.VisionPositionInfo;
 import frc.robot.subsystems.vision.PoseConfidence;
+import frc.robot.subsystems.vision.VisionPositionInfo;
 import frc.robot.telemetry.Telemetry;
 
 public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
@@ -189,7 +191,7 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
         double timeInSeconds = Timer.getFPGATimestamp() - (visPose.latencyMillis() / 1000);
 
-        this.addVisionMeasurement(visPose.pose(), timeInSeconds, null);
+        this.addVisionMeasurement(visPose.pose(), timeInSeconds, stds);
     }
 
     private void updateLighting(PoseConfidence confidence) {
