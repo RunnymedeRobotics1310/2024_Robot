@@ -286,13 +286,10 @@ public class OperatorInput {
         new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
             .onTrue(new ShootSpeakerFromPodiumCommand(arm, lighting));
 
-        // shoot prep - IF YOU CHANGE THE BUTTON THIS IS ON, MUST CHANGE THE BUTTON RELEASE
-        // IN ShootPrepFireCommand as well.
-        new Trigger(() -> !this.isShift() && operatorController.getAButton())
-            .onTrue(new ShootPrepFireCommand(arm, lighting, this));
-
         // shoot FIRE
-        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootCommand(arm, lighting));
+        // IF YOU CHANGE THE BUTTON THIS IS ON, MUST CHANGE THE BUTTON RELEASE
+        // IN ShootPrepFireCommand as well.
+        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootPrepFireCommand(arm, lighting, this));
 
         // set pose at speaker
         new Trigger(() -> this.isShift() && operatorController.getBButton())

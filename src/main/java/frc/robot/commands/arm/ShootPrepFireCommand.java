@@ -72,7 +72,7 @@ public class ShootPrepFireCommand extends ArmBaseCommand {
             // Wait for the shooter to get up to speed, and button to be released
             double elapsedTime = getStateElapsedTime();
 
-            if (elapsedTime >= .5 && operatorInput.getRawOperatorController().getAButtonReleased()) {
+            if (elapsedTime >= .5 && operatorInput.getRawOperatorController().getBButtonReleased()) {
                 setStateAndLog(State.START_FEEDER, "ShooterSpeed[" + armSubsystem.getBottomShooterEncoderSpeed() + "], Elapsed[" + elapsedTime + "]");
             }
             break;
