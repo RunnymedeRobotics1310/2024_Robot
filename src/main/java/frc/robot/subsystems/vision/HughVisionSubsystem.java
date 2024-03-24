@@ -73,8 +73,6 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
     NetworkTableEntry                  priorityid                           = table.getEntry("priorityid");
 
-    NetworkTableEntry                  json                                 = table.getEntry("json");
-
     private BotTarget                  botTarget                            = BotTarget.NONE;
 
     private static final List<Integer> TARGET_BLUE_SPEAKER                  = List.of(7, 8);
@@ -237,91 +235,6 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         return botPose[BOTPOSE_INDEX_AVGDIST];
     }
 
-    /**
-     * Performs a String based parsing of limelight's json blob in order to obtain9 information on
-     * multiple targets when they are in view, since limelight only gives easy access to the
-     * closest/largest one. Not using JSON parsers libs due to up to 2.5ms parsing time.
-     *
-     * @return An array of AprilTagInfo objects, each representing a visible target.
-     */
-    private AprilTagInfo[] getVisibleTagInfo() {
-        String                  jsonStr = json.getString(null);
-        ArrayList<AprilTagInfo> tags    = new ArrayList<AprilTagInfo>();
-
-        if (jsonStr != null) {
-            int index = 0;
-            while (index != -1) {
-                index = jsonStr.indexOf("\"fID\":", index);
-                if (index == -1)
-                    break; // No more fID found
-
-                // Get Tag ID
-                int    fIDStart    = index + 6;
-                int    fIDEnd      = jsonStr.indexOf(",", fIDStart);
-                String fID         = jsonStr.substring(fIDStart, fIDEnd).trim();
-
-                // Get yTranslation (1st element of array)
-                int    yTransIndex = jsonStr.indexOf("\"t6t_rs\":", fIDEnd);
-                int    yTransStart = yTransIndex + 10;
-                int    yTransEnd   = jsonStr.indexOf(",", yTransStart);
-                String yTransStr   = jsonStr.substring(yTransStart, yTransEnd).trim();
-
-                // Get xTranslation (3rd element of array)
-                int    xTransIndex = jsonStr.indexOf(",", yTransEnd + 1);
-                int    xTransStart = xTransIndex + 1;
-                int    xTransEnd   = jsonStr.indexOf(",", xTransStart);
-                String xTransStr   = jsonStr.substring(xTransStart, xTransEnd).trim();
-
-                // Get xOffset
-                int    txIndex     = jsonStr.indexOf("\"tx\":", fIDEnd);
-                int    txStart     = txIndex + 5;
-                int    txEnd       = jsonStr.indexOf(",", txStart);
-                if (txEnd == -1) { // Check if tx is the last value before the object ends
-                    txEnd = jsonStr.indexOf("}", txStart);
-                }
-                String       tx             = jsonStr.substring(txStart, txEnd).trim();
-
-                int          tagId          = Integer.parseInt(fID);
-                double       xOffset        = Double.parseDouble(tx);
-                double       xTrans         = Double.parseDouble(xTransStr);
-                double       yTrans         = Double.parseDouble(yTransStr);
-                double       targetDistance = Math.hypot(xTrans, yTrans);
-
-                AprilTagInfo ati            = new AprilTagInfo(tagId, xOffset, xTrans, yTrans, targetDistance);
-                tags.add(ati);
-
-                index = txEnd; // Move index to end of the current tx to find the next fID
-            }
-        }
-
-        AprilTagInfo[] tagRet = new AprilTagInfo[tags.size()];
-        return tags.toArray(tagRet);
-    }
-
-    private String aprilTagInfoArrayToString(AprilTagInfo[] tagArray) {
-        if (tagArray == null || tagArray.length == 0) {
-            return "[]";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for (int i = 0; i < tagArray.length; i++) {
-            AprilTagInfo tag = tagArray[i];
-            sb.append("[Tag:");
-            sb.append(tag.tagId());
-            sb.append(",xDeg:");
-            sb.append(tag.xAngle());
-            sb.append(",Dist:");
-            sb.append(tag.targetDistance());
-            sb.append("]");
-            if (i < tagArray.length - 1) {
-                sb.append(",");
-            }
-        }
-        sb.append("]");
-        return sb.toString();
-    }
-
     private int getNumActiveTargets() {
         double[] botPose = getBotPose();
         if (botPose == null || botPose.length < 11 || botPose[BOTPOSE_INDEX_TAGCOUNT] == Double.MIN_VALUE) {
@@ -479,17 +392,6 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         else {
             setPriorityId(activeAprilTagTargets.get(0));
         }
-    }
-
-    /**
-     * If any April tag in the actively set bot target is visible, return true.
-     *
-     * @return true if any April tag in the actively set bot target is visible
-     * @since 2024-02-10
-     */
-    public boolean isCurrentTargetVisible() {
-        AprilTagInfo[] visibleTags = getVisibleTagInfo();
-        return Arrays.stream(visibleTags).anyMatch(tag -> activeAprilTagTargets.contains(tag.tagId()));
     }
 
     /**
