@@ -279,6 +279,10 @@ public class OperatorInput {
                 .onTrue(new ShootTrapFromFloorCommand(arm, lighting, this));
 
         // rotate aim shoot
+        new Trigger(() -> !this.isShift() && operatorController.getAButton())
+                .onTrue(new ShootSpeakerFromAnywhereMcMullinStyleCommand(arm, drive, lighting));
+
+        // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getXButton())
             .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, lighting));
 

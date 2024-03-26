@@ -411,7 +411,7 @@ public abstract class ArmBaseCommand extends LoggingCommand {
      * @param linkAngle
      * @return hold motor output
      */
-    private double calcAimHold(double aimAngle, double linkAngle) {
+    public double calcAimHold(double aimAngle, double linkAngle) {
 
         /*
          * The torque on the aim pivot point depends on the angle of the aim
@@ -459,7 +459,7 @@ public abstract class ArmBaseCommand extends LoggingCommand {
      * @param linkAngle
      * @return hold motor output
      */
-    private double calcLinkHold(double aimAngle, double linkAngle) {
+    public double calcLinkHold(double aimAngle, double linkAngle) {
 
         /*
          * The torque on the link pivot point depends on the angle of the link, and the

@@ -1,10 +1,14 @@
 package frc.robot.commands.arm;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -12,14 +16,11 @@ import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
-import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
-
 /**
  * Move arm to speaker shoot pose
  * Set shooter speed (distance based)
  */
-public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
+public class ShootSpeakerFromAnywhereMcMullinStyleCommand extends ArmBaseCommand {
 
     private enum State {
         MOVE_TO_UNLOCK, REVERSE_NOTE, START_SHOOTER, START_FEEDER, FINISHED
@@ -34,10 +35,13 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     private Constants.BotTarget botTarget;
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("Testing");
-    NetworkTableEntry aimAngleNT = table.getEntry("aimAngle");
+    NetworkTableEntry aimMotorSpeed = table.getEntry("aimMotorSpeed");
+    NetworkTableEntry linkMotorSpeed = table.getEntry("linkMotorSpeed");
+    NetworkTableEntry aimDuration = table.getEntry("aimDuration");
+    NetworkTableEntry linkDuration = table.getEntry("linkDuration");
 
-    public ShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem,
-        LightingSubsystem lighting) {
+    public ShootSpeakerFromAnywhereMcMullinStyleCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem,
+                                                        LightingSubsystem lighting) {
         super(armSubsystem);
         this.swerveSubsystem     = swerveSubsystem;
         this.lighting            = lighting;
@@ -131,14 +135,30 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             // Drive to the arm position at the same time
             double linkAngle = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
 
+            double aimMotorSpeed = this.aimMotorSpeed.getDouble(0);
+            double linkMotorSpeed = this.linkMotorSpeed.getDouble(0);
+            double aimDuration = this.aimDuration.getDouble(0);
+            double linkDuration = this.aimDuration.getDouble(0);
+
             Pose2d botPose = swerveSubsystem.getPose();
             double distanceToTarget = botPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
             // double aimAngle = calculateAimAngle(distanceToTarget);
-            double aimAngle = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
-            Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
 
-            atArmAngle = this.driveToArmPosition(armPositionNew, 1, 1);
-//                ArmConstants.DEFAULT_LINK_TOLERANCE_DEG, ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
+            if (isStateTimeoutExceeded(linkDuration)) {
+                double holdSpeed = calcLinkHold(armSubsystem.getAimAngle(), armSubsystem.getLinkAngle());
+                armSubsystem.setLinkPivotSpeed(holdSpeed);
+            }
+            else {
+                armSubsystem.setLinkPivotSpeed(linkMotorSpeed);
+            }
+
+            if (isStateTimeoutExceeded(aimDuration)) {
+                double holdSpeed = calcAimHold(armSubsystem.getAimAngle(), armSubsystem.getLinkAngle());
+                armSubsystem.setAimPivotSpeed(holdSpeed);
+            }
+            else {
+                armSubsystem.setAimPivotSpeed(aimMotorSpeed);
+            }
 
             armSubsystem.setIntakeSpeed(0);
 
@@ -152,9 +172,9 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            if (isStateTimeoutExceeded(.75) && atArmAngle) {
+            if (isStateTimeoutExceeded(linkDuration + .25) && isStateTimeoutExceeded(linkDuration+ .25)) {
                 logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed()
-                + ",DistanceToTarget["+distanceToTarget+"],DesiredAimAngle["+aimAngleNT+"],encoderAimAngle["+armSubsystem.getAimAngle()+"],encoderLinkAngle["+armSubsystem.getLinkAngle()+"]");
+                + ",DistanceToTarget["+distanceToTarget+"],encoderAimAngle["+armSubsystem.getAimAngle()+"],encoderLinkAngle["+armSubsystem.getLinkAngle()+"]");
                 state = State.START_FEEDER;
             }
 
@@ -163,8 +183,10 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         case START_FEEDER:
 
             // Continue to drive to the arm position while shooting
-            atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION, 1, 1);
-//                ArmConstants.DEFAULT_LINK_TOLERANCE_DEG, ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
+            double linkHoldSpeed = calcLinkHold(armSubsystem.getAimAngle(), armSubsystem.getLinkAngle());
+            armSubsystem.setLinkPivotSpeed(linkHoldSpeed);
+            double aimHoldSpeed = calcAimHold(armSubsystem.getAimAngle(), armSubsystem.getLinkAngle());
+            armSubsystem.setAimPivotSpeed(aimHoldSpeed);
 
             armSubsystem.setIntakeSpeed(1);
 
@@ -175,6 +197,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             break;
 
         case FINISHED:
+
 
             break;
 
@@ -206,7 +229,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         if (!interrupted) {
             if (DriverStation.isTeleop()) {
-//                CommandScheduler.getInstance().schedule(new CompactCommand(armSubsystem));
+                CommandScheduler.getInstance().schedule(new CompactCommand(armSubsystem));
             }
 
         }
