@@ -95,7 +95,7 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
     private SwerveSubsystem swerveSubsystem;
 
-    private final RectanglePoseArea fieldBoundary = new RectanglePoseArea(new Translation2d(0, 0), new Translation2d(16.541, 8.211));
+    private static final RectanglePoseArea FIELD_BOUNDARY = new RectanglePoseArea(new Translation2d(0, 0), new Translation2d(16.541, 8.211));
     private final NetworkTable poseTable = NetworkTableInstance.getDefault().getTable("Pose");
     private final DoubleArrayPublisher limelightPub = poseTable.getDoubleArrayTopic("llPose").publish();
 
@@ -156,7 +156,7 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
     public void periodic() {
         // read values periodically and post to smart dashboard periodically
         PoseEstimate poseEstimate = getBotPoseEstimate();
-        VisionPositionInfo visPosInfo = getPositionInfo(swerveSubsystem.getPose());
+        VisionPositionInfo visPosInfo = getPositionInfo(poseEstimate, swerveSubsystem.getPose());
         publishToField(poseEstimate.pose);
         swerveSubsystem.updateOdometryWithVisionInfo(visPosInfo);
 
@@ -177,7 +177,7 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         Telemetry.hugh.isAlignedWithTarget    = isAlignedWithTarget();
         Telemetry.hugh.targetOffset           = getTargetOffset();
         Rotation2d r = getDynamicSpeakerShooterAngle(new Translation2d(0, 0));
-        Telemetry.hugh.shooterAngle = r == null ? Double.MIN_VALUE : r.getDegrees();
+        Telemetry.hugh.shooterAngle = r == null ? 1310 : r.getDegrees();
         Telemetry.hugh.aprilTagInfo = aprilTagInfoArrayToString(poseEstimate.rawFiducials);
     }
 
@@ -359,12 +359,10 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
      * @return position info or null
      * @since 2024-02-10
      */
-    public VisionPositionInfo getPositionInfo(Pose2d odometryPose) {
-        PoseEstimate poseEstimate = getBotPoseEstimate();
-
+    public VisionPositionInfo getPositionInfo(PoseEstimate poseEstimate, Pose2d odometryPose) {
         // If pose is 0,0 or no tags in view, we don't actually have data - return null
         if ((poseEstimate.pose.getX() == 0 && poseEstimate.pose.getY() == 0)
-                || poseEstimate.rawFiducials.length == 0  || !fieldBoundary.isPoseWithinArea(poseEstimate.pose)) {
+                || poseEstimate.rawFiducials.length == 0  || !FIELD_BOUNDARY.isPoseWithinArea(poseEstimate.pose)) {
             return null;
         }
 
@@ -392,7 +390,6 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         }
 
         Matrix<N3, N1> deviation = VecBuilder.fill(stdDevRatio, stdDevRatio, 5 * stdDevRatio);
-
         return new VisionPositionInfo(poseEstimate.pose, poseEstimate.timestampSeconds, deviation);
     }
 
