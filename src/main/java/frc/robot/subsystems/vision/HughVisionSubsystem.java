@@ -1,20 +1,25 @@
 package frc.robot.subsystems.vision;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.Constants.BotTarget;
 import frc.robot.subsystems.RunnymedeSubsystemBase;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.telemetry.Telemetry;
+import frc.robot.util.RectanglePoseArea;
 
 /**
  * Handles the April Tag Limelight On Shooter Side
@@ -69,8 +74,6 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
     NetworkTableEntry                  priorityid                           = table.getEntry("priorityid");
 
-    NetworkTableEntry                  json                                 = table.getEntry("json");
-
     private BotTarget                  botTarget                            = BotTarget.NONE;
 
     private static final List<Integer> TARGET_BLUE_SPEAKER                  = List.of(7, 8);
@@ -90,7 +93,61 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
     private static final double        SPEAKER_TAG_DELTA                    = 0.565868;
 
-    public HughVisionSubsystem() {
+    private SwerveSubsystem swerveSubsystem;
+
+    private final RectanglePoseArea fieldBoundary = new RectanglePoseArea(new Translation2d(0, 0), new Translation2d(16.541, 8.211));
+    private final NetworkTable poseTable = NetworkTableInstance.getDefault().getTable("Pose");
+    private final DoubleArrayPublisher limelightPub = poseTable.getDoubleArrayTopic("llPose").publish();
+
+    public static class RawFiducial {
+        public int    id;
+        public double txnc;
+        public double tync;
+        public double ta;
+        public double distToCamera;
+        public double distToRobot;
+        public double ambiguity;
+
+
+        public RawFiducial(int id, double txnc, double tync, double ta, double distToCamera, double distToRobot,
+            double ambiguity) {
+            this.id           = id;
+            this.txnc         = txnc;
+            this.tync         = tync;
+            this.ta           = ta;
+            this.distToCamera = distToCamera;
+            this.distToRobot  = distToRobot;
+            this.ambiguity    = ambiguity;
+        }
+    }
+
+    public static class PoseEstimate {
+        public Pose2d        pose;
+        public double        timestampSeconds;
+        public double        latency;
+        public int           tagCount;
+        public double        tagSpan;
+        public double        avgTagDist;
+        public double        avgTagArea;
+        public RawFiducial[] rawFiducials;
+
+        public PoseEstimate(Pose2d pose, double timestampSeconds, double latency,
+            int tagCount, double tagSpan, double avgTagDist,
+            double avgTagArea, RawFiducial[] rawFiducials) {
+
+            this.pose             = pose;
+            this.timestampSeconds = timestampSeconds;
+            this.latency          = latency;
+            this.tagCount         = tagCount;
+            this.tagSpan          = tagSpan;
+            this.avgTagDist       = avgTagDist;
+            this.avgTagArea       = avgTagArea;
+            this.rawFiducials     = rawFiducials;
+        }
+    }
+
+    public HughVisionSubsystem(SwerveSubsystem swerveSubsystem) {
+        this.swerveSubsystem = swerveSubsystem;
         this.pipeline.setNumber(PIPELINE_APRIL_TAG_DETECT);
         this.camMode.setNumber(CAM_MODE_VISION);
     }
@@ -98,32 +155,48 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
     @Override
     public void periodic() {
         // read values periodically and post to smart dashboard periodically
-        double[]           bp         = getBotPose();
-        // AprilTagInfo[] visibleTags = getVisibleTagInfo();
-        double             avgDist    = getTargetAvgDistance();
-        int                numTargets = getNumActiveTargets();
-        VisionPositionInfo visPos     = getPositionInfo(bp, numTargets, avgDist);
+        PoseEstimate poseEstimate = getBotPoseEstimate();
+        VisionPositionInfo visPosInfo = getPositionInfo(swerveSubsystem.getPose());
+        publishToField(poseEstimate.pose);
+        swerveSubsystem.updateOdometryWithVisionInfo(visPosInfo);
 
+        Telemetry.hugh.poseUpdate             = visPosInfo != null;
+        Telemetry.hugh.confidence             = visPosInfo == null ? 0 : visPosInfo.deviation().get(0, 0);
         Telemetry.hugh.botTarget              = getBotTarget();
         Telemetry.hugh.priorityId             = getPriorityId();
-        // Telemetry.hugh.targetFound = isCurrentTargetVisible();
+        Telemetry.hugh.targetFound            = isCurrentTargetVisible(poseEstimate);
         Telemetry.hugh.tid                    = tid.getDouble(-1.0);
         Telemetry.hugh.tx                     = tx.getDouble(-1.0);
         Telemetry.hugh.ty                     = ty.getDouble(-1.0);
         Telemetry.hugh.ta                     = ta.getDouble(-1.0);
         Telemetry.hugh.tl                     = tl.getDouble(-1.0);
-        Telemetry.hugh.botpost                = bp;
-        Telemetry.hugh.targetAvgDist          = avgDist;
-        Telemetry.hugh.visPose                = visPos;
-        Telemetry.hugh.numTags                = getNumActiveTargets();
+        Telemetry.hugh.botpose                = poseEstimate.pose.getTranslation().toVector().getData();
+        Telemetry.hugh.targetAvgDist          = poseEstimate.avgTagDist;
+        Telemetry.hugh.numTags                = poseEstimate.tagCount;
         Telemetry.hugh.distanceToTargetMetres = getDistanceToTargetMetres();
         Telemetry.hugh.isAlignedWithTarget    = isAlignedWithTarget();
         Telemetry.hugh.targetOffset           = getTargetOffset();
         Rotation2d r = getDynamicSpeakerShooterAngle(new Translation2d(0, 0));
-        Telemetry.hugh.shooterAngle           = r == null ? Double.MIN_VALUE : r.getDegrees();
-        // Telemetry.hugh.aprilTagInfo = aprilTagInfoArrayToString(visibleTags);
+        Telemetry.hugh.shooterAngle = r == null ? Double.MIN_VALUE : r.getDegrees();
+        Telemetry.hugh.aprilTagInfo = aprilTagInfoArrayToString(poseEstimate.rawFiducials);
     }
 
+    private String aprilTagInfoArrayToString(RawFiducial[] rawFiducials) {
+        if (rawFiducials == null) {
+            return "null";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (RawFiducial rawFiducial : rawFiducials) {
+            sb.append("[id:").append(rawFiducial.id)
+                .append(",distToRobot:").append(rawFiducial.distToRobot)
+                .append(",ambiguity:").append(rawFiducial.ambiguity)
+                .append(",txnc:").append(rawFiducial.txnc)
+                .append(",tync:").append(rawFiducial.tync)
+                .append(",ta:").append(rawFiducial.ta)
+                .append("]");
+        }
+        return sb.toString();
+    }
 
     /**
      * Get the limelight coordinates for the target (i.e. with respect to the limelight origin, NOT
@@ -188,91 +261,6 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         return botPose[BOTPOSE_INDEX_AVGDIST];
     }
 
-    /**
-     * Performs a String based parsing of limelight's json blob in order to obtain9 information on
-     * multiple targets when they are in view, since limelight only gives easy access to the
-     * closest/largest one. Not using JSON parsers libs due to up to 2.5ms parsing time.
-     *
-     * @return An array of AprilTagInfo objects, each representing a visible target.
-     */
-    private AprilTagInfo[] getVisibleTagInfo() {
-        String                  jsonStr = json.getString(null);
-        ArrayList<AprilTagInfo> tags    = new ArrayList<AprilTagInfo>();
-
-        if (jsonStr != null) {
-            int index = 0;
-            while (index != -1) {
-                index = jsonStr.indexOf("\"fID\":", index);
-                if (index == -1)
-                    break; // No more fID found
-
-                // Get Tag ID
-                int    fIDStart    = index + 6;
-                int    fIDEnd      = jsonStr.indexOf(",", fIDStart);
-                String fID         = jsonStr.substring(fIDStart, fIDEnd).trim();
-
-                // Get yTranslation (1st element of array)
-                int    yTransIndex = jsonStr.indexOf("\"t6t_rs\":", fIDEnd);
-                int    yTransStart = yTransIndex + 10;
-                int    yTransEnd   = jsonStr.indexOf(",", yTransStart);
-                String yTransStr   = jsonStr.substring(yTransStart, yTransEnd).trim();
-
-                // Get xTranslation (3rd element of array)
-                int    xTransIndex = jsonStr.indexOf(",", yTransEnd + 1);
-                int    xTransStart = xTransIndex + 1;
-                int    xTransEnd   = jsonStr.indexOf(",", xTransStart);
-                String xTransStr   = jsonStr.substring(xTransStart, xTransEnd).trim();
-
-                // Get xOffset
-                int    txIndex     = jsonStr.indexOf("\"tx\":", fIDEnd);
-                int    txStart     = txIndex + 5;
-                int    txEnd       = jsonStr.indexOf(",", txStart);
-                if (txEnd == -1) { // Check if tx is the last value before the object ends
-                    txEnd = jsonStr.indexOf("}", txStart);
-                }
-                String       tx             = jsonStr.substring(txStart, txEnd).trim();
-
-                int          tagId          = Integer.parseInt(fID);
-                double       xOffset        = Double.parseDouble(tx);
-                double       xTrans         = Double.parseDouble(xTransStr);
-                double       yTrans         = Double.parseDouble(yTransStr);
-                double       targetDistance = Math.hypot(xTrans, yTrans);
-
-                AprilTagInfo ati            = new AprilTagInfo(tagId, xOffset, xTrans, yTrans, targetDistance);
-                tags.add(ati);
-
-                index = txEnd; // Move index to end of the current tx to find the next fID
-            }
-        }
-
-        AprilTagInfo[] tagRet = new AprilTagInfo[tags.size()];
-        return tags.toArray(tagRet);
-    }
-
-    private String aprilTagInfoArrayToString(AprilTagInfo[] tagArray) {
-        if (tagArray == null || tagArray.length == 0) {
-            return "[]";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for (int i = 0; i < tagArray.length; i++) {
-            AprilTagInfo tag = tagArray[i];
-            sb.append("[Tag:");
-            sb.append(tag.tagId());
-            sb.append(",xDeg:");
-            sb.append(tag.xAngle());
-            sb.append(",Dist:");
-            sb.append(tag.targetDistance());
-            sb.append("]");
-            if (i < tagArray.length - 1) {
-                sb.append(",");
-            }
-        }
-        sb.append("]");
-        return sb.toString();
-    }
-
     private int getNumActiveTargets() {
         double[] botPose = getBotPose();
         if (botPose == null || botPose.length < 11 || botPose[BOTPOSE_INDEX_TAGCOUNT] == Double.MIN_VALUE) {
@@ -304,51 +292,57 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         return new Pose2d(tran2d, r2d);
     }
 
-    /**
-     * Get the position of the robot as computed by the Vision Subsystem. Includes latency data.
-     *
-     * If no valid position can be returned (due to bad or erratic data, blocked view, etc.),
-     * returns null
-     *
-     * @return position info or null
-     * @since 2024-02-10
-     */
-    private VisionPositionInfo getPositionInfo(double[] botPose, int numTargets, double avgTargetDistance) {
-        // If No Pose, No Targets Visible, or Bot is floating in mid air, return null
-        if (botPose == null || numTargets < 1 || botPose[2] > 1) {
-            return null;
+    private static double extractBotPoseEntry(double[] inData, int position) {
+        if (inData.length < position + 1) {
+            return 0;
         }
-
-        double         latency        = botPose[6];
-        Pose2d         pose           = toPose2D(botPose);
-
-        PoseConfidence poseConfidence = PoseConfidence.NONE;
-
-        if (numTargets == 1) {
-            if (avgTargetDistance <= 2) {
-                poseConfidence = PoseConfidence.HIGH;
-            }
-            else if (avgTargetDistance <= 2.4) {
-                poseConfidence = PoseConfidence.MEDIUM;
-            }
-            else if (avgTargetDistance <= 2.8) {
-                poseConfidence = PoseConfidence.LOW;
-            }
-        }
-        else { // numTargets > 1
-            if (avgTargetDistance <= 5) {
-                poseConfidence = PoseConfidence.HIGH;
-            }
-            else if (avgTargetDistance <= 6) {
-                poseConfidence = PoseConfidence.MEDIUM;
-            }
-            else if (avgTargetDistance <= 7) {
-                poseConfidence = PoseConfidence.LOW;
-            }
-        }
-
-        return new VisionPositionInfo(pose, latency, poseConfidence);
+        return inData[position];
     }
+
+    private PoseEstimate getBotPoseEstimate() {
+        var           poseArray         = botpose_wpiblue.getDoubleArray(new double[0]);
+        var           pose              = toPose2D(poseArray);
+        double        latency           = extractBotPoseEntry(poseArray, 6);
+        int           tagCount          = (int) extractBotPoseEntry(poseArray, 7);
+        double        tagSpan           = extractBotPoseEntry(poseArray, 8);
+        double        tagDist           = extractBotPoseEntry(poseArray, 9);
+        double        tagArea           = extractBotPoseEntry(poseArray, 10);
+        // getlastchange() in microseconds, ll latency in milliseconds
+        var           timestampSeconds  = (botpose_wpiblue.getLastChange() / 1000000.0) - (latency / 1000.0);
+
+        RawFiducial[] rawFiducials      = new RawFiducial[tagCount];
+        int           valsPerFiducial   = 7;
+        int           expectedTotalVals = 11 + valsPerFiducial * tagCount;
+
+        if (poseArray.length != expectedTotalVals) {
+            // Don't populate fiducials
+        }
+        else {
+            for (int i = 0; i < tagCount; i++) {
+                int    baseIndex    = 11 + (i * valsPerFiducial);
+                int    id           = (int) poseArray[baseIndex];
+                double txnc         = poseArray[baseIndex + 1];
+                double tync         = poseArray[baseIndex + 2];
+                double ta           = poseArray[baseIndex + 3];
+                double distToCamera = poseArray[baseIndex + 4];
+                double distToRobot  = poseArray[baseIndex + 5];
+                double ambiguity    = poseArray[baseIndex + 6];
+                rawFiducials[i] = new RawFiducial(id, txnc, tync, ta, distToCamera, distToRobot, ambiguity);
+            }
+        }
+
+        return new PoseEstimate(pose, timestampSeconds, latency, tagCount, tagSpan, tagDist, tagArea, rawFiducials);
+    }
+
+    private void publishToField(Pose2d llPose) {
+        // If you have a Field2D you can easily push it that way here.
+        limelightPub.set(new double[] {
+                llPose.getX(),
+                llPose.getY(),
+                llPose.getRotation().getDegrees()
+        });
+    }
+
 
     /**
      *
@@ -358,16 +352,50 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
     /**
      * Get the position of the robot as computed by the Vision Subsystem. Includes latency data.
-     * 
+     *
      * If no valid position can be returned (due to bad or erratic data, blocked view, etc.),
      * returns null
-     * 
+     *
      * @return position info or null
      * @since 2024-02-10
      */
-    public VisionPositionInfo getPositionInfo() {
-        return getPositionInfo(getBotPose(), getNumActiveTargets(), getTargetAvgDistance());
+    public VisionPositionInfo getPositionInfo(Pose2d odometryPose) {
+        PoseEstimate poseEstimate = getBotPoseEstimate();
+
+        // If pose is 0,0 or no tags in view, we don't actually have data - return null
+        if ((poseEstimate.pose.getX() == 0 && poseEstimate.pose.getY() == 0)
+                || poseEstimate.rawFiducials.length == 0  || !fieldBoundary.isPoseWithinArea(poseEstimate.pose)) {
+            return null;
+        }
+
+        // Get the "best" tag - assuming the first one is the best - TBD TODO
+        RawFiducial rawFiducial = poseEstimate.rawFiducials[0];
+
+        if (rawFiducial.ambiguity > Constants.VisionConstants.MAX_AMBIGUITY) {
+            return null;
+        }
+
+        double stdDevRatio;
+
+        // If the ambiguity is very low, use the data as is
+        if (rawFiducial.ambiguity < Constants.VisionConstants.HIGH_QUALITY_AMBIGUITY) {
+            stdDevRatio = .01;
+        }
+        else {
+            // We need to be careful with this data set.  If the location is too far off,
+            // don't use it.  Otherwise scale confidence by distance.
+            double compareDistance = poseEstimate.pose.getTranslation().getDistance(odometryPose.getTranslation());
+            if (compareDistance > Constants.VisionConstants.MAX_VISPOSE_DELTA_DISTANCE) {
+                return null;
+            }
+            stdDevRatio = Math.pow(rawFiducial.distToRobot, 2) / 2;
+        }
+
+        Matrix<N3, N1> deviation = VecBuilder.fill(stdDevRatio, stdDevRatio, 5 * stdDevRatio);
+
+        return new VisionPositionInfo(poseEstimate.pose, poseEstimate.timestampSeconds, deviation);
     }
+
 
     /**
      * Return the current BotTarget
@@ -409,6 +437,11 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         }
     }
 
+
+    private boolean isCurrentTargetVisible(PoseEstimate poseEstimate) {
+        return Arrays.stream(poseEstimate.rawFiducials).anyMatch(rawFiducial -> activeAprilTagTargets.contains(rawFiducial.id));
+    }
+
     /**
      * If any April tag in the actively set bot target is visible, return true.
      *
@@ -416,8 +449,8 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
      * @since 2024-02-10
      */
     public boolean isCurrentTargetVisible() {
-        AprilTagInfo[] visibleTags = getVisibleTagInfo();
-        return Arrays.stream(visibleTags).anyMatch(tag -> activeAprilTagTargets.contains(tag.tagId()));
+        PoseEstimate poseEstimate = getBotPoseEstimate();
+        return isCurrentTargetVisible(poseEstimate);
     }
 
     /**
@@ -463,7 +496,7 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
             return null;
         }
 
-        // TODO: Use dynamic shooter location once available.  For now it's based on 185deg link
+        // TODO: Use dynamic shooter location once available. For now it's based on 185deg link
         double shooterHeight                            = 0.80;
         double shooterDistanceOffsetFromMiddleOfBot     = 0.345;
 

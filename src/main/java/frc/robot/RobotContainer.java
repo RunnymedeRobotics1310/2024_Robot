@@ -37,14 +37,13 @@ public class RobotContainer {
 
     // The robot's subsystems and commands are defined here...
 
-    private final HughVisionSubsystem    hugh          = new HughVisionSubsystem();
     private final JackmanVisionSubsystem jackman       = new JackmanVisionSubsystem();
     private final LightingSubsystem      lighting      = new LightingSubsystem(VISPOSE1, SIGNAL, VISPOSE2);
     private final ArmSubsystem           arm           = new ArmSubsystem(lighting);
     private final ClimbSubsystem         climb         = new ClimbSubsystem(lighting);
     private final File                   yagslConfig   = new File(Filesystem.getDeployDirectory(), "swerve/neo");
-    private final SwerveSubsystem        drive         = new YagslSubsystem(yagslConfig, hugh,
-        lighting);
+    private final SwerveSubsystem        drive         = new YagslSubsystem(yagslConfig, lighting);
+    private final HughVisionSubsystem    hugh          = new HughVisionSubsystem(drive);
 //    private final SwerveSubsystem        drive   = new RunnymedeSwerveSubsystem(hughVisionSubsystem,
 //        lightingSubsystem);
 

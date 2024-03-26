@@ -36,8 +36,8 @@ public class YagslSubsystem extends SwerveSubsystem {
      *
      * @param configDirectory Directory of swerve drive config files.
      */
-    public YagslSubsystem(File configDirectory, HughVisionSubsystem visionSubsystem, LightingSubsystem lightingSubsystem) {
-        super(visionSubsystem, lightingSubsystem);
+    public YagslSubsystem(File configDirectory, LightingSubsystem lightingSubsystem) {
+        super(lightingSubsystem);
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
         Telemetry.swerve.implementation = Swerve.Implementation.YAGSL;

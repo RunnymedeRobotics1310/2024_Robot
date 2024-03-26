@@ -49,8 +49,8 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
 
     public final SwerveDrivePoseEstimator swerveDrivePoseEstimator;
 
-    public RunnymedeSwerveSubsystem(HughVisionSubsystem visionSubsystem, LightingSubsystem lightingSubsystem) {
-        super(visionSubsystem, lightingSubsystem);
+    public RunnymedeSwerveSubsystem(LightingSubsystem lightingSubsystem) {
+        super(lightingSubsystem);
 
         modules                             = new SwerveModule[4];
         modules[0]                          = new SwerveModule(FRONT_LEFT, DRIVE, ANGLE);
