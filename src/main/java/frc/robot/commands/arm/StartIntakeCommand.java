@@ -1,13 +1,13 @@
 package frc.robot.commands.arm;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Intaking;
-
-import static frc.robot.Constants.LightingConstants.SIGNAL;
 
 // Start Intake
 // Move Aim/Arm
@@ -98,7 +98,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
             // Start by extending the aim
             armSubsystem.setLinkPivotSpeed(-9.0);
-            armSubsystem.setAimPivotSpeed(.85);
+            armSubsystem.setAimPivotSpeed(1);
             armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
 
             // Once the aim has reached the target, then stop the aim.

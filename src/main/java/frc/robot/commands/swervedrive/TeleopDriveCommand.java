@@ -2,11 +2,7 @@ package frc.robot.commands.swervedrive;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.Constants.ShooterConstants.SPEAKER_SHOT_RANGE_METRES;
-import static frc.robot.Constants.Swerve.Chassis.GENERAL_SPEED_FACTOR;
-import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATIONAL_VELOCITY_PER_SEC;
-import static frc.robot.Constants.Swerve.Chassis.MAX_SPEED_FACTOR;
-import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
-import static frc.robot.Constants.Swerve.Chassis.SLOW_SPEED_FACTOR;
+import static frc.robot.Constants.Swerve.Chassis.*;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 import static frc.robot.commands.operator.OperatorInput.Axis.X;
 import static frc.robot.commands.operator.OperatorInput.Axis.Y;
@@ -30,7 +26,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
 
     private final LightingSubsystem lighting;
     private final OperatorInput     oi;
-    private final SlewRateLimiter   inputOmegaLimiter = new SlewRateLimiter(4.42);
+    private final SlewRateLimiter   inputOmegaLimiter = new SlewRateLimiter(MAX_ANGULAR_VELOCITY_PCT_CHANGE_PER_CYCLE_FOR_TELEOP);
     private Rotation2d              headingSetpoint   = Rotation2d.fromDegrees(0);
 
     private boolean                 lockOnSpeaker     = false;

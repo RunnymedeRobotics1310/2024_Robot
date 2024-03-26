@@ -83,13 +83,15 @@ public final class Constants {
              */
 
             // todo: this needs to be increased
-            public static final Rotation2d ROTATION_SLOW_ZONE                     = Rotation2d.fromDegrees(35);
-            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(45);
-            public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC        = Rotation2d.fromDegrees(360);
-            public static final Rotation2d MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC   = Rotation2d.fromDegrees(205);
-            public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2 = Rotation2d.fromRotations(1310).getRadians();
-            public static final Rotation2d ROTATION_DECELERATION_DISTANCE         = Rotation2d.fromDegrees(5);
-            public static final Rotation2d ROTATION_TOLERANCE                     = Rotation2d.fromDegrees(2);
+            public static final Rotation2d ROTATION_SLOW_ZONE                                   = Rotation2d.fromDegrees(35);
+            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC                      = Rotation2d.fromDegrees(45);
+            public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC                      = Rotation2d.fromDegrees(360);
+            public static final Rotation2d MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC                 = Rotation2d.fromDegrees(205);
+            public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2               = Rotation2d.fromRotations(1310)
+                .getRadians();
+            public static final Rotation2d ROTATION_DECELERATION_DISTANCE                       = Rotation2d.fromDegrees(5);
+            public static final Rotation2d ROTATION_TOLERANCE                                   = Rotation2d.fromDegrees(2);
+            public static final double     MAX_ANGULAR_VELOCITY_PCT_CHANGE_PER_CYCLE_FOR_TELEOP = 4.42;
 
             public static final class HeadingPIDConfig {
                 // 0.4 is a little low but okay
@@ -346,13 +348,13 @@ public final class Constants {
         // Blue Side Notes
         public static final Translation2d BLUE_WOLVERINE      = new Translation2d(2.9, 4.11);
         public static final Translation2d BLUE_BARNUM         = new Translation2d(2.9, 5.5);
-        public static final Translation2d BLUE_BARNUM_SHOT    = new Translation2d(3.1, 5.5);
+        public static final Translation2d BLUE_BARNUM_SHOT    = new Translation2d(3.0, 5.5);
         public static final Translation2d BLUE_VALJEAN        = new Translation2d(2.9, 7);
 
         // Red Side Notes
         public static final Translation2d RED_WOLVERINE       = new Translation2d(13.53, 4.11);
         public static final Translation2d RED_BARNUM          = new Translation2d(13.53, 5.5);
-        public static final Translation2d RED_BARNUM_SHOT     = new Translation2d(13.33, 5.5);
+        public static final Translation2d RED_BARNUM_SHOT     = new Translation2d(13.43, 5.5);
         public static final Translation2d RED_VALJEAN         = new Translation2d(13.53, 7);
 
         // Centre Field Notes
@@ -397,13 +399,13 @@ public final class Constants {
 
     public static final class LightingConstants {
         public static final int        PWM_PORT     = 9;
-        public static final int        STRIP_LENGTH = 42;
+        public static final int        STRIP_LENGTH = 24;
 
         public static final Color      NOTE_ORANGE  = new Color(255, 20, 0);
 
-        public static LightstripRegion VISPOSE1     = new LightstripRegion("Vision1", 0, 5);
-        public static LightstripRegion SIGNAL       = new LightstripRegion("Signal", 5, 32);
-        public static LightstripRegion VISPOSE2     = new LightstripRegion("Vision2", 37, VISPOSE1.length);
+        public static LightstripRegion VISPOSE1     = new LightstripRegion("Vision1", 0, 3);
+        public static LightstripRegion SIGNAL       = new LightstripRegion("Signal", 3, 18);
+        public static LightstripRegion VISPOSE2     = new LightstripRegion("Vision2", 21, VISPOSE1.length);
 
     }
 
@@ -553,7 +555,8 @@ public final class Constants {
         public static final double      MAX_LINK_HOLD                      = 0.02;                       // 0.04;
 
         public enum TrapShootMotorSpeeds {
-            ZERO_ONE, ZERO_ONE5, ZERO_TWO,ZERO_TWO5, ZERO_THREE, ZERO_THREE5, ZERO_FOUR, ZERO_FOUR5, ZERO_FIVE, ZERO_FIVE5, ZERO_SIX, ZERO_SIX5, ZERO_SEVEN, ZERO_EIGHT, ZERO_NINE, ONE
+            ZERO_ONE, ZERO_ONE5, ZERO_TWO, ZERO_TWO5, ZERO_THREE, ZERO_THREE5, ZERO_FOUR, ZERO_FOUR5, ZERO_FIVE, ZERO_FIVE5,
+            ZERO_SIX, ZERO_SIX5, ZERO_SEVEN, ZERO_EIGHT, ZERO_NINE, ONE
         }
     }
 
