@@ -2,13 +2,11 @@ package frc.robot.commands.swervedrive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.IntakeWithVision;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import swervelib.SwerveDrive;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 
@@ -18,13 +16,9 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
     private final LightingSubsystem      lighting;
     private final ArmSubsystem           arm;
-    private long                         intakeStartTime;
-    private boolean                      startTimeSet = false;
     private final double                 speedMPS;
 
 
-
-    // todo: fixme: specify unit in speed param name (e.g. speedRPM, speedDegPerSec, etc.)
     public DriveToNoteCommand(SwerveSubsystem drive, LightingSubsystem lighting, ArmSubsystem arm, JackmanVisionSubsystem jackman,
         double speedMPS) {
 
@@ -48,7 +42,6 @@ public class DriveToNoteCommand extends BaseDriveCommand {
         super.execute();
 
         Rotation2d robotRelativeOffset = jackman.getNoteOffset();
-
 
         if (robotRelativeOffset != null) {
             double setSpeed = speedMPS;
