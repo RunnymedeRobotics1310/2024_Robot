@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.telemetry.Telemetry;
 
+import static frc.robot.Constants.ArmConstants.DISABLE_ARM_SAFETY_MODE;
+
 
 public class ArmSubsystem extends RunnymedeSubsystemBase {
     private final CANSparkMax   linkMotor            = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
@@ -35,7 +37,6 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     private boolean             safetyEnabled        = false;
     private long                safetyStartTime      = 0;
     private long                trapReleaseStartTime = 0;
-    private boolean             armSafetyMode        = true;
 
     public ArmSubsystem() {
 
@@ -162,70 +163,33 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         return noteDetector.get();
     }
 
-    // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
-    // linkSpeedRPM, etc)
-    public void setArmPivotTestSpeeds(double linkSpeed, double aimSpeed) {
-
-        armSafetyMode = true;
-
-        if (!armSafetyMode) {
-
-            this.linkPivotSpeed = linkSpeed;
-            this.aimPivotSpeed  = aimSpeed;
-
-            linkMotor.set(linkSpeed);
-            aimMotor.set(aimSpeed);
-        }
-        else {
-            setLinkPivotSpeed(linkSpeed);
-            setAimPivotSpeed(aimSpeed);
-        }
+    /**
+     * Set the arm speeds FOR TEST MODE ONLY. Note this requires manual intervention.
+     */
+    public void setArmPivotTestSpeeds(double linkSpeedPct, double aimSpeedPct) {
+        setLinkPivotSpeed(linkSpeedPct);
+        setAimPivotSpeed(aimSpeedPct);
     }
 
-    // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
-    // linkSpeedRPM, etc)
-    public void setLinkPivotSpeed(double speed) {
-
-        this.linkPivotSpeed = speed;
-
-        checkArmSafety();
-
-        if (!ArmConstants.DISABLE_LINK) {
-            linkMotor.set(linkPivotSpeed);
-        }
+    public void setLinkPivotSpeed(double speedPct) {
+        this.linkPivotSpeed = speedPct;
     }
 
-    // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
-    // linkSpeedRPM, etc)
-    public void setAimPivotSpeed(double speed) {
-
-        this.aimPivotSpeed = speed;
-
-        checkArmSafety();
-
-        if (!ArmConstants.DISABLE_AIM) {
-            aimMotor.set(aimPivotSpeed);
-        }
+    public void setAimPivotSpeed(double speedPct) {
+        this.aimPivotSpeed = speedPct;
     }
 
-    // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
-    // linkSpeedRPM, etc)
-    public void setIntakeSpeed(double intakeSpeed) {
-        this.intakeSpeed = intakeSpeed;
-        intakeMotor.set(intakeSpeed);
+    public void setIntakeSpeed(double intakeSpeedPct) {
+        this.intakeSpeed = intakeSpeedPct;
     }
 
-    public void setShooterSpeed(double topShooterSpeed, double bottomShooterSpeed) {
-        this.topShooterSpeed    = topShooterSpeed;
-        this.bottomShooterSpeed = bottomShooterSpeed;
-        shooterTopMotor.set(topShooterSpeed);
-        shooterBottomMotor.set(bottomShooterSpeed);
+    public void setShooterSpeed(double topShooterSpeedPct, double bottomShooterSpeedPct) {
+        this.topShooterSpeed    = topShooterSpeedPct;
+        this.bottomShooterSpeed = bottomShooterSpeedPct;
     }
 
-    // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
-    // linkSpeedRPM, etc)
-    public void setShooterSpeed(double shooterSpeed) {
-        this.setShooterSpeed(shooterSpeed, shooterSpeed);
+    public void setShooterSpeed(double shooterSpeedPct) {
+        this.setShooterSpeed(shooterSpeedPct, shooterSpeedPct);
     }
 
     public void stop() {
@@ -248,17 +212,24 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
          *
          * Safety can be bypassed by the test mode commands
          */
-        if (armSafetyMode) {
+        checkArmSafety();
 
-            setLinkPivotSpeed(linkPivotSpeed);
-            setAimPivotSpeed(aimPivotSpeed);
+        if (!ArmConstants.DISABLE_LINK) {
+            linkMotor.set(linkPivotSpeed);
+        }
 
-            // Latch the arm safety for 2 seconds when a safety condition
-            // is activated.
-            if (safetyEnabled) {
-                if ((System.currentTimeMillis() - safetyStartTime) > 2000) {
-                    safetyEnabled = false;
-                }
+        if (!ArmConstants.DISABLE_AIM) {
+            aimMotor.set(aimPivotSpeed);
+        }
+        intakeMotor.set(intakeSpeed);
+        shooterTopMotor.set(topShooterSpeed);
+        shooterBottomMotor.set(bottomShooterSpeed);
+
+        // Latch the arm safety for 2 seconds when a safety condition
+        // is activated.
+        if (safetyEnabled) {
+            if ((System.currentTimeMillis() - safetyStartTime) > 2000) {
+                safetyEnabled = false;
             }
         }
 
@@ -268,10 +239,10 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
                 trapRelease.set(false);
             }
         }
+
         /*
          * Update the SmartDashboard
          */
-
         Telemetry.arm.intakeSpeed                = intakeSpeed;
         Telemetry.arm.intakeEncoderSpeed         = getIntakeEncoderSpeed();
         Telemetry.arm.topShooterSpeed            = topShooterSpeed;
@@ -309,7 +280,9 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
 
     private void checkArmSafety() {
 
-        armSafetyMode = true;
+        if (DISABLE_ARM_SAFETY_MODE) {
+            return;
+        }
 
         // NOTE: Set safetyEnabled = true if a safety condition
         // is encountered
@@ -415,9 +388,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     }
 
     public double getShooterPosition() {
-
         return shooterTopMotor.getEncoder().getPosition();
-
     }
 
     private boolean trapReleased() {
