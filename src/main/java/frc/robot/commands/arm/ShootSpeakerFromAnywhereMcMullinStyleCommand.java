@@ -138,7 +138,7 @@ public class ShootSpeakerFromAnywhereMcMullinStyleCommand extends ArmBaseCommand
             double aimMotorSpeed = this.aimMotorSpeed.getDouble(0);
             double linkMotorSpeed = this.linkMotorSpeed.getDouble(0);
             double aimDuration = this.aimDuration.getDouble(0);
-            double linkDuration = this.aimDuration.getDouble(0);
+            double linkDuration = this.linkDuration.getDouble(0);
 
             Pose2d botPose = swerveSubsystem.getPose();
             double distanceToTarget = botPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
@@ -163,7 +163,7 @@ public class ShootSpeakerFromAnywhereMcMullinStyleCommand extends ArmBaseCommand
             armSubsystem.setIntakeSpeed(0);
 
             double shooterSpeed;
-            if (distanceToTarget < 3.5) {
+            if (distanceToTarget < 4.5) {
                 shooterSpeed = 0.75;
             }
             else {
@@ -172,7 +172,8 @@ public class ShootSpeakerFromAnywhereMcMullinStyleCommand extends ArmBaseCommand
             armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            if (isStateTimeoutExceeded(linkDuration + .25) && isStateTimeoutExceeded(linkDuration+ .25)) {
+            double hold = Math.max(Math.max(1, aimDuration + .5), linkDuration + .5);
+            if (isStateTimeoutExceeded(hold)) {
                 logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed()
                 + ",DistanceToTarget["+distanceToTarget+"],encoderAimAngle["+armSubsystem.getAimAngle()+"],encoderLinkAngle["+armSubsystem.getLinkAngle()+"]");
                 state = State.START_FEEDER;

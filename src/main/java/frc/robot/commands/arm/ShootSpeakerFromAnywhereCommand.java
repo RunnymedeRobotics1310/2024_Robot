@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -139,7 +140,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             double aimAngle = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
             Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
 
-            atArmAngle = this.driveToArmPosition(armPositionNew, 1, 1);
+            atArmAngle = this.driveToArmPosition(armPositionNew, 2, 2);
 //                ArmConstants.DEFAULT_LINK_TOLERANCE_DEG, ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             armSubsystem.setIntakeSpeed(0);
@@ -154,9 +155,10 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            if (isStateTimeoutExceeded(.75) && atArmAngle) {
+            if (isStateTimeoutExceeded(shooterSpeed) && atArmAngle) {
                 logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed()
-                + ",DistanceToTarget["+distanceToTarget+"],DesiredAimAngle["+aimAngleNT+"],encoderAimAngle["+armSubsystem.getAimAngle()+"],encoderLinkAngle["+armSubsystem.getLinkAngle()+"]");
+                + ",DistanceToTarget["+distanceToTarget+"],DesiredAimAngle["+aimAngle+"],encoderAimAngle["+armSubsystem.getAimAngle()+"],encoderLinkAngle["+armSubsystem.getLinkAngle()+"]"
+                +",BottomShooterSpeed["+armSubsystem.getBottomShooterEncoderSpeed()+"]" +",TopShooterSpeed["+armSubsystem.getTopShooterEncoderSpeed()+"]");
                 state = State.START_FEEDER;
             }
 
@@ -171,7 +173,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             double aimAngle2 = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
             Constants.ArmPosition armPositionNew2 = new Constants.ArmPosition(linkAngle2, aimAngle2);
 
-            atArmAngle = this.driveToArmPosition(armPositionNew2, 1, 1);
+            atArmAngle = this.driveToArmPosition(armPositionNew2, 2, 2);
 //                ArmConstants.DEFAULT_LINK_TOLERANCE_DEG, ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             armSubsystem.setIntakeSpeed(1);
@@ -214,7 +216,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         if (!interrupted) {
             if (DriverStation.isTeleop()) {
-//                CommandScheduler.getInstance().schedule(new CompactCommand(armSubsystem));
+                CommandScheduler.getInstance().schedule(new CompactCommand(armSubsystem));
             }
 
         }
