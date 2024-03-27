@@ -1,6 +1,8 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -11,6 +13,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+import frc.robot.subsystems.vision.HughVisionSubsystem;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
@@ -37,7 +40,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     NetworkTableEntry aimAngleNT = table.getEntry("aimAngle");
 
     public ShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem,
-        LightingSubsystem lighting) {
+                                           LightingSubsystem lighting) {
         super(armSubsystem);
         this.swerveSubsystem     = swerveSubsystem;
         this.lighting            = lighting;
@@ -133,7 +136,6 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
             Pose2d botPose = swerveSubsystem.getPose();
             double distanceToTarget = botPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
-            // double aimAngle = calculateAimAngle(distanceToTarget);
             double aimAngle = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
             Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
 
@@ -143,7 +145,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             armSubsystem.setIntakeSpeed(0);
 
             double shooterSpeed;
-            if (distanceToTarget < 3.5) {
+            if (distanceToTarget < 4.5) {
                 shooterSpeed = 0.75;
             }
             else {
@@ -163,7 +165,13 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         case START_FEEDER:
 
             // Continue to drive to the arm position while shooting
-            atArmAngle = this.driveToArmPosition(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION, 1, 1);
+            double linkAngle2 = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
+            Pose2d botPose2 = swerveSubsystem.getPose();
+            double distanceToTarget2 = botPose2.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
+            double aimAngle2 = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
+            Constants.ArmPosition armPositionNew2 = new Constants.ArmPosition(linkAngle2, aimAngle2);
+
+            atArmAngle = this.driveToArmPosition(armPositionNew2, 1, 1);
 //                ArmConstants.DEFAULT_LINK_TOLERANCE_DEG, ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
 
             armSubsystem.setIntakeSpeed(1);
