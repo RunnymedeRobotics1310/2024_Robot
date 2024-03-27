@@ -23,18 +23,17 @@ import frc.robot.subsystems.lighting.pattern.VisionConfidenceHigh;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceLow;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceMedium;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.PoseConfidence;
 import frc.robot.subsystems.vision.VisionPositionInfo;
 import frc.robot.telemetry.Telemetry;
 
 public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
-    private final SlewRateLimiter     xLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
-    private final SlewRateLimiter     yLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
-    private final SlewRateLimiter     omegaLimiter = new SlewRateLimiter(MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
-    private final HughVisionSubsystem hugh         = new HughVisionSubsystem();
-    private final LightingSubsystem   lighting;
+    private final SlewRateLimiter             xLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
+    private final SlewRateLimiter             yLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
+    private final SlewRateLimiter             omegaLimiter = new SlewRateLimiter(MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
+    private final HughLimelightPoseCalculator hugh         = new HughLimelightPoseCalculator();
+    private final LightingSubsystem           lighting;
 
     public SwerveSubsystem(LightingSubsystem lighting) {
         this.lighting = lighting;

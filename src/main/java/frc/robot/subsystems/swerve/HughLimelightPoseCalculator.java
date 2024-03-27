@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.subsystems.swerve;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,13 +16,15 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
+import frc.robot.subsystems.vision.PoseConfidence;
+import frc.robot.subsystems.vision.VisionPositionInfo;
 import frc.robot.telemetry.Telemetry;
 import frc.robot.util.RectanglePoseArea;
 
 /**
  * Handles the April Tag Limelight
  */
-public class HughVisionSubsystem {
+public class HughLimelightPoseCalculator {
 
     private static final long              CAM_MODE_VISION                      = 0;
     @SuppressWarnings("unused")
@@ -133,7 +135,7 @@ public class HughVisionSubsystem {
         }
     }
 
-    public HughVisionSubsystem() {
+    public HughLimelightPoseCalculator() {
         this.pipeline.setNumber(PIPELINE_APRIL_TAG_DETECT);
         this.camMode.setNumber(CAM_MODE_VISION);
     }
@@ -261,7 +263,7 @@ public class HughVisionSubsystem {
 
     /**
      * Get the position of the robot as computed by the Vision Subsystem. Includes latency data.
-     *
+     * <p>
      * If no valid position can be returned (due to bad or erratic data, blocked view, etc.),
      * returns null
      *
