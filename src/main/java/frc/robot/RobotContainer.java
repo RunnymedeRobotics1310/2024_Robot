@@ -18,7 +18,6 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.swerve.yagsl.YagslSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 import static frc.robot.Constants.LightingConstants.*;
