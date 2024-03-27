@@ -1,5 +1,7 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.Constants.LightingConstants.VISPOSE1;
+import static frc.robot.Constants.LightingConstants.VISPOSE2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATION_ACCELERATION_RAD_PER_SEC2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_ACCELERATION_MPS2;
 import static frc.robot.RunnymedeUtils.format;
@@ -16,17 +18,26 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.Constants;
 import frc.robot.subsystems.RunnymedeSubsystemBase;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceHigh;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceLow;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceMedium;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
+import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.PoseConfidence;
 import frc.robot.subsystems.vision.VisionPositionInfo;
 import frc.robot.telemetry.Telemetry;
 
 public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
-    private final SlewRateLimiter xLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
-    private final SlewRateLimiter yLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
-    private final SlewRateLimiter omegaLimiter = new SlewRateLimiter(MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
+    private final SlewRateLimiter     xLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
+    private final SlewRateLimiter     yLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
+    private final SlewRateLimiter     omegaLimiter = new SlewRateLimiter(MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
+    private final HughVisionSubsystem hugh         = new HughVisionSubsystem();
+    private final LightingSubsystem   lighting;
 
-    public SwerveSubsystem() {
+    public SwerveSubsystem(LightingSubsystem lighting) {
+        this.lighting = lighting;
     }
 
     /**
@@ -142,12 +153,34 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
      * Update the field relative position of the robot using vision
      * position data returned from the vision subsystem.
      */
-    public void updateOdometryWithVisionInfo(VisionPositionInfo visPosInfo) {
+    private void updateOdometryWithVisionInfo(Pose2d odometryPose) {
 
+        VisionPositionInfo visPosInfo = hugh.getVisionPositionInfo(odometryPose);
         Telemetry.swerve.swerve_vispose = visPosInfo;
+
         if (visPosInfo.confidence() != PoseConfidence.NONE) {
             addVisionMeasurement(visPosInfo.pose(), visPosInfo.timestampSeconds(), visPosInfo.deviation());
         }
+
+        switch (visPosInfo.confidence()) {
+        case HIGH:
+            lighting.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
+            lighting.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
+            break;
+        case MEDIUM:
+            lighting.setPattern(VISPOSE1, VisionConfidenceMedium.getInstance());
+            lighting.setPattern(VISPOSE2, VisionConfidenceMedium.getInstance());
+            break;
+        case LOW:
+            lighting.setPattern(VISPOSE1, VisionConfidenceLow.getInstance());
+            lighting.setPattern(VISPOSE2, VisionConfidenceLow.getInstance());
+            break;
+        case NONE:
+            lighting.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
+            lighting.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
+            break;
+        }
+
     }
 
     public abstract void updateTelemetry();
@@ -167,8 +200,9 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
     public void periodic() {
         super.periodic();
         updateOdometryWithStates();
-        updateTelemetry();
         Pose2d pose = getPose();
+        updateOdometryWithVisionInfo(pose);
+        updateTelemetry();
         Telemetry.swerve.swerve_pose = pose;
     }
 

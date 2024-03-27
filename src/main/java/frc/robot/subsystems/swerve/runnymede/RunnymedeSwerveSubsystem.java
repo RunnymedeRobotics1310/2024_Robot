@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.telemetry.Swerve;
 import frc.robot.telemetry.Telemetry;
@@ -47,8 +48,8 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
 
     public final SwerveDrivePoseEstimator swerveDrivePoseEstimator;
 
-    public RunnymedeSwerveSubsystem() {
-        super();
+    public RunnymedeSwerveSubsystem(LightingSubsystem lighting) {
+        super(lighting);
 
         modules                             = new SwerveModule[4];
         modules[0]                          = new SwerveModule(FRONT_LEFT, DRIVE, ANGLE);
