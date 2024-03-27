@@ -433,6 +433,13 @@ public final class Constants {
          * but can be set to true when the aim motor is not functioning correctly.
          */
         public static final boolean     DISABLE_AIM                        = false;
+        /**
+         * Completely turn off arm safety code. This is actually dangerous - the
+         * arm can flip up an hit people standing nearby. Set this to false
+         * unless specifically trying to measure values inside the safety code
+         * and you really know what you are doing.
+         */
+        public static final boolean     DISABLE_ARM_SAFETY_MODE            = false;
 
         public static final int         LINK_MOTOR_CAN_ADDRESS             = 40;
         public static final int         AIM_MOTOR_CAN_ADDRESS              = 41;
