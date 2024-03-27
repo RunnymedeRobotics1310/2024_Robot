@@ -3,6 +3,7 @@ package frc.robot.telemetry;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.subsystems.vision.PoseConfidence;
 
 import java.util.Arrays;
 
@@ -27,7 +28,7 @@ public class Hugh {
     public String              aprilTagInfo           = null;
     public double              shooterAngle           = Double.MIN_VALUE;
     public boolean             poseUpdate             = false;
-    public double              confidence             = -1310.0;
+    public PoseConfidence      poseConfidence         = PoseConfidence.NONE;
 
     void post() {
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/BotTarget", botTarget.toString());
@@ -48,6 +49,6 @@ public class Hugh {
             targetOffset == null ? "null" : targetOffset.toString());
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/shooterAngle", shooterAngle);
         SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionHugh/PoseUpdate", poseUpdate);
-        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/Confidence", confidence);
+        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/PoseConf", poseConfidence.name());
     }
 }

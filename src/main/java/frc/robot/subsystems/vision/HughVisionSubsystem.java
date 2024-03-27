@@ -214,8 +214,8 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
     private void updateTelemetry(PoseEstimate poseEstimate, VisionPositionInfo visPosInfo) {
         if (Telemetry.config.hugh()) {
             publishToField(poseEstimate.pose);
-            Telemetry.hugh.poseUpdate = visPosInfo != null;
-            Telemetry.hugh.confidence = visPosInfo == null ? 0 : visPosInfo.deviation().get(0, 0);
+            Telemetry.hugh.poseUpdate = visPosInfo.confidence() != PoseConfidence.NONE;
+            Telemetry.hugh.poseConfidence = visPosInfo.confidence();
             Telemetry.hugh.botTarget = getBotTarget();
             Telemetry.hugh.priorityId = getPriorityId();
             Telemetry.hugh.targetFound = isCurrentTargetVisible(poseEstimate);
