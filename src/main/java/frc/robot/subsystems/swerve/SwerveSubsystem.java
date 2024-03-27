@@ -30,13 +30,11 @@ import frc.robot.telemetry.Telemetry;
 
 public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
-    LightingSubsystem                 lightingSubsystem;
     private final SlewRateLimiter     xLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
     private final SlewRateLimiter     yLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
     private final SlewRateLimiter     omegaLimiter = new SlewRateLimiter(MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
 
-    public SwerveSubsystem(LightingSubsystem lightingSubsystem) {
-        this.lightingSubsystem = lightingSubsystem;
+    public SwerveSubsystem() {
     }
 
     /**
@@ -140,7 +138,7 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
      */
     public abstract void lock();
 
-    abstract protected void addVisionMeasurement(Pose2d robotPose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs);
+    abstract public void addVisionMeasurement(Pose2d robotPose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs);
 
     /**
      * Updates the field relative position of the robot using module
@@ -152,45 +150,11 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
      * Update the field relative position of the robot using vision
      * position data returned from the vision subsystem.
      */
-    public void updateOdometryWithVisionInfo(VisionPositionInfo visPose) {
-        Telemetry.swerve.swerve_vispose = visPose;
+    public void updateOdometryWithVisionInfo(VisionPositionInfo visPosInfo) {
 
-        // ignore unreliable info from vision subsystem
-        if (visPose == null) {
-            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
-        }
-        else {
-            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
-            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
-            this.addVisionMeasurement(visPose.pose(), visPose.timestampSeconds(), visPose.deviation());
-        }
-    }
-
-    private void updateLighting(PoseConfidence confidence) {
-        if (confidence == null) {
-            lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-            lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
-        }
-        else {
-            switch (confidence) {
-            case HIGH:
-                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
-                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
-                break;
-            case MEDIUM:
-                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceMedium.getInstance());
-                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceMedium.getInstance());
-                break;
-            case LOW:
-                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceLow.getInstance());
-                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceLow.getInstance());
-                break;
-            case NONE:
-                lightingSubsystem.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-                lightingSubsystem.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
-                break;
-            }
+        Telemetry.swerve.swerve_vispose = visPosInfo;
+        if (visPosInfo.confidence() != PoseConfidence.NONE) {
+            addVisionMeasurement(visPosInfo.pose(), visPosInfo.timestampSeconds(), visPosInfo.deviation());
         }
     }
 

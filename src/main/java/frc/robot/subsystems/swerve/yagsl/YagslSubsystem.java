@@ -36,8 +36,8 @@ public class YagslSubsystem extends SwerveSubsystem {
      *
      * @param configDirectory Directory of swerve drive config files.
      */
-    public YagslSubsystem(File configDirectory, LightingSubsystem lightingSubsystem) {
-        super(lightingSubsystem);
+    public YagslSubsystem(File configDirectory) {
+        super();
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
         Telemetry.swerve.implementation = Swerve.Implementation.YAGSL;
@@ -93,7 +93,7 @@ public class YagslSubsystem extends SwerveSubsystem {
     }
 
     @Override
-    protected void addVisionMeasurement(Pose2d robotPose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
+    public void addVisionMeasurement(Pose2d robotPose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
         swerveDrive.addVisionMeasurement(robotPose, timestamp, visionMeasurementStdDevs);
     }
 
