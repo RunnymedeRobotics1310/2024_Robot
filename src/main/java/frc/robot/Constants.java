@@ -9,22 +9,13 @@ import static frc.robot.Constants.BotTarget.BLUE_NOTE_WOLVERINE;
 import static frc.robot.Constants.BotTarget.RED_NOTE_WOLVERINE;
 import static frc.robot.Constants.Swerve.Chassis.TRACK_WIDTH_METRES;
 import static frc.robot.Constants.Swerve.Chassis.WHEEL_BASE_METRES;
-import static frc.robot.subsystems.vision.PoseConfidence.HIGH;
-import static frc.robot.subsystems.vision.PoseConfidence.LOW;
-import static frc.robot.subsystems.vision.PoseConfidence.MEDIUM;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.lighting.LightstripRegion;
-import frc.robot.subsystems.vision.PoseConfidence;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -452,7 +443,7 @@ public final class Constants {
         public static final int         LINK_ABSOLUTE_ENCODER_ANALOG_PORT  = 3;
         // Encoder constants to convert from Volts to Deg
         public static final double      LINK_ABSOLUTE_ENCODER_DEG_PER_VOLT = 49.11;
-        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -62 + 121 + 2.5;
+        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -62 + 121 + 2.5 - 3;
 
 
         public static final int         LINK_LOWER_LIMIT_SWITCH_DIO_PORT   = 0;
@@ -463,7 +454,7 @@ public final class Constants {
         // Increasing aim offset by 78 to account for a change that happened on Saturday Mar 9. New
         // measurement added March 10th at 11:20am
         // 73 degree offset on Mar 15.
-        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 61.3 - 73 + 32;
+        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 61.3 - 73 + 32 + 5;
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
