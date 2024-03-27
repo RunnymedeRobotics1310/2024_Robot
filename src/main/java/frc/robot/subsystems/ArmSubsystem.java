@@ -103,7 +103,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     public double getLinkAngle() {
 
         // The conversion from volts to degrees
-        double angle = getLinkAbsoluteEncoderVoltage()
+        double angle = (getLinkAbsoluteEncoderVoltage() + 2.5) % 5 // move rollover location
             * ArmConstants.LINK_ABSOLUTE_ENCODER_DEG_PER_VOLT
             + ArmConstants.LINK_ABSOLUTE_ENCODER_OFFSET_DEG;
 
@@ -233,7 +233,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
 
 
     public void setShooterSpeed(double topShooterSpeed, double bottomShooterSpeed) {
-        this.topShooterSpeed = topShooterSpeed;
+        this.topShooterSpeed    = topShooterSpeed;
         this.bottomShooterSpeed = bottomShooterSpeed;
         shooterTopMotor.set(topShooterSpeed);
         shooterBottomMotor.set(bottomShooterSpeed);

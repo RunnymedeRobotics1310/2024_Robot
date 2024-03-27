@@ -486,7 +486,7 @@ public final class Constants {
         public static final int         LINK_ABSOLUTE_ENCODER_ANALOG_PORT  = 3;
         // Encoder constants to convert from Volts to Deg
         public static final double      LINK_ABSOLUTE_ENCODER_DEG_PER_VOLT = 49.11;
-        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -12;
+        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -62 + 121 + 2.5;
 
 
         public static final int         LINK_LOWER_LIMIT_SWITCH_DIO_PORT   = 0;
@@ -497,7 +497,7 @@ public final class Constants {
         // Increasing aim offset by 78 to account for a change that happened on Saturday Mar 9. New
         // measurement added March 10th at 11:20am
         // 73 degree offset on Mar 15.
-        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 61.3 - 73;
+        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 61.3 - 73 + 32;
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
