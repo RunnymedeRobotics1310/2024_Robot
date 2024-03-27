@@ -101,9 +101,12 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
 
     // todo: fixme: return rotation2d or specify unit in either javadoc or method name
     public double getLinkAngle() {
-
+        double voltage = getLinkAbsoluteEncoderVoltage();
+        if (voltage < 3) {
+            voltage += 5;
+        }
         // The conversion from volts to degrees
-        double angle = (getLinkAbsoluteEncoderVoltage() + 2.5) % 5 // move rollover location
+        double angle = voltage
             * ArmConstants.LINK_ABSOLUTE_ENCODER_DEG_PER_VOLT
             + ArmConstants.LINK_ABSOLUTE_ENCODER_OFFSET_DEG;
 
