@@ -51,42 +51,42 @@ public class TelemetryConfig {
         SmartDashboard.putData(Telemetry.PREFIX + "Telemetry/Swerve1310", telemetrySwerve1310Chooser);
     }
 
-    boolean arm() {
+    public boolean arm() {
         Boolean enabled = telemetryArmChooser.getSelected();
         return enabled != null && enabled;
     }
 
-    boolean climb() {
+    public boolean climb() {
         Boolean enabled = telemetryClimbChooser.getSelected();
         return enabled != null && enabled;
     }
 
-    boolean drive() {
+    public boolean drive() {
         Boolean enabled = telemetryDriveChooser.getSelected();
         return enabled != null && enabled;
     }
 
-    boolean hugh() {
+    public boolean hugh() {
         Boolean enabled = telemetryHughChooser.getSelected();
         return enabled != null && enabled;
     }
 
-    boolean jackman() {
+    public boolean jackman() {
         Boolean enabled = telemetryJackmanChooser.getSelected();
         return enabled != null && enabled;
     }
 
-    boolean light() {
+    public boolean light() {
         Boolean enabled = telemetryLightChooser.getSelected();
         return enabled != null && enabled;
     }
 
-    boolean swerve() {
+    public boolean swerve() {
         Boolean enabled = telemetrySwerveChooser.getSelected();
         return enabled != null && enabled;
     }
 
-    boolean swerve1310() {
+    public boolean swerve1310() {
         Boolean enabled = telemetrySwerve1310Chooser.getSelected();
         return enabled != null && enabled;
     }

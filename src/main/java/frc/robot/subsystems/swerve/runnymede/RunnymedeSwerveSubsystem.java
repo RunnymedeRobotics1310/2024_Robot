@@ -49,8 +49,8 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
 
     public final SwerveDrivePoseEstimator swerveDrivePoseEstimator;
 
-    public RunnymedeSwerveSubsystem(HughVisionSubsystem visionSubsystem, LightingSubsystem lightingSubsystem) {
-        super(visionSubsystem, lightingSubsystem);
+    public RunnymedeSwerveSubsystem() {
+        super();
 
         modules                             = new SwerveModule[4];
         modules[0]                          = new SwerveModule(FRONT_LEFT, DRIVE, ANGLE);
@@ -145,7 +145,7 @@ public class RunnymedeSwerveSubsystem extends SwerveSubsystem {
     }
 
     @Override
-    protected void addVisionMeasurement(Pose2d robotPose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
+    public void addVisionMeasurement(Pose2d robotPose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
         this.swerveDrivePoseEstimator.addVisionMeasurement(robotPose, timestamp, visionMeasurementStdDevs);
     }
 
