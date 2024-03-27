@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.Constants.BotTarget;
 import frc.robot.subsystems.RunnymedeSubsystemBase;
@@ -119,8 +120,8 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
 
 
     private static final RectanglePoseArea FIELD_BOUNDARY = new RectanglePoseArea(new Translation2d(0, 0), new Translation2d(16.541, 8.211));
-    private final NetworkTable poseTable = NetworkTableInstance.getDefault().getTable("Pose");
-    private final DoubleArrayPublisher limelightPub = poseTable.getDoubleArrayTopic("llPose").publish();
+    private final NetworkTable poseTable = NetworkTableInstance.getDefault().getTable("LimelightPose");
+    private final DoubleArrayPublisher limelightPub = poseTable.getDoubleArrayTopic("Robot").publish();
 
     private static class RawFiducial {
         public int    id;
@@ -233,6 +234,7 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
             Rotation2d r = getDynamicSpeakerShooterAngle(new Translation2d(0, 0));
             Telemetry.hugh.shooterAngle = r == null ? 1310 : r.getDegrees();
             Telemetry.hugh.aprilTagInfo = aprilTagInfoArrayToString(poseEstimate.rawFiducials);
+            Telemetry.hugh.poseSwerveDiff = visPosInfo.odometryDistDelta();
         }
     }
     private String aprilTagInfoArrayToString(RawFiducial[] rawFiducials) {
@@ -372,6 +374,7 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         double timestampSeconds = poseEstimate.timestampSeconds;
         double stdDevRatio = 1310;
         PoseConfidence poseConfidence = PoseConfidence.NONE;
+        double compareDistance = poseEstimate.pose.getTranslation().getDistance(odometryPose.getTranslation());
 
         // If pose is 0,0 or no tags in view, we don't actually have data - return null
         if (poseEstimate.pose.getX() > 0
@@ -383,15 +386,14 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
             RawFiducial rawFiducial = poseEstimate.rawFiducials[0];
 
             if (rawFiducial.ambiguity < Constants.VisionConstants.MAX_AMBIGUITY) {
-                // If the ambiguity is very low, use the data as is
-                if (rawFiducial.ambiguity < Constants.VisionConstants.HIGH_QUALITY_AMBIGUITY) {
+                // If the ambiguity is very low, use the data as is (or when disabled, to allow for bot repositioning
+                if (rawFiducial.ambiguity < Constants.VisionConstants.HIGH_QUALITY_AMBIGUITY || DriverStation.isDisabled()) {
                     stdDevRatio = .01;
                     poseConfidence = PoseConfidence.HIGH;
                 }
                 else {
                     // We need to be careful with this data set.  If the location is too far off,
                     // don't use it.  Otherwise scale confidence by distance.
-                    double compareDistance = poseEstimate.pose.getTranslation().getDistance(odometryPose.getTranslation());
                     if (compareDistance < Constants.VisionConstants.MAX_VISPOSE_DELTA_DISTANCE) {
                         stdDevRatio = Math.pow(rawFiducial.distToRobot, 2) / 2;
                         poseConfidence = PoseConfidence.MEDIUM;
@@ -401,7 +403,7 @@ public class HughVisionSubsystem extends RunnymedeSubsystemBase {
         }
 
         Matrix<N3, N1> deviation = VecBuilder.fill(stdDevRatio, stdDevRatio, 5 * stdDevRatio);
-        return new VisionPositionInfo(poseEstimate.pose, poseEstimate.timestampSeconds, deviation, poseConfidence);
+        return new VisionPositionInfo(poseEstimate.pose, poseEstimate.timestampSeconds, deviation, poseConfidence, compareDistance);
     }
 
 

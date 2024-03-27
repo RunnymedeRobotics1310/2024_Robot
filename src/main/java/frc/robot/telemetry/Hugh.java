@@ -29,6 +29,7 @@ public class Hugh {
     public double              shooterAngle           = Double.MIN_VALUE;
     public boolean             poseUpdate             = false;
     public PoseConfidence      poseConfidence         = PoseConfidence.NONE;
+    public double              poseSwerveDiff         = -1310.0;
 
     void post() {
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/BotTarget", botTarget.toString());
@@ -42,7 +43,6 @@ public class Hugh {
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/Botpose", Arrays.toString(botpose));
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/TargetAvgDist", targetAvgDist);
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/NumTags", "" + numTags);
-        // SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/AprilTagInfo", aprilTagInfo);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/DistToTarget", distanceToTargetMetres);
         SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionHugh/AlignedWithTarget", isAlignedWithTarget);
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/TargetOffset",
@@ -50,5 +50,7 @@ public class Hugh {
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/shooterAngle", shooterAngle);
         SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionHugh/PoseUpdate", poseUpdate);
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/PoseConf", poseConfidence.name());
+        SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/PoseSwerveDiff", poseSwerveDiff);
+        SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/AprilTagInfo", aprilTagInfo);
     }
 }
