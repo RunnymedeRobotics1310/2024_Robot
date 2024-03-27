@@ -8,52 +8,36 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.telemetry.Telemetry;
 
 
 public class ArmSubsystem extends RunnymedeSubsystemBase {
-
-    private final LightingSubsystem lighting;
-
-    private final CANSparkMax       linkMotor            = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax   linkMotor            = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax       aimMotor             = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax   aimMotor             = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-
-    private final CANSparkMax       intakeMotor          = new CANSparkMax(ArmConstants.INTAKE_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax   intakeMotor          = new CANSparkMax(ArmConstants.INTAKE_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax       shooterBottomMotor   = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax   shooterBottomMotor   = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax       shooterTopMotor      = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
+    private final CANSparkMax   shooterTopMotor      = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
         MotorType.kBrushless);
+    private final DigitalInput  linkLowerLimitSwitch = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
+    private final DigitalInput  noteDetector         = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
+    private final AnalogInput   linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private final AnalogInput   aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private final DigitalOutput trapRelease          = new DigitalOutput(ArmConstants.TRAP_RELEASE_DIO_PORT);
+    private double              linkPivotSpeed       = 0;
+    private double              aimPivotSpeed        = 0;
+    private double              intakeSpeed          = 0;
+    private double              topShooterSpeed      = 0;
+    private double              bottomShooterSpeed   = 0;
+    private boolean             safetyEnabled        = false;
+    private long                safetyStartTime      = 0;
+    private long                trapReleaseStartTime = 0;
+    private boolean             armSafetyMode        = true;
 
-    private final DigitalInput      linkLowerLimitSwitch = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
-
-    private final DigitalInput      noteDetector         = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
-
-    private final AnalogInput       linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
-    private final AnalogInput       aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
-
-    private final DigitalOutput     trapRelease          = new DigitalOutput(ArmConstants.TRAP_RELEASE_DIO_PORT);
-
-    private double                  linkPivotSpeed       = 0;
-    private double                  aimPivotSpeed        = 0;
-    private double                  intakeSpeed          = 0;
-    private double                  topShooterSpeed      = 0;
-    private double                  bottomShooterSpeed   = 0;
-
-    private boolean                 safetyEnabled        = false;
-    private long                    safetyStartTime      = 0;
-    private long                    trapReleaseStartTime = 0;
-
-    private boolean                 armSafetyMode        = true;
-    private boolean                 shooterLigntsEnabled = false;
-    private boolean                 intakeLightsEnabled  = false;
-
-    public ArmSubsystem(LightingSubsystem lightingSubsystem) {
-
-        this.lighting = lightingSubsystem;
+    public ArmSubsystem() {
 
         linkMotor.setInverted(false);
         aimMotor.setInverted(true);
@@ -62,7 +46,6 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         aimMotor.getEncoder().setPosition(0);
 
     }
-
 
     private double getAimAbsoluteEncoderVoltage() {
         // 0-5V range = 0-360 deg
@@ -175,8 +158,6 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         return !linkLowerLimitSwitch.get() || getLinkAngle() < ArmConstants.LINK_MIN_DEGREES;
     }
 
-
-
     public boolean isNoteDetected() {
         return noteDetector.get();
     }
@@ -234,14 +215,12 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         intakeMotor.set(intakeSpeed);
     }
 
-
     public void setShooterSpeed(double topShooterSpeed, double bottomShooterSpeed) {
         this.topShooterSpeed    = topShooterSpeed;
         this.bottomShooterSpeed = bottomShooterSpeed;
         shooterTopMotor.set(topShooterSpeed);
         shooterBottomMotor.set(bottomShooterSpeed);
     }
-
 
     // todo: fixme: specify units in either javadoc or param names (e.g. linkSpeedPercent or
     // linkSpeedRPM, etc)
@@ -255,8 +234,6 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         setIntakeSpeed(0);
         setShooterSpeed(0);
     }
-
-
 
     @Override
     public void periodic() {
@@ -311,9 +288,6 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         Telemetry.arm.noteDetected               = isNoteDetected();
         Telemetry.arm.safetyEnabled              = safetyEnabled;
         Telemetry.arm.trapReleased               = trapReleased();
-
-        // Update the lights
-        updateLights();
     }
 
     @Override
@@ -331,28 +305,6 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
             .append("Game Piece ").append(isNoteDetected());
 
         return sb.toString();
-    }
-
-    /*
-     * Update the lights based on the current state of the arm
-     * FIXME: the lighting pattern is specific to Shifty.
-     */
-    private void updateLights() {
-
-        /*
-         * lightsSubsystem.setIntakeSpeed(intakeSpeedEncoder, intakeAtTargetSpeed);
-         *
-         * boolean shooterAtTargetSpeed = Math.abs(shooterSpeed - shooterSpeedEncoder) < .05;
-         *
-         * lightsSubsystem.setShooterSpeed(shooterSpeedEncoder, shooterAtTargetSpeed);
-         *
-         * lightsSubsystem.setLinkAngle(getLinkAngle());
-         *
-         * lightsSubsystem.setAimAngle(getAimAngle());
-         *
-         * lightsSubsystem.setNoteHeld(isNoteDetected());
-         *
-         */
     }
 
     private void checkArmSafety() {
@@ -460,9 +412,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
                 safetyStartTime = System.currentTimeMillis();
             }
         }
-        return;
     }
-
 
     public double getShooterPosition() {
 
@@ -486,5 +436,3 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     }
 
 }
-
-

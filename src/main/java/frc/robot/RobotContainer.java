@@ -39,7 +39,7 @@ public class RobotContainer {
 
     private final JackmanVisionSubsystem jackman       = new JackmanVisionSubsystem();
     private final LightingSubsystem      lighting      = new LightingSubsystem(VISPOSE1, SIGNAL, VISPOSE2);
-    private final ArmSubsystem           arm           = new ArmSubsystem(lighting);
+    private final ArmSubsystem           arm           = new ArmSubsystem();
     private final ClimbSubsystem         climb         = new ClimbSubsystem(lighting);
     private final File                   yagslConfig   = new File(Filesystem.getDeployDirectory(), "swerve/neo");
     private final SwerveSubsystem        drive         = new YagslSubsystem(yagslConfig);
