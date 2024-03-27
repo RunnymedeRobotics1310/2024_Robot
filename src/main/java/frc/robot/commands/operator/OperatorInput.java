@@ -43,7 +43,6 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Enabled;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.telemetry.Telemetry;
 
@@ -55,7 +54,6 @@ public class OperatorInput {
     private final SwerveSubsystem                                              drive;
     private final ArmSubsystem                                                 arm;
     private final LightingSubsystem                                            lighting;
-    private final HughVisionSubsystem                                          hugh;
     private final ClimbSubsystem                                               climb;
     private final JackmanVisionSubsystem                                       jackman;
     private final XboxController                                               driverController;
@@ -84,12 +82,11 @@ public class OperatorInput {
      * plugged into
      */
     public OperatorInput(int driverControllerPort, int operatorControllerPort, SwerveSubsystem drive, ArmSubsystem arm,
-        ClimbSubsystem climb, HughVisionSubsystem hugh, JackmanVisionSubsystem jackman, LightingSubsystem lighting) {
+        ClimbSubsystem climb, JackmanVisionSubsystem jackman, LightingSubsystem lighting) {
         this.drive         = drive;
 
         this.arm           = arm;
         this.lighting      = lighting;
-        this.hugh          = hugh;
         this.climb         = climb;
         this.jackman       = jackman;
 
@@ -273,14 +270,14 @@ public class OperatorInput {
 
         // Trap
         new Trigger(() -> operatorController.getBackButton() && operatorController.getYButton())
-         .onTrue(new ShootTrapCommand(arm, climb));
+            .onTrue(new ShootTrapCommand(arm, climb));
 
         new Trigger(() -> this.isShift() && operatorController.getXButton())
-                .onTrue(new ShootTrapFromFloorCommand(arm, lighting, this));
+            .onTrue(new ShootTrapFromFloorCommand(arm, lighting, this));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())
-                .onTrue(new ShootSpeakerFromAnywhereMcMullinStyleCommand(arm, drive, lighting));
+            .onTrue(new ShootSpeakerFromAnywhereMcMullinStyleCommand(arm, drive, lighting));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getXButton())
@@ -293,7 +290,8 @@ public class OperatorInput {
         // shoot FIRE
         // IF YOU CHANGE THE BUTTON THIS IS ON, MUST CHANGE THE BUTTON RELEASE
         // IN ShootPrepFireCommand as well.
-        new Trigger(() -> !this.isShift() && operatorController.getBButton()).onTrue(new ShootPrepFireCommand(arm, lighting, this));
+        new Trigger(() -> !this.isShift() && operatorController.getBButton())
+            .onTrue(new ShootPrepFireCommand(arm, lighting, this));
 
         // set pose at speaker
         new Trigger(() -> this.isShift() && operatorController.getBButton())
@@ -456,20 +454,20 @@ public class OperatorInput {
 
         return switch (autoPatternChooser.getSelected()) {
         case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);
-        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, arm, hugh, lighting, delay);
-        case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, hugh, jackman, lighting, delay);
-        case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, hugh, jackman, lighting, delay);
-        case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, hugh, lighting, delay);
-        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, hugh, lighting, delay);
+        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, arm, lighting, delay);
+        case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, jackman, lighting, delay);
+        case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, jackman, lighting, delay);
+        case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, lighting, delay);
+        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, lighting, delay);
         case THE_DOUBLE_DOWN -> new TheDoubleDown(drive, arm, lighting, delay);
-        case SCORE_LOADED_WOLVERINE -> new ScoreLoadedWolverine(drive, arm, hugh, jackman, lighting, delay);
-        case SCORE_2_SPEAKER_VISION -> new Score2SpeakerVisualAutoCommand(drive, arm, hugh, jackman, lighting, delay);
-        case SCORE_LOADED_WOLVERINE_BARNUM -> new ScoreLoadedWolverineBarnum(drive, arm, hugh, jackman, lighting, delay);
+        case SCORE_LOADED_WOLVERINE -> new ScoreLoadedWolverine(drive, arm, jackman, lighting, delay);
+        case SCORE_2_SPEAKER_VISION -> new Score2SpeakerVisualAutoCommand(drive, arm, jackman, lighting, delay);
+        case SCORE_LOADED_WOLVERINE_BARNUM -> new ScoreLoadedWolverineBarnum(drive, arm, jackman, lighting, delay);
         case SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN ->
-            new ScoreLoadedWolverineBarnumValjean(drive, arm, hugh, jackman, lighting, delay);
-        case SCORE_LOADED_BARNUM_VALJEAN -> new ScoreLoadedBarnumValjean(drive, arm, hugh, jackman, lighting, delay);
-        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
-        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, hugh, jackman, lighting, delay);
+            new ScoreLoadedWolverineBarnumValjean(drive, arm, jackman, lighting, delay);
+        case SCORE_LOADED_BARNUM_VALJEAN -> new ScoreLoadedBarnumValjean(drive, arm, jackman, lighting, delay);
+        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, jackman, lighting, delay);
+        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay);
         default -> new InstantCommand();
         };
     }

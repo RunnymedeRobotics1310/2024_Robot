@@ -6,12 +6,10 @@ import frc.robot.commands.arm.ShootCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 
 public class Score1SpeakerStayAutoCommand extends SequentialCommandGroup {
 
-    public Score1SpeakerStayAutoCommand(SwerveSubsystem swerve, ArmSubsystem arm, HughVisionSubsystem hugh,
-        LightingSubsystem lighting, double delay) {
+    public Score1SpeakerStayAutoCommand(SwerveSubsystem swerve, ArmSubsystem arm, LightingSubsystem lighting, double delay) {
 
 
         addCommands(new LogMessageCommand("Starting Auto"));

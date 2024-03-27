@@ -21,12 +21,11 @@ import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
 
-    public ScoreLoadedBarnumValjean(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
+    public ScoreLoadedBarnumValjean(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
         JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
         // start
@@ -45,7 +44,7 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
         // RED_SPEAKER.getLocation().toTranslation2d(),
         // RED_BARNUM_SHOT, BLUE_SPEAKER.getLocation().toTranslation2d()));
         addCommands(new DriveToPositionCommand(swerve, BLUE_BARNUM_SHOT, RED_BARNUM_SHOT));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh)
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
             .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
@@ -55,7 +54,7 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
         // NOTE: THE ABOVE OVER-ROTATES
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, RED_VALJEAN, 1.5)));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh)
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
             .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
         addCommands(new CompactCommand(armSubsystem));

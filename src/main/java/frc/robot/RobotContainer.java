@@ -49,7 +49,7 @@ public class RobotContainer {
 
     private final OperatorInput          operatorInput = new OperatorInput(
         OiConstants.DRIVER_CONTROLLER_PORT, OiConstants.OPERATOR_CONTROLLER_PORT,
-        drive, arm, climb, hugh, jackman, lighting);
+        drive, arm, climb, jackman, lighting);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.

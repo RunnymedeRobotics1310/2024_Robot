@@ -14,12 +14,11 @@ import frc.robot.commands.swervedrive.*;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 public class ScoreLoadedWolverineBarnum extends SequentialCommandGroup {
 
-    public ScoreLoadedWolverineBarnum(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
+    public ScoreLoadedWolverineBarnum(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
         JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
         // start
@@ -35,7 +34,7 @@ public class ScoreLoadedWolverineBarnum extends SequentialCommandGroup {
             new StartIntakeCommand(armSubsystem, lighting)
                 .deadlineWith(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.5)));
         addCommands(new SimpleDriveRobotOrientedCommand(swerve, -1.0, 0, 0, 0.4));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         // barnum
@@ -43,7 +42,7 @@ public class ScoreLoadedWolverineBarnum extends SequentialCommandGroup {
             .alongWith(new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         // end

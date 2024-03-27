@@ -9,8 +9,6 @@ import frc.robot.Constants.BotTarget;
 import frc.robot.commands.arm.AimAmpCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.auto.stubs.FakeScoreAmpCommand;
-import frc.robot.commands.auto.stubs.FakeVisionNotePickupCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
@@ -18,15 +16,14 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 
 import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
 import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
 
 public class Score2_5AmpAutoCommand extends SequentialCommandGroup {
 
-    public Score2_5AmpAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
-        JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
+    public Score2_5AmpAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, JackmanVisionSubsystem jackman,
+        LightingSubsystem lighting, double delay) {
 
         addCommands(new LogMessageCommand("Starting Auto"));
         addCommands(new WaitCommand(delay));

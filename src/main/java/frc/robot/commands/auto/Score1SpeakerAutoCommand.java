@@ -10,12 +10,10 @@ import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 
 public class Score1SpeakerAutoCommand extends SequentialCommandGroup {
 
-    public Score1SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem arm, HughVisionSubsystem hugh,
-        LightingSubsystem lighting, double delay) {
+    public Score1SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem arm, LightingSubsystem lighting, double delay) {
 
         Pose2d blueFinishPose  = new Pose2d(4, 1.5, new Rotation2d());
         Pose2d redFinishPose   = new Pose2d(12.54, 1.8, new Rotation2d());

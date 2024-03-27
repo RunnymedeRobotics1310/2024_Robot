@@ -10,7 +10,6 @@ import frc.robot.commands.swervedrive.*;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 import static frc.robot.Constants.FieldConstants.*;
@@ -19,7 +18,7 @@ import static frc.robot.Constants.UsefulPoses.IN_FRONT_OF_WOLVERINE_RED;
 
 public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
 
-    public ScoreLoadedWolverineBarnumValjean(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
+    public ScoreLoadedWolverineBarnumValjean(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
         JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
         // start
@@ -35,7 +34,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
             new StartIntakeCommand(armSubsystem, lighting)
                 .deadlineWith(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.5)));
         addCommands(new SimpleDriveRobotOrientedCommand(swerve, -1.0, 0, 0, 0.4));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         // barnum
@@ -43,7 +42,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
             .alongWith(new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         // valjean
@@ -51,7 +50,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
             .alongWith(new RotateToLocationCommand(swerve, BLUE_VALJEAN, BLUE_VALJEAN)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, BLUE_VALJEAN)));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         // end

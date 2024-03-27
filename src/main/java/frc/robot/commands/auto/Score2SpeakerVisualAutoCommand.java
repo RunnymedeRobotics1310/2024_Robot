@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants;
 import frc.robot.Constants.BotTarget;
 import frc.robot.commands.arm.CompactCommand;
 import frc.robot.commands.arm.ShootCommand;
@@ -19,26 +18,27 @@ import frc.robot.commands.swervedrive.*;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 public class Score2SpeakerVisualAutoCommand extends SequentialCommandGroup {
 
-    public Score2SpeakerVisualAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
-                                          JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
+    public Score2SpeakerVisualAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
+        JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
 
-        // In this case we need to adjust the pose and take off 70cm (on a diagonal from where the bot will start by speaker) so it doesn't ram the podium
-        Translation2d blueNote2Loc = BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(-0.48, 0.48));
-        Translation2d redNote2Loc  = RED_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(0.48, 0.48));
+        // In this case we need to adjust the pose and take off 70cm (on a diagonal from where the
+        // bot will start by speaker) so it doesn't ram the podium
+        Translation2d blueNote2Loc       = BLUE_NOTE_WOLVERINE.getLocation().toTranslation2d()
+            .plus(new Translation2d(-0.48, 0.48));
+        Translation2d redNote2Loc        = RED_NOTE_WOLVERINE.getLocation().toTranslation2d().plus(new Translation2d(0.48, 0.48));
 
         // Transition Away from Stage/Podium before moving to final
-        Pose2d blueTransitionPose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
-        Pose2d redTransitionPose  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
+        Pose2d        blueTransitionPose = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
+        Pose2d        redTransitionPose  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX(), 1.5, new Rotation2d());
 
         // Final resting place
-        Pose2d blueFinishPose     = new Pose2d(4, 1.5, new Rotation2d());
-        Pose2d redFinishPose      = new Pose2d(12.54, 1.8, new Rotation2d());
+        Pose2d        blueFinishPose     = new Pose2d(4, 1.5, new Rotation2d());
+        Pose2d        redFinishPose      = new Pose2d(12.54, 1.8, new Rotation2d());
 
 
         addCommands(new LogMessageCommand("Starting Auto"));
@@ -57,11 +57,11 @@ public class Score2SpeakerVisualAutoCommand extends SequentialCommandGroup {
 
         /* Note 2 */
         addCommands(new WaitCommand(1.3)
-                .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
+            .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-                .deadlineWith(new DriveToPositionFacingCommand(swerve, blueNote2Loc, redNote2Loc)));
+            .deadlineWith(new DriveToPositionFacingCommand(swerve, blueNote2Loc, redNote2Loc)));
         addCommands(new CompactCommand(armSubsystem));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         /* Exit Zone */

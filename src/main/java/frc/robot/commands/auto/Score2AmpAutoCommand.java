@@ -12,20 +12,17 @@ import frc.robot.Constants.BotTarget;
 import frc.robot.commands.arm.AimAmpCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.auto.stubs.FakeScoreAmpCommand;
-import frc.robot.commands.auto.stubs.FakeVisionNotePickupCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 public class Score2AmpAutoCommand extends SequentialCommandGroup {
 
-    public Score2AmpAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
+    public Score2AmpAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
         JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
         Pose2d blueFinishPose = new Pose2d(4, 7.0, new Rotation2d(90));

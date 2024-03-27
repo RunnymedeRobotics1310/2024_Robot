@@ -19,12 +19,11 @@ import frc.robot.commands.swervedrive.RotateToTargetCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
 
-    public Score3SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, HughVisionSubsystem hugh,
+    public Score3SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
         JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
 
 
@@ -52,14 +51,14 @@ public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .alongWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25)));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootCommand(armSubsystem, lighting));
 
         /* Note 4 */
         addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .alongWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25)));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve, hugh));
+        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootCommand(armSubsystem, lighting));
 
         /* Exit Zone */
