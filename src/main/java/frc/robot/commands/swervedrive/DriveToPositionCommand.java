@@ -34,20 +34,14 @@ public class DriveToPositionCommand extends BaseDriveCommand {
     }
 
     /**
-     * Drive as fast as possible to the specified pose
+     * Drive as fast as possible to the specified pose.
      */
     public DriveToPositionCommand(SwerveSubsystem swerve, Pose2d bluePose, Pose2d redPose) {
-        super(swerve);
-        this.bluePose     = bluePose;
-        this.redPose      = redPose;
-        this.blueLocation = null;
-        this.redLocation  = null;
-        this.heading      = null;
-        this.speed        = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
+        this(swerve, bluePose, redPose, Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS);
     }
 
     /**
-     * Drive at the specified speed to the specified pose
+     * Drive at the specified speed to the specified pose.
      */
     public DriveToPositionCommand(SwerveSubsystem swerve, Pose2d bluePose, Pose2d redPose, double speed) {
         super(swerve);
