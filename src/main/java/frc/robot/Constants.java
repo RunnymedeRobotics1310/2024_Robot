@@ -494,8 +494,8 @@ public final class Constants {
          * Key Arm Positions
          */
         // aim re-measured Mar 10, 2024 9:30am (was 35, set to 113) - diff - 78
-        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185, 33);
-        public static final ArmPosition CLOSE_TO_COMPACT_ARM_POSITION      = new ArmPosition(187, 40);
+        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(189, 33);
+        public static final ArmPosition CLOSE_TO_COMPACT_ARM_POSITION      = new ArmPosition(193, 45);
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 109);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 105);

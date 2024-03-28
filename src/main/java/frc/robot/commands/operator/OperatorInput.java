@@ -307,8 +307,11 @@ public class OperatorInput {
             .onTrue(new AimAmpCommand(arm));
 
         // eject
-        new Trigger(() -> operatorController.getPOV() == 90)
+        new Trigger(() -> !this.isShift() && operatorController.getPOV() == 90)
             .whileTrue(new EjectNoteCommand(arm));
+
+        new Trigger(() -> this.isShift() && operatorController.getPOV() == 90)
+            .whileTrue(new InjectNoteCommand(arm));
 
         // aim source
         new Trigger(() -> operatorController.getPOV() == 180)

@@ -37,14 +37,14 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     long                        shooterStartTime    = 0;
     private Constants.BotTarget botTarget;
 
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("Testing");
-    NetworkTableEntry aimAngleNT = table.getEntry("aimAngle");
+    NetworkTable                table               = NetworkTableInstance.getDefault().getTable("Testing");
+    NetworkTableEntry           aimAngleNT          = table.getEntry("aimAngle");
 
     public ShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem,
-                                           LightingSubsystem lighting) {
+        LightingSubsystem lighting) {
         super(armSubsystem);
-        this.swerveSubsystem     = swerveSubsystem;
-        this.lighting            = lighting;
+        this.swerveSubsystem = swerveSubsystem;
+        this.lighting        = lighting;
         addRequirements(swerveSubsystem);
     }
 
@@ -145,20 +145,17 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
             armSubsystem.setIntakeSpeed(0);
 
-            double shooterSpeed;
-            if (distanceToTarget < 4.5) {
-                shooterSpeed = 0.75;
-            }
-            else {
-                shooterSpeed = .95;
-            }
+            double shooterSpeed = 0.85;
+
             armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
             if (isStateTimeoutExceeded(shooterSpeed + 0.5) && atArmAngle) {
                 logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed()
-                + ",DistanceToTarget["+distanceToTarget+"],DesiredAimAngle["+aimAngle+"],encoderAimAngle["+armSubsystem.getAimAngle()+"],encoderLinkAngle["+armSubsystem.getLinkAngle()+"]"
-                +",BottomShooterSpeed["+armSubsystem.getBottomShooterEncoderSpeed()+"]" +",TopShooterSpeed["+armSubsystem.getTopShooterEncoderSpeed()+"]");
+                    + ",DistanceToTarget[" + distanceToTarget + "],DesiredAimAngle[" + aimAngle + "],encoderAimAngle["
+                    + armSubsystem.getAimAngle() + "],encoderLinkAngle[" + armSubsystem.getLinkAngle() + "]"
+                    + ",BottomShooterSpeed[" + armSubsystem.getBottomShooterEncoderSpeed() + "]" + ",TopShooterSpeed["
+                    + armSubsystem.getTopShooterEncoderSpeed() + "]");
                 state = State.START_FEEDER;
             }
 
