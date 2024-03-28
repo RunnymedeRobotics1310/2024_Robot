@@ -7,6 +7,7 @@ import static frc.robot.Constants.FieldConstants.RED_BARNUM;
 import static frc.robot.Constants.FieldConstants.RED_BARNUM_SHOT;
 import static frc.robot.Constants.FieldConstants.RED_VALJEAN;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.arm.CompactCommand;
@@ -36,24 +37,23 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
         addCommands(new ShootCommand(armSubsystem, lighting));
 
         // barnum
-        addCommands(new WaitCommand(1.3)
+        addCommands(new WaitCommand(.8)
             .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
-        // addCommands(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM_SHOT,
-        // RED_SPEAKER.getLocation().toTranslation2d(),
-        // RED_BARNUM_SHOT, BLUE_SPEAKER.getLocation().toTranslation2d()));
+            .deadlineWith(new DriveToPositionCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
         addCommands(new DriveToPositionCommand(swerve, BLUE_BARNUM_SHOT, RED_BARNUM_SHOT));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
             .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
 
         // valjean
-        addCommands(new CompactCommand(armSubsystem)
-            .alongWith(new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN)));
-        // NOTE: THE ABOVE OVER-ROTATES
-        addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, RED_VALJEAN, 1.5)));
+        Command arm   = new CompactCommand(armSubsystem)
+            .andThen(new StartIntakeCommand(armSubsystem, lighting));
+        Command drive = new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN)
+            .andThen(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, RED_VALJEAN, 1.5));
+        addCommands(arm.deadlineWith(drive));
+
+
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
             .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));

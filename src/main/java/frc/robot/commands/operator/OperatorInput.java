@@ -28,8 +28,6 @@ import frc.robot.commands.auto.Score2_5AmpAutoCommand;
 import frc.robot.commands.auto.Score3SpeakerAutoCommand;
 import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.auto.ScoreLoadedBarnumValjean;
-import frc.robot.commands.auto.ScoreLoadedWolverine;
-import frc.robot.commands.auto.ScoreLoadedWolverineBarnum;
 import frc.robot.commands.auto.ScoreLoadedWolverineBarnumValjean;
 import frc.robot.commands.auto.TheDoubleDown;
 import frc.robot.commands.climb.MaxClimbCommand;
@@ -453,21 +451,24 @@ public class OperatorInput {
         };
 
         return switch (autoPatternChooser.getSelected()) {
-        case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);
+        // not used
         case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, arm, lighting, delay);
         case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, jackman, lighting, delay);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, jackman, lighting, delay);
+        case SCORE_2_SPEAKER_VISION -> new Score2SpeakerVisualAutoCommand(drive, arm, jackman, lighting, delay);
+        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, jackman, lighting, delay);
+        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay);
+
+        // used in competition
+        case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);
         case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, lighting, delay);
         case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, lighting, delay);
         case THE_DOUBLE_DOWN -> new TheDoubleDown(drive, arm, lighting, delay);
-        case SCORE_LOADED_WOLVERINE -> new ScoreLoadedWolverine(drive, arm, jackman, lighting, delay);
-        case SCORE_2_SPEAKER_VISION -> new Score2SpeakerVisualAutoCommand(drive, arm, jackman, lighting, delay);
-        case SCORE_LOADED_WOLVERINE_BARNUM -> new ScoreLoadedWolverineBarnum(drive, arm, jackman, lighting, delay);
+        case SCORE_LOADED_WOLVERINE -> new ScoreLoadedWolverineBarnumValjean(drive, arm, jackman, lighting, delay, 2);
+        case SCORE_LOADED_WOLVERINE_BARNUM -> new ScoreLoadedWolverineBarnumValjean(drive, arm, jackman, lighting, delay, 3);
         case SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN ->
-            new ScoreLoadedWolverineBarnumValjean(drive, arm, jackman, lighting, delay);
+            new ScoreLoadedWolverineBarnumValjean(drive, arm, jackman, lighting, delay, 4);
         case SCORE_LOADED_BARNUM_VALJEAN -> new ScoreLoadedBarnumValjean(drive, arm, jackman, lighting, delay);
-        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, jackman, lighting, delay);
-        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay);
         default -> new InstantCommand();
         };
     }
