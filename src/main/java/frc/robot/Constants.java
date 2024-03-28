@@ -394,14 +394,23 @@ public final class Constants {
     }
 
     public static final class LightingConstants {
-        public static final int        PWM_PORT     = 9;
-        public static final int        STRIP_LENGTH = 24;
+        public static final int        PWM_PORT                = 9;
+        public static final int        STRIP_LENGTH            = 24;
 
-        public static final Color      NOTE_ORANGE  = new Color(255, 20, 0);
+        /**
+         * The factor by which the brightness of the lights in the workshop should be reduced.
+         * The lighting subsystem checks to see if the FMS is attached. If not, this factor
+         * is applied.
+         *
+         * To disable this feature, set the factor to 1.
+         */
+        public static final double     WORKSHOP_DIMMING_FACTOR = 0.5;
 
-        public static LightstripRegion VISPOSE1     = new LightstripRegion("Vision1", 0, 3);
-        public static LightstripRegion SIGNAL       = new LightstripRegion("Signal", 3, 18);
-        public static LightstripRegion VISPOSE2     = new LightstripRegion("Vision2", 21, VISPOSE1.length);
+        public static final Color      NOTE_ORANGE             = new Color(255, 20, 0);
+
+        public static LightstripRegion VISPOSE1                = new LightstripRegion("Vision1", 0, 3);
+        public static LightstripRegion SIGNAL                  = new LightstripRegion("Signal", 3, 18);
+        public static LightstripRegion VISPOSE2                = new LightstripRegion("Vision2", 21, VISPOSE1.length);
 
     }
 

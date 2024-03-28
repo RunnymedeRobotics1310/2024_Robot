@@ -2,6 +2,7 @@ package frc.robot.subsystems.lighting;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants;
 import frc.robot.subsystems.RunnymedeSubsystemBase;
@@ -9,6 +10,8 @@ import frc.robot.subsystems.lighting.pattern.LightingPattern;
 import frc.robot.telemetry.Telemetry;
 
 import java.util.ArrayList;
+
+import static frc.robot.Constants.LightingConstants.WORKSHOP_DIMMING_FACTOR;
 
 public class LightingSubsystem extends RunnymedeSubsystemBase {
 
@@ -69,7 +72,25 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
             Telemetry.light.regionStatus.put(region.name, pattern.getClass().getSimpleName());
         }
 
+        dimLightsInWorkshop();
+
         safelySetLights();
+    }
+
+    private void dimLightsInWorkshop() {
+        /*
+         * Full brightness is too bright when in the workshop
+         */
+        if (!DriverStation.isFMSAttached()) {
+            for (int i = 0; i < ledBuffer.getLength(); i++) {
+                Color color       = ledBuffer.getLED(i);
+                Color dimmerColor = new Color(
+                    color.red / WORKSHOP_DIMMING_FACTOR,
+                    color.green / WORKSHOP_DIMMING_FACTOR,
+                    color.blue / WORKSHOP_DIMMING_FACTOR);
+                ledBuffer.setLED(i, dimmerColor);
+            }
+        }
     }
 
     private void safelySetLights() {
@@ -147,6 +168,10 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
                 throw new IllegalArgumentException(
                     "Lightstrip regions do not cover the entire lightstrip. No value found for LED " + i);
             }
+        }
+
+        if (WORKSHOP_DIMMING_FACTOR < 0 || WORKSHOP_DIMMING_FACTOR > 1) {
+            throw new IllegalArgumentException("WORKSHOP_DIMMING_FACTOR must be between 0 and 1");
         }
     }
 }
