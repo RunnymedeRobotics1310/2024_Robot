@@ -518,7 +518,7 @@ public final class Constants {
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
         public static final double      FAST_AIM_SPEED                     = .7;
-        public static final double      SLOW_AIM_SPEED                     = .1;
+        public static final double      SLOW_AIM_SPEED                     = .2;
         public static final double      FAST_LINK_SPEED                    = .7;
         public static final double      SLOW_LINK_SPEED                    = .2;
 
