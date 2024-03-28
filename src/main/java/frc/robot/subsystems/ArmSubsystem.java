@@ -400,6 +400,8 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         if (linkAngle <= CLOSE_TO_COMPACT_ARM_POSITION.linkAngle
             && linkAngle >= COMPACT_ARM_POSITION.linkAngle
             && totalAngle <= COMPACT_ARM_POSITION.getTotalAngle()) {
+            log(String.format("Compacting safety code activated link: %.2f aim: %.2f total: %.2f", linkAngle, aimAngle,
+                totalAngle));
             // we are close to compact.
             if (aimPivotSpeed < 0 && Math.abs(aimPivotSpeed) > SLOW_AIM_SPEED) {
                 aimPivotSpeed = -SLOW_AIM_SPEED;
