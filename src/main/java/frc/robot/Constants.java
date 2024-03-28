@@ -468,7 +468,7 @@ public final class Constants {
         public static final int         LINK_ABSOLUTE_ENCODER_ANALOG_PORT  = 3;
         // Encoder constants to convert from Volts to Deg
         public static final double      LINK_ABSOLUTE_ENCODER_DEG_PER_VOLT = 49.11;
-        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -62.5;
+        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -62;
 
 
         public static final int         LINK_LOWER_LIMIT_SWITCH_DIO_PORT   = 0;
@@ -479,7 +479,7 @@ public final class Constants {
         // Increasing aim offset by 78 to account for a change that happened on Saturday Mar 9. New
         // measurement added March 10th at 11:20am
         // 73 degree offset on Mar 15.
-        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 11.7;
+        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 14.7;
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
@@ -494,8 +494,8 @@ public final class Constants {
          * Key Arm Positions
          */
         // aim re-measured Mar 10, 2024 9:30am (was 35, set to 113) - diff - 78
-        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(189, 33);
-        public static final ArmPosition CLOSE_TO_COMPACT_ARM_POSITION      = new ArmPosition(193, 45);
+        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185, 33);
+        public static final ArmPosition CLOSE_TO_COMPACT_ARM_POSITION      = new ArmPosition(189, 45);
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 109);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 105);
