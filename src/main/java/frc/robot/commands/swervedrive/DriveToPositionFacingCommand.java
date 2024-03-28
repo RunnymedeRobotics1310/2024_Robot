@@ -11,43 +11,31 @@ import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class DriveToPositionFacingCommand extends BaseDriveCommand {
 
-    private final Translation2d redPositionToDriveToward;
-    private final Translation2d redPositionToFace;
     private final Translation2d bluePositionToDriveToward;
     private final Translation2d bluePositionToFace;
+    private final Translation2d redPositionToDriveToward;
+    private final Translation2d redPositionToFace;
     private final double        maxSpeedMPS;
 
     private Translation2d       positionToDriveToward;
     private Translation2d       positionToFace;
 
     /**
-     * Drive to the specified location while facing another specified position.
-     * Useful while driving one way and locking onto another target.
-     */
-    public DriveToPositionFacingCommand(SwerveSubsystem swerve, Translation2d bluePositionToDriveToward,
-        Translation2d bluePositionToFace, Translation2d redPositionToDriveToward, Translation2d redPositionToFace,
-        double maxSpeedMPS) {
-        super(swerve);
-        this.redPositionToDriveToward  = redPositionToDriveToward;
-        this.redPositionToFace         = redPositionToFace;
-        this.bluePositionToDriveToward = bluePositionToDriveToward;
-        this.bluePositionToFace        = bluePositionToFace;
-        this.maxSpeedMPS               = maxSpeedMPS;
-    }
-
-
-    /**
-     * Drive to the specified location while facing another specified position.
-     * Useful while driving one way and locking onto another target.
+     * Drive to the specified location while facing that location at the same time (i.e. aim for
+     * robot-relative heading of 0 and field-relative heading is not important).
      *
-     * This version faces the target.
-     * Todo: reconcile with DriveToPosition
-     * Todo: consider what happens when you get close - which way should you face?
+     * Note, that it's not possible to know which direction to face when the robot arrives at the
+     * target location, so heading error is not considered to be a factor in the completion of this
+     * command.
      */
-    public DriveToPositionFacingCommand(SwerveSubsystem swerve,
-        Translation2d bluePositionToDriveAndFaceToward, Translation2d redPositionToDriveAndFaceToward, double maxSpeedMPS) {
-        this(swerve, bluePositionToDriveAndFaceToward, bluePositionToDriveAndFaceToward,
-            redPositionToDriveAndFaceToward, redPositionToDriveAndFaceToward, maxSpeedMPS);
+    public DriveToPositionFacingCommand(
+        SwerveSubsystem swerve, Translation2d bluePosition, Translation2d redPosition, double maxSpeedMPS) {
+        super(swerve);
+        this.bluePositionToDriveToward = bluePosition;
+        this.bluePositionToFace        = bluePosition;
+        this.redPositionToDriveToward  = redPosition;
+        this.redPositionToFace         = redPosition;
+        this.maxSpeedMPS               = maxSpeedMPS;
     }
 
     @Override
@@ -81,7 +69,6 @@ public class DriveToPositionFacingCommand extends BaseDriveCommand {
     @Override
     public boolean isFinished() {
         super.isFinished();
-        Rotation2d heading = getHeadingToFieldPosition(positionToFace);
-        return isCloseEnough(positionToDriveToward) && isCloseEnough(heading);
+        return isCloseEnough(positionToDriveToward);
     }
 }
