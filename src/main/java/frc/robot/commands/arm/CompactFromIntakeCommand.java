@@ -11,7 +11,7 @@ public class CompactFromIntakeCommand extends ArmBaseCommand {
         LIFT_LINK_10_DEG, MOVE_BOTH, LOCK, LOCKED
     };
 
-    private State state = State.LIFT_LINK_10_DEG;
+    private State   state            = State.LIFT_LINK_10_DEG;
 
     private boolean tighterTolerance = false;
 
@@ -31,7 +31,7 @@ public class CompactFromIntakeCommand extends ArmBaseCommand {
         if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, tolerance)) {
 
             if (armSubsystem.getAimAngle() <= ArmConstants.COMPACT_ARM_POSITION.aimAngle
-                    && armSubsystem.getLinkAngle() >= ArmConstants.COMPACT_ARM_POSITION.linkAngle) {
+                && armSubsystem.getLinkAngle() >= ArmConstants.COMPACT_ARM_POSITION.linkAngle) {
                 setStateAndLog(State.LOCK, "Arm already near compact.  Lock it");
             }
             else {
@@ -54,62 +54,63 @@ public class CompactFromIntakeCommand extends ArmBaseCommand {
 
         switch (state) {
 
-            case LIFT_LINK_10_DEG:
+        case LIFT_LINK_10_DEG:
 
-                armSubsystem.setLinkPivotSpeed(.5);
+            armSubsystem.setLinkPivotSpeed(.5);
 
-                if (armSubsystem.getLinkAngle() > ArmConstants.INTAKE_ARM_POSITION.linkAngle + 4) {
-                    setStateAndLog(State.MOVE_BOTH, "Link lifted, Link at" + armSubsystem.getLinkAngle());
+            if (armSubsystem.getLinkAngle() > ArmConstants.INTAKE_ARM_POSITION.linkAngle + 4) {
+                setStateAndLog(State.MOVE_BOTH, "Link lifted, Link at" + armSubsystem.getLinkAngle());
+            }
+            break;
+
+        case MOVE_BOTH:
+
+            linkSpeed = .9;
+            aimSpeed = -.6;
+
+            if (armSubsystem.getLinkAngle() > ArmConstants.COMPACT_ARM_POSITION.linkAngle) {
+
+                if (armSubsystem.getLinkAngle() > ArmConstants.COMPACT_ARM_POSITION.linkAngle + 5) {
+                    linkSpeed = -.1;
                 }
-                break;
-
-            case MOVE_BOTH:
-
-                linkSpeed = .9;
-                aimSpeed = -.6;
-
-                if (armSubsystem.getLinkAngle() > ArmConstants.COMPACT_ARM_POSITION.linkAngle) {
-
-                    if (armSubsystem.getLinkAngle() > ArmConstants.COMPACT_ARM_POSITION.linkAngle + 5) {
-                        linkSpeed = -.1;
-                    }
-                    else {
-                        linkSpeed = 0;
-                    }
+                else {
+                    linkSpeed = 0;
                 }
+            }
 
-                if (armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle) {
-                    aimSpeed = 0;
-                }
+            if (armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle) {
+                aimSpeed = 0;
+            }
 
-                armSubsystem.setLinkPivotSpeed(linkSpeed);
-                armSubsystem.setAimPivotSpeed(aimSpeed);
+            armSubsystem.setLinkPivotSpeed(linkSpeed);
+            armSubsystem.setAimPivotSpeed(aimSpeed);
 
-                if (armSubsystem.getLinkAngle() > ArmConstants.COMPACT_ARM_POSITION.linkAngle
-                        && armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle) {
+            if (armSubsystem.getLinkAngle() > ArmConstants.COMPACT_ARM_POSITION.linkAngle
+                && armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle) {
 
-                    setStateAndLog(State.LOCK, "In Position - let's lock. Link" + armSubsystem.getLinkAngle() + ", Aim " + armSubsystem.getAimAngle());
-                }
-                break;
+                setStateAndLog(State.LOCK,
+                    "In Position - let's lock. Link" + armSubsystem.getLinkAngle() + ", Aim " + armSubsystem.getAimAngle());
+            }
+            break;
 
-            case LOCK:
+        case LOCK:
 
-                armSubsystem.setLinkPivotSpeed(-.2);
-                armSubsystem.setAimPivotSpeed(0);
+            armSubsystem.setLinkPivotSpeed(-.2);
+            armSubsystem.setAimPivotSpeed(0);
 
-                // If past the bumper danger, move to the intake position.
-                if (this.isStateTimeoutExceeded(.2)) {
+            // If past the bumper danger, move to the intake position.
+            if (this.isStateTimeoutExceeded(.2)) {
 
-                    armSubsystem.setLinkPivotSpeed(0);
+                armSubsystem.setLinkPivotSpeed(0);
 
-                    setStateAndLog(State.LOCKED, "In locked position");
-                }
+                setStateAndLog(State.LOCKED, "In locked position");
+            }
 
-                break;
+            break;
 
-            case LOCKED:
-                // Nothing to do here
-                break;
+        case LOCKED:
+            // Nothing to do here
+            break;
         }
     }
 
@@ -140,7 +141,7 @@ public class CompactFromIntakeCommand extends ArmBaseCommand {
      * @param reason Reason for the transition for logging
      */
     private void setStateAndLog(CompactFromIntakeCommand.State newState, String reason) {
-        logStateTransition(newState.name(), reason);
+        logStateTransition(newState.name(), reason, true);
         state = newState;
     }
 
