@@ -20,6 +20,9 @@ public class DriveToPositionCommand extends BaseDriveCommand {
     private Rotation2d          heading;
     private double              speed;
 
+    /**
+     * Drive to the specified location, maintaining the current heading.
+     */
     public DriveToPositionCommand(SwerveSubsystem swerve, Translation2d blueLocation, Translation2d redLocation) {
         super(swerve);
         this.bluePose     = null;
@@ -27,7 +30,7 @@ public class DriveToPositionCommand extends BaseDriveCommand {
         this.blueLocation = blueLocation;
         this.redLocation  = redLocation;
         this.heading      = null;
-        this.speed = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
+        this.speed        = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
     }
 
     /**
@@ -40,9 +43,12 @@ public class DriveToPositionCommand extends BaseDriveCommand {
         this.blueLocation = null;
         this.redLocation  = null;
         this.heading      = null;
-        this.speed = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
+        this.speed        = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
     }
 
+    /**
+     * Drive at the specified speed to the specified pose
+     */
     public DriveToPositionCommand(SwerveSubsystem swerve, Pose2d bluePose, Pose2d redPose, double speed) {
         super(swerve);
         this.bluePose     = bluePose;
@@ -50,7 +56,7 @@ public class DriveToPositionCommand extends BaseDriveCommand {
         this.blueLocation = null;
         this.redLocation  = null;
         this.heading      = null;
-        this.speed = speed;
+        this.speed        = speed;
     }
 
     @Override
