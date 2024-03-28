@@ -19,39 +19,47 @@ import static frc.robot.Constants.UsefulPoses.IN_FRONT_OF_WOLVERINE_RED;
 public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
 
     public ScoreLoadedWolverineBarnumValjean(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
-        JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
+        JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay, int noteCount) {
 
         // start
         addCommands(new LogMessageCommand("Starting Auto"));
         addCommands(new WaitCommand(delay));
 
         // loaded
-        addCommands(new ShootCommand(armSubsystem, lighting));
+        if (noteCount > 0) {
+            addCommands(new ShootCommand(armSubsystem, lighting));
+        }
 
         // wolverine
-        addCommands(new DriveToPositionCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED));
-        addCommands(
-            new StartIntakeCommand(armSubsystem, lighting)
-                .deadlineWith(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.5)));
-        addCommands(new SimpleDriveRobotOrientedCommand(swerve, -1.0, 0, 0, 0.4));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
-        addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+        if (noteCount > 1) {
+            addCommands(new DriveToPositionCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED));
+            addCommands(
+                new StartIntakeCommand(armSubsystem, lighting)
+                    .deadlineWith(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.5)));
+            addCommands(new SimpleDriveRobotOrientedCommand(swerve, -1.0, 0, 0, 0.4));
+            addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
+            addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+        }
 
         // barnum
-        addCommands(new CompactCommand(armSubsystem)
-            .alongWith(new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
-        addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
-        addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+        if (noteCount > 2) {
+            addCommands(new CompactCommand(armSubsystem)
+                .alongWith(new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
+            addCommands(new StartIntakeCommand(armSubsystem, lighting)
+                .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
+            addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
+            addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+        }
 
         // valjean
-        addCommands(new CompactCommand(armSubsystem)
-            .alongWith(new RotateToLocationCommand(swerve, BLUE_VALJEAN, BLUE_VALJEAN)));
-        addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, BLUE_VALJEAN)));
-        addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
-        addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+        if (noteCount > 3) {
+            addCommands(new CompactCommand(armSubsystem)
+                .alongWith(new RotateToLocationCommand(swerve, BLUE_VALJEAN, BLUE_VALJEAN)));
+            addCommands(new StartIntakeCommand(armSubsystem, lighting)
+                .deadlineWith(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, BLUE_VALJEAN)));
+            addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
+            addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+        }
 
         // end
         addCommands(new LogMessageCommand("Auto Complete"));
