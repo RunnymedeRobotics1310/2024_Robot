@@ -9,14 +9,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BotTarget;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.swervedrive.DriveToNoteCommand;
-import frc.robot.commands.swervedrive.DriveToPositionCommand;
-import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
-import frc.robot.commands.swervedrive.RotateToTargetCommand;
+import frc.robot.commands.swervedrive.*;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
+
+import static frc.robot.Constants.FieldConstants.*;
 
 public class Score4SpeakerAutoCommand extends SequentialCommandGroup {
 
@@ -44,7 +43,7 @@ public class Score4SpeakerAutoCommand extends SequentialCommandGroup {
 
 
         /* Note 2 */
-        addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_WOLVERINE, BotTarget.RED_NOTE_WOLVERINE));
+        addCommands(new RotateToLocationCommand(swerve, BLUE_WOLVERINE, RED_WOLVERINE));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .alongWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
@@ -52,14 +51,14 @@ public class Score4SpeakerAutoCommand extends SequentialCommandGroup {
 
 
         /* Note 3 */
-        addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
+        addCommands(new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .alongWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootCommand(armSubsystem, lighting));
 
         /* Note 4 */
-        addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
+        addCommands(new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .alongWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));

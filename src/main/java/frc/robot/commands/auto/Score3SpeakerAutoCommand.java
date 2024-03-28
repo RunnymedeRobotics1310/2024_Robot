@@ -3,6 +3,7 @@ package frc.robot.commands.auto;
 
 import static frc.robot.Constants.BotTarget.BLUE_NOTE_VALJEAN;
 import static frc.robot.Constants.BotTarget.RED_NOTE_VALJEAN;
+import static frc.robot.Constants.FieldConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,10 +13,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BotTarget;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.swervedrive.DriveToNoteCommand;
-import frc.robot.commands.swervedrive.DriveToPositionCommand;
-import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
-import frc.robot.commands.swervedrive.RotateToTargetCommand;
+import frc.robot.commands.swervedrive.*;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -48,14 +46,14 @@ public class Score3SpeakerAutoCommand extends SequentialCommandGroup {
             BotTarget.RED_SPEAKER.getLocation().toTranslation2d().plus(new Translation2d(-1.6, 0))));
 
         /* Note 3 */
-        addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_BARNUM, BotTarget.RED_NOTE_BARNUM));
+        addCommands(new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .alongWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootCommand(armSubsystem, lighting));
 
         /* Note 4 */
-        addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
+        addCommands(new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .alongWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25)));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));

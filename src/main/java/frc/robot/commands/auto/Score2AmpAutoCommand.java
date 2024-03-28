@@ -1,6 +1,8 @@
 package frc.robot.commands.auto;
 
 
+import static frc.robot.Constants.FieldConstants.BLUE_VALJEAN;
+import static frc.robot.Constants.FieldConstants.RED_VALJEAN;
 import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
 import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
 
@@ -8,13 +10,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.BotTarget;
 import frc.robot.commands.arm.AimAmpCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
-import frc.robot.commands.swervedrive.RotateToPlacedNoteCommand;
+import frc.robot.commands.swervedrive.RotateToLocationCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -41,7 +42,7 @@ public class Score2AmpAutoCommand extends SequentialCommandGroup {
         addCommands(new ShootCommand(armSubsystem, lighting));
 
         /* Note 2 */
-        addCommands(new RotateToPlacedNoteCommand(swerve, BotTarget.BLUE_NOTE_VALJEAN, BotTarget.RED_NOTE_VALJEAN));
+        addCommands(new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .deadlineWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, .5)));
         addCommands(new DriveToPositionCommand(swerve, SCORE_BLUE_AMP, SCORE_RED_AMP));
