@@ -3,6 +3,7 @@ package frc.robot.commands.auto;
 
 import static frc.robot.Constants.BotTarget.BLUE_NOTE_WOLVERINE;
 import static frc.robot.Constants.BotTarget.RED_NOTE_WOLVERINE;
+import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -59,7 +60,8 @@ public class Score2SpeakerVisualAutoCommand extends SequentialCommandGroup {
         addCommands(new WaitCommand(1.3)
             .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToPositionFacingCommand(swerve, blueNote2Loc, redNote2Loc)));
+            .deadlineWith(new DriveToPositionFacingCommand(swerve, blueNote2Loc, redNote2Loc, MAX_TRANSLATION_SPEED_MPS)));
+        // todo: the above speed was the default and is probably WAY too fast. Try 1.5.
         addCommands(new CompactCommand(armSubsystem));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
         addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
