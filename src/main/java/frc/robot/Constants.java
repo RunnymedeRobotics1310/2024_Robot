@@ -419,6 +419,10 @@ public final class Constants {
             this.linkAngle = linkDegrees;
             this.aimAngle  = aimDegrees;
         }
+
+        public double getTotalAngle() {
+            return this.aimAngle + this.linkAngle;
+        }
     }
 
     public static final class ArmConstants {
@@ -477,6 +481,7 @@ public final class Constants {
          */
         // aim re-measured Mar 10, 2024 9:30am (was 35, set to 113) - diff - 78
         public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185, 33);
+        public static final ArmPosition CLOSE_TO_COMPACT_ARM_POSITION      = new ArmPosition(187, 40);
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 109);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 105);
@@ -487,7 +492,6 @@ public final class Constants {
         // Transition position - above the lock position (arm not caught on stops)
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
-        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0); // Unfinished
         public static final ArmPosition SHOOT_SPEAKER_PODIUM_ARM_POSITION  = new ArmPosition(196, 42);
 
         // re-measured Mar 10, 2024 9:30am 2.4% arm (was 108, changed to 186; diff 78)
