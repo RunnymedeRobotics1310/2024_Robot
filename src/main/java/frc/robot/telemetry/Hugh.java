@@ -1,9 +1,7 @@
 package frc.robot.telemetry;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-import frc.robot.subsystems.vision.PoseConfidence;
+import frc.robot.utils.vision.PoseConfidence;
 
 import java.util.Arrays;
 
@@ -12,7 +10,6 @@ public class Hugh {
     }
 
     public double         priorityId     = -1310.0;
-    public boolean        targetFound    = false;
     public double         tid            = -1310.0;
     public double         tx             = -1310.0;
     public double         ty             = -1310.0;
@@ -28,7 +25,6 @@ public class Hugh {
 
     void post() {
         SmartDashboard.putString(Telemetry.PREFIX + "VisionHugh/PriorityId", "" + priorityId);
-        // SmartDashboard.putBoolean(Telemetry.PREFIX + "VisionHugh/Target Found", targetFound);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/tid", tid);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/tx", tx);
         SmartDashboard.putNumber(Telemetry.PREFIX + "VisionHugh/ty", ty);

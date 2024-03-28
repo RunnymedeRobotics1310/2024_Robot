@@ -5,6 +5,7 @@ import static frc.robot.Constants.LightingConstants.VISPOSE2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATION_ACCELERATION_RAD_PER_SEC2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_ACCELERATION_MPS2;
 import static frc.robot.RunnymedeUtils.format;
+import static frc.robot.utils.vision.PoseConfidence.NONE;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -23,17 +24,19 @@ import frc.robot.subsystems.lighting.pattern.VisionConfidenceHigh;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceLow;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceMedium;
 import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
-import frc.robot.subsystems.vision.PoseConfidence;
-import frc.robot.subsystems.vision.VisionPositionInfo;
+import frc.robot.utils.vision.PoseConfidence;
+import frc.robot.utils.vision.InvalidVisionDataException;
+import frc.robot.utils.vision.VisionPositionInfo;
 import frc.robot.telemetry.Telemetry;
+import frc.robot.utils.vision.HughVision;
 
 public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
-    private final SlewRateLimiter             xLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
-    private final SlewRateLimiter             yLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
-    private final SlewRateLimiter             omegaLimiter = new SlewRateLimiter(MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
-    private final HughLimelightPoseCalculator hugh         = new HughLimelightPoseCalculator();
-    private final LightingSubsystem           lighting;
+    private final SlewRateLimiter   xLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
+    private final SlewRateLimiter   yLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
+    private final SlewRateLimiter   omegaLimiter = new SlewRateLimiter(MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
+    private final HughVision        hugh         = new HughVision();
+    private final LightingSubsystem lighting;
 
     public SwerveSubsystem(LightingSubsystem lighting) {
         this.lighting = lighting;
@@ -152,16 +155,27 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
      * Update the field relative position of the robot using vision
      * position data returned from the vision subsystem.
      */
-    private void updateOdometryWithVisionInfo(Pose2d odometryPose) {
+    private void updateOdometryWithVisionInfo() {
 
-        VisionPositionInfo visPosInfo = hugh.getVisionPositionInfo(odometryPose);
+        Pose2d             odometryPose = getPose();
+        VisionPositionInfo visPosInfo;
+        PoseConfidence     confidence;
+
+        try {
+            visPosInfo = hugh.getVisionPositionInfo(odometryPose);
+            confidence = visPosInfo.confidence();
+        }
+        catch (InvalidVisionDataException e) {
+            visPosInfo = null;
+            confidence = NONE;
+        }
+
         Telemetry.swerve.swerve_vispose = visPosInfo;
-
-        if (visPosInfo.confidence() != PoseConfidence.NONE) {
+        if (confidence != NONE) {
             addVisionMeasurement(visPosInfo.pose(), visPosInfo.timestampSeconds(), visPosInfo.deviation());
         }
 
-        switch (visPosInfo.confidence()) {
+        switch (confidence) {
         case HIGH:
             lighting.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
             lighting.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
@@ -179,7 +193,6 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
             lighting.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
             break;
         }
-
     }
 
     public abstract void updateTelemetry();
@@ -199,10 +212,9 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
     public void periodic() {
         super.periodic();
         updateOdometryWithStates();
-        Pose2d pose = getPose();
-        updateOdometryWithVisionInfo(pose);
+        updateOdometryWithVisionInfo();
         updateTelemetry();
-        Telemetry.swerve.swerve_pose = pose;
+        Telemetry.swerve.swerve_pose = getPose();
     }
 
     @Override

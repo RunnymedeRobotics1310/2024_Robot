@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.vision.VisionPositionInfo;
+import frc.robot.utils.vision.VisionPositionInfo;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

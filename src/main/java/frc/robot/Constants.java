@@ -332,8 +332,8 @@ public final class Constants {
     }
 
     public static final class FieldConstants {
-        public static final double        FIELD_WIDTH_METRES  = 16.54;
-        public static final double        FIELD_LENGTH_METRES = 8.02;
+        public static final double        FIELD_WIDTH_METRES  = 16.541;
+        public static final double        FIELD_LENGTH_METRES = 8.211;
         public static final double        WING_LENGTH_METRES  = 5.87;
 
         // Blue Side Notes

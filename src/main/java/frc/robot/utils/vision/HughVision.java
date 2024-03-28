@@ -1,7 +1,4 @@
-package frc.robot.subsystems.swerve;
-
-import java.util.Arrays;
-import java.util.List;
+package frc.robot.utils.vision;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -16,126 +13,70 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
-import frc.robot.subsystems.vision.PoseConfidence;
-import frc.robot.subsystems.vision.VisionPositionInfo;
 import frc.robot.telemetry.Telemetry;
-import frc.robot.util.RectanglePoseArea;
 
 /**
  * Handles the April Tag Limelight
  */
-public class HughLimelightPoseCalculator {
+public class HughVision {
 
-    private static final long              CAM_MODE_VISION                      = 0;
+    private static final long          CAM_MODE_VISION                      = 0;
     @SuppressWarnings("unused")
-    private static final long              CAM_MODE_DRIVER                      = 1;
+    private static final long          CAM_MODE_DRIVER                      = 1;
 
     // configure more pipelines here
-    private static final long              PIPELINE_APRIL_TAG_DETECT            = 0;
+    private static final long          PIPELINE_APRIL_TAG_DETECT            = 0;
     @SuppressWarnings("unused")
-    private static final long              PIPELINE_RETROREFLECTIVE_NOTE_DETECT = 1;
+    private static final long          PIPELINE_RETROREFLECTIVE_NOTE_DETECT = 1;
     @SuppressWarnings("unused")
-    private static final long              PIPELINE_VISUAL                      = 2;
+    private static final long          PIPELINE_VISUAL                      = 2;
 
-    NetworkTable                           table                                = NetworkTableInstance.getDefault()
+    NetworkTable                       table                                = NetworkTableInstance.getDefault()
         .getTable("limelight-hugh");
 
     // inputs/configs
-    private final NetworkTableEntry        camMode                              = table.getEntry("camMode");
-    private final NetworkTableEntry        pipeline                             = table.getEntry("pipeline");
+    private final NetworkTableEntry    camMode                              = table.getEntry("camMode");
+    private final NetworkTableEntry    pipeline                             = table.getEntry("pipeline");
 
     // output
-    private final NetworkTableEntry        tv                                   = table.getEntry("tv");
-    private final NetworkTableEntry        tx                                   = table.getEntry("tx");
-    private final NetworkTableEntry        ty                                   = table.getEntry("ty");
-    private final NetworkTableEntry        ta                                   = table.getEntry("ta");
+    private final NetworkTableEntry    tx                                   = table.getEntry("tx");
+    private final NetworkTableEntry    ty                                   = table.getEntry("ty");
+    private final NetworkTableEntry    ta                                   = table.getEntry("ta");
 
-    private final NetworkTableEntry        tl                                   = table.getEntry("tl");
-    private final NetworkTableEntry        cl                                   = table.getEntry("cl");
+    private final NetworkTableEntry    tl                                   = table.getEntry("tl");
 
-    private final NetworkTableEntry        botpose_wpiblue                      = table.getEntry("botpose_wpiblue");
+    private final NetworkTableEntry    botpose_wpiblue                      = table.getEntry("botpose_wpiblue");
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_TX                     = 0;
+    private static final int           BOTPOSE_INDEX_TX                     = 0;
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_TY                     = 1;
+    private static final int           BOTPOSE_INDEX_TY                     = 1;
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_TZ                     = 2;
+    private static final int           BOTPOSE_INDEX_TZ                     = 2;
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_R                      = 3;
+    private static final int           BOTPOSE_INDEX_R                      = 3;
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_P                      = 4;
+    private static final int           BOTPOSE_INDEX_P                      = 4;
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_Y                      = 5;
+    private static final int           BOTPOSE_INDEX_Y                      = 5;
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_LATENCY                = 6;
+    private static final int           BOTPOSE_INDEX_LATENCY                = 6;
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_TAGCOUNT               = 7;
+    private static final int           BOTPOSE_INDEX_TAGCOUNT               = 7;
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_TAGSPAN                = 8;
+    private static final int           BOTPOSE_INDEX_TAGSPAN                = 8;
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_AVGDIST                = 9;
+    private static final int           BOTPOSE_INDEX_AVGDIST                = 9;
     @SuppressWarnings("unused")
-    private static final int               BOTPOSE_INDEX_AVGAREA                = 10;
-    private final NetworkTableEntry        tid                                  = table.getEntry("tid");
+    private static final int           BOTPOSE_INDEX_AVGAREA                = 10;
+    private final NetworkTableEntry    tid                                  = table.getEntry("tid");
 
-    private final NetworkTableEntry        priorityId                           = table.getEntry("priorityid");
-
-    private List<Integer>                  activeAprilTagTargets                = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-        13, 14, 15, 16);
-    private static final RectanglePoseArea FIELD_BOUNDARY                       = new RectanglePoseArea(new Translation2d(0, 0),
-        new Translation2d(16.541, 8.211));
-    private final NetworkTable             poseTable                            = NetworkTableInstance.getDefault()
+    private final NetworkTableEntry    priorityId                           = table.getEntry("priorityid");
+    private final NetworkTable         poseTable                            = NetworkTableInstance.getDefault()
         .getTable("LimelightPose");
-    private final DoubleArrayPublisher     limelightPub                         = poseTable.getDoubleArrayTopic("Robot")
+    private final DoubleArrayPublisher limelightPub                         = poseTable.getDoubleArrayTopic("Robot")
         .publish();
 
-    private static class RawFiducial {
-        public int    id;
-        public double txnc;
-        public double tync;
-        public double ta;
-        public double distToCamera;
-        public double distToRobot;
-        public double ambiguity;
-
-        public RawFiducial(int id, double txnc, double tync, double ta, double distToCamera, double distToRobot,
-            double ambiguity) {
-            this.id           = id;
-            this.txnc         = txnc;
-            this.tync         = tync;
-            this.ta           = ta;
-            this.distToCamera = distToCamera;
-            this.distToRobot  = distToRobot;
-            this.ambiguity    = ambiguity;
-        }
-    }
-
-    private static class PoseEstimate {
-        public Pose2d        pose;
-        public double        timestampSeconds;
-        public double        latency;
-        public int           tagCount;
-        public double        tagSpan;
-        public double        avgTagDist;
-        public double        avgTagArea;
-        public RawFiducial[] rawFiducials;
-
-        public PoseEstimate(Pose2d pose, double timestampSeconds, double latency,
-            int tagCount, double tagSpan, double avgTagDist,
-            double avgTagArea, RawFiducial[] rawFiducials) {
-
-            this.pose             = pose;
-            this.timestampSeconds = timestampSeconds;
-            this.latency          = latency;
-            this.tagCount         = tagCount;
-            this.tagSpan          = tagSpan;
-            this.avgTagDist       = avgTagDist;
-            this.avgTagArea       = avgTagArea;
-            this.rawFiducials     = rawFiducials;
-        }
-    }
-
-    public HughLimelightPoseCalculator() {
+    public HughVision() {
         this.pipeline.setNumber(PIPELINE_APRIL_TAG_DETECT);
         this.camMode.setNumber(CAM_MODE_VISION);
     }
@@ -143,11 +84,12 @@ public class HughLimelightPoseCalculator {
     /**
      * Compute the position information using limelight data and the current odometry pose.
      *
-     * @return VisionPositionInfo. Never null, but if the confidence returned is null, this data
-     * should not be used.
+     * @param currentOdometryPose the current odometry pose
+     * @return VisionPositionInfo.
+     * @throws InvalidVisionDataException if the vision data is invalid
      */
-    public VisionPositionInfo getVisionPositionInfo(Pose2d currentOdometryPose) {
-        PoseEstimate       poseEstimate = getBotPoseEstimate();
+    public VisionPositionInfo getVisionPositionInfo(Pose2d currentOdometryPose) throws InvalidVisionDataException {
+        PoseEstimate       poseEstimate = getBotPoseEstimate(botpose_wpiblue);
         VisionPositionInfo visPoseInfo  = calcVisionPositionInfo(poseEstimate, currentOdometryPose);
         updateTelemetry(poseEstimate, visPoseInfo);
         return visPoseInfo;
@@ -158,8 +100,7 @@ public class HughLimelightPoseCalculator {
             publishToField(poseEstimate.pose);
             Telemetry.hugh.poseUpdate     = visPosInfo.confidence() != PoseConfidence.NONE;
             Telemetry.hugh.poseConfidence = visPosInfo.confidence();
-            Telemetry.hugh.priorityId     = getPriorityId();
-            Telemetry.hugh.targetFound    = isCurrentTargetVisible(poseEstimate);
+            Telemetry.hugh.priorityId     = priorityId.getDouble(-1);
             Telemetry.hugh.tid            = tid.getDouble(-1.0);
             Telemetry.hugh.tx             = tx.getDouble(-1.0);
             Telemetry.hugh.ty             = ty.getDouble(-1.0);
@@ -190,34 +131,26 @@ public class HughLimelightPoseCalculator {
         return sb.toString();
     }
 
-    /**
-     * Gets the priority Tag ID
-     *
-     * @return priority tag id. -1 means no priority
-     */
-    private double getPriorityId() {
-        return priorityId.getDouble(-1);
-    }
-
-    private static Pose2d toPose2D(double[] inData) {
+    private static Pose2d toPose2D(double[] inData) throws InvalidVisionDataException {
         if (inData.length < 6) {
-            System.err.println("Bad LL 2D Pose Data!");
-            return new Pose2d();
+            throw new InvalidVisionDataException("Bad LL 2D Pose Data!");
         }
+
         Translation2d tran2d = new Translation2d(inData[0], inData[1]);
         // Add 180deg to rotation because Hugh is on rear of bot
         Rotation2d    r2d    = Rotation2d.fromDegrees((inData[5] + 180) % 360);
         return new Pose2d(tran2d, r2d);
     }
 
-    private static double extractBotPoseEntry(double[] inData, int position) {
+    private static double extractBotPoseEntry(double[] inData, int position) throws InvalidVisionDataException {
         if (inData.length < position + 1) {
-            return 0;
+            throw new InvalidVisionDataException(
+                "Cannot reference position: " + position + " in data array of length: " + inData.length);
         }
         return inData[position];
     }
 
-    private PoseEstimate getBotPoseEstimate() {
+    private static PoseEstimate getBotPoseEstimate(NetworkTableEntry botpose_wpiblue) throws InvalidVisionDataException {
         var           poseArray         = botpose_wpiblue.getDoubleArray(new double[0]);
         var           pose              = toPose2D(poseArray);
         double        latency           = extractBotPoseEntry(poseArray, 6);
@@ -279,7 +212,8 @@ public class HughLimelightPoseCalculator {
         if (poseEstimate.pose.getX() > 0
             && poseEstimate.pose.getY() > 0
             && poseEstimate.rawFiducials.length >= 1
-            && FIELD_BOUNDARY.isPoseWithinArea(poseEstimate.pose)) {
+            && poseEstimate.pose.getX() < Constants.FieldConstants.FIELD_WIDTH_METRES
+            && poseEstimate.pose.getY() < Constants.FieldConstants.FIELD_LENGTH_METRES) {
 
             // Get the "best" tag - assuming the first one is the best - TBD TODO
             RawFiducial rawFiducial = poseEstimate.rawFiducials[0];
@@ -305,9 +239,5 @@ public class HughLimelightPoseCalculator {
         Matrix<N3, N1> deviation = VecBuilder.fill(stdDevRatio, stdDevRatio, 5 * stdDevRatio);
         return new VisionPositionInfo(poseEstimate.pose, poseEstimate.timestampSeconds, deviation, poseConfidence,
             compareDistance);
-    }
-
-    private boolean isCurrentTargetVisible(PoseEstimate poseEstimate) {
-        return Arrays.stream(poseEstimate.rawFiducials).anyMatch(rawFiducial -> activeAprilTagTargets.contains(rawFiducial.id));
     }
 }
