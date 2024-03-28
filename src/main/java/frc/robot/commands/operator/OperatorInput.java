@@ -23,9 +23,7 @@ import frc.robot.commands.auto.Score1AmpAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
 import frc.robot.commands.auto.Score2AmpAutoCommand;
-import frc.robot.commands.auto.Score2SpeakerVisualAutoCommand;
 import frc.robot.commands.auto.Score2_5AmpAutoCommand;
-import frc.robot.commands.auto.Score3SpeakerAutoCommand;
 import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.auto.ScoreLoadedBarnumValjean;
 import frc.robot.commands.auto.ScoreLoadedWolverineBarnumValjean;
@@ -455,9 +453,9 @@ public class OperatorInput {
         case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, arm, lighting, delay);
         case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, jackman, lighting, delay);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, jackman, lighting, delay);
-        case SCORE_2_SPEAKER_VISION -> new Score2SpeakerVisualAutoCommand(drive, arm, jackman, lighting, delay);
-        case SCORE_3_SPEAKER -> new Score3SpeakerAutoCommand(drive, arm, jackman, lighting, delay);
-        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay);
+        case SCORE_2_SPEAKER_VISION -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay, 2);
+        case SCORE_3_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay, 3);
+        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay, 4);
 
         // used in competition
         case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);
