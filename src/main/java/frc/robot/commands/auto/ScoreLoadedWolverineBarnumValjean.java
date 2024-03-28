@@ -34,6 +34,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
             addCommands(
                 new StartIntakeCommand(armSubsystem, lighting)
                     .deadlineWith(new DriveToPositionCommand(swerve, WOLVERINE_PICKUP_BLUE, WOLVERINE_PICKUP_RED, 1.5)));
+            // todo: maybe remove this reverse code
             addCommands(new SimpleDriveRobotOrientedCommand(swerve, -1.0, 0, 0, 0.4));
             addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
             // todo:replace with shoot from anywhere
