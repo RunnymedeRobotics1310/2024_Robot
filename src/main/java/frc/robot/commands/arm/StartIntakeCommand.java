@@ -97,7 +97,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
         case EXTEND_BOTH:
 
             // Start by extending the aim
-            armSubsystem.setLinkPivotSpeed(-9.0);
+            armSubsystem.setLinkPivotSpeed(-.9);
             armSubsystem.setAimPivotSpeed(1);
             armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
 

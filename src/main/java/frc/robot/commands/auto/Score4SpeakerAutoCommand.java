@@ -38,10 +38,11 @@ public class Score4SpeakerAutoCommand extends SequentialCommandGroup {
 
         // wolverine
         if (noteCount > 1) {
-            addCommands(new DriveToPositionCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED));
+            addCommands(new DriveToPositionCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
+                .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
             addCommands(
                 new StartIntakeCommand(armSubsystem, lighting)
-                    .deadlineWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25)));
+                    .deadlineWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 1)));
             // todo: maybe remove this reverse code
             addCommands(new SimpleDriveRobotOrientedCommand(swerve, -1.0, 0, 0, 0.4));
             addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
@@ -54,7 +55,7 @@ public class Score4SpeakerAutoCommand extends SequentialCommandGroup {
             Command arm   = new CompactCommand(armSubsystem)
                 .andThen(new StartIntakeCommand(armSubsystem, lighting));
             Command drive = new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM)
-                .andThen(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25));
+                .andThen(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 1));
             addCommands(arm.deadlineWith(drive));
 
             addCommands(new DriveToPositionCommand(swerve, BLUE_BARNUM_SHOT, RED_BARNUM_SHOT));
@@ -62,25 +63,22 @@ public class Score4SpeakerAutoCommand extends SequentialCommandGroup {
             addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
                 .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
             // todo:replace with shoot from anywhere
-            addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
-            addCommands(new CompactCommand(armSubsystem));
+            addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting).andThen(new CompactCommand(armSubsystem)));
 
         }
 
         // valjean
         if (noteCount > 3) {
-            Command arm   = new CompactCommand(armSubsystem)
-                .andThen(new StartIntakeCommand(armSubsystem, lighting));
+            Command arm   = new StartIntakeCommand(armSubsystem, lighting);
             Command drive = new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN)
-                .andThen(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 0.25));
+                .andThen(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, 1));
             addCommands(arm.deadlineWith(drive));
 
 
             addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
                 .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
             // todo:replace with shoot from anywhere
-            addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
-            addCommands(new CompactCommand(armSubsystem));
+            addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting).andThen(new CompactCommand(armSubsystem)));
         }
 
         // Exit Zone
