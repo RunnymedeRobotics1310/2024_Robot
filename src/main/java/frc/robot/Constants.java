@@ -336,7 +336,7 @@ public final class Constants {
         public static final Pose2d WOLVERINE_PICKUP_RED           = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + .5,
             RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
 
-        public static final Pose2d PARK_AFTER_VALJEAN_AUTO_BLUE   = new Pose2d(2.5, 7.5, Rotation2d.fromDegrees(0));
+        public static final Pose2d PARK_AFTER_VALJEAN_AUTO_BLUE   = new Pose2d(7.5, 7.5, Rotation2d.fromDegrees(0));
         public static final Pose2d PARK_AFTER_VALJEAN_AUTO_RED    = new Pose2d(9.5, 7.5, Rotation2d.fromDegrees(180));
 
         public static final Pose2d PARK_AFTER_BARNUM_AUTO_BLUE    = new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));

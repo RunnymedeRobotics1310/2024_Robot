@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Robot;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.swervedrive.*;
 import frc.robot.subsystems.ArmSubsystem;
@@ -37,14 +38,23 @@ public class BaseAutoCommand extends SequentialCommandGroup {
     }
 
     protected Command compact() {
+        if (Robot.isSimulation()) {
+            return new WaitCommand(0.5);
+        }
         return new CompactCommand(armSubsystem);
     }
 
     protected Command intake() {
+        if (Robot.isSimulation()) {
+            return new WaitCommand(0.5);
+        }
         return new StartIntakeCommand(armSubsystem, lighting);
     }
 
     protected Command shoot() {
+        if (Robot.isSimulation()) {
+            return new WaitCommand(0.5);
+        }
         return new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting);
     }
 
@@ -69,6 +79,9 @@ public class BaseAutoCommand extends SequentialCommandGroup {
     }
 
     protected Command driveToNote(double spd) {
+        if (Robot.isSimulation()) {
+            return new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.25);
+        }
         return new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, spd);
     }
 
