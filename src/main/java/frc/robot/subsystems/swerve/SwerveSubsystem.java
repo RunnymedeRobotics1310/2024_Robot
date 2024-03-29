@@ -1,8 +1,11 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.Constants.LightingConstants.VISPOSE1;
+import static frc.robot.Constants.LightingConstants.VISPOSE2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATION_ACCELERATION_RAD_PER_SEC2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_ACCELERATION_MPS2;
 import static frc.robot.RunnymedeUtils.format;
+import static frc.robot.utils.vision.PoseConfidence.NONE;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -16,17 +19,27 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.Constants;
 import frc.robot.subsystems.RunnymedeSubsystemBase;
-import frc.robot.subsystems.vision.PoseConfidence;
-import frc.robot.subsystems.vision.VisionPositionInfo;
+import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceHigh;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceLow;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceMedium;
+import frc.robot.subsystems.lighting.pattern.VisionConfidenceNone;
+import frc.robot.utils.vision.PoseConfidence;
+import frc.robot.utils.vision.InvalidVisionDataException;
+import frc.robot.utils.vision.VisionPositionInfo;
 import frc.robot.telemetry.Telemetry;
+import frc.robot.utils.vision.HughVision;
 
 public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
-    private final SlewRateLimiter xLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
-    private final SlewRateLimiter yLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
-    private final SlewRateLimiter omegaLimiter = new SlewRateLimiter(MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
+    private final SlewRateLimiter   xLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
+    private final SlewRateLimiter   yLimiter     = new SlewRateLimiter(MAX_TRANSLATION_ACCELERATION_MPS2);
+    private final SlewRateLimiter   omegaLimiter = new SlewRateLimiter(MAX_ROTATION_ACCELERATION_RAD_PER_SEC2);
+    private final HughVision        hugh         = new HughVision();
+    private final LightingSubsystem lighting;
 
-    public SwerveSubsystem() {
+    public SwerveSubsystem(LightingSubsystem lighting) {
+        this.lighting = lighting;
     }
 
     /**
@@ -142,11 +155,43 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
      * Update the field relative position of the robot using vision
      * position data returned from the vision subsystem.
      */
-    public void updateOdometryWithVisionInfo(VisionPositionInfo visPosInfo) {
+    private void updateOdometryWithVisionInfo() {
+
+        Pose2d             odometryPose = getPose();
+        VisionPositionInfo visPosInfo;
+        PoseConfidence     confidence;
+
+        try {
+            visPosInfo = hugh.getVisionPositionInfo(odometryPose);
+            confidence = visPosInfo.confidence();
+        }
+        catch (InvalidVisionDataException e) {
+            visPosInfo = null;
+            confidence = NONE;
+        }
 
         Telemetry.swerve.swerve_vispose = visPosInfo;
-        if (visPosInfo.confidence() != PoseConfidence.NONE) {
+        if (confidence != NONE) {
             addVisionMeasurement(visPosInfo.pose(), visPosInfo.timestampSeconds(), visPosInfo.deviation());
+        }
+
+        switch (confidence) {
+        case HIGH:
+            lighting.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
+            lighting.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
+            break;
+        case MEDIUM:
+            lighting.setPattern(VISPOSE1, VisionConfidenceMedium.getInstance());
+            lighting.setPattern(VISPOSE2, VisionConfidenceMedium.getInstance());
+            break;
+        case LOW:
+            lighting.setPattern(VISPOSE1, VisionConfidenceLow.getInstance());
+            lighting.setPattern(VISPOSE2, VisionConfidenceLow.getInstance());
+            break;
+        case NONE:
+            lighting.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
+            lighting.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
+            break;
         }
     }
 
@@ -167,9 +212,9 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
     public void periodic() {
         super.periodic();
         updateOdometryWithStates();
+        updateOdometryWithVisionInfo();
         updateTelemetry();
-        Pose2d pose = getPose();
-        Telemetry.swerve.swerve_pose = pose;
+        Telemetry.swerve.swerve_pose = getPose();
     }
 
     @Override

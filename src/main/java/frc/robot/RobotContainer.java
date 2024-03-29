@@ -18,7 +18,6 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.swerve.yagsl.YagslSubsystem;
-import frc.robot.subsystems.vision.HughVisionSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 import static frc.robot.Constants.LightingConstants.*;
@@ -42,10 +41,8 @@ public class RobotContainer {
     private final ArmSubsystem           arm           = new ArmSubsystem();
     private final ClimbSubsystem         climb         = new ClimbSubsystem(lighting);
     private final File                   yagslConfig   = new File(Filesystem.getDeployDirectory(), "swerve/neo");
-    private final SwerveSubsystem        drive         = new YagslSubsystem(yagslConfig);
-    private final HughVisionSubsystem    hugh          = new HughVisionSubsystem(drive, lighting);
-//    private final SwerveSubsystem        drive   = new RunnymedeSwerveSubsystem(hughVisionSubsystem,
-//        lightingSubsystem);
+    private final SwerveSubsystem        drive         = new YagslSubsystem(lighting, yagslConfig);
+//    private final SwerveSubsystem        drive   = new RunnymedeSwerveSubsystem(lighting);
 
     private final OperatorInput          operatorInput = new OperatorInput(
         OiConstants.DRIVER_CONTROLLER_PORT, OiConstants.OPERATOR_CONTROLLER_PORT,
