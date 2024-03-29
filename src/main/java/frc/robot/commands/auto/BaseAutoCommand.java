@@ -74,8 +74,8 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN);
     }
 
-    protected Command driveRobotOriented(double x, double y, double omega, double seconds) {
-        return new SimpleDriveRobotOrientedCommand(swerve, x, y, omega, seconds);
+    protected Command driveRobotOriented(double vX, double vY, double omega, double seconds) {
+        return new SimpleDriveRobotOrientedCommand(swerve, vX, vY, omega, seconds);
     }
 
     protected Command driveToNote(double spd) {
