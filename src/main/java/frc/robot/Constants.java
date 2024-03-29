@@ -495,7 +495,8 @@ public final class Constants {
          */
         // aim re-measured Mar 10, 2024 9:30am (was 35, set to 113) - diff - 78
         public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185, 33);
-        public static final ArmPosition CLOSE_TO_COMPACT_ARM_POSITION      = new ArmPosition(189, 45);
+        public static final double      COMPACT_LINK_SLOW_RANGE_DEG        = 5;
+        public static final double      COMPACT_AIM_SLOW_RANGE_DEG         = 10;
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 109);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 105);
@@ -518,7 +519,8 @@ public final class Constants {
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
         public static final double      FAST_AIM_SPEED                     = .7;
-        public static final double      SLOW_AIM_SPEED                     = .1;
+        public static final double      SLOW_AIM_SPEED                     = .2;
+        public static final double      SAFE_AIM_SPEED                     = .1;
         public static final double      FAST_LINK_SPEED                    = .7;
         public static final double      SLOW_LINK_SPEED                    = .2;
 
