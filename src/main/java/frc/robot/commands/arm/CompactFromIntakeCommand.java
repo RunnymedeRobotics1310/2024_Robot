@@ -141,7 +141,7 @@ public class CompactFromIntakeCommand extends ArmBaseCommand {
      * @param reason Reason for the transition for logging
      */
     private void setStateAndLog(CompactFromIntakeCommand.State newState, String reason) {
-        logStateTransition(newState.name(), reason, true);
+        logStateTransition(newState.name(), reason, false);
         state = newState;
     }
 
