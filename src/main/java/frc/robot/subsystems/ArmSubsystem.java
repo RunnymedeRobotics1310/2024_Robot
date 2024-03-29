@@ -270,9 +270,11 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
             .append("Link ").append(getLinkAngle()).append("deg (").append(linkPivotSpeed).append(") ")
             .append(isLinkAtLowerLimit() ? "LINK LOWER LIMIT" : "")
             .append("Aim ").append(getAimAngle()).append("deg (").append(aimPivotSpeed).append(") ")
-            .append("Intake ").append(intakeSpeed).append(", ").append(getIntakeEncoderSpeed()).append(' ')
-            .append("TopShooter ").append(topShooterSpeed).append(", ").append(getBottomShooterEncoderSpeed()).append(' ')
-            .append("BottomShooter ").append(bottomShooterSpeed).append(", ").append(getBottomShooterEncoderSpeed()).append(' ')
+            .append("Intake ").append(intakeSpeed).append(", ").append(String.format("%.2f", getIntakeEncoderSpeed())).append(' ')
+            .append("TopShooter ").append(topShooterSpeed).append(", ")
+            .append(String.format("%.2f", getBottomShooterEncoderSpeed())).append(' ')
+            .append("BottomShooter ").append(bottomShooterSpeed).append(", ")
+            .append(String.format("%.2f", getBottomShooterEncoderSpeed())).append(' ')
             .append("Game Piece ").append(isNoteDetected());
 
         return sb.toString();
@@ -397,25 +399,24 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
          * When getting close to the compact pose and descending into compact pose, slow down the
          * motors to avoid slamming.
          */
-        if (linkAngle <= CLOSE_TO_COMPACT_ARM_POSITION.linkAngle
-            && linkAngle >= COMPACT_ARM_POSITION.linkAngle
-            && totalAngle <= COMPACT_ARM_POSITION.getTotalAngle()) {
-            log(String.format("Compacting safety code activated link: %.2f aim: %.2f total: %.2f", linkAngle, aimAngle,
-                totalAngle));
-            // we are close to compact.
+        double  linkCompactDelta    = linkAngle - COMPACT_ARM_POSITION.linkAngle;
+        double  absLinkCompactDelta = Math.abs(linkCompactDelta);
+        boolean linkClose           = absLinkCompactDelta < COMPACT_LINK_SLOW_RANGE_DEG;
+        double  aimCompactDelta     = aimAngle - COMPACT_ARM_POSITION.aimAngle;
+        double  absAimCompactDelta  = Math.abs(aimCompactDelta);
+        boolean aimClose            = absAimCompactDelta < COMPACT_AIM_SLOW_RANGE_DEG;
+        if (linkClose && aimClose) {
             if (aimPivotSpeed < 0 && Math.abs(aimPivotSpeed) > SLOW_AIM_SPEED) {
-                aimPivotSpeed = -SLOW_AIM_SPEED;
-                log(String.format("Compacting - aim safety mode link: %.2f aim: %.2f total: %.2f", linkAngle, aimAngle,
-                    totalAngle));
+                aimPivotSpeed = -SAFE_AIM_SPEED;
+//                log(String.format("Compacting - aim safety mode link: %.2f aim: %.2f total: %.2f", linkAngle, aimAngle,
+//                    totalAngle));
             }
             if (linkPivotSpeed < 0 && Math.abs(linkPivotSpeed) > SLOW_LINK_SPEED) {
                 linkPivotSpeed = -SLOW_LINK_SPEED;
-                log(String.format("Compacting - link safety mode link: %.2f aim: %.2f total: %.2f", linkAngle, aimAngle,
-                    totalAngle));
+//                log(String.format("Compacting - link safety mode link: %.2f aim: %.2f total: %.2f", linkAngle, aimAngle,
+//                    totalAngle));
             }
         }
-
-
     }
 
     public double getShooterPosition() {
