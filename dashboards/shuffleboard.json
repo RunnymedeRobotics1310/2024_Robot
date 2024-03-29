@@ -100,19 +100,6 @@
               "_showGlyph": false
             }
           },
-          "12,6": {
-            "size": [
-              6,
-              3
-            ],
-            "content": {
-              "_type": "Network Table Tree",
-              "_source0": "network_table:///SmartDashboard/1310/Lighting",
-              "_title": "SmartDashboard/1310/Lighting",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
           "12,2": {
             "size": [
               7,
@@ -186,17 +173,20 @@
               "_showGlyph": false
             }
           },
-          "12,9": {
+          "12,6": {
             "size": [
-              4,
-              2
+              5,
+              5
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/1310/VisionHugh/TargetOffset",
-              "_title": "SmartDashboard/1310/VisionHugh/TargetOffset",
+              "_type": "Field",
+              "_source0": "network_table:///LimelightPose",
+              "_title": "Limelight Pose",
               "_glyph": 148,
-              "_showGlyph": false
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Show Outside Circles": false
             }
           }
         }
@@ -443,7 +433,7 @@
   ],
   "windowGeometry": {
     "x": 12.0,
-    "y": 6.0,
+    "y": 44.0,
     "width": 1904.0,
     "height": 971.0
   }

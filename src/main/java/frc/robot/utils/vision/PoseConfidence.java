@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.utils.vision;
 
 public enum PoseConfidence {
     NONE,

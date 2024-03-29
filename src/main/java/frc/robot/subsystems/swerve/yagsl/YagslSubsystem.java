@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.Constants;
+import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.telemetry.Swerve;
 import frc.robot.telemetry.Telemetry;
@@ -34,8 +35,8 @@ public class YagslSubsystem extends SwerveSubsystem {
      *
      * @param configDirectory Directory of swerve drive config files.
      */
-    public YagslSubsystem(File configDirectory) {
-        super();
+    public YagslSubsystem(LightingSubsystem lighting, File configDirectory) {
+        super(lighting);
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
         Telemetry.swerve.implementation = Swerve.Implementation.YAGSL;

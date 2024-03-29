@@ -66,8 +66,6 @@ public class DriveToNoteCommand extends BaseDriveCommand {
     @Override
     public boolean isFinished() {
 
-        Rotation2d robotRelativeOffset = jackman.getNoteOffset();
-
         if (System.currentTimeMillis() - noteLastSeenTime > 1000) {
             log("note lost, aborting");
             return true;
