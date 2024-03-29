@@ -80,7 +80,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
 
     protected Command driveToNote(double spd) {
         if (Robot.isSimulation()) {
-            return new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.25);
+            return new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.35);
         }
         return new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, spd);
     }
