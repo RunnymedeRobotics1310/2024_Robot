@@ -151,11 +151,14 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
             // Wait for the shooter to get up to speed and the arm to get into position
             if (isStateTimeoutExceeded(shooterSpeed + 0.5) && atArmAngle) {
-                logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed()
-                    + ",DistanceToTarget[" + distanceToTarget + "],DesiredAimAngle[" + aimAngle + "],encoderAimAngle["
-                    + armSubsystem.getAimAngle() + "],encoderLinkAngle[" + armSubsystem.getLinkAngle() + "]"
-                    + ",BottomShooterSpeed[" + armSubsystem.getBottomShooterEncoderSpeed() + "]" + ",TopShooterSpeed["
-                    + armSubsystem.getTopShooterEncoderSpeed() + "]");
+                StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
+                sb.append(" TopShooter ")
+                    .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
+                    .append(" BottomShooter ")
+                    .append(" Link ").append(armSubsystem.getLinkAngle()).append("deg")
+                    .append(" Aim ").append(armSubsystem.getAimAngle()).append("deg")
+                    .append(" DistanceToTarget ").append(distanceToTarget);
+                logStateTransition("Start Shooter -> Shoot", sb.toString());
                 state = State.START_FEEDER;
             }
 
