@@ -195,6 +195,10 @@ public abstract class BaseDriveCommand extends LoggingCommand {
         return Math.abs(delta.getRadians()) <= ROTATION_TOLERANCE.getRadians();
     }
 
+    protected final boolean isCloseEnough(Pose2d desiredPose) {
+        return isCloseEnough(desiredPose.getTranslation()) && isCloseEnough(desiredPose.getRotation());
+    }
+
     /**
      * Compute the heading required to face the specified position on the field.
      * <p>

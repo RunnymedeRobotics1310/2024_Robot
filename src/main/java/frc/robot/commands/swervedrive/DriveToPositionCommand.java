@@ -1,7 +1,6 @@
 package frc.robot.commands.swervedrive;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
@@ -16,8 +15,8 @@ public class DriveToPositionCommand extends BaseDriveCommand {
     private final Pose2d        bluePose;
     private final Pose2d        redPose;
 
-    private Translation2d       location;
-    private Rotation2d          heading;
+    private Pose2d              desiredPose;
+
     private double              speed;
 
     /**
@@ -29,7 +28,7 @@ public class DriveToPositionCommand extends BaseDriveCommand {
         this.redPose      = null;
         this.blueLocation = blueLocation;
         this.redLocation  = redLocation;
-        this.heading      = null;
+        this.desiredPose  = null;
         this.speed        = Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
     }
 
@@ -49,7 +48,7 @@ public class DriveToPositionCommand extends BaseDriveCommand {
         this.redPose      = redPose;
         this.blueLocation = null;
         this.redLocation  = null;
-        this.heading      = null;
+        this.desiredPose  = null;
         this.speed        = speed;
     }
 
@@ -57,31 +56,27 @@ public class DriveToPositionCommand extends BaseDriveCommand {
     public void initialize() {
         if (getRunnymedeAlliance() == DriverStation.Alliance.Blue) {
             if (bluePose == null) {
-                location = blueLocation;
-                heading  = swerve.getPose().getRotation();
+                desiredPose = new Pose2d(blueLocation, swerve.getPose().getRotation());
             }
             else {
-                location = bluePose.getTranslation();
-                heading  = bluePose.getRotation();
+                desiredPose = bluePose;
             }
         }
         else {
             if (redPose == null) {
-                location = redLocation;
-                heading  = swerve.getPose().getRotation();
+                desiredPose = new Pose2d(redLocation, swerve.getPose().getRotation());
             }
             else {
-                location = redPose.getTranslation();
-                heading  = redPose.getRotation();
+                desiredPose = redPose;
             }
         }
-        logCommandStart("desiredPose: " + new Pose2d(location, heading));
+        logCommandStart("desiredPose: " + desiredPose);
     }
 
     @Override
     public void execute() {
         super.execute();
-        driveToFieldPose(new Pose2d(location, heading), speed);
+        driveToFieldPose(desiredPose, speed);
     }
 
     @Override
@@ -92,6 +87,6 @@ public class DriveToPositionCommand extends BaseDriveCommand {
     @Override
     public boolean isFinished() {
         super.isFinished();
-        return isCloseEnough(location) && isCloseEnough(heading);
+        return isCloseEnough(desiredPose);
     }
 }
