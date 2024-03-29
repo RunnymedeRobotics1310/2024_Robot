@@ -44,7 +44,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
         }
         else if (armSubsystem.isLinkAtLowerLimit()) {
             state = State.MOVE_TO_INTAKE;
-            logStateTransition("Start -> Extend Both", "Arm past bumper, aim angle " + armSubsystem.getAimAngle());
+            logStateTransition("Start -> Move to intake", "Link down, aim angle " + armSubsystem.getAimAngle());
         }
         else {
             state = State.EXTEND_BOTH;
@@ -82,11 +82,10 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         case EXTEND_AIM:
 
-            // Start by extending the aim
             armSubsystem.setLinkPivotSpeed(-.4);
-            armSubsystem.setAimPivotSpeed(.4);
+            armSubsystem.setAimPivotSpeed(.4); // Try .2
 
-            // Once the arm has extended by 15 deg, then start a sychro movement
+            // Once the arm has extended by 5 deg, then start a sychro movement
             if (armSubsystem.getAimAngle() > ArmConstants.COMPACT_ARM_POSITION.aimAngle + 5) {
                 logStateTransition("Extend Aim -> Extend Both", "Aim at " + armSubsystem.getAimAngle());
                 state = State.EXTEND_BOTH;
@@ -96,7 +95,6 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         case EXTEND_BOTH:
 
-            // Start by extending the aim
             armSubsystem.setLinkPivotSpeed(-.9);
             armSubsystem.setAimPivotSpeed(1);
             armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
@@ -113,8 +111,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         case MOVE_TO_INTAKE:
 
-            // Start by extending the aim
-            armSubsystem.setLinkPivotSpeed(-.6);
+            armSubsystem.setLinkPivotSpeed(-.6); // try -.4
             armSubsystem.setAimPivotSpeed(-0.3);
             armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
 
