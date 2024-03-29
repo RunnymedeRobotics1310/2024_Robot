@@ -311,29 +311,41 @@ public final class Constants {
 
     public static final class UsefulPoses {
 
-        public static final Pose2d SCORE_BLUE_AMP             = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.8,
+        public static final Pose2d SCORE_BLUE_AMP                 = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.8,
             Rotation2d.fromDegrees(270)));
-        public static final Pose2d SCORE_RED_AMP              = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.8,
+        public static final Pose2d SCORE_RED_AMP                  = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.8,
             Rotation2d.fromDegrees(270)));
 
-        public static final Pose2d START_AT_BLUE_SPEAKER      = new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(),
+        public static final Pose2d START_AT_BLUE_SPEAKER          = new Pose2d(
+            Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(),
             1.6, new Rotation2d());
-        public static final Pose2d START_AT_RED_SPEAKER       = new Pose2d(Constants.BotTarget.RED_SPEAKER.getLocation().getX(),
+        public static final Pose2d START_AT_RED_SPEAKER           = new Pose2d(
+            Constants.BotTarget.RED_SPEAKER.getLocation().getX(),
             FieldConstants.FIELD_WIDTH_METRES - 1.6, new Rotation2d());
 
-        public static final Pose2d BLUE_2_2_20                = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
-        public static final Pose2d RED_2_2_20                 = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
+        public static final Pose2d BLUE_2_2_20                    = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
+        public static final Pose2d RED_2_2_20                     = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
 
-        public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.5,
+        public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE     = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.5,
             BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
-        public static final Pose2d IN_FRONT_OF_WOLVERINE_RED  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + 1.5,
+        public static final Pose2d IN_FRONT_OF_WOLVERINE_RED      = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + 1.5,
             RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
 
-        public static final Pose2d WOLVERINE_PICKUP_BLUE      = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - .5,
+        public static final Pose2d WOLVERINE_PICKUP_BLUE          = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - .5,
             BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
-        public static final Pose2d WOLVERINE_PICKUP_RED       = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + .5,
+        public static final Pose2d WOLVERINE_PICKUP_RED           = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + .5,
             RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
 
+        public static final Pose2d PARK_AFTER_VALJEAN_AUTO_BLUE   = new Pose2d(2.5, 7.5, Rotation2d.fromDegrees(0));
+        public static final Pose2d PARK_AFTER_VALJEAN_AUTO_RED    = new Pose2d(9.5, 7.5, Rotation2d.fromDegrees(180));
+
+        public static final Pose2d PARK_AFTER_BARNUM_AUTO_BLUE    = new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
+        public static final Pose2d PARK_AFTER_BARNUM_AUTO_RED     = new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
+
+        public static final Pose2d AFTER_WOLVERINE_AUTO_BLUE      = new Pose2d(2.7, 2.85, Rotation2d.fromDegrees(0));
+        public static final Pose2d AFTER_WOLVERINE_AUTO_RED       = new Pose2d(14, 2.85, Rotation2d.fromDegrees(180));
+        public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_BLUE = new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
+        public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_RED  = new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
     }
 
     public static final class FieldConstants {
