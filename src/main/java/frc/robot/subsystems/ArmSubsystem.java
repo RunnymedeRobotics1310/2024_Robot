@@ -3,40 +3,49 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.math.geometry.Translation2d;
+import com.revrobotics.REVLibError;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.telemetry.Telemetry;
+
+import java.util.function.Supplier;
 
 import static frc.robot.Constants.ArmConstants.*;
 
 
 public class ArmSubsystem extends RunnymedeSubsystemBase {
-    private final CANSparkMax   linkMotor            = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax        linkMotor                = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   aimMotor             = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax        aimMotor                 = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   intakeMotor          = new CANSparkMax(ArmConstants.INTAKE_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax        intakeMotor              = new CANSparkMax(ArmConstants.INTAKE_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   shooterBottomMotor   = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax        shooterBottomMotor       = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   shooterTopMotor      = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
+    private final CANSparkMax        shooterTopMotor          = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
         MotorType.kBrushless);
-    private final DigitalInput  linkLowerLimitSwitch = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
-    private final DigitalInput  noteDetector         = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
-    private final AnalogInput   linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
-    private final AnalogInput   aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
-    private final DigitalOutput trapRelease          = new DigitalOutput(ArmConstants.TRAP_RELEASE_DIO_PORT);
-    private double              linkPivotSpeed       = 0;
-    private double              aimPivotSpeed        = 0;
-    private double              intakeSpeed          = 0;
-    private double              topShooterSpeed      = 0;
-    private double              bottomShooterSpeed   = 0;
-    private boolean             safetyEnabled        = false;
-    private long                safetyStartTime      = 0;
-    private long                trapReleaseStartTime = 0;
+    private final int                maxSparkMaxConfigRetries = 5;
+    private final RelativeEncoder    intakeEncoder;
+    private final RelativeEncoder    shooterTopEncoder;
+    private final RelativeEncoder    shooterBottomEncoder;
+    private final SparkPIDController intakePid;
+    private final SparkPIDController shooterTopPid;
+    private final SparkPIDController shooterBottomPid;
+    private final DigitalInput       linkLowerLimitSwitch     = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
+    private final DigitalInput       noteDetector             = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
+    private final AnalogInput        linkAbsoluteEncoder      = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private final AnalogInput        aimAbsoluteEncoder       = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private final DigitalOutput      trapRelease              = new DigitalOutput(ArmConstants.TRAP_RELEASE_DIO_PORT);
+    private double                   linkPivotSpeed           = 0;
+    private double                   aimPivotSpeed            = 0;
+    private boolean                  safetyEnabled            = false;
+    private long                     safetyStartTime          = 0;
+    private long                     trapReleaseStartTime     = 0;
 
     public ArmSubsystem() {
 
@@ -46,6 +55,74 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         linkMotor.getEncoder().setPosition(0);
         aimMotor.getEncoder().setPosition(0);
 
+        double intakePositionConversionFactor  = 1; // todo: specify
+        double intakeVelocityConversionFactor  = 1; // todo: specify
+        double shooterPositionConversionFactor = 1; // todo: specify
+        double shooterVelocityConversionFactor = 1; // todo: specify
+
+        configureSparkMax(intakeMotor::restoreFactoryDefaults);
+        configureSparkMax(intakeMotor::clearFaults);
+        intakeEncoder = intakeMotor.getEncoder();
+        configureSparkMax(() -> intakeEncoder.setPositionConversionFactor(intakePositionConversionFactor));
+        configureSparkMax(() -> intakeEncoder.setVelocityConversionFactor(intakeVelocityConversionFactor));
+        intakePid = intakeMotor.getPIDController();
+        intakePid.setFeedbackDevice(intakeEncoder);
+        configurePid(intakePid, 1, 0, 0, 0, 0);
+        burnFlash(intakeMotor);
+
+        configureSparkMax(shooterTopMotor::restoreFactoryDefaults);
+        configureSparkMax(shooterTopMotor::clearFaults);
+        shooterTopEncoder = shooterTopMotor.getEncoder();
+        configureSparkMax(() -> shooterTopEncoder.setPositionConversionFactor(shooterPositionConversionFactor));
+        configureSparkMax(() -> shooterTopEncoder.setVelocityConversionFactor(shooterVelocityConversionFactor));
+        shooterTopPid = shooterTopMotor.getPIDController();
+        shooterTopPid.setFeedbackDevice(shooterTopEncoder);
+        configurePid(shooterTopPid, 1, 0, 0, 0, 0);
+        burnFlash(shooterTopMotor);
+
+        configureSparkMax(shooterBottomMotor::restoreFactoryDefaults);
+        configureSparkMax(shooterBottomMotor::clearFaults);
+        shooterBottomEncoder = shooterBottomMotor.getEncoder();
+        configureSparkMax(() -> shooterBottomEncoder.setPositionConversionFactor(shooterPositionConversionFactor));
+        configureSparkMax(() -> shooterBottomEncoder.setVelocityConversionFactor(shooterVelocityConversionFactor));
+        shooterBottomPid = shooterBottomMotor.getPIDController();
+        shooterBottomPid.setFeedbackDevice(shooterBottomEncoder);
+        configurePid(shooterBottomPid, 1, 0, 0, 0, 0);
+        burnFlash(shooterBottomMotor);
+
+    }
+
+    private void configurePid(SparkPIDController pid, double p, double i, double d, double ff, double iz) {
+        configureSparkMax(() -> pid.setP(p, 0));
+        configureSparkMax(() -> pid.setI(i, 0));
+        configureSparkMax(() -> pid.setD(d, 0));
+        configureSparkMax(() -> pid.setFF(ff, 0));
+        configureSparkMax(() -> pid.setIZone(iz, 0));
+        configureSparkMax(() -> pid.setOutputRange(-1, 1, 0));
+        configureSparkMax(() -> pid.setPositionPIDWrappingEnabled(false));
+    }
+
+    /**
+     * Run the configuration until it succeeds or times out.
+     *
+     * @param config Lambda supplier returning the error state.
+     */
+    private void configureSparkMax(Supplier<REVLibError> config) {
+        for (int i = 0; i < maxSparkMaxConfigRetries; i++) {
+            if (config.get() == REVLibError.kOk) {
+                return;
+            }
+        }
+        DriverStation.reportWarning("Failure configuring motor ", true);
+    }
+
+    private void burnFlash(CANSparkMax motor) {
+        try {
+            Thread.sleep(200);
+        }
+        catch (Exception e) {
+        }
+        configureSparkMax(() -> motor.burnFlash());
     }
 
     private double getAimAbsoluteEncoderVoltage() {
@@ -98,61 +175,29 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         return Math.round(angle * 100) / 100.0d;
     }
 
-    // todo: fixme: specify unit in either javadoc or method name
+    /**
+     * Return the bottom shooter encoder speed in RPM
+     */
     public double getBottomShooterEncoderSpeed() {
-        return shooterBottomMotor.getEncoder().getVelocity();
+        return shooterBottomEncoder.getVelocity();
     }
 
-    // todo: fixme: specify unit in either javadoc or method name
+    /**
+     * Return the top shooter encoder speed in RPM
+     */
     public double getTopShooterEncoderSpeed() {
-        return shooterTopMotor.getEncoder().getVelocity();
+        return shooterTopEncoder.getVelocity();
     }
 
-    // todo: fixme: specify unit in either javadoc or method name
+    /**
+     * Return the intake encoder speed in RPM
+     */
     public double getIntakeEncoderSpeed() {
-        return Math.round(intakeMotor.getEncoder().getVelocity() * 100) / 100.0;
+        return Math.round(intakeEncoder.getVelocity() * 100) / 100.0;
     }
 
     public double getIntakePosition() {
         return intakeMotor.getEncoder().getPosition();
-    }
-
-    // todo: fixme: specify unit in either javadoc or method name
-    // changed to use static link pose and aim from link pose
-    public Translation2d getShooterXY() {
-
-        // calculate angle of bar
-        double       aimMotorAngle = getAimAngle() + 48;
-
-        final double hypM          = 0.20955;
-
-        double       yDifference;
-        double       xDifference;
-        double       shooterX;
-        double       shooterY;
-
-        if (aimMotorAngle > 90) {
-            aimMotorAngle -= 90;
-            yDifference    = hypM * (Math.cos(aimMotorAngle));
-            xDifference    = hypM * (Math.sin(aimMotorAngle));
-            shooterX       = ArmConstants.AIM_X_SHOOTING - xDifference;
-            shooterY       = ArmConstants.AIM_Y_SHOOTING + yDifference;
-        }
-        else if (aimMotorAngle < 90) {
-            aimMotorAngle += 90;
-            yDifference    = hypM * (Math.cos(aimMotorAngle));
-            xDifference    = hypM * (Math.sin(aimMotorAngle));
-            shooterX       = ArmConstants.AIM_X_SHOOTING - xDifference;
-            shooterY       = ArmConstants.AIM_Y_SHOOTING + yDifference;
-
-        }
-        // aimMotorAngle == 90
-        else {
-            shooterX = 0.20955;
-            shooterY = 0;
-        }
-
-        return new Translation2d(shooterX, shooterY);
     }
 
     public boolean isLinkAtLowerLimit() {
@@ -179,15 +224,39 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         this.aimPivotSpeed = speedPct;
     }
 
+    /**
+     * @deprecated use setIntakeRpm instead. This will set the RPM value to the provided number,
+     * which will typically be less than 1 (which is very slow!)
+     */
     public void setIntakeSpeed(double intakeSpeedPct) {
-        this.intakeSpeed = intakeSpeedPct;
+        setIntakeRpm(intakeSpeedPct);
     }
 
+    /**
+     * @deprecated use setShooterRpm instead. This will set the RPM value to the provided number,
+     * which will typically be less than 1 (which is very slow!)
+     */
     public void setShooterSpeed(double topShooterSpeedPct, double bottomShooterSpeedPct) {
-        this.topShooterSpeed    = topShooterSpeedPct;
-        this.bottomShooterSpeed = bottomShooterSpeedPct;
+        setShooterRpm(topShooterSpeedPct, bottomShooterSpeedPct);
     }
 
+    public void setShooterRpm(double shooterRpm) {
+        this.setShooterRpm(shooterRpm, shooterRpm);
+    }
+
+    public void setShooterRpm(double topShooterRpm, double bottomShooterRpm) {
+        shooterTopPid.setReference(topShooterRpm, CANSparkMax.ControlType.kVelocity);
+        shooterBottomPid.setReference(bottomShooterRpm, CANSparkMax.ControlType.kVelocity);
+    }
+
+    public void setIntakeRpm(double intakeRpm) {
+        intakePid.setReference(intakeRpm, CANSparkMax.ControlType.kVelocity);
+    }
+
+    /**
+     * @deprecated use setShooterRpm instead. This will set the RPM value to the provided number,
+     * which will typically be less than 1 (which is very slow!)
+     */
     public void setShooterSpeed(double shooterSpeedPct) {
         this.setShooterSpeed(shooterSpeedPct, shooterSpeedPct);
     }
@@ -195,8 +264,8 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     public void stop() {
         setLinkPivotSpeed(0);
         setAimPivotSpeed(0);
-        setIntakeSpeed(0);
-        setShooterSpeed(0);
+        setIntakeRpm(0);
+        setShooterRpm(0);
     }
 
     @Override
@@ -221,9 +290,6 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         if (!ArmConstants.DISABLE_AIM) {
             aimMotor.set(aimPivotSpeed);
         }
-        intakeMotor.set(intakeSpeed);
-        shooterTopMotor.set(topShooterSpeed);
-        shooterBottomMotor.set(bottomShooterSpeed);
 
         // Latch the arm safety for 2 seconds when a safety condition
         // is activated.
@@ -243,10 +309,10 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         /*
          * Update the SmartDashboard
          */
-        Telemetry.arm.intakeSpeed                = intakeSpeed;
+        Telemetry.arm.intakeSpeed                = intakeEncoder.getVelocity();
         Telemetry.arm.intakeEncoderSpeed         = getIntakeEncoderSpeed();
-        Telemetry.arm.topShooterSpeed            = topShooterSpeed;
-        Telemetry.arm.bottomShooterSpeed         = bottomShooterSpeed;
+        Telemetry.arm.topShooterSpeed            = shooterTopEncoder.getVelocity();
+        Telemetry.arm.bottomShooterSpeed         = shooterBottomEncoder.getVelocity();
         Telemetry.arm.topShooterEncoderSpeed     = getTopShooterEncoderSpeed();
         Telemetry.arm.bottomShooterEncoderSpeed  = getBottomShooterEncoderSpeed();
         Telemetry.arm.linkPivotSpeed             = linkPivotSpeed;
@@ -270,10 +336,11 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
             .append("Link ").append(getLinkAngle()).append("deg (").append(linkPivotSpeed).append(") ")
             .append(isLinkAtLowerLimit() ? "LINK LOWER LIMIT" : "")
             .append("Aim ").append(getAimAngle()).append("deg (").append(aimPivotSpeed).append(") ")
-            .append("Intake ").append(intakeSpeed).append(", ").append(String.format("%.2f", getIntakeEncoderSpeed())).append(' ')
-            .append("TopShooter ").append(topShooterSpeed).append(", ")
-            .append(String.format("%.2f", getBottomShooterEncoderSpeed())).append(' ')
-            .append("BottomShooter ").append(bottomShooterSpeed).append(", ")
+            .append("Intake ")
+            .append(String.format("%.2f", getIntakeEncoderSpeed())).append(' ')
+            .append("TopShooter ")
+            .append(String.format("%.2f", getTopShooterEncoderSpeed())).append(' ')
+            .append("BottomShooter ")
             .append(String.format("%.2f", getBottomShooterEncoderSpeed())).append(' ')
             .append("Game Piece ").append(isNoteDetected());
 
