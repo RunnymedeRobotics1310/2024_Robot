@@ -1,8 +1,6 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -144,22 +142,20 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
             armSubsystem.setIntakeSpeed(0);
 
-            double shooterSpeed;
-            if (distanceToTarget < 4.5) {
-                shooterSpeed = 0.75;
-            }
-            else {
-                shooterSpeed = .95;
-            }
+            double shooterSpeed = 0.85;
+
             armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
             if (isStateTimeoutExceeded(shooterSpeed + 0.5) && atArmAngle) {
-                logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed()
-                    + ",DistanceToTarget[" + distanceToTarget + "],DesiredAimAngle[" + aimAngle + "],encoderAimAngle["
-                    + armSubsystem.getAimAngle() + "],encoderLinkAngle[" + armSubsystem.getLinkAngle() + "]"
-                    + ",BottomShooterSpeed[" + armSubsystem.getBottomShooterEncoderSpeed() + "]" + ",TopShooterSpeed["
-                    + armSubsystem.getTopShooterEncoderSpeed() + "]");
+                StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
+                sb.append(" TopShooter ")
+                    .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
+                    .append(" BottomShooter ")
+                    .append(" Link ").append(armSubsystem.getLinkAngle()).append("deg")
+                    .append(" Aim ").append(armSubsystem.getAimAngle()).append("deg")
+                    .append(" DistanceToTarget ").append(distanceToTarget);
+                logStateTransition("Start Shooter -> Shoot", sb.toString());
                 state = State.START_FEEDER;
             }
 

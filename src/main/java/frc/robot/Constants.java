@@ -329,6 +329,11 @@ public final class Constants {
         public static final Pose2d IN_FRONT_OF_WOLVERINE_RED  = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + 1.5,
             RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
 
+        public static final Pose2d WOLVERINE_PICKUP_BLUE      = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - .5,
+            BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
+        public static final Pose2d WOLVERINE_PICKUP_RED       = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + .5,
+            RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
+
     }
 
     public static final class FieldConstants {
@@ -389,14 +394,23 @@ public final class Constants {
     }
 
     public static final class LightingConstants {
-        public static final int        PWM_PORT     = 9;
-        public static final int        STRIP_LENGTH = 24;
+        public static final int        PWM_PORT                = 9;
+        public static final int        STRIP_LENGTH            = 24;
 
-        public static final Color      NOTE_ORANGE  = new Color(255, 20, 0);
+        /**
+         * The factor by which the brightness of the lights in the workshop should be reduced.
+         * The lighting subsystem checks to see if the FMS is attached. If not, this factor
+         * is applied.
+         *
+         * To disable this feature, set the factor to 1.
+         */
+        public static final double     WORKSHOP_DIMMING_FACTOR = 0.5;
 
-        public static LightstripRegion VISPOSE1     = new LightstripRegion("Vision1", 0, 3);
-        public static LightstripRegion SIGNAL       = new LightstripRegion("Signal", 3, 18);
-        public static LightstripRegion VISPOSE2     = new LightstripRegion("Vision2", 21, VISPOSE1.length);
+        public static final Color      NOTE_ORANGE             = new Color(255, 20, 0);
+
+        public static LightstripRegion VISPOSE1                = new LightstripRegion("Vision1", 0, 3);
+        public static LightstripRegion SIGNAL                  = new LightstripRegion("Signal", 3, 18);
+        public static LightstripRegion VISPOSE2                = new LightstripRegion("Vision2", 21, VISPOSE1.length);
 
     }
 
@@ -418,6 +432,10 @@ public final class Constants {
         public ArmPosition(double linkDegrees, double aimDegrees) {
             this.linkAngle = linkDegrees;
             this.aimAngle  = aimDegrees;
+        }
+
+        public double getTotalAngle() {
+            return this.aimAngle + this.linkAngle;
         }
     }
 
@@ -450,7 +468,7 @@ public final class Constants {
         public static final int         LINK_ABSOLUTE_ENCODER_ANALOG_PORT  = 3;
         // Encoder constants to convert from Volts to Deg
         public static final double      LINK_ABSOLUTE_ENCODER_DEG_PER_VOLT = 49.11;
-        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -62.5;
+        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -62;
 
 
         public static final int         LINK_LOWER_LIMIT_SWITCH_DIO_PORT   = 0;
@@ -461,7 +479,7 @@ public final class Constants {
         // Increasing aim offset by 78 to account for a change that happened on Saturday Mar 9. New
         // measurement added March 10th at 11:20am
         // 73 degree offset on Mar 15.
-        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 11.7;
+        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 14.7;
 
         public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
 
@@ -477,6 +495,8 @@ public final class Constants {
          */
         // aim re-measured Mar 10, 2024 9:30am (was 35, set to 113) - diff - 78
         public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185, 33);
+        public static final double      COMPACT_LINK_SLOW_RANGE_DEG        = 5;
+        public static final double      COMPACT_AIM_SLOW_RANGE_DEG         = 10;
         public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 109);
 
         public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 105);
@@ -487,7 +507,6 @@ public final class Constants {
         // Transition position - above the lock position (arm not caught on stops)
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
-        public static final ArmPosition SHOOT_SPEAKER_ARM_POSITION         = new ArmPosition(180, 90.0); // Unfinished
         public static final ArmPosition SHOOT_SPEAKER_PODIUM_ARM_POSITION  = new ArmPosition(196, 42);
 
         // re-measured Mar 10, 2024 9:30am 2.4% arm (was 108, changed to 186; diff 78)
@@ -500,7 +519,8 @@ public final class Constants {
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
         public static final double      FAST_AIM_SPEED                     = .7;
-        public static final double      SLOW_AIM_SPEED                     = .1;
+        public static final double      SLOW_AIM_SPEED                     = .2;
+        public static final double      SAFE_AIM_SPEED                     = .1;
         public static final double      FAST_LINK_SPEED                    = .7;
         public static final double      SLOW_LINK_SPEED                    = .2;
 

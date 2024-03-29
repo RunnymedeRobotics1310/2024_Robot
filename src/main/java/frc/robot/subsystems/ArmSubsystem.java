@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.telemetry.Telemetry;
 
-import static frc.robot.Constants.ArmConstants.DISABLE_ARM_SAFETY_MODE;
+import static frc.robot.Constants.ArmConstants.*;
 
 
 public class ArmSubsystem extends RunnymedeSubsystemBase {
@@ -270,9 +270,11 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
             .append("Link ").append(getLinkAngle()).append("deg (").append(linkPivotSpeed).append(") ")
             .append(isLinkAtLowerLimit() ? "LINK LOWER LIMIT" : "")
             .append("Aim ").append(getAimAngle()).append("deg (").append(aimPivotSpeed).append(") ")
-            .append("Intake ").append(intakeSpeed).append(", ").append(getIntakeEncoderSpeed()).append(' ')
-            .append("TopShooter ").append(topShooterSpeed).append(", ").append(getBottomShooterEncoderSpeed()).append(' ')
-            .append("BottomShooter ").append(bottomShooterSpeed).append(", ").append(getBottomShooterEncoderSpeed()).append(' ')
+            .append("Intake ").append(intakeSpeed).append(", ").append(String.format("%.2f", getIntakeEncoderSpeed())).append(' ')
+            .append("TopShooter ").append(topShooterSpeed).append(", ")
+            .append(String.format("%.2f", getBottomShooterEncoderSpeed())).append(' ')
+            .append("BottomShooter ").append(bottomShooterSpeed).append(", ")
+            .append(String.format("%.2f", getBottomShooterEncoderSpeed())).append(' ')
             .append("Game Piece ").append(isNoteDetected());
 
         return sb.toString();
@@ -283,6 +285,11 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         if (DISABLE_ARM_SAFETY_MODE) {
             return;
         }
+
+        double linkAngle  = getLinkAngle();
+        double aimAngle   = getAimAngle();
+        double totalAngle = linkAngle + aimAngle;
+
 
         // NOTE: Set safetyEnabled = true if a safety condition
         // is encountered
@@ -296,7 +303,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
          * If the link lower limit switch is active, then stop lowering
          * the link.
          */
-        if (linkPivotSpeed < 0 && (getLinkAngle() <= ArmConstants.LINK_MIN_DEGREES
+        if (linkPivotSpeed < 0 && (linkAngle <= ArmConstants.LINK_MIN_DEGREES
             || isLinkAtLowerLimit())) {
             linkPivotSpeed  = 0;
             safetyEnabled   = true;
@@ -308,7 +315,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
          *
          * The arm never needs to be that high.
          */
-        if (linkPivotSpeed > 0 && getLinkAngle() >= ArmConstants.LINK_MAX_DEGREES) {
+        if (linkPivotSpeed > 0 && linkAngle >= ArmConstants.LINK_MAX_DEGREES) {
             linkPivotSpeed  = 0;
             safetyEnabled   = true;
             safetyStartTime = System.currentTimeMillis();
@@ -322,7 +329,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
          *
          * The aim never needs to be that high.
          */
-        if (aimPivotSpeed > 0 && getAimAngle() >= ArmConstants.AIM_MAX_DEGREES) {
+        if (aimPivotSpeed > 0 && aimAngle >= ArmConstants.AIM_MAX_DEGREES) {
             aimPivotSpeed   = 0;
             safetyEnabled   = true;
             safetyStartTime = System.currentTimeMillis();
@@ -333,7 +340,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
          *
          * The aim never needs to be that low.
          */
-        if (aimPivotSpeed < 0 && getAimAngle() <= ArmConstants.AIM_MIN_DEGREES) {
+        if (aimPivotSpeed < 0 && aimAngle <= ArmConstants.AIM_MIN_DEGREES) {
             aimPivotSpeed   = 0;
             safetyEnabled   = true;
             safetyStartTime = System.currentTimeMillis();
@@ -350,7 +357,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
          * Turn off the motor that is lowering the total arm angle.
          * Allow any positive movements to continue.
          */
-        if (getAimAngle() + getLinkAngle() <= ArmConstants.ARM_MIN_ANGLE_SUM) {
+        if (totalAngle <= ArmConstants.ARM_MIN_ANGLE_SUM) {
             if (aimPivotSpeed < 0) {
                 aimPivotSpeed   = 0;
                 safetyEnabled   = true;
@@ -373,7 +380,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
          * Allow any negative movements to continue.
          */
 
-        if (getAimAngle() + getLinkAngle() >= ArmConstants.ARM_MAX_ANGLE_SUM) {
+        if (totalAngle >= ArmConstants.ARM_MAX_ANGLE_SUM) {
             if (aimPivotSpeed > 0) {
                 aimPivotSpeed   = 0;
                 safetyEnabled   = true;
@@ -383,6 +390,31 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
                 linkPivotSpeed  = 0;
                 safetyEnabled   = true;
                 safetyStartTime = System.currentTimeMillis();
+            }
+        }
+
+        /*
+         * Compact Pose
+         * 
+         * When getting close to the compact pose and descending into compact pose, slow down the
+         * motors to avoid slamming.
+         */
+        double  linkCompactDelta    = linkAngle - COMPACT_ARM_POSITION.linkAngle;
+        double  absLinkCompactDelta = Math.abs(linkCompactDelta);
+        boolean linkClose           = absLinkCompactDelta < COMPACT_LINK_SLOW_RANGE_DEG;
+        double  aimCompactDelta     = aimAngle - COMPACT_ARM_POSITION.aimAngle;
+        double  absAimCompactDelta  = Math.abs(aimCompactDelta);
+        boolean aimClose            = absAimCompactDelta < COMPACT_AIM_SLOW_RANGE_DEG;
+        if (linkClose && aimClose) {
+            if (aimPivotSpeed < 0 && Math.abs(aimPivotSpeed) > SLOW_AIM_SPEED) {
+                aimPivotSpeed = -SAFE_AIM_SPEED;
+//                log(String.format("Compacting - aim safety mode link: %.2f aim: %.2f total: %.2f", linkAngle, aimAngle,
+//                    totalAngle));
+            }
+            if (linkPivotSpeed < 0 && Math.abs(linkPivotSpeed) > SLOW_LINK_SPEED) {
+                linkPivotSpeed = -SLOW_LINK_SPEED;
+//                log(String.format("Compacting - link safety mode link: %.2f aim: %.2f total: %.2f", linkAngle, aimAngle,
+//                    totalAngle));
             }
         }
     }

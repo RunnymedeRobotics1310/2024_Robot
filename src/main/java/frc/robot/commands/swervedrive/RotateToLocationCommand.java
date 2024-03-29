@@ -26,13 +26,8 @@ public class RotateToLocationCommand extends BaseDriveCommand {
 
     @Override
     public void initialize() {
-        super.initialize();
-        if (getRunnymedeAlliance() == DriverStation.Alliance.Blue) {
-            target = blueTarget;
-        }
-        else {
-            target = redTarget;
-        }
+        this.target = getRunnymedeAlliance() == DriverStation.Alliance.Blue ? blueTarget : redTarget;
+        logCommandStart("Target: " + target);
     }
 
     @Override

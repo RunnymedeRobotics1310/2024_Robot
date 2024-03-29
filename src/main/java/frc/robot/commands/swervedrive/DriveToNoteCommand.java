@@ -18,6 +18,8 @@ public class DriveToNoteCommand extends BaseDriveCommand {
     private final ArmSubsystem           arm;
     private final double                 speedMPS;
 
+    private long noteLastSeenTime;
+
 
     public DriveToNoteCommand(SwerveSubsystem drive, LightingSubsystem lighting, ArmSubsystem arm, JackmanVisionSubsystem jackman,
         double speedMPS) {
@@ -34,6 +36,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
     public void initialize() {
         super.initialize();
         lighting.addPattern(SIGNAL, IntakeWithVision.getInstance());
+        noteLastSeenTime = System.currentTimeMillis();
     }
 
 
@@ -45,6 +48,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
         if (robotRelativeOffset != null) {
             double setSpeed = speedMPS;
+            noteLastSeenTime = System.currentTimeMillis();
 
             if (Math.abs(robotRelativeOffset.getDegrees()) > 7) {
                 Rotation2d omega = computeOmegaForOffset(robotRelativeOffset);
@@ -61,15 +65,19 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
     @Override
     public boolean isFinished() {
+
         Rotation2d robotRelativeOffset = jackman.getNoteOffset();
-        if (robotRelativeOffset == null) {
-            log("no note detect, aborting");
+
+        if (System.currentTimeMillis() - noteLastSeenTime > 1000) {
+            log("note lost, aborting");
             return true;
         }
+
         if (arm.isNoteDetected()) {
-            log("note detect, finishing");
+            log("note acquired, finishing");
             return true;
         }
+        
         return false;
     }
 
