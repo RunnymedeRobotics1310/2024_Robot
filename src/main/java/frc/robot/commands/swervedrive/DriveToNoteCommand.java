@@ -18,7 +18,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
     private final ArmSubsystem           arm;
     private final double                 speedMPS;
 
-    private long noteLastSeenTime;
+    private long                         noteLastSeenTime;
 
 
     public DriveToNoteCommand(SwerveSubsystem drive, LightingSubsystem lighting, ArmSubsystem arm, JackmanVisionSubsystem jackman,
@@ -56,7 +56,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
             }
 
-            else {
+            else if (arm.getLinkAngle() <= 120) {
                 swerve.driveRobotOriented(new ChassisSpeeds(setSpeed, 0, 0));
             }
         }
@@ -77,7 +77,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
             log("note acquired, finishing");
             return true;
         }
-        
+
         return false;
     }
 
