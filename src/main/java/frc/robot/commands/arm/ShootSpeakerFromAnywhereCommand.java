@@ -12,6 +12,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+import frc.robot.utils.SpeakerShooterPolynomialAngleCalc;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
@@ -31,7 +32,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
     private State               state               = State.MOVE_TO_UNLOCK;
     double                      intakeStartPosition = 0;
-    long                        shooterStartTime    = 0;
+    private double              lastDistanceToTarget = -1310;
     private Constants.BotTarget botTarget;
 
     NetworkTable                table               = NetworkTableInstance.getDefault().getTable("Testing");
@@ -74,25 +75,22 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         }
     }
 
-    /**
-     * Calculates aim angle based on quadratic equation fit for the following data:
-     * - 1.5 meter distance, angle 40 (by paper measurement, but feels odd. let's try 43)
-     * - 3 meters distance, angle 42
-     * - 5 meters distance, angle 53
-     *
-     * @param distance Distance in meters to target
-     * @return aim angle in degrees
-     */
-    private double calculateAimAngle(double distance) {
-        // Coefficients from the quadratic equation fit
-        double a = 0.85714286;
-        double b = -1.85714286;
-        double c = 40.85714286;
-
-        // Calculate the angle based on the distance
-        return a * Math.pow(distance, 2) + b * distance + c;
+    private double getDistanceToTarget() {
+        Pose2d botPose = swerveSubsystem.getPose();
+        double distanceToTarget = botPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
+        lastDistanceToTarget = distanceToTarget;
+        return distanceToTarget;
     }
 
+    private boolean driveArmToCalculatedAngle() {
+        // Drive to the arm position at the same time
+        double linkAngle = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
+        double distanceToTarget = getDistanceToTarget();
+        double aimAngle = SpeakerShooterPolynomialAngleCalc.calculateAimAngle(distanceToTarget);
+        Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
+
+        return driveToArmPosition(armPositionNew, 2, 2);
+    }
 
     @Override
     public void execute() {
@@ -129,32 +127,22 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         case START_SHOOTER:
 
-            // Drive to the arm position at the same time
-            double linkAngle = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
-
-            Pose2d botPose = swerveSubsystem.getPose();
-            double distanceToTarget = botPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
-            double aimAngle = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
-            Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
-
-            atArmAngle = this.driveToArmPosition(armPositionNew, 2, 2);
-//                ArmConstants.DEFAULT_LINK_TOLERANCE_DEG, ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
-
+            atArmAngle = driveArmToCalculatedAngle();
             armSubsystem.setIntakeSpeed(0);
 
             double shooterSpeed = 0.85;
-
             armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
             if (isStateTimeoutExceeded(shooterSpeed + 0.5) && atArmAngle) {
                 StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
-                sb.append(" TopShooter ")
-                    .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
+                    sb.append(" TopShooter ")
+                    .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
                     .append(" BottomShooter ")
+                    .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
                     .append(" Link ").append(armSubsystem.getLinkAngle()).append("deg")
                     .append(" Aim ").append(armSubsystem.getAimAngle()).append("deg")
-                    .append(" DistanceToTarget ").append(distanceToTarget);
+                    .append(" DistanceToTarget ").append(lastDistanceToTarget);
                 logStateTransition("Start Shooter -> Shoot", sb.toString());
                 state = State.START_FEEDER;
             }
@@ -163,16 +151,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         case START_FEEDER:
 
-            // Continue to drive to the arm position while shooting
-            double linkAngle2 = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
-            Pose2d botPose2 = swerveSubsystem.getPose();
-            double distanceToTarget2 = botPose2.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
-            double aimAngle2 = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
-            Constants.ArmPosition armPositionNew2 = new Constants.ArmPosition(linkAngle2, aimAngle2);
-
-            atArmAngle = this.driveToArmPosition(armPositionNew2, 2, 2);
-//                ArmConstants.DEFAULT_LINK_TOLERANCE_DEG, ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
-
+            driveArmToCalculatedAngle();
             armSubsystem.setIntakeSpeed(1);
 
             if (isStateTimeoutExceeded(.5)) {
