@@ -47,16 +47,16 @@ import frc.robot.telemetry.Telemetry;
  */
 public class OperatorInput {
 
-    private final SwerveSubsystem                                              drive;
-    private final ArmSubsystem                                                 arm;
-    private final LightingSubsystem                                            lighting;
-    private final ClimbSubsystem                                               climb;
-    private final JackmanVisionSubsystem                                       jackman;
-    private final XboxController                                               driverController;
-    private final XboxController                                               operatorController;
+    private final SwerveSubsystem                                      drive;
+    private final ArmSubsystem                                         arm;
+    private final LightingSubsystem                                    lighting;
+    private final ClimbSubsystem                                       climb;
+    private final JackmanVisionSubsystem                               jackman;
+    private final XboxController                                       driverController;
+    private final XboxController                                       operatorController;
 
-    private final SendableChooser<Constants.AutoConstants.AutoPattern>         autoPatternChooser               = new SendableChooser<>();
-    private final SendableChooser<Constants.AutoConstants.Delay>               delayChooser                     = new SendableChooser<>();
+    private final SendableChooser<Constants.AutoConstants.AutoPattern> autoPatternChooser = new SendableChooser<>();
+    private final SendableChooser<Constants.AutoConstants.Delay>       delayChooser       = new SendableChooser<>();
 
     public enum Stick {
         LEFT, RIGHT
@@ -266,9 +266,6 @@ public class OperatorInput {
         new Trigger(() -> operatorController.getBackButton() && operatorController.getYButton())
             .onTrue(new ShootTrapCommand(arm, climb));
 
-        new Trigger(() -> this.isShift() && operatorController.getXButton())
-            .onTrue(new ShootTrapFromFloorCommand(arm, lighting, this));
-
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())
             .onTrue(new ShootSpeakerTestCommand(arm, drive, lighting));
@@ -279,7 +276,7 @@ public class OperatorInput {
 
         // podium shot
         new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
-            .onTrue(new ShootSpeakerFromPodiumCommand(arm, lighting));
+            .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, lighting));
 
         // shoot FIRE
         // IF YOU CHANGE THE BUTTON THIS IS ON, MUST CHANGE THE BUTTON RELEASE
