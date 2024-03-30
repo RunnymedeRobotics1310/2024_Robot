@@ -33,10 +33,9 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     private State               state               = State.MOVE_TO_UNLOCK;
     double                      intakeStartPosition = 0;
     private double              lastDistanceToTarget = -1310;
+    private boolean             tooClose             = false;
     private Constants.BotTarget botTarget;
 
-    NetworkTable                table               = NetworkTableInstance.getDefault().getTable("Testing");
-    NetworkTableEntry           aimAngleNT          = table.getEntry("aimAngle");
 
     public ShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem,
         LightingSubsystem lighting) {
@@ -47,13 +46,29 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
     @Override
     public void initialize() {
-        lighting.addPattern(SIGNAL, Shooting.getInstance());
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
             log("No note detected in robot. AimSpeakerCommand cancelled");
             state = State.FINISHED;
             return;
         }
+
+        if (getRunnymedeAlliance() == DriverStation.Alliance.Blue) {
+            botTarget = Constants.BotTarget.BLUE_SPEAKER;
+        }
+        else {
+            botTarget = Constants.BotTarget.RED_SPEAKER;
+        }
+
+        // Use standard Shoot if we're close enough to the speaker
+        if (getDistanceToTarget() < 1.6) {
+            tooClose = true;
+            CommandScheduler.getInstance().schedule(new ShootCommand(armSubsystem, lighting));
+            state = State.FINISHED;
+            return;
+        }
+
+        lighting.addPattern(SIGNAL, Shooting.getInstance());
 
         logCommandStart();
 
@@ -65,13 +80,6 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         }
 
         intakeStartPosition = armSubsystem.getIntakePosition();
-
-        if (getRunnymedeAlliance() == DriverStation.Alliance.Blue) {
-            botTarget = Constants.BotTarget.BLUE_SPEAKER;
-        }
-        else {
-            botTarget = Constants.BotTarget.RED_SPEAKER;
-        }
     }
 
     private double getDistanceToTarget() {
@@ -179,6 +187,11 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
     @Override
     public void end(boolean interrupted) {
+        // If tooClose, this command did nothing, so bail
+        if (tooClose) {
+            return;
+        }
+
         lighting.removePattern(Shooting.class);
 
         armSubsystem.setAimPivotSpeed(0);
