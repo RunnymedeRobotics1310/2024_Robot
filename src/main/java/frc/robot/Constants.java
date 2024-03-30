@@ -500,7 +500,7 @@ public final class Constants {
         /*
          * ARM PID CONTROLS
          */
-        public static final double      AIM_PID_P                          = 0.02;
+        public static final double      AIM_PID_P                          = 0.03;
 
         /*
          * Key Arm Positions

@@ -95,8 +95,8 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
         case EXTEND_BOTH:
 
-            armSubsystem.setLinkPivotSpeed(-.9);
-            armSubsystem.setAimPivotSpeed(1);
+            armSubsystem.setLinkPivotSpeed(-1);
+            armSubsystem.setAimPivotSpeed(.9);
             armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
 
             // Once the aim has reached the target, then stop the aim.

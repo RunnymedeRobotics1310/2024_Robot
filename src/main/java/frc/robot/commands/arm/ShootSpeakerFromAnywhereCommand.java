@@ -43,7 +43,6 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         super(armSubsystem);
         this.swerveSubsystem = swerveSubsystem;
         this.lighting        = lighting;
-        addRequirements(swerveSubsystem);
     }
 
     @Override
@@ -130,11 +129,11 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             atArmAngle = driveArmToCalculatedAngle();
             armSubsystem.setIntakeSpeed(0);
 
-            double shooterSpeed = 0.85;
+            double shooterSpeed = 0.75;
             armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            if (isStateTimeoutExceeded(shooterSpeed + 0.5) && atArmAngle) {
+            if (isStateTimeoutExceeded(shooterSpeed + 0.25) && atArmAngle) {
                 StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
                     sb.append(" TopShooter ")
                     .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
