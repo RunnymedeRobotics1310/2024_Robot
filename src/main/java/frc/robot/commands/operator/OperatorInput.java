@@ -264,7 +264,7 @@ public class OperatorInput {
 
         // Trap
         new Trigger(() -> this.isShift() && operatorController.getXButton())
-            .onTrue(new ShootTrapFromFloorCommand(arm, lighting, this));
+            .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())

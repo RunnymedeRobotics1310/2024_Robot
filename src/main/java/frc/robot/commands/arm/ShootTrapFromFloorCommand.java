@@ -11,6 +11,7 @@ import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 // Shoot. That's it.
 public class ShootTrapFromFloorCommand extends ArmBaseCommand {
@@ -25,15 +26,17 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
     private double            startIntakePosition = 0;
 
     private OperatorInput     operatorInput;
+    private SwerveSubsystem     swerveSubsystem;
 
     NetworkTable table                       = NetworkTableInstance.getDefault().getTable("Testing");
     NetworkTableEntry bottomMotorSpeed       = table.getEntry("bottomMotorSpeed");
     NetworkTableEntry topMotorSpeed          = table.getEntry("topMotorSpeed");
 
 
-    public ShootTrapFromFloorCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting, OperatorInput operatorInput) {
+    public ShootTrapFromFloorCommand(SwerveSubsystem swerveSubsystem, ArmSubsystem armSubsystem, LightingSubsystem lighting, OperatorInput operatorInput) {
 
         super(armSubsystem);
+        this.swerveSubsystem = swerveSubsystem;
         this.lighting = lighting;
         this.operatorInput = operatorInput;
     }
@@ -60,7 +63,7 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
         case START_SHOOTER:
 
             armSubsystem.setIntakeSpeed(0);
-            armSubsystem.setShooterSpeed(topMotorSpeed.getDouble(0.3), bottomMotorSpeed.getDouble(0.4));
+            armSubsystem.setShooterSpeed(topMotorSpeed.getDouble(0.4), bottomMotorSpeed.getDouble(0.5));
 
             // Wait for the shooter to get up to speed
             if (isStateTimeoutExceeded(.75)) {
@@ -68,7 +71,9 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
                 sb.append(" TopShooter ")
                         .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
                         .append(" BottomShooter ")
-                        .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()));
+                        .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
+                        .append(" BotPose " )
+                        .append(swerveSubsystem.getPose().getTranslation());
                 logStateTransition("Start Shooter -> Shoot", sb.toString());;
                 state = State.START_FEEDER;
             }

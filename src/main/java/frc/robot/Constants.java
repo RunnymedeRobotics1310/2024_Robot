@@ -311,14 +311,14 @@ public final class Constants {
 
     public static final class UsefulPoses {
 
-        public static final Pose2d SCORE_BLUE_AMP                 = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.8,
+        public static final Pose2d SCORE_BLUE_AMP                 = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.65,
             Rotation2d.fromDegrees(270)));
-        public static final Pose2d SCORE_RED_AMP                  = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.8,
+        public static final Pose2d SCORE_RED_AMP                  = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.65,
             Rotation2d.fromDegrees(270)));
 
-        public static final Pose2d PRE_SCORE_BLUE_AMP             = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.0,
+        public static final Pose2d PRE_SCORE_BLUE_AMP             = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 6.9,
             Rotation2d.fromDegrees(270)));
-        public static final Pose2d PRE_SCORE_RED_AMP              = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.0,
+        public static final Pose2d PRE_SCORE_RED_AMP              = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 6.9,
             Rotation2d.fromDegrees(270)));
 
         public static final Pose2d START_AT_BLUE_SPEAKER          = new Pose2d(
