@@ -20,6 +20,8 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
     private long                         noteLastSeenTime;
 
+    private double                       noteTY = 1310;
+
 
     public DriveToNoteCommand(SwerveSubsystem drive, LightingSubsystem lighting, ArmSubsystem arm, JackmanVisionSubsystem jackman,
         double speedMPS) {
@@ -45,6 +47,13 @@ public class DriveToNoteCommand extends BaseDriveCommand {
         super.execute();
 
         Rotation2d robotRelativeOffset = jackman.getNoteOffset();
+        noteTY = jackman.getNoteTY();
+
+        if (arm.isNoteDetected()) {
+            swerve.stop();
+        }
+
+
 
         if (robotRelativeOffset != null) {
             double setSpeed = speedMPS;
@@ -57,7 +66,15 @@ public class DriveToNoteCommand extends BaseDriveCommand {
             }
 
             else if (arm.getLinkAngle() <= 120) {
-                swerve.driveRobotOriented(new ChassisSpeeds(setSpeed, 0, 0));
+                if (noteTY < -15.75) {
+                    swerve.stop();
+                }
+                else if (noteTY < 5) {
+                    swerve.driveRobotOriented(new ChassisSpeeds(1, 0, 0));
+                }
+                else {
+                    swerve.driveRobotOriented(new ChassisSpeeds(2, 0, 0));
+                }
             }
         }
 
@@ -73,7 +90,6 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
         if (arm.isNoteDetected()) {
             log("note acquired, finishing");
-            swerve.stop();
             return true;
         }
 

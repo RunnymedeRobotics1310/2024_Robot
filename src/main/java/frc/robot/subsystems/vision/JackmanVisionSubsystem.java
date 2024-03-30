@@ -117,7 +117,7 @@ public class JackmanVisionSubsystem extends RunnymedeSubsystemBase {
      *
      * @return limelight Y target coordinates
      */
-    private double getTargetY() {
+    public double getNoteTY() {
         return ty.getDouble(-1.0);
     }
 
