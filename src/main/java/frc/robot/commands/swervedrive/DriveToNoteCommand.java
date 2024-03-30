@@ -73,6 +73,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
 
         if (arm.isNoteDetected()) {
             log("note acquired, finishing");
+            swerve.stop();
             return true;
         }
 
