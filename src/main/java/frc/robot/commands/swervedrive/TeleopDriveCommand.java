@@ -43,6 +43,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
     @Override
     public void initialize() {
         super.initialize();
+        headingSetpoint = swerve.getPose().getRotation();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
