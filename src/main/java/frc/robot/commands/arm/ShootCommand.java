@@ -12,10 +12,10 @@ import static frc.robot.Constants.LightingConstants.SIGNAL;
 public class ShootCommand extends ArmBaseCommand {
 
     private enum State {
-        REVERSE_NOTE, START_SHOOTER, START_FEEDER, FINISHED
+        START_SHOOTER, START_FEEDER, FINISHED
     };
 
-    private State             state               = State.REVERSE_NOTE;
+    private State             state               = State.START_SHOOTER;
     private LightingSubsystem lighting;
 
     private double            startIntakePosition = 0;
@@ -29,7 +29,7 @@ public class ShootCommand extends ArmBaseCommand {
     @Override
     public void initialize() {
 
-        state               = State.REVERSE_NOTE;
+        state               = State.START_SHOOTER;
 
         startIntakePosition = armSubsystem.getIntakePosition();
 
@@ -44,19 +44,6 @@ public class ShootCommand extends ArmBaseCommand {
         double shooterSpeed = 0;
 
         switch (state) {
-
-        case REVERSE_NOTE:
-
-            armSubsystem.setShooterSpeed(-0.1);
-            armSubsystem.setIntakeSpeed(-0.3);
-
-            // Reverse the note for a number of rotations
-            if (Math.abs(armSubsystem.getIntakePosition() - startIntakePosition) > 2) {
-                logStateTransition("Reverse -> Start Shooter", "Shooter Reversed");
-                state = State.START_SHOOTER;
-            }
-
-            break;
 
         case START_SHOOTER:
 

@@ -24,7 +24,7 @@ import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
     private enum State {
-        MOVE_TO_UNLOCK, REVERSE_NOTE, START_SHOOTER, START_FEEDER, FINISHED
+        MOVE_TO_UNLOCK, START_SHOOTER, START_FEEDER, FINISHED
     };
 
     private SwerveSubsystem     swerveSubsystem;
@@ -67,13 +67,13 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         // Use standard Shoot if we're close enough to the speaker
         if (getDistanceToTarget() < 1.6) {
             tooClose = true;
-            state = State.REVERSE_NOTE;
+            state = State.START_SHOOTER;
         }
         else if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, 2)) {
             state = State.MOVE_TO_UNLOCK;
         }
         else {
-            state = State.REVERSE_NOTE;
+            state = State.START_SHOOTER;
         }
 
         intakeStartPosition = armSubsystem.getIntakePosition();
@@ -111,19 +111,6 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
             if (isStateTimeoutExceeded(.2)) {
                 logStateTransition("Unlock -> Move To Speaker", "Arm Unlocked");
-                state = State.REVERSE_NOTE;
-            }
-
-            break;
-
-        case REVERSE_NOTE:
-
-            armSubsystem.setShooterSpeed(-0.1);
-            armSubsystem.setIntakeSpeed(-0.3);
-
-            // Reverse the note for a number of rotations
-            if (Math.abs(armSubsystem.getIntakePosition() - intakeStartPosition) > 2) {
-                logStateTransition("Reverse -> Start Shooter", "Shooter Reversed");
                 state = State.START_SHOOTER;
             }
 

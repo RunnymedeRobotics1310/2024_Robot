@@ -13,10 +13,10 @@ import frc.robot.subsystems.lighting.pattern.Shooting;
 public class ShootPrepFireCommand extends ArmBaseCommand {
 
     private enum State {
-        REVERSE_NOTE, START_SHOOTER, WAIT_FOR_IT, START_FEEDER, FINISHED
+        START_SHOOTER, WAIT_FOR_IT, START_FEEDER, FINISHED
     };
 
-    private State             state               = State.REVERSE_NOTE;
+    private State             state               = State.START_SHOOTER;
     private LightingSubsystem lighting;
     private OperatorInput operatorInput;
 
@@ -32,7 +32,7 @@ public class ShootPrepFireCommand extends ArmBaseCommand {
     @Override
     public void initialize() {
 
-        state               = State.REVERSE_NOTE;
+        state               = State.START_SHOOTER;
 
         startIntakePosition = armSubsystem.getIntakePosition();
 
@@ -47,18 +47,6 @@ public class ShootPrepFireCommand extends ArmBaseCommand {
         double shooterSpeed = 0;
 
         switch (state) {
-
-        case REVERSE_NOTE:
-
-            armSubsystem.setShooterSpeed(-0.1);
-            armSubsystem.setIntakeSpeed(-0.3);
-
-            // Reverse the note for a number of rotations
-            if (Math.abs(armSubsystem.getIntakePosition() - startIntakePosition) > 1.5) {
-                setStateAndLog(State.START_SHOOTER, "Shooter Reversed");
-            }
-
-            break;
 
         case START_SHOOTER:
 

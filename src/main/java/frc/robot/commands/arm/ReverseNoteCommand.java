@@ -4,24 +4,26 @@ import static frc.robot.Constants.LightingConstants.SIGNAL;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.LoggingCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
 
 // Shoot. That's it.
-public class ReverseNoteCommand extends ArmBaseCommand {
+public class ReverseNoteCommand extends LoggingCommand {
 
     private enum State {
         ENSURE_INTAKE_STOPPED, REVERSE_NOTE, FINISHED
     };
 
-    private State             state               = State.ENSURE_INTAKE_STOPPED;
+    private State              state               = State.ENSURE_INTAKE_STOPPED;
 
-    private double            intakeStartPosition = 0;
+    private double             intakeStartPosition = 0;
+
+    private final ArmSubsystem armSubsystem;
 
     public ReverseNoteCommand(ArmSubsystem armSubsystem) {
-
-        super(armSubsystem);
+        this.armSubsystem = armSubsystem;
     }
 
     @Override

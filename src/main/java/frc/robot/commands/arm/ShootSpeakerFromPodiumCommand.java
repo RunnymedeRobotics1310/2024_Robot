@@ -16,7 +16,7 @@ import static frc.robot.Constants.LightingConstants.SIGNAL;
 public class ShootSpeakerFromPodiumCommand extends ArmBaseCommand {
 
     private enum State {
-        MOVE_TO_UNLOCK, REVERSE_NOTE, START_SHOOTER, START_FEEDER, FINISHED
+        MOVE_TO_UNLOCK, START_SHOOTER, START_FEEDER, FINISHED
     };
 
     private State             state               = State.MOVE_TO_UNLOCK;
@@ -46,7 +46,7 @@ public class ShootSpeakerFromPodiumCommand extends ArmBaseCommand {
             state = State.MOVE_TO_UNLOCK;
         }
         else {
-            state = State.REVERSE_NOTE;
+            state = State.START_SHOOTER;
         }
 
         intakeStartPosition = armSubsystem.getIntakePosition();
@@ -67,19 +67,6 @@ public class ShootSpeakerFromPodiumCommand extends ArmBaseCommand {
 
             if (isStateTimeoutExceeded(.2)) {
                 logStateTransition("Unlock -> Move To Speaker", "Arm Unlocked");
-                state = State.REVERSE_NOTE;
-            }
-
-            break;
-
-        case REVERSE_NOTE:
-
-            armSubsystem.setShooterSpeed(-0.1);
-            armSubsystem.setIntakeSpeed(-0.3);
-
-            // Reverse the note for a number of rotations
-            if (Math.abs(armSubsystem.getIntakePosition() - intakeStartPosition) > 2) {
-                logStateTransition("Reverse -> Start Shooter", "Shooter Reversed");
                 state = State.START_SHOOTER;
             }
 
