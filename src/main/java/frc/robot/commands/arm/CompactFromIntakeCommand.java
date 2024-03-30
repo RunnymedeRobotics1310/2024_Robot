@@ -20,6 +20,17 @@ public class CompactFromIntakeCommand extends ArmBaseCommand {
         this.tighterTolerance = tighterTolerance;
     }
 
+    /**
+     * Set the state and log the transition
+     *
+     * @param newState State to transition to
+     * @param reason Reason for the transition for logging
+     */
+    private void setStateAndLog(State newState, String reason) {
+        logStateTransition(newState.name(), reason, false);
+        state = newState;
+    }
+
     @Override
     public void initialize() {
 
@@ -69,15 +80,17 @@ public class CompactFromIntakeCommand extends ArmBaseCommand {
             aimSpeed = -.6;
 
             if (armSubsystem.getLinkAngle() > ArmConstants.COMPACT_ARM_POSITION.linkAngle) {
-
+                // It's too far, move the other way slowly
                 if (armSubsystem.getLinkAngle() > ArmConstants.COMPACT_ARM_POSITION.linkAngle + 5) {
                     linkSpeed = -.1;
                 }
+                // Done, At Target
                 else {
                     linkSpeed = 0;
                 }
             }
 
+            // Stop when at target
             if (armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle) {
                 aimSpeed = 0;
             }
@@ -132,17 +145,6 @@ public class CompactFromIntakeCommand extends ArmBaseCommand {
         armSubsystem.stop();
 
         logCommandEnd(interrupted);
-    }
-
-    /**
-     * Set the state and log the transition
-     *
-     * @param newState State to transition to
-     * @param reason Reason for the transition for logging
-     */
-    private void setStateAndLog(CompactFromIntakeCommand.State newState, String reason) {
-        logStateTransition(newState.name(), reason, false);
-        state = newState;
     }
 
 }
