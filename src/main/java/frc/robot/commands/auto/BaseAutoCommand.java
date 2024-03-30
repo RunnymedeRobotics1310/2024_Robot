@@ -44,11 +44,18 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return new CompactCommand(armSubsystem);
     }
 
+    protected Command compactFromIntake() {
+        if (Robot.isSimulation()) {
+            return new WaitCommand(0.5);
+        }
+        return new CompactFromIntakeCommand(armSubsystem, false);
+    }
+
     protected Command intake() {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
-        return new StartIntakeCommand(armSubsystem, lighting).andThen(compact());
+        return new StartIntakeCommand(armSubsystem, lighting).andThen(compactFromIntake());
     }
 
     protected Command shoot() {
@@ -59,7 +66,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
     }
 
     protected Command scoreSpeaker() {
-        return faceSpeaker().andThen(shoot()).andThen(compact());
+        return faceSpeaker().alongWith(shoot()).andThen(compact());
     }
 
     protected Command faceSpeaker() {
