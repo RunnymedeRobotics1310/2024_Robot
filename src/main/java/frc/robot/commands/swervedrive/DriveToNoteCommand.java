@@ -59,14 +59,14 @@ public class DriveToNoteCommand extends BaseDriveCommand {
             double setSpeed = speedMPS;
             noteLastSeenTime = System.currentTimeMillis();
 
-            if (Math.abs(robotRelativeOffset.getDegrees()) > 7) {
+            if (Math.abs(robotRelativeOffset.getDegrees()) > 8) {
                 Rotation2d omega = computeOmegaForOffset(robotRelativeOffset);
                 swerve.driveRobotOriented(new ChassisSpeeds(0, 0, -omega.getRadians()));
 
             }
 
             else if (arm.getLinkAngle() <= 120) {
-                if (noteTY < -15.75) {
+                if (noteTY < -16) {
                     swerve.stop();
                 }
                 else if (noteTY < 5) {
