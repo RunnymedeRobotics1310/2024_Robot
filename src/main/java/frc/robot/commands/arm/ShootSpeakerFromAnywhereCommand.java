@@ -133,7 +133,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            if (isStateTimeoutExceeded(shooterSpeed + 0.25) && atArmAngle) {
+            if (isStateTimeoutExceeded(0.85) && atArmAngle) {
                 StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
                     sb.append(" TopShooter ")
                     .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
