@@ -145,6 +145,9 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             armSubsystem.setIntakeSpeed(0);
 
             double shooterSpeed = 0.75;
+            if (lastDistanceToTarget >= 3) {
+                shooterSpeed = 0.85;
+            }
             armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
