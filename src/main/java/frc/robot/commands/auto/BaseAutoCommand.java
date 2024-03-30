@@ -55,7 +55,8 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
-        return new StartIntakeCommand(armSubsystem, lighting).andThen(compactFromIntake().alongWith(new ReverseNoteCommand(armSubsystem));
+        return new StartIntakeCommand(armSubsystem, lighting)
+            .andThen(compactFromIntake().alongWith(new ReverseNoteCommand(armSubsystem)));
     }
 
     protected Command shoot() {
