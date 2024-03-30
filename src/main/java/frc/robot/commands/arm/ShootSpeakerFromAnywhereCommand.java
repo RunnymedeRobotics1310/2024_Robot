@@ -34,6 +34,8 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     double                      intakeStartPosition = 0;
     private double              lastDistanceToTarget = -1310;
     private boolean             tooClose             = false;
+    private double              shooterStartTime     = 0;
+
     private Constants.BotTarget botTarget;
 
 
@@ -96,6 +98,20 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         return driveToArmPosition(armPositionNew, 2, 2);
     }
 
+    private void setShoooterByDistance(double distance) {
+
+        if (distance >= 3) {
+            armSubsystem.setShooterSpeed(0.85);
+        }
+        else {
+            armSubsystem.setShooterSpeed(0.8);
+        }
+
+        if (shooterStartTime == 0) {
+            shooterStartTime = System.currentTimeMillis();
+        }
+    }
+
     @Override
     public void execute() {
 
@@ -104,6 +120,9 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         switch (state) {
 
         case MOVE_TO_UNLOCK:
+
+            // Start the shooter
+            setShoooterByDistance(getDistanceToTarget());
 
             // Run the link motor back (up) for .15 seconds to unlock the arm
             armSubsystem.setLinkPivotSpeed(.3);
@@ -118,27 +137,22 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         case START_SHOOTER:
 
-            double spinupTime;
+            long spinupTime;
 
             if (!tooClose) {
                 atArmAngle = driveArmToCalculatedAngle();
-                spinupTime = 0.85;
+                spinupTime = 850;
             }
             else {
                 atArmAngle = true;
-                spinupTime = 0.5;
+                spinupTime = 800;
             }
 
             armSubsystem.setIntakeSpeed(0);
-
-            double shooterSpeed = 0.75;
-            if (lastDistanceToTarget >= 3) {
-                shooterSpeed = 0.85;
-            }
-            armSubsystem.setShooterSpeed(shooterSpeed);
+            setShoooterByDistance(lastDistanceToTarget);
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            if (isStateTimeoutExceeded(spinupTime) && atArmAngle) {
+            if (((System.currentTimeMillis()-shooterStartTime) > spinupTime) && atArmAngle) {
                 StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
                     sb.append(" TopShooter ")
                     .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))

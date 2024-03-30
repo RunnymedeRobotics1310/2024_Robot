@@ -23,15 +23,15 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
         }
 
         // wolverine
-//        if (noteCount > 1) {
-//            addCommands(
-//                wait(1.25).andThen(intake())
-//                    .alongWith(
-//                        driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED).andThen(driveToNote(1))));
-//            // todo: maybe remove this reverse code
+        if (noteCount > 1) {
+            addCommands(
+                wait(1.25).andThen(intake())
+                    .alongWith(
+                        driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED).andThen(driveToNote(1))));
+            // todo: maybe remove this reverse code
 //            addCommands(driveRobotOriented(-1.0, 0, 0, 0.4));
-//            addCommands(scoreSpeaker());
-//        }
+            addCommands(scoreSpeaker());
+        }
 
         // barnum
         if (noteCount > 2) {
