@@ -11,13 +11,13 @@ public class CompactFromIntakeCommand extends ArmBaseCommand {
         LIFT_LINK_10_DEG, MOVE_BOTH, LOCK, LOCKED
     };
 
-    private State   state            = State.LIFT_LINK_10_DEG;
+    private State state = State.LIFT_LINK_10_DEG;
 
-    private boolean tighterTolerance = false;
+    public double tolerance;
 
     public CompactFromIntakeCommand(ArmSubsystem armSubsystem, boolean tighterTolerance) {
         super(armSubsystem);
-        this.tighterTolerance = tighterTolerance;
+        this.tolerance = tighterTolerance ? 2 : 4;
     }
 
     /**
@@ -35,8 +35,6 @@ public class CompactFromIntakeCommand extends ArmBaseCommand {
     public void initialize() {
 
         logCommandStart();
-
-        double tolerance = tighterTolerance ? 2 : 4;
 
         // If we are close to the locked position, there is nothing to do.
         if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, tolerance)) {
