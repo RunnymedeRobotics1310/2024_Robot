@@ -56,7 +56,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
             return new WaitCommand(0.5);
         }
         return new StartIntakeCommand(armSubsystem, lighting)
-            .andThen(compactFromIntake().alongWith(new ReverseNoteCommand(armSubsystem)));
+            .andThen(new ReverseNoteCommand(armSubsystem));
     }
 
     protected Command shoot() {
@@ -67,7 +67,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
     }
 
     protected Command scoreSpeaker() {
-        return faceSpeaker().alongWith(shoot()).andThen(compact());
+        return faceSpeaker().andThen(shoot()).andThen(compact());
     }
 
     protected Command faceSpeaker() {

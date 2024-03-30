@@ -27,9 +27,9 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
             addCommands(
                 wait(1.25).andThen(intake())
                     .alongWith(
-                        driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED).andThen(driveToNote(1))));
-            // todo: maybe remove this reverse code
-//            addCommands(driveRobotOriented(-1.0, 0, 0, 0.4));
+                        driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
+                            .andThen(driveToNote(1))
+                            .andThen(faceSpeaker())));
             addCommands(scoreSpeaker());
         }
 
@@ -38,7 +38,9 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
             addCommands(
                 intake()
                     .alongWith(
-                        faceBarnum().andThen(driveToNote(1))));
+                        faceBarnum()
+                            .andThen(driveToNote(1)
+                                .andThen(faceSpeaker()))));
             addCommands(scoreSpeaker());
         }
 
@@ -47,7 +49,9 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
             addCommands(
                 intake()
                     .alongWith(
-                        faceValjean().andThen(driveToNote(1))));
+                        faceValjean()
+                            .andThen(driveToNote(1)
+                                .andThen(faceSpeaker()))));
             addCommands(scoreSpeaker());
         }
 

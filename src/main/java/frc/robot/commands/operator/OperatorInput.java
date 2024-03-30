@@ -263,16 +263,12 @@ public class OperatorInput {
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
         // Trap
-        new Trigger(() -> operatorController.getBackButton() && operatorController.getYButton())
-            .onTrue(new ShootTrapCommand(arm, climb));
+        new Trigger(() -> this.isShift() && operatorController.getXButton())
+            .onTrue(new ShootTrapFromFloorCommand(arm, lighting, this));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())
             .onTrue(new ShootSpeakerTestCommand(arm, drive, lighting));
-
-        // rotate aim shoot
-        new Trigger(() -> !this.isShift() && operatorController.getXButton())
-            .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, lighting));
 
         // podium shot
         new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
