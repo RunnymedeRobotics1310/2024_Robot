@@ -573,11 +573,6 @@ public final class Constants {
          * the ground
          */
         public static final double      MAX_LINK_HOLD                      = 0.02;                       // 0.04;
-
-        public enum TrapShootMotorSpeeds {
-            ZERO_ONE, ZERO_ONE5, ZERO_TWO, ZERO_TWO5, ZERO_THREE, ZERO_THREE5, ZERO_FOUR, ZERO_FOUR5, ZERO_FIVE, ZERO_FIVE5,
-            ZERO_SIX, ZERO_SIX5, ZERO_SEVEN, ZERO_EIGHT, ZERO_NINE, ONE
-        }
     }
 
     public static final class ClimbConstants {

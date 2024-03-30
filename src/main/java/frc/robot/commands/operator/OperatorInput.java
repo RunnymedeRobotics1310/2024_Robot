@@ -57,8 +57,6 @@ public class OperatorInput {
 
     private final SendableChooser<Constants.AutoConstants.AutoPattern>         autoPatternChooser               = new SendableChooser<>();
     private final SendableChooser<Constants.AutoConstants.Delay>               delayChooser                     = new SendableChooser<>();
-    private final SendableChooser<Constants.ArmConstants.TrapShootMotorSpeeds> trapShootTopMotorSpeedChooser    = new SendableChooser<>();
-    private final SendableChooser<Constants.ArmConstants.TrapShootMotorSpeeds> trapShootBottomMotorSpeedChooser = new SendableChooser<>();
 
     public enum Stick {
         LEFT, RIGHT
@@ -356,81 +354,6 @@ public class OperatorInput {
         delayChooser.addOption("2 1/2 Seconds", Constants.AutoConstants.Delay.WAIT_2_5_SECONDS);
         delayChooser.addOption("3 Seconds", Constants.AutoConstants.Delay.WAIT_3_SECONDS);
         delayChooser.addOption("5 Seconds", Constants.AutoConstants.Delay.WAIT_5_SECONDS);
-    }
-
-
-    public void initTrapShooterSpeedSelectors() {
-
-        Telemetry.arm.trapShootTopMotorSpeedChooser = trapShootTopMotorSpeedChooser;
-
-        trapShootTopMotorSpeedChooser.setDefaultOption("0.3", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_THREE);
-
-        trapShootTopMotorSpeedChooser.addOption("0.1", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_ONE);
-        trapShootTopMotorSpeedChooser.addOption("0.15", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_ONE5);
-        trapShootTopMotorSpeedChooser.addOption("0.2", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_TWO);
-        trapShootTopMotorSpeedChooser.addOption("0.25", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_TWO5);
-        trapShootTopMotorSpeedChooser.addOption("0.35", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_THREE5);
-        trapShootTopMotorSpeedChooser.addOption("0.4", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FOUR);
-        trapShootTopMotorSpeedChooser.addOption("0.45", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FOUR5);
-        trapShootTopMotorSpeedChooser.addOption("0.5", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FIVE);
-        trapShootTopMotorSpeedChooser.addOption("0.55", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FIVE5);
-        trapShootTopMotorSpeedChooser.addOption("0.6", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SIX);
-        trapShootTopMotorSpeedChooser.addOption("0.65", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SIX5);
-        trapShootTopMotorSpeedChooser.addOption("0.7", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SEVEN);
-        trapShootTopMotorSpeedChooser.addOption("0.8", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_EIGHT);
-        trapShootTopMotorSpeedChooser.addOption("0.9", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_NINE);
-        trapShootTopMotorSpeedChooser.addOption("1.0", Constants.ArmConstants.TrapShootMotorSpeeds.ONE);
-
-        Telemetry.arm.trapShootBottomMotorSpeedChooser = trapShootBottomMotorSpeedChooser;
-
-        trapShootBottomMotorSpeedChooser.setDefaultOption("0.4", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FOUR);
-
-        trapShootBottomMotorSpeedChooser.addOption("0.1", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_ONE);
-        trapShootBottomMotorSpeedChooser.addOption("0.15", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_ONE5);
-        trapShootBottomMotorSpeedChooser.addOption("0.2", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_TWO);
-        trapShootBottomMotorSpeedChooser.addOption("0.25", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_TWO5);
-        trapShootBottomMotorSpeedChooser.addOption("0.3", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_THREE);
-        trapShootBottomMotorSpeedChooser.addOption("0.35", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_THREE5);
-        trapShootBottomMotorSpeedChooser.addOption("0.45", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FOUR5);
-        trapShootBottomMotorSpeedChooser.addOption("0.5", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FIVE);
-        trapShootBottomMotorSpeedChooser.addOption("0.55", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_FIVE5);
-        trapShootBottomMotorSpeedChooser.addOption("0.6", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SIX);
-        trapShootBottomMotorSpeedChooser.addOption("0.65", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SIX5);
-        trapShootBottomMotorSpeedChooser.addOption("0.7", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_SEVEN);
-        trapShootBottomMotorSpeedChooser.addOption("0.8", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_EIGHT);
-        trapShootBottomMotorSpeedChooser.addOption("0.9", Constants.ArmConstants.TrapShootMotorSpeeds.ZERO_NINE);
-        trapShootBottomMotorSpeedChooser.addOption("1.0", Constants.ArmConstants.TrapShootMotorSpeeds.ONE);
-    }
-
-    private double getTrapShootMotorSpeed(
-        SendableChooser<Constants.ArmConstants.TrapShootMotorSpeeds> trapShootMotorSpeedChooser) {
-
-        return switch (trapShootMotorSpeedChooser.getSelected()) {
-        case ZERO_ONE -> 0.1;
-        case ZERO_ONE5 -> 0.15;
-        case ZERO_TWO -> 0.2;
-        case ZERO_TWO5 -> 0.25;
-        case ZERO_THREE -> 0.3;
-        case ZERO_THREE5 -> 0.35;
-        case ZERO_FOUR -> 0.4;
-        case ZERO_FOUR5 -> 0.45;
-        case ZERO_FIVE -> 0.5;
-        case ZERO_FIVE5 -> 0.55;
-        case ZERO_SIX -> 0.6;
-        case ZERO_SIX5 -> 0.65;
-        case ZERO_SEVEN -> 0.7;
-        case ZERO_EIGHT -> 0.8;
-        case ZERO_NINE -> 0.9;
-        case ONE -> 1;
-        };
-    }
-
-    public double getTrapShootTopMotorSpeed() {
-        return getTrapShootMotorSpeed(trapShootTopMotorSpeedChooser);
-    }
-
-    public double getTrapShootBottomMotorSpeed() {
-        return getTrapShootMotorSpeed(trapShootBottomMotorSpeedChooser);
     }
 
     /**

@@ -23,8 +23,6 @@ public class Arm {
     public boolean noteDetected               = false;
     public boolean safetyEnabled              = false;
     public boolean trapReleased               = false;
-    public Sendable trapShootTopMotorSpeedChooser    = null;
-    public Sendable trapShootBottomMotorSpeedChooser = null;
 
     void post() {
         SmartDashboard.putBoolean(Telemetry.PREFIX + "Arm/Safety", safetyEnabled);
@@ -37,8 +35,6 @@ public class Arm {
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/TopEncoder Speed", topShooterEncoderSpeed);
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/BottomMotor", bottomShooterSpeed);
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Shooter/BottomEncoder Speed", bottomShooterEncoderSpeed);
-        SmartDashboard.putData(Telemetry.PREFIX + "Arm/Shooter/SetTopMotorTrapSpeed", trapShootTopMotorSpeedChooser);
-        SmartDashboard.putData(Telemetry.PREFIX + "Arm/Shooter/SetBottomMotorTrapSpeed", trapShootBottomMotorSpeedChooser);
 
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Link/Speed", linkPivotSpeed);
         SmartDashboard.putNumber(Telemetry.PREFIX + "Arm/Link/Angle", linkAngle);

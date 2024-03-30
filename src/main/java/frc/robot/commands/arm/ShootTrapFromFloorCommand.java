@@ -2,6 +2,9 @@ package frc.robot.commands.arm;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.operator.OperatorInput;
@@ -22,6 +25,11 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
     private double            startIntakePosition = 0;
 
     private OperatorInput     operatorInput;
+
+    NetworkTable table                       = NetworkTableInstance.getDefault().getTable("Testing");
+    NetworkTableEntry bottomMotorSpeed       = table.getEntry("bottomMotorSpeed");
+    NetworkTableEntry topMotorSpeed          = table.getEntry("topMotorSpeed");
+
 
     public ShootTrapFromFloorCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting, OperatorInput operatorInput) {
 
@@ -65,7 +73,7 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
         case START_SHOOTER:
 
             armSubsystem.setIntakeSpeed(0);
-            armSubsystem.setShooterSpeed(operatorInput.getTrapShootTopMotorSpeed(), operatorInput.getTrapShootBottomMotorSpeed());
+            armSubsystem.setShooterSpeed(topMotorSpeed.getDouble(0.3), bottomMotorSpeed.getDouble(0.4));
 
             // Wait for the shooter to get up to speed
             if (isStateTimeoutExceeded(.75)) {
