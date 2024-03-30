@@ -15,9 +15,12 @@ public class CompactCommand extends ArmBaseCommand {
 
     private State state = State.LIFT_LINK_10_DEG;
 
+    public double tolerance;
+
     public CompactCommand(ArmSubsystem armSubsystem) {
 
         super(armSubsystem);
+        this.tolerance = 4;
     }
 
     /**
@@ -37,7 +40,7 @@ public class CompactCommand extends ArmBaseCommand {
         logCommandStart();
 
         // If we are close to the locked position, there is nothing to do.
-        if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, 4)) {
+        if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, tolerance)) {
 
             // if (armSubsystem.getAimAngle() <= ArmConstants.COMPACT_ARM_POSITION.aimAngle
             // && armSubsystem.getLinkAngle() >= ArmConstants.COMPACT_ARM_POSITION.linkAngle) {
@@ -48,7 +51,6 @@ public class CompactCommand extends ArmBaseCommand {
             // }
         }
         else {
-            //
             if (armSubsystem.getLinkAngle() < ArmConstants.LINK_EXTENDED_THRESHOLD) {
                 setStateAndLog(State.LIFT_LINK_10_DEG, "Link is low, lift before adjusting aim");
             }
@@ -109,9 +111,8 @@ public class CompactCommand extends ArmBaseCommand {
             if (armSubsystem.getLinkAngle() > ArmConstants.COMPACT_ARM_POSITION.linkAngle
                 && armSubsystem.getAimAngle() < ArmConstants.COMPACT_ARM_POSITION.aimAngle) {
 
-                logStateTransition("Move Both -> Lock",
-                    "Link" + armSubsystem.getLinkAngle() + ", Aim " + armSubsystem.getAimAngle());
-                setStateAndLog(State.LOCK, "In position, let's lock it");
+                setStateAndLog(State.LOCK,
+                    "In Position - let's lock. Link" + armSubsystem.getLinkAngle() + ", Aim " + armSubsystem.getAimAngle());
             }
             break;
 
