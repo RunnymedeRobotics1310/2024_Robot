@@ -60,19 +60,16 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             botTarget = Constants.BotTarget.RED_SPEAKER;
         }
 
-        // Use standard Shoot if we're close enough to the speaker
-        if (getDistanceToTarget() < 1.6) {
-            tooClose = true;
-            CommandScheduler.getInstance().schedule(new ShootCommand(armSubsystem, lighting));
-            state = State.FINISHED;
-            return;
-        }
-
         lighting.addPattern(SIGNAL, Shooting.getInstance());
 
         logCommandStart();
 
-        if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, 2)) {
+        // Use standard Shoot if we're close enough to the speaker
+        if (getDistanceToTarget() < 1.6) {
+            tooClose = true;
+            state = State.REVERSE_NOTE;
+        }
+        else if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, 2)) {
             state = State.MOVE_TO_UNLOCK;
         }
         else {
@@ -134,14 +131,24 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         case START_SHOOTER:
 
-            atArmAngle = driveArmToCalculatedAngle();
+            double spinupTime;
+
+            if (!tooClose) {
+                atArmAngle = driveArmToCalculatedAngle();
+                spinupTime = 0.85;
+            }
+            else {
+                atArmAngle = true;
+                spinupTime = 0.5;
+            }
+
             armSubsystem.setIntakeSpeed(0);
 
             double shooterSpeed = 0.75;
             armSubsystem.setShooterSpeed(shooterSpeed);
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            if (isStateTimeoutExceeded(0.85) && atArmAngle) {
+            if (isStateTimeoutExceeded(spinupTime) && atArmAngle) {
                 StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
                     sb.append(" TopShooter ")
                     .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
@@ -158,7 +165,9 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         case START_FEEDER:
 
-            driveArmToCalculatedAngle();
+            if (!tooClose) {
+                driveArmToCalculatedAngle();
+            }
             armSubsystem.setIntakeSpeed(1);
 
             if (isStateTimeoutExceeded(.5)) {
@@ -176,22 +185,11 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
     @Override
     public boolean isFinished() {
-
-        if (state == State.FINISHED) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return state == State.FINISHED;
     }
 
     @Override
     public void end(boolean interrupted) {
-        // If tooClose, this command did nothing, so bail
-        if (tooClose) {
-            return;
-        }
-
         lighting.removePattern(Shooting.class);
 
         armSubsystem.setAimPivotSpeed(0);
@@ -206,9 +204,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             if (DriverStation.isTeleop()) {
                 CommandScheduler.getInstance().schedule(new CompactCommand(armSubsystem));
             }
-
         }
-
     }
 
 }
