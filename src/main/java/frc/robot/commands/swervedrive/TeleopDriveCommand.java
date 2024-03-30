@@ -1,13 +1,13 @@
 package frc.robot.commands.swervedrive;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
-import static frc.robot.Constants.ShooterConstants.SPEAKER_SHOT_RANGE_METRES;
 import static frc.robot.Constants.Swerve.Chassis.*;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 import static frc.robot.commands.operator.OperatorInput.Axis.X;
 import static frc.robot.commands.operator.OperatorInput.Axis.Y;
 import static frc.robot.commands.operator.OperatorInput.Stick.LEFT;
 import static frc.robot.commands.operator.OperatorInput.Stick.RIGHT;
+import static frc.robot.utils.SpeakerShooterPolynomialAngleCalc.MAX_DISTANCE;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -163,7 +163,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             omega = computeOmega(headingSetpoint);
         }
 
-        if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < SPEAKER_SHOT_RANGE_METRES) {
+        if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < MAX_DISTANCE) {
             lighting.addPattern(SIGNAL, InShootingRange.getInstance());
         }
         else {

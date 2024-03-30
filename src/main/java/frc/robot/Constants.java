@@ -426,16 +426,6 @@ public final class Constants {
 
     }
 
-    public static final class ShooterConstants {
-        /**
-         * The distance (metres) from which the shooter is likely to shoot and score on the speaker.
-         * It may be possible to shoot from beyond this distance, but it would be with considerably
-         * less reliability.
-         */
-        public static final double SPEAKER_SHOT_RANGE_METRES = 4.0;
-    }
-
-
     public static class ArmPosition {
 
         public final double linkAngle;
