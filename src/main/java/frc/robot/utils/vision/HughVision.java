@@ -212,8 +212,8 @@ public class HughVision {
         if (poseEstimate.pose.getX() > 0
             && poseEstimate.pose.getY() > 0
             && poseEstimate.rawFiducials.length >= 1
-            && poseEstimate.pose.getX() < Constants.FieldConstants.FIELD_WIDTH_METRES
-            && poseEstimate.pose.getY() < Constants.FieldConstants.FIELD_LENGTH_METRES) {
+            && poseEstimate.pose.getX() < Constants.FieldConstants.FIELD_EXTENT_METRES_X
+            && poseEstimate.pose.getY() < Constants.FieldConstants.FIELD_EXTENT_METRES_Y) {
 
             // Get the "best" tag - assuming the first one is the best - TBD TODO
             RawFiducial rawFiducial = poseEstimate.rawFiducials[0];

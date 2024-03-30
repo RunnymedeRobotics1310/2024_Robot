@@ -82,7 +82,7 @@ public final class Constants {
                 .getRadians();
             public static final Rotation2d ROTATION_DECELERATION_DISTANCE                       = Rotation2d.fromDegrees(5);
             public static final Rotation2d ROTATION_TOLERANCE                                   = Rotation2d.fromDegrees(2);
-            public static final double     MAX_ANGULAR_VELOCITY_PCT_CHANGE_PER_CYCLE_FOR_TELEOP = 4.42;
+            public static final double     MAX_ANGULAR_VELOCITY_PCT_CHANGE_PER_CYCLE_FOR_TELEOP = 3;
 
             public static final class HeadingPIDConfig {
                 // 0.4 is a little low but okay
@@ -321,7 +321,7 @@ public final class Constants {
             1.6, new Rotation2d());
         public static final Pose2d START_AT_RED_SPEAKER           = new Pose2d(
             Constants.BotTarget.RED_SPEAKER.getLocation().getX(),
-            FieldConstants.FIELD_WIDTH_METRES - 1.6, new Rotation2d());
+            FieldConstants.FIELD_EXTENT_METRES_Y - 1.6, new Rotation2d());
 
         public static final Pose2d BLUE_2_2_20                    = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
         public static final Pose2d RED_2_2_20                     = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
@@ -349,28 +349,29 @@ public final class Constants {
     }
 
     public static final class FieldConstants {
-        public static final double        FIELD_WIDTH_METRES  = 16.541;
-        public static final double        FIELD_LENGTH_METRES = 8.211;
-        public static final double        WING_LENGTH_METRES  = 5.87;
+
+        public static final double        FIELD_EXTENT_METRES_Y = 8.211;
+        public static final double        FIELD_EXTENT_METRES_X = 16.541;
+        public static final double        WING_LENGTH_METRES    = 5.87;
 
         // Blue Side Notes
-        public static final Translation2d BLUE_WOLVERINE      = new Translation2d(2.9, 4.11);
-        public static final Translation2d BLUE_BARNUM         = new Translation2d(2.9, 5.5);
-        public static final Translation2d BLUE_BARNUM_SHOT    = new Translation2d(3.0, 5.5);
-        public static final Translation2d BLUE_VALJEAN        = new Translation2d(2.9, 7);
+        public static final Translation2d BLUE_WOLVERINE        = new Translation2d(2.9, 4.11);
+        public static final Translation2d BLUE_BARNUM           = new Translation2d(2.9, 5.5);
+        public static final Translation2d BLUE_BARNUM_SHOT      = new Translation2d(3.0, 5.5);
+        public static final Translation2d BLUE_VALJEAN          = new Translation2d(2.9, 7);
 
         // Red Side Notes
-        public static final Translation2d RED_WOLVERINE       = new Translation2d(13.53, 4.11);
-        public static final Translation2d RED_BARNUM          = new Translation2d(13.53, 5.5);
-        public static final Translation2d RED_BARNUM_SHOT     = new Translation2d(13.43, 5.5);
-        public static final Translation2d RED_VALJEAN         = new Translation2d(13.53, 7);
+        public static final Translation2d RED_WOLVERINE         = new Translation2d(13.53, 4.11);
+        public static final Translation2d RED_BARNUM            = new Translation2d(13.53, 5.5);
+        public static final Translation2d RED_BARNUM_SHOT       = new Translation2d(13.43, 5.5);
+        public static final Translation2d RED_VALJEAN           = new Translation2d(13.53, 7);
 
         // Centre Field Notes
-        public static final Translation2d CENTRE_NOTE_1       = new Translation2d(8.16, 0.75);
-        public static final Translation2d CENTRE_NOTE_2       = new Translation2d(8.16, 2.43);
-        public static final Translation2d CENTRE_NOTE_3       = new Translation2d(8.16, 4.11);
-        public static final Translation2d CENTRE_NOTE_4       = new Translation2d(8.16, 5.79);
-        public static final Translation2d CENTRE_NOTE_5       = new Translation2d(8.16, 7.47);
+        public static final Translation2d CENTRE_NOTE_1         = new Translation2d(8.16, 0.75);
+        public static final Translation2d CENTRE_NOTE_2         = new Translation2d(8.16, 2.43);
+        public static final Translation2d CENTRE_NOTE_3         = new Translation2d(8.16, 4.11);
+        public static final Translation2d CENTRE_NOTE_4         = new Translation2d(8.16, 5.79);
+        public static final Translation2d CENTRE_NOTE_5         = new Translation2d(8.16, 7.47);
 
     }
 

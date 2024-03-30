@@ -228,12 +228,12 @@ public class TeleopDriveCommand extends BaseDriveCommand {
     private static Rotation2d getChainHeading(Pose2d pose, Alliance alliance) {
 
         if (alliance == Alliance.Blue) {
-            if (pose.getY() > Constants.FieldConstants.WING_LENGTH_METRES) {
+            if (pose.getX() > Constants.FieldConstants.WING_LENGTH_METRES) {
                 // center stage
                 return Rotation2d.fromDegrees(180);
             }
             else {
-                if (pose.getX() > Constants.FieldConstants.FIELD_WIDTH_METRES / 2) {
+                if (pose.getY() > Constants.FieldConstants.FIELD_EXTENT_METRES_Y / 2) {
                     // stage left
                     return Rotation2d.fromDegrees(-60);
                 }
@@ -244,12 +244,12 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             }
         }
         else {
-            if (pose.getY() < Constants.FieldConstants.FIELD_LENGTH_METRES - Constants.FieldConstants.WING_LENGTH_METRES) {
+            if (pose.getX() < Constants.FieldConstants.FIELD_EXTENT_METRES_X - Constants.FieldConstants.WING_LENGTH_METRES) {
                 // center stage
                 return Rotation2d.fromDegrees(180);
             }
             else {
-                if (pose.getX() < Constants.FieldConstants.FIELD_WIDTH_METRES / 2) {
+                if (pose.getY() < Constants.FieldConstants.FIELD_EXTENT_METRES_Y / 2) {
                     // stage left
                     return Rotation2d.fromDegrees(-60);
                 }
