@@ -10,11 +10,7 @@ import static frc.robot.Constants.FieldConstants.RED_VALJEAN;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.arm.CompactCommand;
-import frc.robot.commands.arm.CompactFromIntakeCommand;
-import frc.robot.commands.arm.ShootCommand;
-import frc.robot.commands.arm.ShootSpeakerFromPodiumCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.DriveToPositionFacingCommand;
 import frc.robot.commands.swervedrive.RotateToLocationCommand;
@@ -44,7 +40,7 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
         addCommands(new DriveToPositionCommand(swerve, BLUE_BARNUM_SHOT, RED_BARNUM_SHOT));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
             .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
-        addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+        addCommands(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
 
         // valjean
         Command arm   = new CompactCommand(armSubsystem)
@@ -56,7 +52,7 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
 
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
             .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
-        addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+        addCommands(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
         addCommands(new CompactCommand(armSubsystem));
 
 

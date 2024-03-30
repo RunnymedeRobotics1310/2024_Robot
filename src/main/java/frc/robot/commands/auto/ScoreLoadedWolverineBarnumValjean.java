@@ -38,7 +38,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
             addCommands(new SimpleDriveRobotOrientedCommand(swerve, -1.0, 0, 0, 0.4));
             addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
             // todo:replace with shoot from anywhere
-            addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+            addCommands(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
         }
 
         // barnum
@@ -54,7 +54,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
             addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
                 .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
             // todo:replace with shoot from anywhere
-            addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+            addCommands(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
             addCommands(new CompactCommand(armSubsystem));
 
         }
@@ -71,7 +71,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
             addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
                 .alongWith(new CompactFromIntakeCommand(armSubsystem, false)));
             // todo:replace with shoot from anywhere
-            addCommands(new ShootSpeakerFromPodiumCommand(armSubsystem, lighting));
+            addCommands(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
             addCommands(new CompactCommand(armSubsystem));
         }
 
