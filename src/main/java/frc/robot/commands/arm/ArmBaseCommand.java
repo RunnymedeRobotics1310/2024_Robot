@@ -381,6 +381,12 @@ public abstract class ArmBaseCommand extends LoggingCommand {
             aimSpeed = calcAimOmega(aimAngleError, aimTolerance);
         }
 
+        // Override the link speed with a PID if in the SLOW Zone
+        // TODO: tune and implement this
+//        if (Math.abs(linkAngleError) <= ArmConstants.SLOW_ARM_ZONE_DEG) {
+//            linkSpeed = calcLinkOmega(linkAngleError, aimTolerance);
+//        }
+
 
         // Adjust the output speeds by compensating for gravity.
         aimSpeed  = aimSpeed + calcAimHold(currentAimAngle, currentLinkAngle);
@@ -489,5 +495,12 @@ public abstract class ArmBaseCommand extends LoggingCommand {
         double kP = ArmConstants.AIM_PID_P;
 
         return aimAngleError * kP;
+    }
+
+    public double calcLinkOmega(double linkAngleError, double tolerance) {
+
+        double kP = ArmConstants.LINK_PID_P;
+
+        return linkAngleError * kP;
     }
 }
