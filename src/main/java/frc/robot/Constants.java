@@ -331,9 +331,9 @@ public final class Constants {
         public static final Pose2d BLUE_2_2_20                    = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
         public static final Pose2d RED_2_2_20                     = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
 
-        public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE     = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.5,
+        public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE     = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.1,
             BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
-        public static final Pose2d IN_FRONT_OF_WOLVERINE_RED      = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + 1.5,
+        public static final Pose2d IN_FRONT_OF_WOLVERINE_RED      = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + 1.1,
             RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
 
         public static final Pose2d WOLVERINE_PICKUP_BLUE          = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - .5,
@@ -497,7 +497,7 @@ public final class Constants {
          * ARM PID CONTROLS
          */
         public static final double      AIM_PID_P                          = 0.025;
-        public static final double      LINK_PID_P                          = 0.025;
+        public static final double      LINK_PID_P                         = 0.025;
 
         /*
          * Key Arm Positions
