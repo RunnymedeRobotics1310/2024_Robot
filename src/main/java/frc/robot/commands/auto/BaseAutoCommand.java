@@ -80,9 +80,16 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return new InstantCommand();
     }
 
+    protected Command reverseNoteCommand() {
+        if (Robot.isSimulation()) {
+            return new WaitCommand(0.5);
+        }
+        return new ReverseNoteCommand(armSubsystem);
+    }
+
     protected Command scoreSpeaker() {
         Command drive   = faceSpeakerCommand();
-        Command prePrep = armToPointBCommand().alongWith(new ReverseNoteCommand(armSubsystem));
+        Command prePrep = armToPointBCommand().alongWith(reverseNoteCommand());
         Command prep    = shootSpeakerPrepCommand();
         Command fire    = fireCommand();
         // todo: uncomment when fixes are implemented
@@ -92,7 +99,10 @@ public class BaseAutoCommand extends SequentialCommandGroup {
 
     protected Command scoreSpeakerBackupPlan() {
         Command drive   = faceSpeakerCommand();
-        Command prePrep = armToPointBCommand().alongWith(new ReverseNoteCommand(armSubsystem));
+        Command prePrep = armToPointBCommand().alongWith(reverseNoteCommand());
+        if (Robot.isSimulation()) {
+            return drive.alongWith(prePrep).andThen(new WaitCommand(0.5));
+        }
         return drive.alongWith(prePrep).andThen(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
     }
 
