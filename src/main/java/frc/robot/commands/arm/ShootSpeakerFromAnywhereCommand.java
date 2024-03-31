@@ -174,7 +174,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             }
             armSubsystem.setIntakeSpeed(1);
 
-            if (isStateTimeoutExceeded(.5)) {
+            if (isStateTimeoutExceeded(.125)) {
                 logStateTransition("Shoot -> Finished", "Shot fired");
                 state = State.FINISHED;
             }
