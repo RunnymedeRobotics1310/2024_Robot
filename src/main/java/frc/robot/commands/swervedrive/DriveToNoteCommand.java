@@ -66,7 +66,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
             }
 
             else if (arm.getLinkAngle() <= 120) {
-                if (noteTY < -16) {
+                if (noteTY < -16.5) {
                     swerve.stop();
                 }
                 else if (noteTY < 5) {
