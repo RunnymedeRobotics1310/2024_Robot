@@ -1,65 +1,30 @@
 package frc.robot.commands.auto;
 
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.BotTarget;
-import frc.robot.commands.arm.AimAmpCommand;
-import frc.robot.commands.arm.ShootCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.swervedrive.DriveToNoteCommand;
-import frc.robot.commands.swervedrive.DriveToPositionCommand;
-import frc.robot.commands.swervedrive.RotateToLocationCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
-import static frc.robot.Constants.FieldConstants.*;
-import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
-import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
-
-public class Score2_5AmpAutoCommand extends SequentialCommandGroup {
+public class Score2_5AmpAutoCommand extends BaseAutoCommand {
 
     public Score2_5AmpAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem, JackmanVisionSubsystem jackman,
         LightingSubsystem lighting, double delay) {
+        super(swerve, armSubsystem, jackman, lighting);
 
-        addCommands(new LogMessageCommand("Starting Auto"));
-        addCommands(new WaitCommand(delay));
-
-        // TODO: replace FaKeScoreAmpCommand
+        addCommands(log("Starting Auto"));
+        addCommands(wait(delay));
 
         /* Note 1 */
-        addCommands(new DriveToPositionCommand(swerve, SCORE_BLUE_AMP, SCORE_RED_AMP));
-        addCommands(new AimAmpCommand(armSubsystem));
-        addCommands(new ShootCommand(armSubsystem, lighting));
+        addCommands(scoreAmp());
 
         /* Note 2 */
-        addCommands(new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN));
-        addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, .5)));
-        addCommands(new DriveToPositionCommand(swerve, SCORE_BLUE_AMP, SCORE_RED_AMP));
-        addCommands(new AimAmpCommand(armSubsystem));
-        addCommands(new ShootCommand(armSubsystem, lighting));
+        addCommands(goGetValjean());
+        addCommands(scoreAmp());
 
         /* Note 3 */
-        addCommands(new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM));
-        addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, .5)));
+        addCommands(goGetBarnum());
+        addCommands(driveToAmp().andThen(aimAmp()));
+        addCommands(log("Auto Complete"));
 
-        /* Exit zone & finish at amp */
-        // addCommands(new DriveToPositionCommand(swerve,
-        // new Pose2d(BotTarget.BLUE_NOTE_VALJEAN.getLocation().toTranslation2d(),
-        // Rotation2d.fromDegrees(90)),
-        // new Pose2d(BotTarget.RED_NOTE_VALJEAN.getLocation().toTranslation2d(),
-        // Rotation2d.fromDegrees(90))));
-        addCommands(new DriveToPositionCommand(swerve,
-            new Pose2d(BotTarget.BLUE_NOTE_BARNUM.getLocation().toTranslation2d(), Rotation2d.fromDegrees(90)),
-            new Pose2d(BotTarget.RED_NOTE_BARNUM.getLocation().toTranslation2d(), Rotation2d.fromDegrees(90))));
-        addCommands(new DriveToPositionCommand(swerve, SCORE_BLUE_AMP, SCORE_RED_AMP));
-        addCommands(new AimAmpCommand(armSubsystem));
-        addCommands(new LogMessageCommand("Auto Complete"));
     }
 }

@@ -123,6 +123,27 @@ public class BaseAutoCommand extends SequentialCommandGroup {
                     .andThen(driveToNote(1)));
     }
 
+    protected Command driveToAmp() {
+        return new DriveToScoreAmpCommand(swerve);
+    }
+
+    protected Command aimAmp() {
+        if (Robot.isSimulation()) {
+            return new WaitCommand(0.5);
+        }
+        return new AimAmpCommand(armSubsystem);
+    }
+
+    protected Command scoreAmp() {
+        if (Robot.isSimulation()) {
+            return driveToAmp().andThen(wait(0.5));
+        }
+        return driveToAmp().andThen(aimAmp()).andThen(shoot()).andThen(compact());
+    }
+
+    /*
+     * SEQUENCES
+     */
     protected void sequenceExitSourceSide() {
         addCommands(driveTo(AFTER_WOLVERINE_AUTO_BLUE, AFTER_WOLVERINE_AUTO_RED));
         addCommands(driveTo(PARK_AFTER_WOLVERINE_AUTO_BLUE, PARK_AFTER_WOLVERINE_AUTO_RED));
@@ -135,4 +156,5 @@ public class BaseAutoCommand extends SequentialCommandGroup {
     protected void sequenceExitAmpSide() {
         addCommands(driveTo(PARK_AFTER_VALJEAN_AUTO_BLUE, PARK_AFTER_VALJEAN_AUTO_RED));
     }
+
 }
