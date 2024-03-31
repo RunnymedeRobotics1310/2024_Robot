@@ -25,7 +25,7 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
         // wolverine
         if (noteCount > 1) {
             addCommands(
-                wait(1.25).andThen(intake())
+                wait(0.25).andThen(intake())
                     .alongWith(
                         driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
                             .andThen(driveToNote(1))
