@@ -19,10 +19,8 @@ import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
-import frc.robot.commands.auto.Score1AmpAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
-import frc.robot.commands.auto.Score2AmpAutoCommand;
 import frc.robot.commands.auto.Score2_5AmpAutoCommand;
 import frc.robot.commands.auto.Score4SpeakerAutoCommand;
 import frc.robot.commands.auto.ScoreLoadedBarnumValjean;
@@ -317,8 +315,6 @@ public class OperatorInput {
         autoPatternChooser.setDefaultOption("Do Nothing", Constants.AutoConstants.AutoPattern.DO_NOTHING);
 
         autoPatternChooser.addOption("Exit Zone", Constants.AutoConstants.AutoPattern.EXIT_ZONE);
-        autoPatternChooser.addOption("1 Amp", Constants.AutoConstants.AutoPattern.SCORE_1_AMP);
-        autoPatternChooser.addOption("2 Amp", Constants.AutoConstants.AutoPattern.SCORE_2_AMP);
         autoPatternChooser.addOption("2.5 Amp", Constants.AutoConstants.AutoPattern.SCORE_2_5_AMP);
 
         autoPatternChooser.addOption("1 Speaker Stay", Constants.AutoConstants.AutoPattern.SCORE_1_SPEAKER_STAY);
@@ -369,8 +365,6 @@ public class OperatorInput {
 
         return switch (autoPatternChooser.getSelected()) {
         // not used
-        case SCORE_1_AMP -> new Score1AmpAutoCommand(drive, arm, lighting, delay);
-        case SCORE_2_AMP -> new Score2AmpAutoCommand(drive, arm, jackman, lighting, delay);
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, jackman, lighting, delay);
         case SCORE_2_SPEAKER_VISION -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay, 2);
         case SCORE_3_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay, 3);
