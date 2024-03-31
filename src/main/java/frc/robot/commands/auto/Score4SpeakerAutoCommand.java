@@ -5,8 +5,6 @@ import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
-import static frc.robot.Constants.UsefulPoses.*;
-
 public class Score4SpeakerAutoCommand extends BaseAutoCommand {
 
     public Score4SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
@@ -24,32 +22,17 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
 
         // wolverine
         if (noteCount > 1) {
-            addCommands(
-                wait(0.25).andThen(intake())
-                    .alongWith(
-                        driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
-                            .andThen(driveToNote(1))));
-            addCommands(scoreSpeaker());
+            sequenceScoreWolverine();
         }
 
         // barnum
         if (noteCount > 2) {
-            addCommands(
-                intake()
-                    .alongWith(
-                        faceBarnum()
-                            .andThen(driveToNote(1))));
-            addCommands(scoreSpeaker());
+            sequenceScoreBarnum();
         }
 
         // valjean
         if (noteCount > 3) {
-            addCommands(
-                intake()
-                    .alongWith(
-                        faceValjean()
-                            .andThen(driveToNote(1))));
-            addCommands(scoreSpeaker());
+            sequenceScoreValjean();
         }
 
         // Exit Zone
@@ -57,14 +40,13 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
         case 0:
         case 1:
         case 2:
-            addCommands(driveTo(AFTER_WOLVERINE_AUTO_BLUE, AFTER_WOLVERINE_AUTO_RED));
-            addCommands(driveTo(PARK_AFTER_WOLVERINE_AUTO_BLUE, PARK_AFTER_WOLVERINE_AUTO_RED));
+            sequenceExitSourceSide();
             break;
         case 3:
-            addCommands(driveTo(PARK_AFTER_BARNUM_AUTO_BLUE, PARK_AFTER_BARNUM_AUTO_RED));
+            sequenceExitMiddle();
             break;
         case 4:
-            addCommands(driveTo(PARK_AFTER_VALJEAN_AUTO_BLUE, PARK_AFTER_VALJEAN_AUTO_RED));
+            sequenceExitAmpSide();
             break;
         default:
             break;

@@ -334,7 +334,7 @@ public final class Constants {
         public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE     = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.1,
             BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
         public static final Pose2d IN_FRONT_OF_WOLVERINE_RED      = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + 1.1,
-            RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
+            RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d().fromDegrees(180));
 
         public static final Pose2d WOLVERINE_PICKUP_BLUE          = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - .5,
             BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());

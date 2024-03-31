@@ -1,6 +1,7 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -13,6 +14,9 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 import static frc.robot.Constants.FieldConstants.*;
+import static frc.robot.Constants.UsefulPoses.*;
+import static frc.robot.Constants.UsefulPoses.PARK_AFTER_WOLVERINE_AUTO_RED;
+import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class BaseAutoCommand extends SequentialCommandGroup {
 
@@ -95,5 +99,45 @@ public class BaseAutoCommand extends SequentialCommandGroup {
 
     protected Command driveTo(Pose2d blue, Pose2d red) {
         return new DriveToPositionCommand(swerve, blue, red);
+    }
+
+    protected void sequenceScoreWolverine() {
+        addCommands(
+            wait(0.25).andThen(intake())
+                .alongWith(
+                    driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
+                        .andThen(driveToNote(1))));
+        addCommands(scoreSpeaker());
+    }
+
+    protected void sequenceScoreBarnum() {
+        addCommands(
+            intake()
+                .alongWith(
+                    faceBarnum()
+                        .andThen(driveToNote(1))));
+        addCommands(scoreSpeaker());
+    }
+
+    protected void sequenceScoreValjean() {
+        addCommands(
+            intake()
+                .alongWith(
+                    faceValjean()
+                        .andThen(driveToNote(1))));
+        addCommands(scoreSpeaker());
+    }
+
+    protected void sequenceExitSourceSide() {
+        addCommands(driveTo(AFTER_WOLVERINE_AUTO_BLUE, AFTER_WOLVERINE_AUTO_RED));
+        addCommands(driveTo(PARK_AFTER_WOLVERINE_AUTO_BLUE, PARK_AFTER_WOLVERINE_AUTO_RED));
+    }
+
+    protected void sequenceExitMiddle() {
+        addCommands(driveTo(PARK_AFTER_BARNUM_AUTO_BLUE, PARK_AFTER_BARNUM_AUTO_RED));
+    }
+
+    protected void sequenceExitAmpSide() {
+        addCommands(driveTo(PARK_AFTER_VALJEAN_AUTO_BLUE, PARK_AFTER_VALJEAN_AUTO_RED));
     }
 }
