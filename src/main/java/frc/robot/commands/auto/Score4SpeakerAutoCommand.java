@@ -28,8 +28,7 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
                 wait(0.25).andThen(intake())
                     .alongWith(
                         driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
-                            .andThen(driveToNote(1))
-                            .andThen(faceSpeaker())));
+                            .andThen(driveToNote(1))));
             addCommands(scoreSpeaker());
         }
 
@@ -39,8 +38,7 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
                 intake()
                     .alongWith(
                         faceBarnum()
-                            .andThen(driveToNote(1)
-                                .andThen(faceSpeaker()))));
+                            .andThen(driveToNote(1))));
             addCommands(scoreSpeaker());
         }
 
@@ -50,8 +48,7 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
                 intake()
                     .alongWith(
                         faceValjean()
-                            .andThen(driveToNote(1)
-                                .andThen(faceSpeaker()))));
+                            .andThen(driveToNote(1))));
             addCommands(scoreSpeaker());
         }
 
