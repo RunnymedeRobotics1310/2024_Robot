@@ -1,10 +1,9 @@
 package frc.robot.commands.arm;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
-import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
-import static frc.robot.utils.SpeakerShooterPolynomialAngleCalc.MIN_DISTANCE;
-
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
@@ -15,6 +14,9 @@ import frc.robot.subsystems.lighting.pattern.Shooting;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.utils.SpeakerShooterPolynomialAngleCalc;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
+
 /**
  * Move arm to speaker shoot pose
  * Set shooter speed (distance based)
@@ -22,21 +24,17 @@ import frc.robot.utils.SpeakerShooterPolynomialAngleCalc;
 public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
     private enum State {
-        START_SHOOTER_UNLOCK_ARM, DRIVE_ARM_TO_POSITION, START_FEEDER, FINISHED
+        MOVE_TO_UNLOCK, START_SHOOTER, START_FEEDER, FINISHED
     };
 
     private SwerveSubsystem     swerveSubsystem;
     private LightingSubsystem   lighting;
 
-    private State               state                = State.START_SHOOTER_UNLOCK_ARM;
-    double                      intakeStartPosition  = 0;
+    private State               state               = State.MOVE_TO_UNLOCK;
+    double                      intakeStartPosition = 0;
     private double              lastDistanceToTarget = -1310;
     private boolean             tooClose             = false;
-    private long                shooterStartTime     = 0;
-    private long                shooterSpinupTime    = 0;
-    private long                armMoveStartTime     = 0;
-    private boolean             armInCompactAtInit   = false;
-
+    private double              shooterStartTime     = 0;
 
     private Constants.BotTarget botTarget;
 
@@ -64,60 +62,42 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             botTarget = Constants.BotTarget.RED_SPEAKER;
         }
 
+        lighting.addPattern(SIGNAL, Shooting.getInstance());
+
+        logCommandStart();
+
         // Use standard Shoot if we're close enough to the speaker
-        if (getDistanceToTarget() < MIN_DISTANCE) {
-            tooClose          = true;
-            shooterSpinupTime = 800;
+        if (getDistanceToTarget() < 1.6) {
+            tooClose = true;
+            state = State.START_SHOOTER;
+        }
+        else if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, 2)) {
+            state = State.MOVE_TO_UNLOCK;
         }
         else {
-            shooterSpinupTime = 850;
+            state = State.START_SHOOTER;
         }
 
-        armInCompactAtInit  = isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, 2);
         intakeStartPosition = armSubsystem.getIntakePosition();
-
-        lighting.addPattern(SIGNAL, Shooting.getInstance());
-        logCommandStart();
     }
 
-    /**
-     * Get the distance to the target from current bot position. Store in class variable for
-     * easy reference.
-     *
-     * @return distance to target in meters
-     */
     private double getDistanceToTarget() {
-        Pose2d botPose          = swerveSubsystem.getPose();
+        Pose2d botPose = swerveSubsystem.getPose();
         double distanceToTarget = botPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
         lastDistanceToTarget = distanceToTarget;
         return distanceToTarget;
     }
 
-    /**
-     * Drive the arm to the calculated angle for the current distance to the target.
-     *
-     * @return if arm is at desired position
-     */
     private boolean driveArmToCalculatedAngle() {
         // Drive to the arm position at the same time
-        double                linkAngle        = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
-        double                distanceToTarget = getDistanceToTarget();
-        double                aimAngle         = SpeakerShooterPolynomialAngleCalc.calculateAimAngle(distanceToTarget);
-        Constants.ArmPosition armPositionNew   = new Constants.ArmPosition(linkAngle, aimAngle);
-
-        if (armMoveStartTime == 0) {
-            armMoveStartTime = System.currentTimeMillis();
-        }
+        double linkAngle = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
+        double distanceToTarget = getDistanceToTarget();
+        double aimAngle = SpeakerShooterPolynomialAngleCalc.calculateAimAngle(distanceToTarget);
+        Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
 
         return driveToArmPosition(armPositionNew, 2, 2);
     }
 
-    /**
-     * Set the shooter speed based on the distance to the target and records the 1st time the
-     * shooter was started.
-     *
-     * @param distance distance to target in meters
-     */
     private void setShoooterByDistance(double distance) {
 
         if (distance >= 3) {
@@ -136,58 +116,52 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     public void execute() {
 
         final boolean atArmAngle;
-        long          now;
 
         switch (state) {
 
-        case START_SHOOTER_UNLOCK_ARM:
+        case MOVE_TO_UNLOCK:
 
             // Start the shooter
             setShoooterByDistance(getDistanceToTarget());
 
-            if (!tooClose && armInCompactAtInit) {
-                // Run the link motor back (up) for .15 seconds to unlock the arm
-                armSubsystem.setLinkPivotSpeed(.3);
-                armSubsystem.setAimPivotSpeed(0);
+            // Run the link motor back (up) for .15 seconds to unlock the arm
+            armSubsystem.setLinkPivotSpeed(.3);
+            armSubsystem.setAimPivotSpeed(0);
 
-                if (isStateTimeoutExceeded(.2)) {
-                    logStateTransition(State.DRIVE_ARM_TO_POSITION.name(), "Shooter Started. Arm Unlocked.");
-                    state = State.DRIVE_ARM_TO_POSITION;
-                }
+            if (isStateTimeoutExceeded(.2)) {
+                logStateTransition("Unlock -> Move To Speaker", "Arm Unlocked");
+                state = State.START_SHOOTER;
             }
-            else {
-                logStateTransition(State.DRIVE_ARM_TO_POSITION.name(), "Shooter Started. Unlocked Already. Move Arm Now");
-                state = State.DRIVE_ARM_TO_POSITION;
-            }
+
             break;
 
-        case DRIVE_ARM_TO_POSITION:
+        case START_SHOOTER:
+
+            long spinupTime;
 
             if (!tooClose) {
                 atArmAngle = driveArmToCalculatedAngle();
+                spinupTime = 850;
             }
             else {
                 atArmAngle = true;
+                spinupTime = 800;
             }
 
-            // Call this again to make sure the shooter is up to speed for the right distance
+            armSubsystem.setIntakeSpeed(0);
             setShoooterByDistance(lastDistanceToTarget);
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            now = System.currentTimeMillis();
-            if ((now - shooterStartTime) >= shooterSpinupTime
-                && (atArmAngle || (now - armMoveStartTime) > 1000)) {
+            if (((System.currentTimeMillis()-shooterStartTime) > spinupTime) && atArmAngle) {
                 StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
-                sb.append(" TopShooter ")
+                    sb.append(" TopShooter ")
                     .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
                     .append(" BottomShooter ")
                     .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
                     .append(" Link ").append(armSubsystem.getLinkAngle()).append("deg")
                     .append(" Aim ").append(armSubsystem.getAimAngle()).append("deg")
-                    .append(" DistanceToTarget ").append(lastDistanceToTarget)
-                    .append(" AtArmAngle ").append(atArmAngle)
-                    .append(" ArmMoveElasped ").append(now - armMoveStartTime);
-                logStateTransition(State.START_FEEDER.name(), sb.toString());
+                    .append(" DistanceToTarget ").append(lastDistanceToTarget);
+                logStateTransition("Start Shooter -> Shoot", sb.toString());
                 state = State.START_FEEDER;
             }
 
@@ -200,8 +174,8 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             }
             armSubsystem.setIntakeSpeed(1);
 
-            if (isStateTimeoutExceeded(.125)) {
-                logStateTransition(State.FINISHED.name(), "Shot fired");
+            if (isStateTimeoutExceeded(.5)) {
+                logStateTransition("Shoot -> Finished", "Shot fired");
                 state = State.FINISHED;
             }
             break;
