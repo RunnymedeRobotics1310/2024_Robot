@@ -137,16 +137,16 @@ public class TeleopDriveCommand extends BaseDriveCommand {
                 desiredHeading                             = Rotation2d.fromDegrees(correctedHeadingDeg);
             }
 
-            omega           = computeOmega(desiredHeading);
+            omega           = swerve.computeOmega(desiredHeading);
             // Save the previous heading for when the jump is done
             headingSetpoint = desiredHeading;
         }
         else if (faceSpeaker) {
             modeForDebug = "Face speaker";
-            Rotation2d desiredHeading = super.getHeadingToFieldPosition(speaker)
+            Rotation2d desiredHeading = swerve.getHeadingToFieldPosition(speaker)
                 .plus(Rotation2d.fromDegrees(180));
 
-            omega           = computeOmega(desiredHeading);
+            omega           = swerve.computeOmega(desiredHeading);
             headingSetpoint = desiredHeading;
             lockOnSpeaker   = true;
         }
@@ -155,16 +155,16 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             // Translating only. Just drive on the last heading we knew.
 
             if (lockOnSpeaker) {
-                headingSetpoint = getHeadingToFieldPosition(speaker).plus(Rotation2d.fromDegrees(180));
+                headingSetpoint = swerve.getHeadingToFieldPosition(speaker).plus(Rotation2d.fromDegrees(180));
             }
             else if (headingSetpoint == null) {
                 headingSetpoint = swerve.getPose().getRotation();
             }
 
-            omega = computeOmega(headingSetpoint);
+            omega = swerve.computeOmega(headingSetpoint);
         }
 
-        if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < MAX_DISTANCE) {
+        if (lockOnSpeaker && Math.abs(swerve.distanceToFieldPosition(speaker)) < MAX_DISTANCE) {
             lighting.addPattern(SIGNAL, InShootingRange.getInstance());
         }
         else {

@@ -1,14 +1,14 @@
 package frc.robot.commands.swervedrive;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.IntakeWithVision;
-import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-
-import static frc.robot.Constants.LightingConstants.SIGNAL;
+import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 
 public class DriveToNoteCommand extends BaseDriveCommand {
@@ -60,7 +60,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
             noteLastSeenTime = System.currentTimeMillis();
 
             if (Math.abs(robotRelativeOffset.getDegrees()) > 8) {
-                Rotation2d omega = computeOmegaForOffset(robotRelativeOffset);
+                Rotation2d omega = swerve.computeOmegaForOffset(robotRelativeOffset);
                 swerve.driveRobotOriented(new ChassisSpeeds(0, 0, -omega.getRadians()));
 
             }

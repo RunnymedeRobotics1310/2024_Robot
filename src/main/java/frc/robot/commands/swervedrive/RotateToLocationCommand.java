@@ -1,11 +1,11 @@
 package frc.robot.commands.swervedrive;
 
+import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-
-import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class RotateToLocationCommand extends BaseDriveCommand {
 
@@ -33,14 +33,14 @@ public class RotateToLocationCommand extends BaseDriveCommand {
     @Override
     public void execute() {
         super.execute();
-        Rotation2d delta = getHeadingToFieldPosition(target);
-        Rotation2d omega = computeOmega(delta);
+        Rotation2d delta = swerve.getHeadingToFieldPosition(target);
+        Rotation2d omega = swerve.computeOmega(delta);
         swerve.driveFieldOriented(new Translation2d(), omega);
     }
 
     @Override
     public boolean isFinished() {
-        Rotation2d delta = getHeadingToFieldPosition(target);
-        return isCloseEnough(delta);
+        Rotation2d delta = swerve.getHeadingToFieldPosition(target);
+        return swerve.isCloseEnough(delta);
     }
 }

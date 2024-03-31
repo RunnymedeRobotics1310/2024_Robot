@@ -1,7 +1,9 @@
 package frc.robot.commands.auto;
 
+import static frc.robot.Constants.FieldConstants.*;
+import static frc.robot.Constants.UsefulPoses.*;
+
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -12,11 +14,6 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
-
-import static frc.robot.Constants.FieldConstants.*;
-import static frc.robot.Constants.UsefulPoses.*;
-import static frc.robot.Constants.UsefulPoses.PARK_AFTER_WOLVERINE_AUTO_RED;
-import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class BaseAutoCommand extends SequentialCommandGroup {
 
@@ -67,11 +64,11 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
-        return new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting);
+        return new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting, true);
     }
 
     protected Command scoreSpeaker() {
-        return faceSpeaker().andThen(shoot()).andThen(compact());
+        return shoot().andThen(compact());
     }
 
     protected Command faceSpeaker() {

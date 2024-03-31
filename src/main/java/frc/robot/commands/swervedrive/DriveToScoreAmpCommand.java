@@ -1,11 +1,11 @@
 package frc.robot.commands.swervedrive;
 
+import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-
-import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class DriveToScoreAmpCommand extends BaseDriveCommand {
 
@@ -34,7 +34,7 @@ public class DriveToScoreAmpCommand extends BaseDriveCommand {
             this.nearby = Constants.UsefulPoses.PRE_SCORE_RED_AMP;
             this.amp    = Constants.UsefulPoses.SCORE_RED_AMP;
         }
-        if (isCloseEnough(nearby)) {
+        if (swerve.isCloseEnough(nearby)) {
             state = State.CLOSE_ALIGNING;
         }
         else {
@@ -48,13 +48,13 @@ public class DriveToScoreAmpCommand extends BaseDriveCommand {
 
         switch (state) {
         case MOVE_NEARBY:
-            driveToFieldPose(nearby, speed);
-            if (isCloseEnough(nearby)) {
+            swerve.driveToFieldPose(nearby, speed);
+            if (swerve.isCloseEnough(nearby)) {
                 state = State.CLOSE_ALIGNING;
             }
             break;
         case CLOSE_ALIGNING:
-            driveToFieldPose(amp, speed / 2);
+            swerve.driveToFieldPose(amp, speed / 2);
             break;
         }
     }
@@ -67,6 +67,6 @@ public class DriveToScoreAmpCommand extends BaseDriveCommand {
     @Override
     public boolean isFinished() {
         super.isFinished();
-        return isCloseEnough(amp);
+        return swerve.isCloseEnough(amp);
     }
 }

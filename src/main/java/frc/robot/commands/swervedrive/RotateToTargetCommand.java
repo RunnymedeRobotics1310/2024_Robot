@@ -67,10 +67,10 @@ public class RotateToTargetCommand extends BaseDriveCommand {
     public void execute() {
         super.execute();
 
-        Rotation2d heading    = super.getHeadingToFieldPosition(target.getLocation().toTranslation2d())
+        Rotation2d heading    = swerve.getHeadingToFieldPosition(target.getLocation().toTranslation2d())
             .plus(Rotation2d.fromDegrees(180 * (forwards ? 0 : 1)));
         Pose2d     targetPose = new Pose2d(swerve.getPose().getTranslation(), heading);
-        driveToFieldPose(targetPose, MAX_TRANSLATION_SPEED_MPS);
+        swerve.driveToFieldPose(targetPose, MAX_TRANSLATION_SPEED_MPS);
     }
 
 
@@ -87,8 +87,8 @@ public class RotateToTargetCommand extends BaseDriveCommand {
 
 
     private boolean isAligned() {
-        Rotation2d heading = super.getHeadingToFieldPosition(target.getLocation().toTranslation2d())
+        Rotation2d heading = swerve.getHeadingToFieldPosition(target.getLocation().toTranslation2d())
             .plus(Rotation2d.fromDegrees(180 * (forwards ? 1 : -1)));
-        return isCloseEnough(heading);
+        return swerve.isCloseEnough(heading);
     }
 }

@@ -1,13 +1,13 @@
 package frc.robot.commands.swervedrive;
 
+import static frc.robot.RunnymedeUtils.format;
+import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-
-import static frc.robot.RunnymedeUtils.format;
-import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class DriveToPositionFacingCommand extends BaseDriveCommand {
 
@@ -58,7 +58,7 @@ public class DriveToPositionFacingCommand extends BaseDriveCommand {
         Pose2d     current  = swerve.getPose();
         Rotation2d heading  = positionToFace.minus(current.getTranslation()).getAngle();
         Pose2d     nextPose = new Pose2d(positionToDriveToward, heading);
-        driveToFieldPose(nextPose, maxSpeedMPS);
+        swerve.driveToFieldPose(nextPose, maxSpeedMPS);
     }
 
     @Override
@@ -69,6 +69,6 @@ public class DriveToPositionFacingCommand extends BaseDriveCommand {
     @Override
     public boolean isFinished() {
         super.isFinished();
-        return isCloseEnough(positionToDriveToward);
+        return swerve.isCloseEnough(positionToDriveToward);
     }
 }
