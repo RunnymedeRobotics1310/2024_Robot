@@ -56,7 +56,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
             return new WaitCommand(0.5);
         }
         return new StartIntakeCommand(armSubsystem, lighting)
-            .andThen(new ReverseNoteCommand(armSubsystem));
+            .andThen(compactFromIntake().alongWith(new ReverseNoteCommand(armSubsystem)));
     }
 
     protected Command shoot() {
