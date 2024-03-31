@@ -22,17 +22,20 @@ public class Score4SpeakerAutoCommand extends BaseAutoCommand {
 
         // wolverine
         if (noteCount > 1) {
-            sequenceScoreWolverine();
+            addCommands(goGetWolverine());
+            addCommands(scoreSpeaker());
         }
 
         // barnum
         if (noteCount > 2) {
-            sequenceScoreBarnum();
+            addCommands(goGetBarnum());
+            addCommands(scoreSpeaker());
         }
 
         // valjean
         if (noteCount > 3) {
-            sequenceScoreValjean();
+            addCommands(goGetValjean());
+            addCommands(scoreSpeaker());
         }
 
         // Exit Zone

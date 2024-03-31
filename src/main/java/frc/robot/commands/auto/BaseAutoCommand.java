@@ -101,31 +101,26 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return new DriveToPositionCommand(swerve, blue, red);
     }
 
-    protected void sequenceScoreWolverine() {
-        addCommands(
-            wait(0.25).andThen(intake())
-                .alongWith(
-                    driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
-                        .andThen(driveToNote(1))));
-        addCommands(scoreSpeaker());
+    protected Command goGetWolverine() {
+        return wait(0.25).andThen(intake())
+            .alongWith(
+                driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
+                    .andThen(driveToNote(1)));
     }
 
-    protected void sequenceScoreBarnum() {
-        addCommands(
-            intake()
-                .alongWith(
-                    faceBarnum()
-                        .andThen(driveToNote(1))));
-        addCommands(scoreSpeaker());
+
+    protected Command goGetBarnum() {
+        return intake()
+            .alongWith(
+                faceBarnum()
+                    .andThen(driveToNote(1)));
     }
 
-    protected void sequenceScoreValjean() {
-        addCommands(
-            intake()
-                .alongWith(
-                    faceValjean()
-                        .andThen(driveToNote(1))));
-        addCommands(scoreSpeaker());
+    protected Command goGetValjean() {
+        return intake()
+            .alongWith(
+                faceValjean()
+                    .andThen(driveToNote(1)));
     }
 
     protected void sequenceExitSourceSide() {
