@@ -1,8 +1,8 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
@@ -16,7 +16,6 @@ import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import static frc.robot.Constants.FieldConstants.*;
 import static frc.robot.Constants.UsefulPoses.*;
 import static frc.robot.Constants.UsefulPoses.PARK_AFTER_WOLVERINE_AUTO_RED;
-import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class BaseAutoCommand extends SequentialCommandGroup {
 
@@ -41,48 +40,71 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return new WaitCommand(seconds);
     }
 
-    protected Command compact() {
+    protected Command compactCommand() {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
         return new CompactCommand(armSubsystem);
     }
 
-    protected Command compactFromIntake() {
+    protected Command armToPointBCommand() {
+        if (Robot.isSimulation()) {
+            return new WaitCommand(0.5);
+        }
+        // TODO: replace compact with a new command that goes to Point B instead (above bumper)
+        return new CompactCommand(armSubsystem);
+    }
+
+    protected Command compactFromIntakeCommand() {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
         return new CompactFromIntakeCommand(armSubsystem, false);
     }
 
-    protected Command intake() {
+    protected Command startIntakeCommand() {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
-        return new StartIntakeCommand(armSubsystem, lighting)
-            .andThen(compactFromIntake().alongWith(new ReverseNoteCommand(armSubsystem)));
+        return new StartIntakeCommand(armSubsystem, lighting);
     }
 
-    protected Command shoot() {
-        if (Robot.isSimulation()) {
-            return new WaitCommand(0.5);
-        }
-        return new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting);
+
+    protected Command shootSpeakerPrepCommand() {
+        // todo: implement : spins up shooter and aims arm to speaker
+        return new InstantCommand();
+    }
+
+    protected Command fireCommand() {
+        // todo: implement
+        return new InstantCommand();
     }
 
     protected Command scoreSpeaker() {
-        return faceSpeaker().andThen(shoot()).andThen(compact());
+        Command drive   = faceSpeakerCommand();
+        Command prePrep = armToPointBCommand().alongWith(new ReverseNoteCommand(armSubsystem));
+        Command prep    = shootSpeakerPrepCommand();
+        Command fire    = fireCommand();
+        // todo: uncomment when fixes are implemented
+        // return drive.alongWith(prePrep.andThen(prep)).andThen(fire);
+        return scoreSpeakerBackupPlan();
     }
 
-    protected Command faceSpeaker() {
+    protected Command scoreSpeakerBackupPlan() {
+        Command drive   = faceSpeakerCommand();
+        Command prePrep = armToPointBCommand().alongWith(new ReverseNoteCommand(armSubsystem));
+        return drive.alongWith(prePrep).andThen(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
+    }
+
+    protected Command faceSpeakerCommand() {
         return RotateToTargetCommand.createRotateToSpeakerCommand(swerve);
     }
 
-    protected Command faceBarnum() {
+    protected Command faceBarnumCommand() {
         return new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM);
     }
 
-    protected Command faceValjean() {
+    protected Command faceValjeanCommand() {
         return new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN);
     }
 
@@ -90,7 +112,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return new SimpleDriveRobotOrientedCommand(swerve, xSpeedMps, ySpeedMps, omegaRadPerSec, seconds);
     }
 
-    protected Command driveToNote(double speedMps) {
+    protected Command driveToNoteCommand(double speedMps) {
         if (Robot.isSimulation()) {
             return new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.35);
         }
@@ -102,25 +124,22 @@ public class BaseAutoCommand extends SequentialCommandGroup {
     }
 
     protected Command goGetWolverine() {
-        return wait(0.25).andThen(intake())
-            .alongWith(
-                driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
-                    .andThen(driveToNote(1)));
+        Command arm   = armToPointBCommand().andThen(startIntakeCommand());
+        Command drive = driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED).andThen(driveToNoteCommand(2));
+        return arm.alongWith(drive);
     }
 
 
     protected Command goGetBarnum() {
-        return intake()
-            .alongWith(
-                faceBarnum()
-                    .andThen(driveToNote(1)));
+        Command arm   = armToPointBCommand().andThen(startIntakeCommand());
+        Command drive = faceBarnumCommand().andThen(driveToNoteCommand(2));
+        return arm.alongWith(drive);
     }
 
     protected Command goGetValjean() {
-        return intake()
-            .alongWith(
-                faceValjean()
-                    .andThen(driveToNote(1)));
+        Command arm   = armToPointBCommand().andThen(startIntakeCommand());
+        Command drive = faceValjeanCommand().andThen(driveToNoteCommand(2));
+        return arm.alongWith(drive);
     }
 
     protected Command driveToAmp() {
@@ -138,7 +157,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         if (Robot.isSimulation()) {
             return driveToAmp().andThen(wait(0.5));
         }
-        return driveToAmp().andThen(aimAmp()).andThen(shoot()).andThen(compact());
+        return driveToAmp().andThen(aimAmp()).andThen(new ShootCommand(armSubsystem, lighting)).andThen(compactCommand());
     }
 
     /*
