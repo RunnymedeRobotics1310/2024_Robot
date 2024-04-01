@@ -5,13 +5,29 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
+import static frc.robot.Constants.Swerve.Chassis.ROTATION_TOLERANCE;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 public class RotateToLocationCommand extends BaseDriveCommand {
 
     private final Translation2d blueTarget;
     private final Translation2d redTarget;
+    private final Rotation2d    tolerance;
     private Translation2d       target = null;
+
+
+    /**
+     * Turn the robot to face the vision target specified
+     *
+     * @param swerve the swerve drive subsystem
+     */
+    public RotateToLocationCommand(SwerveSubsystem swerve, Translation2d blueTarget, Translation2d redTarget,
+        Rotation2d tolerance) {
+        super(swerve);
+        this.blueTarget = blueTarget;
+        this.redTarget  = redTarget;
+        this.tolerance  = tolerance;
+    }
 
     /**
      * Turn the robot to face the vision target specified
@@ -19,9 +35,7 @@ public class RotateToLocationCommand extends BaseDriveCommand {
      * @param swerve the swerve drive subsystem
      */
     public RotateToLocationCommand(SwerveSubsystem swerve, Translation2d blueTarget, Translation2d redTarget) {
-        super(swerve);
-        this.blueTarget = blueTarget;
-        this.redTarget  = redTarget;
+        this(swerve, blueTarget, redTarget, ROTATION_TOLERANCE);
     }
 
     @Override
@@ -41,6 +55,6 @@ public class RotateToLocationCommand extends BaseDriveCommand {
     @Override
     public boolean isFinished() {
         Rotation2d delta = getHeadingToFieldPosition(target);
-        return isCloseEnough(delta);
+        return isCloseEnough(delta, tolerance);
     }
 }
