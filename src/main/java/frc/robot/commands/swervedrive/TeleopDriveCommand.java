@@ -167,9 +167,11 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         }
 
         if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < MAX_DISTANCE) {
+            lighting.removePattern(BonusShootingRange.class);
             lighting.addPattern(SIGNAL, InShootingRange.getInstance());
         }
         else if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < BONUS_DISTANCE) {
+            lighting.removePattern(InShootingRange.class);
             lighting.addPattern(SIGNAL, BonusShootingRange.getInstance());
         }
         else {
