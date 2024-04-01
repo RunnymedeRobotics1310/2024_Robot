@@ -63,6 +63,9 @@ public abstract class BaseDriveCommand extends LoggingCommand {
         else if (absErrRad < ROTATION_SLOW_ZONE.getRadians()) {
             omegaRad = errSignum * MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
         }
+        else if (absErrRad < ROTATION_MID_ZONE.getRadians()) {
+            omegaRad = errSignum * MID_ROTATIONAL_JUMP_VELOCITY_PER_SEC.getRadians();
+        }
         else {
             omegaRad = errSignum * MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC.getRadians();
         }
