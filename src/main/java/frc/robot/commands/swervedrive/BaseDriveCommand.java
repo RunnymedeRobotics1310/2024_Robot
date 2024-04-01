@@ -202,6 +202,10 @@ public abstract class BaseDriveCommand extends LoggingCommand {
      * location
      */
     protected final boolean isCloseEnough(Rotation2d desiredHeading, Rotation2d tolerance) {
+        if (tolerance.getRadians() < ROTATION_TOLERANCE.getRadians()) {
+            // tolerance can't be below the minimum the robot can achieve
+            tolerance = ROTATION_TOLERANCE;
+        }
         Rotation2d delta = desiredHeading.minus(swerve.getPose().getRotation());
         return Math.abs(delta.getRadians()) <= tolerance.getRadians();
     }
