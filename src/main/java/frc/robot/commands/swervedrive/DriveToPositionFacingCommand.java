@@ -20,6 +20,8 @@ public class DriveToPositionFacingCommand extends BaseDriveCommand {
     private Translation2d       positionToDriveToward;
     private Translation2d       positionToFace;
 
+    private Pose2d              currentTargetPose;
+
     /**
      * Drive to the specified location while facing that location at the same time (i.e. aim for
      * robot-relative heading of 0 and field-relative heading is not important).
@@ -55,10 +57,18 @@ public class DriveToPositionFacingCommand extends BaseDriveCommand {
     @Override
     public void execute() {
         super.execute();
-        Pose2d     current  = swerve.getPose();
-        Rotation2d heading  = positionToFace.minus(current.getTranslation()).getAngle();
-        Pose2d     nextPose = new Pose2d(positionToDriveToward, heading);
-        driveToFieldPose(nextPose, maxSpeedMPS);
+        calculateCurrentTargetPose();
+        driveToFieldPose(getTargetPose(), maxSpeedMPS);
+    }
+
+    private void calculateCurrentTargetPose() {
+        Pose2d     current = swerve.getPose();
+        Rotation2d heading = positionToFace.minus(current.getTranslation()).getAngle();
+        currentTargetPose = new Pose2d(positionToDriveToward, heading);
+    }
+
+    protected Pose2d getTargetPose() {
+        return currentTargetPose;
     }
 
     @Override
