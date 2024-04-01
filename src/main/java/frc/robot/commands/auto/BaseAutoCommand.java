@@ -4,9 +4,12 @@ import static frc.robot.Constants.FieldConstants.*;
 import static frc.robot.Constants.UsefulPoses.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.swervedrive.*;
@@ -83,12 +86,16 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return RotateToTargetCommand.createRotateToSpeakerCommand(swerve);
     }
 
-    private Command faceBarnumCommand() {
-        return new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM);
+    private Command faceWolverineCommand(Rotation2d tolerance) {
+        return new RotateToLocationCommand(swerve, BLUE_WOLVERINE, RED_WOLVERINE, tolerance);
     }
 
-    private Command faceValjeanCommand() {
-        return new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN);
+    private Command faceBarnumCommand(Rotation2d tolerance) {
+        return new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM, tolerance);
+    }
+
+    private Command faceValjeanCommand(Rotation2d tolerance) {
+        return new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN, tolerance);
     }
 
     private Command driveRobotOriented(double xSpeedMps, double ySpeedMps, double omegaRadPerSec, double seconds) {
@@ -97,31 +104,42 @@ public class BaseAutoCommand extends SequentialCommandGroup {
 
     private Command driveToNoteCommand(double speedMps) {
         if (Robot.isSimulation()) {
-            return new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.35);
+            return new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 0.2).andThen(wait(0.5));
         }
         return new DriveToNoteCommand(swerve, lighting, armSubsystem, jackman, speedMps);
     }
 
     protected Command driveTo(Pose2d blue, Pose2d red) {
-        return new DriveToPositionCommand(swerve, blue, red);
+        return new DriveToPositionCommand(swerve, blue, red, Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS);
+    }
+
+    protected Command approach(Translation2d blue, Translation2d red, double separationMetres) {
+        return new ApproachPositionCommand(swerve, blue, red, Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS,
+            separationMetres);
     }
 
     protected Command goGetWolverine() {
         Command arm   = compactCommand().andThen(startIntakeCommand());
-        Command drive = driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED).andThen(driveToNoteCommand(2));
+        // get away from speaker before rotating
+        Command drive = driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
+//            .andThen(faceWolverineCommand())
+            .andThen(approach(BLUE_WOLVERINE, RED_WOLVERINE, 0.8))
+            .andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
 
     protected Command goGetBarnum() {
         Command arm   = compactCommand().andThen(startIntakeCommand());
-        Command drive = faceBarnumCommand().andThen(driveToNoteCommand(2));
+        Command drive = faceBarnumCommand(Rotation2d.fromDegrees(15)).andThen(approach(BLUE_BARNUM, RED_BARNUM, 0.80))
+            .andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
     protected Command goGetValjean() {
         Command arm   = compactCommand().andThen(startIntakeCommand());
-        Command drive = faceValjeanCommand().andThen(driveToNoteCommand(2));
+        Command drive = faceValjeanCommand(Rotation2d.fromDegrees(15)).andThen(approach(BLUE_VALJEAN, RED_VALJEAN, 0.80))
+            .andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
