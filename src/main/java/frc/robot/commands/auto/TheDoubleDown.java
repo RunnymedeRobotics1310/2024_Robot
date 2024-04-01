@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.arm.CompactCommand;
+import frc.robot.commands.arm.ReverseNoteCommand;
 import frc.robot.commands.arm.ShootCommand;
 import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.swervedrive.SimpleDriveRobotOrientedCommand;
@@ -26,7 +27,7 @@ public class TheDoubleDown extends SequentialCommandGroup {
         // barnum
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
             .deadlineWith(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 3)));
-        addCommands(new CompactCommand(armSubsystem));
+        addCommands(new CompactCommand(armSubsystem).alongWith(new ReverseNoteCommand(armSubsystem)));
         addCommands(new SimpleDriveRobotOrientedCommand(swerve, -1, 0, TEMP_DRIFT_COMPENSATION.getRadians(), 3));
         addCommands(new ShootCommand(armSubsystem, lighting));
 
