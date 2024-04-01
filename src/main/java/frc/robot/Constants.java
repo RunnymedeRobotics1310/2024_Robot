@@ -9,6 +9,7 @@ import static frc.robot.Constants.BotTarget.BLUE_NOTE_WOLVERINE;
 import static frc.robot.Constants.BotTarget.RED_NOTE_WOLVERINE;
 import static frc.robot.Constants.Swerve.Chassis.TRACK_WIDTH_METRES;
 import static frc.robot.Constants.Swerve.Chassis.WHEEL_BASE_METRES;
+import static frc.robot.Constants.UsefulHeadings.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -309,48 +310,91 @@ public final class Constants {
         }
     }
 
+    public static final class UsefulHeadings {
+        public static final Rotation2d FACING_CHAIN_RED_LEFT    = Rotation2d.fromDegrees(-60);
+        public static final Rotation2d FACING_CHAIN_RED_CENTER  = Rotation2d.fromDegrees(180);
+        public static final Rotation2d FACING_CHAIN_RED_RIGHT   = Rotation2d.fromDegrees(60);
+        public static final Rotation2d FACING_CHAIN_BLUE_LEFT   = Rotation2d.fromDegrees(-60);
+        public static final Rotation2d FACING_CHAIN_BLUE_CENTER = Rotation2d.fromDegrees(180);
+        public static final Rotation2d FACING_CHAIN_BLUE_RIGHT  = Rotation2d.fromDegrees(60);
+    }
+
     public static final class UsefulPoses {
 
-        public static final Pose2d SCORE_BLUE_AMP                 = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.65,
+        public static final Pose2d SCORE_BLUE_AMP                            = (new Pose2d(
+            BotTarget.BLUE_AMP.getLocation().getX(),
+            7.65,
             Rotation2d.fromDegrees(270)));
-        public static final Pose2d SCORE_RED_AMP                  = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.65,
-            Rotation2d.fromDegrees(270)));
-
-        public static final Pose2d PRE_SCORE_BLUE_AMP             = (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 6.9,
-            Rotation2d.fromDegrees(270)));
-        public static final Pose2d PRE_SCORE_RED_AMP              = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 6.9,
+        public static final Pose2d SCORE_RED_AMP                             = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(),
+            7.65,
             Rotation2d.fromDegrees(270)));
 
-        public static final Pose2d START_AT_BLUE_SPEAKER          = new Pose2d(
+        public static final Pose2d PRE_SCORE_BLUE_AMP                        = (new Pose2d(
+            BotTarget.BLUE_AMP.getLocation().getX(),
+            6.9,
+            Rotation2d.fromDegrees(270)));
+        public static final Pose2d PRE_SCORE_RED_AMP                         = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(),
+            6.9,
+            Rotation2d.fromDegrees(270)));
+
+        public static final Pose2d START_AT_BLUE_SPEAKER                     = new Pose2d(
             Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(),
             1.6, new Rotation2d());
-        public static final Pose2d START_AT_RED_SPEAKER           = new Pose2d(
+        public static final Pose2d START_AT_RED_SPEAKER                      = new Pose2d(
             Constants.BotTarget.RED_SPEAKER.getLocation().getX(),
             FieldConstants.FIELD_EXTENT_METRES_Y - 1.6, new Rotation2d());
 
-        public static final Pose2d BLUE_2_2_20                    = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
-        public static final Pose2d RED_2_2_20                     = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
+        public static final Pose2d BLUE_2_2_20                               = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
+        public static final Pose2d RED_2_2_20                                = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
 
-        public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE     = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.1,
+        public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE                = new Pose2d(
+            BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.1,
             BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
-        public static final Pose2d IN_FRONT_OF_WOLVERINE_RED      = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + 1.1,
+        public static final Pose2d IN_FRONT_OF_WOLVERINE_RED                 = new Pose2d(
+            RED_NOTE_WOLVERINE.getLocation().getX() + 1.1,
             RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d().fromDegrees(180));
 
-        public static final Pose2d WOLVERINE_PICKUP_BLUE          = new Pose2d(BLUE_NOTE_WOLVERINE.getLocation().getX() - .5,
+        public static final Pose2d WOLVERINE_PICKUP_BLUE                     = new Pose2d(
+            BLUE_NOTE_WOLVERINE.getLocation().getX() - .5,
             BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
-        public static final Pose2d WOLVERINE_PICKUP_RED           = new Pose2d(RED_NOTE_WOLVERINE.getLocation().getX() + .5,
+        public static final Pose2d WOLVERINE_PICKUP_RED                      = new Pose2d(
+            RED_NOTE_WOLVERINE.getLocation().getX() + .5,
             RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
 
-        public static final Pose2d PARK_AFTER_VALJEAN_AUTO_BLUE   = new Pose2d(7.5, 7.5, Rotation2d.fromDegrees(0));
-        public static final Pose2d PARK_AFTER_VALJEAN_AUTO_RED    = new Pose2d(9.5, 7.5, Rotation2d.fromDegrees(180));
+        public static final Pose2d PARK_AFTER_VALJEAN_AUTO_BLUE              = new Pose2d(7.5, 7.5, Rotation2d.fromDegrees(0));
+        public static final Pose2d PARK_AFTER_VALJEAN_AUTO_RED               = new Pose2d(9.5, 7.5, Rotation2d.fromDegrees(180));
 
-        public static final Pose2d PARK_AFTER_BARNUM_AUTO_BLUE    = new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
-        public static final Pose2d PARK_AFTER_BARNUM_AUTO_RED     = new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
+        public static final Pose2d PARK_AFTER_BARNUM_AUTO_BLUE               = new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
+        public static final Pose2d PARK_AFTER_BARNUM_AUTO_RED                = new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
 
-        public static final Pose2d AFTER_WOLVERINE_AUTO_BLUE      = new Pose2d(2.7, 2.85, Rotation2d.fromDegrees(0));
-        public static final Pose2d AFTER_WOLVERINE_AUTO_RED       = new Pose2d(14, 2.85, Rotation2d.fromDegrees(180));
-        public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_BLUE = new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
-        public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_RED  = new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
+        public static final Pose2d AFTER_WOLVERINE_AUTO_BLUE                 = new Pose2d(2.7, 2.85, Rotation2d.fromDegrees(0));
+        public static final Pose2d AFTER_WOLVERINE_AUTO_RED                  = new Pose2d(14, 2.85, Rotation2d.fromDegrees(180));
+        public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_BLUE            = new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
+        public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_RED             = new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
+
+        // TODO: QUENTIN: CALCULATE LOCATIONS. ROTATIONS ARE FINE.
+        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_LEFT        = new Pose2d(0, 0, FACING_CHAIN_RED_LEFT);
+        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_CENTER      = new Pose2d(0, 0, FACING_CHAIN_RED_CENTER);
+        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_RIGHT       = new Pose2d(0, 0, FACING_CHAIN_RED_RIGHT);
+        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_LEFT       = new Pose2d(0, 0, FACING_CHAIN_BLUE_LEFT);
+        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_CENTER     = new Pose2d(0, 0, FACING_CHAIN_BLUE_CENTER);
+        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_RIGHT      = new Pose2d(0, 0, FACING_CHAIN_BLUE_RIGHT);
+
+        // NOTE: These are for the possible scenario in which we score the track backwards from the
+        // floor
+        // todo: update poses when we decide to use this.
+        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_LEFT    = new Pose2d(0, 0,
+            FACING_CHAIN_RED_LEFT.plus(Rotation2d.fromDegrees(180)));
+        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_CENTER  = new Pose2d(0, 0,
+            FACING_CHAIN_RED_CENTER.plus(Rotation2d.fromDegrees(180)));
+        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_RIGHT   = new Pose2d(0, 0,
+            FACING_CHAIN_RED_RIGHT.plus(Rotation2d.fromDegrees(180)));
+        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_LEFT   = new Pose2d(0, 0,
+            FACING_CHAIN_BLUE_LEFT.plus(Rotation2d.fromDegrees(180)));
+        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_CENTER = new Pose2d(0, 0,
+            FACING_CHAIN_BLUE_CENTER.plus(Rotation2d.fromDegrees(180)));
+        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_RIGHT  = new Pose2d(0, 0,
+            FACING_CHAIN_BLUE_RIGHT.plus(Rotation2d.fromDegrees(180)));
     }
 
     public static final class FieldConstants {

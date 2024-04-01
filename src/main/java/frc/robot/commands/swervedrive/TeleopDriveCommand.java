@@ -2,6 +2,7 @@ package frc.robot.commands.swervedrive;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.Constants.Swerve.Chassis.*;
+import static frc.robot.Constants.UsefulHeadings.*;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 import static frc.robot.commands.operator.OperatorInput.Axis.X;
 import static frc.robot.commands.operator.OperatorInput.Axis.Y;
@@ -239,32 +240,32 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         if (alliance == Alliance.Blue) {
             if (pose.getX() > Constants.FieldConstants.WING_LENGTH_METRES) {
                 // center stage
-                return Rotation2d.fromDegrees(180);
+                return FACING_CHAIN_BLUE_CENTER;
             }
             else {
                 if (pose.getY() > Constants.FieldConstants.FIELD_EXTENT_METRES_Y / 2) {
                     // stage left
-                    return Rotation2d.fromDegrees(-60);
+                    return FACING_CHAIN_BLUE_LEFT;
                 }
                 else {
                     // stage right
-                    return Rotation2d.fromDegrees(60);
+                    return FACING_CHAIN_BLUE_RIGHT;
                 }
             }
         }
         else {
             if (pose.getX() < Constants.FieldConstants.FIELD_EXTENT_METRES_X - Constants.FieldConstants.WING_LENGTH_METRES) {
                 // center stage
-                return Rotation2d.fromDegrees(180);
+                return FACING_CHAIN_RED_CENTER;
             }
             else {
                 if (pose.getY() < Constants.FieldConstants.FIELD_EXTENT_METRES_Y / 2) {
                     // stage left
-                    return Rotation2d.fromDegrees(-60);
+                    return FACING_CHAIN_RED_LEFT;
                 }
                 else {
                     // stage right
-                    return Rotation2d.fromDegrees(60);
+                    return FACING_CHAIN_RED_RIGHT;
                 }
             }
         }
