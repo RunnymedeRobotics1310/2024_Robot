@@ -22,7 +22,7 @@ import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
 import frc.robot.commands.auto.Score2_5AmpAutoCommand;
-import frc.robot.commands.auto.Score4SpeakerAutoCommand;
+import frc.robot.commands.auto.TheSpeakerAuto;
 import frc.robot.commands.auto.ScoreLoadedBarnumValjean;
 import frc.robot.commands.auto.ScoreLoadedWolverineBarnumValjean;
 import frc.robot.commands.auto.TheDoubleDown;
@@ -366,9 +366,9 @@ public class OperatorInput {
         return switch (autoPatternChooser.getSelected()) {
         // not used
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, jackman, lighting, delay);
-        case SCORE_2_SPEAKER_VISION -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay, 2);
-        case SCORE_3_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay, 3);
-        case SCORE_4_SPEAKER -> new Score4SpeakerAutoCommand(drive, arm, jackman, lighting, delay, 4);
+        case SCORE_2_SPEAKER_VISION -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 2);
+        case SCORE_3_SPEAKER -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 3);
+        case SCORE_4_SPEAKER -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 4);
 
         // used in competition
         case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);

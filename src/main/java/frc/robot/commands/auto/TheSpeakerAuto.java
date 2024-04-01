@@ -5,9 +5,9 @@ import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
-public class Score4SpeakerAutoCommand extends BaseAutoCommand {
+public class TheSpeakerAuto extends BaseAutoCommand {
 
-    public Score4SpeakerAutoCommand(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
+    public TheSpeakerAuto(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
         JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay, int noteCount) {
         super(swerve, armSubsystem, jackman, lighting);
 
