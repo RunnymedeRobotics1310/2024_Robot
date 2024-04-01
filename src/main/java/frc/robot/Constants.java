@@ -425,6 +425,7 @@ public final class Constants {
         public static final double     WORKSHOP_DIMMING_FACTOR = 0.5;
 
         public static final Color      NOTE_ORANGE             = new Color(255, 20, 0);
+        public static final Color      NOTE_RED                = new Color(255, 0, 0);
 
         public static LightstripRegion VISPOSE1                = new LightstripRegion("Vision1", 0, 3);
         public static LightstripRegion SIGNAL                  = new LightstripRegion("Signal", 3, 18);
@@ -512,7 +513,7 @@ public final class Constants {
         public static final ArmPosition NOTE_INTAKE_CLEARANCE_POSITION     = new ArmPosition(149, 144);
 
         // Transition position - over bumper
-        public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(157, 76.89);
+        public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(146, 109);
         // Transition position - above the lock position (arm not caught on stops)
         public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
 
@@ -572,14 +573,14 @@ public final class Constants {
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
          */
-        public static final double      MAX_AIM_HOLD                       = 0.03;                       // 0.03;
+        public static final double      MAX_AIM_HOLD                       = 0.03;                     // 0.03;
 
 
         /**
          * Amount of output required to hold the Link Pivot when the Link and Aim are parallel to
          * the ground
          */
-        public static final double      MAX_LINK_HOLD                      = 0.02;                       // 0.04;
+        public static final double      MAX_LINK_HOLD                      = 0.02;                     // 0.04;
     }
 
     public static final class ClimbConstants {

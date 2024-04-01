@@ -7,6 +7,7 @@ import static frc.robot.commands.operator.OperatorInput.Axis.X;
 import static frc.robot.commands.operator.OperatorInput.Axis.Y;
 import static frc.robot.commands.operator.OperatorInput.Stick.LEFT;
 import static frc.robot.commands.operator.OperatorInput.Stick.RIGHT;
+import static frc.robot.utils.SpeakerShooterPolynomialAngleCalc.BONUS_DISTANCE;
 import static frc.robot.utils.SpeakerShooterPolynomialAngleCalc.MAX_DISTANCE;
 
 import edu.wpi.first.math.MathUtil;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.lighting.LightingSubsystem;
+import frc.robot.subsystems.lighting.pattern.BonusShootingRange;
 import frc.robot.subsystems.lighting.pattern.InShootingRange;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.telemetry.Telemetry;
@@ -167,8 +169,12 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < MAX_DISTANCE) {
             lighting.addPattern(SIGNAL, InShootingRange.getInstance());
         }
+        else if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < BONUS_DISTANCE) {
+            lighting.addPattern(SIGNAL, BonusShootingRange.getInstance());
+        }
         else {
             lighting.removePattern(InShootingRange.class);
+            lighting.removePattern(BonusShootingRange.class);
         }
 
         Telemetry.drive.teleop_vX                   = vX;

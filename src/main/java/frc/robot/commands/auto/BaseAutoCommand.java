@@ -46,11 +46,11 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return new CompactCommand(armSubsystem);
     }
 
-    protected Command raiseFromIntakeCommand() {
+    protected Command armToPointBCommand() {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
-        return new RaiseFromIntakeCommand(armSubsystem);
+        return new ArmToPointBCommand(armSubsystem);
     }
 
     protected Command compactFromIntakeCommand() {
@@ -87,7 +87,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
 
     protected Command scoreSpeaker() {
         Command drive   = faceSpeakerCommand();
-        Command prePrep = raiseFromIntakeCommand().alongWith(reverseNoteCommand());
+        Command prePrep = armToPointBCommand().alongWith(reverseNoteCommand());
         Command prep    = shootSpeakerPrepCommand();
         Command fire    = fireCommand();
         // todo: uncomment when fixes are implemented
@@ -97,7 +97,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
 
     protected Command scoreSpeakerBackupPlan() {
         Command drive   = faceSpeakerCommand();
-        Command prePrep = raiseFromIntakeCommand().alongWith(reverseNoteCommand());
+        Command prePrep = armToPointBCommand().alongWith(reverseNoteCommand());
         if (Robot.isSimulation()) {
             return drive.alongWith(prePrep).andThen(new WaitCommand(0.5));
         }
@@ -132,20 +132,20 @@ public class BaseAutoCommand extends SequentialCommandGroup {
     }
 
     protected Command goGetWolverine() {
-        Command arm   = raiseFromIntakeCommand().andThen(startIntakeCommand());
+        Command arm   = armToPointBCommand().andThen(startIntakeCommand());
         Command drive = driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED).andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
 
     protected Command goGetBarnum() {
-        Command arm   = raiseFromIntakeCommand().andThen(startIntakeCommand());
+        Command arm   = armToPointBCommand().andThen(startIntakeCommand());
         Command drive = faceBarnumCommand().andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
     protected Command goGetValjean() {
-        Command arm   = raiseFromIntakeCommand().andThen(startIntakeCommand());
+        Command arm   = armToPointBCommand().andThen(startIntakeCommand());
         Command drive = faceValjeanCommand().andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
