@@ -1,5 +1,8 @@
 package frc.robot.commands.auto;
 
+import static frc.robot.Constants.FieldConstants.*;
+import static frc.robot.Constants.UsefulPoses.*;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -12,10 +15,6 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
-
-import static frc.robot.Constants.FieldConstants.*;
-import static frc.robot.Constants.UsefulPoses.*;
-import static frc.robot.Constants.UsefulPoses.PARK_AFTER_WOLVERINE_AUTO_RED;
 
 public class BaseAutoCommand extends SequentialCommandGroup {
 
@@ -47,12 +46,11 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return new CompactCommand(armSubsystem);
     }
 
-    protected Command armToPointBCommand() {
+    protected Command raiseFromIntakeCommand() {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
-        // TODO: replace compact with a new command that goes to Point B instead (above bumper)
-        return new CompactCommand(armSubsystem);
+        return new RaiseFromIntakeCommand(armSubsystem);
     }
 
     protected Command compactFromIntakeCommand() {
@@ -89,7 +87,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
 
     protected Command scoreSpeaker() {
         Command drive   = faceSpeakerCommand();
-        Command prePrep = armToPointBCommand().alongWith(reverseNoteCommand());
+        Command prePrep = raiseFromIntakeCommand().alongWith(reverseNoteCommand());
         Command prep    = shootSpeakerPrepCommand();
         Command fire    = fireCommand();
         // todo: uncomment when fixes are implemented
@@ -99,7 +97,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
 
     protected Command scoreSpeakerBackupPlan() {
         Command drive   = faceSpeakerCommand();
-        Command prePrep = armToPointBCommand().alongWith(reverseNoteCommand());
+        Command prePrep = raiseFromIntakeCommand().alongWith(reverseNoteCommand());
         if (Robot.isSimulation()) {
             return drive.alongWith(prePrep).andThen(new WaitCommand(0.5));
         }
@@ -134,20 +132,20 @@ public class BaseAutoCommand extends SequentialCommandGroup {
     }
 
     protected Command goGetWolverine() {
-        Command arm   = armToPointBCommand().andThen(startIntakeCommand());
+        Command arm   = raiseFromIntakeCommand().andThen(startIntakeCommand());
         Command drive = driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED).andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
 
     protected Command goGetBarnum() {
-        Command arm   = armToPointBCommand().andThen(startIntakeCommand());
+        Command arm   = raiseFromIntakeCommand().andThen(startIntakeCommand());
         Command drive = faceBarnumCommand().andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
     protected Command goGetValjean() {
-        Command arm   = armToPointBCommand().andThen(startIntakeCommand());
+        Command arm   = raiseFromIntakeCommand().andThen(startIntakeCommand());
         Command drive = faceValjeanCommand().andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
