@@ -11,6 +11,12 @@ public class TheSpeakerAuto extends BaseAutoCommand {
         JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay, int noteCount) {
         super(swerve, armSubsystem, jackman, lighting);
 
+        enum Note {
+            Loaded, Wolverine, Barnum, Valjean
+        }
+
+        Note lastNote = null;
+
         // start
         addCommands(log("Starting Auto"));
         addCommands(wait(delay));
@@ -18,40 +24,42 @@ public class TheSpeakerAuto extends BaseAutoCommand {
         // loaded
         if (noteCount > 0) {
             addCommands(scoreSpeaker());
+            lastNote = Note.Loaded;
         }
 
         // wolverine
         if (noteCount > 1) {
             addCommands(goGetWolverine());
             addCommands(scoreSpeaker());
+            lastNote = Note.Wolverine;
         }
 
         // barnum
         if (noteCount > 2) {
             addCommands(goGetBarnum());
             addCommands(scoreSpeaker());
+            lastNote = Note.Barnum;
         }
 
         // valjean
         if (noteCount > 3) {
             addCommands(goGetValjean());
             addCommands(scoreSpeaker());
+            lastNote = Note.Valjean;
         }
 
         // Exit Zone
-        switch (noteCount) {
-        case 0:
-        case 1:
-        case 2:
-            sequenceExitSourceSide();
-            break;
-        case 3:
-            sequenceExitMiddle();
-            break;
-        case 4:
+        switch (lastNote) {
+        case Valjean:
             sequenceExitAmpSide();
             break;
+        case Barnum:
+            sequenceExitMiddle();
+            break;
+        case Wolverine:
+        case Loaded:
         default:
+            sequenceExitSourceSide();
             break;
         }
 
