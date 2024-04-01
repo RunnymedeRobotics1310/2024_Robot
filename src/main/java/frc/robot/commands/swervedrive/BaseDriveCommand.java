@@ -194,8 +194,16 @@ public abstract class BaseDriveCommand extends LoggingCommand {
      * location
      */
     protected final boolean isCloseEnough(Rotation2d desiredHeading) {
+        return isCloseEnough(desiredHeading, ROTATION_TOLERANCE);
+    }
+
+    /**
+     * Returns true when the robot heading is within the specified tolerance of the desired
+     * location
+     */
+    protected final boolean isCloseEnough(Rotation2d desiredHeading, Rotation2d tolerance) {
         Rotation2d delta = desiredHeading.minus(swerve.getPose().getRotation());
-        return Math.abs(delta.getRadians()) <= ROTATION_TOLERANCE.getRadians();
+        return Math.abs(delta.getRadians()) <= tolerance.getRadians();
     }
 
     protected final boolean isCloseEnough(Pose2d desiredPose) {
