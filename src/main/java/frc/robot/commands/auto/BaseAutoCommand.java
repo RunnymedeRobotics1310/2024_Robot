@@ -5,7 +5,6 @@ import static frc.robot.Constants.UsefulPoses.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
@@ -39,88 +38,64 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return new WaitCommand(seconds);
     }
 
-    protected Command compactCommand() {
+    private Command compactCommand() {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
         return new CompactCommand(armSubsystem);
     }
 
-    protected Command raiseFromIntakeCommand() {
-        if (Robot.isSimulation()) {
-            return new WaitCommand(0.5);
-        }
-        return new RaiseFromIntakeCommand(armSubsystem);
-    }
-
-    protected Command compactFromIntakeCommand() {
+    private Command compactFromIntakeCommand() {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
         return new CompactFromIntakeCommand(armSubsystem, false);
     }
 
-    protected Command startIntakeCommand() {
+    private Command startIntakeCommand() {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
         return new StartIntakeCommand(armSubsystem, lighting);
     }
 
-
-    protected Command shootSpeakerPrepCommand() {
-        // todo: implement : spins up shooter and aims arm to speaker
-        return new InstantCommand();
-    }
-
-    protected Command fireCommand() {
-        // todo: implement
-        return new InstantCommand();
-    }
-
-    protected Command reverseNoteCommand() {
+    private Command reverseNoteCommand() {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
         return new ReverseNoteCommand(armSubsystem);
     }
 
-    protected Command scoreSpeaker() {
-        Command drive   = faceSpeakerCommand();
-        Command prePrep = raiseFromIntakeCommand().alongWith(reverseNoteCommand());
-        Command prep    = shootSpeakerPrepCommand();
-        Command fire    = fireCommand();
-        // todo: uncomment when fixes are implemented
-        // return drive.alongWith(prePrep.andThen(prep)).andThen(fire);
-        return scoreSpeakerBackupPlan();
+    private Command shootFromAnywhereCommand() {
+        return new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting);
     }
 
-    protected Command scoreSpeakerBackupPlan() {
+    protected Command scoreSpeaker() {
         Command drive   = faceSpeakerCommand();
-        Command prePrep = raiseFromIntakeCommand().alongWith(reverseNoteCommand());
+        Command prePrep = compactFromIntakeCommand().alongWith(reverseNoteCommand());
         if (Robot.isSimulation()) {
             return drive.alongWith(prePrep).andThen(new WaitCommand(0.5));
         }
-        return drive.alongWith(prePrep).andThen(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
+        return drive.alongWith(prePrep.andThen(shootFromAnywhereCommand()));
     }
 
-    protected Command faceSpeakerCommand() {
+    private Command faceSpeakerCommand() {
         return RotateToTargetCommand.createRotateToSpeakerCommand(swerve);
     }
 
-    protected Command faceBarnumCommand() {
+    private Command faceBarnumCommand() {
         return new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM);
     }
 
-    protected Command faceValjeanCommand() {
+    private Command faceValjeanCommand() {
         return new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN);
     }
 
-    protected Command driveRobotOriented(double xSpeedMps, double ySpeedMps, double omegaRadPerSec, double seconds) {
+    private Command driveRobotOriented(double xSpeedMps, double ySpeedMps, double omegaRadPerSec, double seconds) {
         return new SimpleDriveRobotOrientedCommand(swerve, xSpeedMps, ySpeedMps, omegaRadPerSec, seconds);
     }
 
-    protected Command driveToNoteCommand(double speedMps) {
+    private Command driveToNoteCommand(double speedMps) {
         if (Robot.isSimulation()) {
             return new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 1.35);
         }
@@ -132,20 +107,20 @@ public class BaseAutoCommand extends SequentialCommandGroup {
     }
 
     protected Command goGetWolverine() {
-        Command arm   = raiseFromIntakeCommand().andThen(startIntakeCommand());
+        Command arm   = compactCommand().andThen(startIntakeCommand());
         Command drive = driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED).andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
 
     protected Command goGetBarnum() {
-        Command arm   = raiseFromIntakeCommand().andThen(startIntakeCommand());
+        Command arm   = compactCommand().andThen(startIntakeCommand());
         Command drive = faceBarnumCommand().andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
     protected Command goGetValjean() {
-        Command arm   = raiseFromIntakeCommand().andThen(startIntakeCommand());
+        Command arm   = compactCommand().andThen(startIntakeCommand());
         Command drive = faceValjeanCommand().andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
