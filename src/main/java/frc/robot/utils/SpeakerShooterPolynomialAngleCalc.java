@@ -3,7 +3,8 @@ package frc.robot.utils;
 public class SpeakerShooterPolynomialAngleCalc {
 
     public static final double  MIN_DISTANCE      = 1.6;
-    public static final double  MAX_DISTANCE      = 5.5;
+    public static final double  MAX_DISTANCE      = 3.9;
+    public static final double  BONUS_DISTANCE    = 5.5;
 
     // Below this, use the a polynomial, above this, use the b polynomial
     private static final double BOUNDARY_DISTANCE = 3.9;
