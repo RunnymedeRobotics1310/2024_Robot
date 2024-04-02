@@ -401,28 +401,35 @@ public final class Constants {
 
     public static final class FieldConstants {
 
-        public static final double        FIELD_EXTENT_METRES_Y = 8.211;
-        public static final double        FIELD_EXTENT_METRES_X = 16.541;
-        public static final double        WING_LENGTH_METRES    = 5.87;
+        public static final double        FIELD_EXTENT_METRES_Y        = 8.211;
+        public static final double        FIELD_EXTENT_METRES_X        = 16.541;
+        public static final double        WING_LENGTH_METRES           = 5.87;
 
         // Blue Side Notes
-        public static final Translation2d BLUE_WOLVERINE        = new Translation2d(2.9, 4.11);
-        public static final Translation2d BLUE_BARNUM           = new Translation2d(2.9, 5.5);
-        public static final Translation2d BLUE_BARNUM_SHOT      = new Translation2d(3.0, 5.5);
-        public static final Translation2d BLUE_VALJEAN          = new Translation2d(2.9, 7);
+        public static final Translation2d BLUE_WOLVERINE               = new Translation2d(2.9, 4.11);
+        public static final Translation2d BLUE_BARNUM                  = new Translation2d(2.9, 5.5);
+        public static final Translation2d BLUE_BARNUM_SHOT             = new Translation2d(3.0, 5.5);
+        public static final Translation2d BLUE_VALJEAN                 = new Translation2d(2.9, 7);
 
         // Red Side Notes
-        public static final Translation2d RED_WOLVERINE         = new Translation2d(13.53, 4.11);
-        public static final Translation2d RED_BARNUM            = new Translation2d(13.53, 5.5);
-        public static final Translation2d RED_BARNUM_SHOT       = new Translation2d(13.43, 5.5);
-        public static final Translation2d RED_VALJEAN           = new Translation2d(13.53, 7);
+        public static final Translation2d RED_WOLVERINE                = new Translation2d(13.53, 4.11);
+        public static final Translation2d RED_BARNUM                   = new Translation2d(13.53, 5.5);
+        public static final Translation2d RED_BARNUM_SHOT              = new Translation2d(13.43, 5.5);
+        public static final Translation2d RED_VALJEAN                  = new Translation2d(13.53, 7);
 
         // Centre Field Notes
-        public static final Translation2d CENTRE_NOTE_1         = new Translation2d(8.16, 0.75);
-        public static final Translation2d CENTRE_NOTE_2         = new Translation2d(8.16, 2.43);
-        public static final Translation2d CENTRE_NOTE_3         = new Translation2d(8.16, 4.11);
-        public static final Translation2d CENTRE_NOTE_4         = new Translation2d(8.16, 5.79);
-        public static final Translation2d CENTRE_NOTE_5         = new Translation2d(8.16, 7.47);
+        public static final Translation2d CENTRE_NOTE_1                = new Translation2d(8.16, 0.75);
+        public static final Translation2d CENTRE_NOTE_2                = new Translation2d(8.16, 2.43);
+        public static final Translation2d CENTRE_NOTE_3                = new Translation2d(8.16, 4.11);
+        public static final Translation2d CENTRE_NOTE_4                = new Translation2d(8.16, 5.79);
+        public static final Translation2d CENTRE_NOTE_5                = new Translation2d(8.16, 7.47);
+
+        // under stage near barnum
+        public static final Translation2d UNDER_STAGE_NEAR_BARNUM_RED  = new Translation2d(12.8, 5.0);
+        public static final Translation2d UNDER_STAGE_NEAR_BARNUM_BLUE = new Translation2d(3.7, 5.0);
+
+        public static final Translation2d UNDER_STAGE_RED              = new Translation2d(11.7, 4.1);
+        public static final Translation2d UNDER_STAGE_BLUE             = new Translation2d(4.9, 4.1);
 
     }
 

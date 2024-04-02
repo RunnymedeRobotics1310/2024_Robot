@@ -51,15 +51,15 @@ public class TheSpeakerAuto extends BaseAutoCommand {
         // Exit Zone
         switch (lastNote) {
         case Valjean:
-            sequenceExitAmpSide();
+            addCommands(goGetNote5());
             break;
         case Barnum:
-            sequenceExitMiddle();
+            addCommands(goGetCenterNote());
             break;
         case Wolverine:
         case Loaded:
         default:
-            sequenceExitSourceSide();
+            addCommands(exitSourceSide());
             break;
         }
 

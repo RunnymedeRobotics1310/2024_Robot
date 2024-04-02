@@ -98,6 +98,10 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN, tolerance);
     }
 
+    private Command faceCenterNoteCommand(Rotation2d tolerance) {
+        return new RotateToLocationCommand(swerve, CENTRE_NOTE_3, CENTRE_NOTE_3, tolerance);
+    }
+
     private Command driveRobotOriented(double xSpeedMps, double ySpeedMps, double omegaRadPerSec, double seconds) {
         return new SimpleDriveRobotOrientedCommand(swerve, xSpeedMps, ySpeedMps, omegaRadPerSec, seconds);
     }
@@ -143,6 +147,20 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return arm.alongWith(drive);
     }
 
+    protected Command goGetCenterNote() {
+        Command part1 = compactCommand().alongWith(approach(UNDER_STAGE_NEAR_BARNUM_BLUE, UNDER_STAGE_NEAR_BARNUM_RED, 0.30)
+            .andThen(approach(UNDER_STAGE_BLUE, UNDER_STAGE_RED, 0.30)));
+        Command arm   = wait(2.0).andThen(startIntakeCommand());
+        Command drive = approach(CENTRE_NOTE_3, CENTRE_NOTE_3, 0.80).andThen(driveToNoteCommand(2));
+        return part1.andThen(arm.alongWith(drive));
+    }
+
+    protected Command goGetNote5() {
+        Command arm   = wait(2.0).andThen(startIntakeCommand());
+        Command drive = approach(CENTRE_NOTE_5, CENTRE_NOTE_5, 0.80).andThen(driveToNoteCommand(2));
+        return arm.alongWith(drive);
+    }
+
     protected Command driveToAmp() {
         return new DriveToScoreAmpCommand(swerve);
     }
@@ -161,20 +179,17 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return driveToAmp().andThen(aimAmp()).andThen(new ShootCommand(armSubsystem, lighting)).andThen(compactCommand());
     }
 
-    /*
-     * SEQUENCES
-     */
-    protected void sequenceExitSourceSide() {
-        addCommands(driveTo(AFTER_WOLVERINE_AUTO_BLUE, AFTER_WOLVERINE_AUTO_RED));
-        addCommands(driveTo(PARK_AFTER_WOLVERINE_AUTO_BLUE, PARK_AFTER_WOLVERINE_AUTO_RED));
+    protected Command exitSourceSide() {
+        return driveTo(AFTER_WOLVERINE_AUTO_BLUE, AFTER_WOLVERINE_AUTO_RED)
+            .andThen(driveTo(PARK_AFTER_WOLVERINE_AUTO_BLUE, PARK_AFTER_WOLVERINE_AUTO_RED));
     }
 
-    protected void sequenceExitMiddle() {
-        addCommands(driveTo(PARK_AFTER_BARNUM_AUTO_BLUE, PARK_AFTER_BARNUM_AUTO_RED));
+    protected Command exitMiddle() {
+        return driveTo(PARK_AFTER_BARNUM_AUTO_BLUE, PARK_AFTER_BARNUM_AUTO_RED);
     }
 
-    protected void sequenceExitAmpSide() {
-        addCommands(driveTo(PARK_AFTER_VALJEAN_AUTO_BLUE, PARK_AFTER_VALJEAN_AUTO_RED));
+    protected Command exitAmpSide() {
+        return driveTo(PARK_AFTER_VALJEAN_AUTO_BLUE, PARK_AFTER_VALJEAN_AUTO_RED);
     }
 
 }
