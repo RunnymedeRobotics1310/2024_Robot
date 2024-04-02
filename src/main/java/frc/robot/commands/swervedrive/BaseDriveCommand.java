@@ -1,7 +1,7 @@
 package frc.robot.commands.swervedrive;
 
 import static frc.robot.Constants.Swerve.Chassis.*;
-import static frc.robot.RunnymedeUtils.format;
+
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -50,10 +50,10 @@ public abstract class BaseDriveCommand extends LoggingCommand {
         Translation2d velocity = SwerveUtils.computeVelocity(delta.getTranslation(), maxSpeedMPS);
         Rotation2d    omega    = computeOmega(desiredPose.getRotation());
 
-        log("Current: " + format(current)
-            + " Delta: " + format(delta.getTranslation()) + " m @ " + format(delta.getRotation())
-            + " Target: " + format(desiredPose)
-            + " Velocity: " + format(velocity) + "m/s @ " + format(omega) + "/s");
+//        log("Current: " + format(current)
+//            + " Delta: " + format(delta.getTranslation()) + " m @ " + format(delta.getRotation())
+//            + " Target: " + format(desiredPose)
+//            + " Velocity: " + format(velocity) + "m/s @ " + format(omega) + "/s");
 
         Telemetry.drive.drive_to_pose_delta    = delta;
         Telemetry.drive.drive_to_pose_desired  = desiredPose;
