@@ -464,7 +464,7 @@ public final class Constants {
 
     public static final class LightingConstants {
         public static final int        PWM_PORT                = 9;
-        public static final int        STRIP_LENGTH            = 24;
+        public static final int        STRIP_LENGTH            = 28;
 
         /**
          * The factor by which the brightness of the lights in the workshop should be reduced.
@@ -479,8 +479,8 @@ public final class Constants {
         public static final Color      NOTE_RED                = new Color(255, 0, 0);
 
         public static LightstripRegion VISPOSE1                = new LightstripRegion("Vision1", 0, 3);
-        public static LightstripRegion SIGNAL                  = new LightstripRegion("Signal", 3, 18);
-        public static LightstripRegion VISPOSE2                = new LightstripRegion("Vision2", 21, VISPOSE1.length);
+        public static LightstripRegion SIGNAL                  = new LightstripRegion("Signal", 3, 22);
+        public static LightstripRegion VISPOSE2                = new LightstripRegion("Vision2", 25, VISPOSE1.length);
 
     }
 
