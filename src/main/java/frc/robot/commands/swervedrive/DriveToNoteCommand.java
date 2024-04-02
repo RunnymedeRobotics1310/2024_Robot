@@ -1,14 +1,14 @@
 package frc.robot.commands.swervedrive;
 
+import static frc.robot.Constants.LightingConstants.SIGNAL;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.IntakeWithVision;
-import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-
-import static frc.robot.Constants.LightingConstants.SIGNAL;
+import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 
 public class DriveToNoteCommand extends BaseDriveCommand {
@@ -66,7 +66,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
             }
 
             else if (arm.getLinkAngle() <= 120) {
-                if (noteTY < -16.5) {
+                if (noteTY < -18) {
                     swerve.stop();
                 }
                 else if (noteTY < 5) {
