@@ -32,8 +32,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     private double              lastDistanceToTarget = -1310;
     private boolean             tooClose             = false;
     private double              shooterStartTime     = 0;
-    private long                armMoveStartTime     = 0;
-
+    private long                shooterSpinUpTime    = 850;
 
     private Constants.BotTarget botTarget;
 
@@ -94,20 +93,22 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         double                aimAngle         = SpeakerShooterPolynomialAngleCalc.calculateAimAngle(distanceToTarget);
         Constants.ArmPosition armPositionNew   = new Constants.ArmPosition(linkAngle, aimAngle);
 
-        if (armMoveStartTime == 0) {
-            armMoveStartTime = System.currentTimeMillis();
-        }
-
         return driveToArmPosition(armPositionNew, 2, 2);
     }
 
     private void setShoooterByDistance(double distance) {
 
-        if (distance >= 3) {
+        if (distance >= 3.9) {
+            armSubsystem.setShooterSpeed(0.95);
+            shooterSpinUpTime = 1000;
+        }
+        else if (distance >= 3) {
             armSubsystem.setShooterSpeed(0.85);
+            shooterSpinUpTime = 850;
         }
         else {
             armSubsystem.setShooterSpeed(0.8);
+            shooterSpinUpTime = 850;
         }
 
         if (shooterStartTime == 0) {
@@ -119,7 +120,6 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     public void execute() {
 
         final boolean atArmAngle;
-        long          now;
 
         switch (state) {
 
@@ -143,23 +143,18 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
             long spinupTime;
 
-            if (!tooClose) {
-                atArmAngle = driveArmToCalculatedAngle();
-                spinupTime = 850;
-            }
-            else {
-                atArmAngle = true;
-                spinupTime = 800;
-            }
-
             armSubsystem.setIntakeSpeed(0);
             setShoooterByDistance(lastDistanceToTarget);
 
-            // Wait for the shooter to get up to speed and the arm to get into position
-            now = System.currentTimeMillis();
-            if ((now - shooterStartTime) >= spinupTime
-                && (atArmAngle || (now - armMoveStartTime) > 1000)) {
+            if (!tooClose) {
+                atArmAngle = driveArmToCalculatedAngle();
+            }
+            else {
+                atArmAngle = true;
+            }
 
+            // Wait for the shooter to get up to speed and the arm to get into position
+            if (((System.currentTimeMillis() - shooterStartTime) > shooterSpinUpTime) && atArmAngle) {
                 StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
                 sb.append(" TopShooter ")
                     .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
@@ -167,9 +162,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
                     .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
                     .append(" Link ").append(armSubsystem.getLinkAngle()).append("deg")
                     .append(" Aim ").append(armSubsystem.getAimAngle()).append("deg")
-                    .append(" DistanceToTarget ").append(lastDistanceToTarget)
-                    .append(" AtArmAngle ").append(atArmAngle)
-                    .append(" ArmMoveElasped ").append(now - armMoveStartTime);
+                    .append(" DistanceToTarget ").append(lastDistanceToTarget);
                 logStateTransition("Start Shooter -> Shoot", sb.toString());
                 state = State.START_FEEDER;
             }
@@ -183,7 +176,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             }
             armSubsystem.setIntakeSpeed(1);
 
-            if (isStateTimeoutExceeded(.125)) {
+            if (isStateTimeoutExceeded(.25)) {
                 logStateTransition("Shoot -> Finished", "Shot fired");
                 state = State.FINISHED;
             }
