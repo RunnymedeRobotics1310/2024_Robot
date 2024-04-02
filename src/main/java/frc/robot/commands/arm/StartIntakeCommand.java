@@ -133,6 +133,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
             // Stop when the note is detected
             if (armSubsystem.isNoteDetected()) {
+                armSubsystem.setIntakeSpeed(0);
                 logStateTransition("Start Intake -> Finish", "Note detected");
                 state = State.FINISHED;
             }
@@ -172,7 +173,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
         if (!interrupted) {
             if (DriverStation.isTeleop()) {
                 CommandScheduler.getInstance().schedule(new CompactFromIntakeCommand(armSubsystem, false)
-                        .alongWith(new ReverseNoteCommand(armSubsystem)));
+                    .alongWith(new ReverseNoteCommand(armSubsystem)));
             }
         }
     }
