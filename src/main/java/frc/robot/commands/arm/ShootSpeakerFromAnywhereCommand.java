@@ -100,7 +100,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         if (distance >= 3.9) {
             armSubsystem.setShooterSpeed(0.95);
-            shooterSpinUpTime = 1000;
+            shooterSpinUpTime = 1100;
         }
         else if (distance >= 3) {
             armSubsystem.setShooterSpeed(0.85);
@@ -141,17 +141,15 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         case START_SHOOTER:
 
-            long spinupTime;
-
-            armSubsystem.setIntakeSpeed(0);
-            setShoooterByDistance(lastDistanceToTarget);
-
             if (!tooClose) {
                 atArmAngle = driveArmToCalculatedAngle();
             }
             else {
                 atArmAngle = true;
             }
+
+            armSubsystem.setIntakeSpeed(0);
+            setShoooterByDistance(lastDistanceToTarget);
 
             // Wait for the shooter to get up to speed and the arm to get into position
             if (((System.currentTimeMillis() - shooterStartTime) > shooterSpinUpTime) && atArmAngle) {
