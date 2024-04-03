@@ -462,6 +462,10 @@ public final class Constants {
             WAIT_2_SECONDS, WAIT_2_5_SECONDS,
             WAIT_3_SECONDS, WAIT_5_SECONDS
         }
+
+        public enum Note {
+            None, Loaded, Wolverine, Barnum, Valjean
+        }
     }
 
     public static final class LightingConstants {

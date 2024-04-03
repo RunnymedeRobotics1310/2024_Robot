@@ -1,51 +1,81 @@
 package frc.robot.commands.auto;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
+import frc.robot.Constants.AutoConstants.Note;
 
 public class TheSpeakerAuto extends BaseAutoCommand {
 
     public TheSpeakerAuto(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
-        JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay, int noteCount) {
+        JackmanVisionSubsystem jackman, LightingSubsystem lighting, Note note1, Note note2, Note note3, double delay, int noteCount) {
+
         super(swerve, armSubsystem, jackman, lighting);
 
-        enum Note {
-            Loaded, Wolverine, Barnum, Valjean
-        }
 
         Note lastNote = null;
+
+        Command wolverine = goGetWolverine().andThen(scoreSpeaker());
+        Command barnum = goGetBarnum().andThen(scoreSpeaker());
+        Command valjean = goGetValjean().andThen(scoreSpeaker());
 
         // start
         addCommands(log("Starting Auto"));
         addCommands(wait(delay));
 
-        // loaded
-        if (noteCount > 0) {
+
+        // loaded (Note 0)
             addCommands(scoreSpeaker());
             lastNote = Note.Loaded;
+
+
+        // Note 1
+        switch (note1) {
+            case Valjean:
+                addCommands(valjean);
+                break;
+            case Barnum:
+                addCommands(barnum);
+                break;
+            case Wolverine:
+                addCommands(wolverine);
+            case None:
+            default:
+                break;
         }
 
-        // wolverine
-        if (noteCount > 1) {
-            addCommands(goGetWolverine());
-            addCommands(scoreSpeaker());
-            lastNote = Note.Wolverine;
+        // Note 2
+        switch (note2) {
+            case Valjean:
+                addCommands(valjean);
+                break;
+            case Barnum:
+                addCommands(barnum);
+                break;
+            case Wolverine:
+                addCommands(wolverine);
+            case None:
+                lastNote = note1;
+            default:
+                break;
         }
 
-        // barnum
-        if (noteCount > 2) {
-            addCommands(goGetBarnum());
-            addCommands(scoreSpeaker());
-            lastNote = Note.Barnum;
-        }
-
-        // valjean
-        if (noteCount > 3) {
-            addCommands(goGetValjean());
-            addCommands(scoreSpeaker());
-            lastNote = Note.Valjean;
+        // Note 3
+        switch (note3) {
+            case Valjean:
+                addCommands(valjean);
+                break;
+            case Barnum:
+                addCommands(barnum);
+                break;
+            case Wolverine:
+                addCommands(wolverine);
+            case None:
+                lastNote = note2;
+            default:
+                break;
         }
 
         // Exit Zone

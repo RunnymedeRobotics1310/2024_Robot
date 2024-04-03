@@ -55,6 +55,9 @@ public class OperatorInput {
 
     private final SendableChooser<Constants.AutoConstants.AutoPattern> autoPatternChooser = new SendableChooser<>();
     private final SendableChooser<Constants.AutoConstants.Delay>       delayChooser       = new SendableChooser<>();
+    private final SendableChooser<Constants.AutoConstants.Note> note1               = new SendableChooser<>();
+    private final SendableChooser<Constants.AutoConstants.Note> note2               = new SendableChooser<>();
+    private final SendableChooser<Constants.AutoConstants.Note> note3               = new SendableChooser<>();
 
     public enum Stick {
         LEFT, RIGHT
@@ -343,6 +346,27 @@ public class OperatorInput {
         delayChooser.addOption("2 1/2 Seconds", Constants.AutoConstants.Delay.WAIT_2_5_SECONDS);
         delayChooser.addOption("3 Seconds", Constants.AutoConstants.Delay.WAIT_3_SECONDS);
         delayChooser.addOption("5 Seconds", Constants.AutoConstants.Delay.WAIT_5_SECONDS);
+
+        Telemetry.auto.note1 = note1;
+
+        note1.setDefaultOption("No Note", Constants.AutoConstants.Note.None);
+        note1.addOption("Wolverine", Constants.AutoConstants.Note.Wolverine);
+        note1.addOption("Barnum", Constants.AutoConstants.Note.Barnum);
+        note1.addOption("Valjean", Constants.AutoConstants.Note.Valjean);
+
+        Telemetry.auto.note2 = note2;
+
+        note1.setDefaultOption("No Note", Constants.AutoConstants.Note.None);
+        note1.addOption("Wolverine", Constants.AutoConstants.Note.Wolverine);
+        note1.addOption("Barnum", Constants.AutoConstants.Note.Barnum);
+        note1.addOption("Valjean", Constants.AutoConstants.Note.Valjean);
+
+        Telemetry.auto.note3 = note3;
+
+        note1.setDefaultOption("No Note", Constants.AutoConstants.Note.None);
+        note1.addOption("Wolverine", Constants.AutoConstants.Note.Wolverine);
+        note1.addOption("Barnum", Constants.AutoConstants.Note.Barnum);
+        note1.addOption("Valjean", Constants.AutoConstants.Note.Valjean);
     }
 
     /**
@@ -362,6 +386,10 @@ public class OperatorInput {
         case WAIT_5_SECONDS -> 5;
         default -> 0;
         };
+
+        Constants.AutoConstants.Note note1 = switch (note1.getSelected()) {
+            case
+        }
 
         return switch (autoPatternChooser.getSelected()) {
         // not used
