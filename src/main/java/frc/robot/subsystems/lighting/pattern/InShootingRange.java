@@ -1,8 +1,7 @@
 package frc.robot.subsystems.lighting.pattern;
 
-
-import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.Constants.LightingConstants.NOTE_ORANGE;
+import static frc.robot.Constants.LightingConstants.SIGNAL_PATTERN_LENGTH;
 
 /**
  * Light signal to display when the robot is within shooting range of a target.
@@ -24,7 +23,7 @@ public class InShootingRange extends LightingPattern {
 
 
     private InShootingRange() {
-        super(SIGNAL.length);
+        super(SIGNAL_PATTERN_LENGTH);
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setLED(i, NOTE_ORANGE);
         }

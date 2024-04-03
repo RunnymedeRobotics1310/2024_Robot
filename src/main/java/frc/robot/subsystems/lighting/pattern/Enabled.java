@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 
 import static edu.wpi.first.wpilibj.DriverStation.Alliance.Red;
-import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.Constants.LightingConstants.SIGNAL_PATTERN_LENGTH;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 /**
@@ -24,12 +24,12 @@ public class Enabled extends LightingPattern {
     static {
 
         // Static initializer for the RSL flash buffer
-        RSL_ON      = new AddressableLEDBuffer(SIGNAL.length);
-        RSL_OFF     = new AddressableLEDBuffer(SIGNAL.length);
-        RED_BUFFER  = new AddressableLEDBuffer(SIGNAL.length);
-        BLUE_BUFFER = new AddressableLEDBuffer(SIGNAL.length);
+        RSL_ON      = new AddressableLEDBuffer(SIGNAL_PATTERN_LENGTH);
+        RSL_OFF     = new AddressableLEDBuffer(SIGNAL_PATTERN_LENGTH);
+        RED_BUFFER  = new AddressableLEDBuffer(SIGNAL_PATTERN_LENGTH);
+        BLUE_BUFFER = new AddressableLEDBuffer(SIGNAL_PATTERN_LENGTH);
 
-        for (int i = 0; i < SIGNAL.length; i++) {
+        for (int i = 0; i < SIGNAL_PATTERN_LENGTH; i++) {
             RSL_ON.setLED(i, RSL_COLOR);
             RSL_OFF.setLED(i, Color.kBlack);
             RED_BUFFER.setLED(i, Color.kRed);
@@ -45,7 +45,7 @@ public class Enabled extends LightingPattern {
     private boolean prevRslState = false;
 
     private Enabled() {
-        super(SIGNAL.length);
+        super(SIGNAL_PATTERN_LENGTH);
         rslFlashCount = 5;
     }
 

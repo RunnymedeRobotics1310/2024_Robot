@@ -11,7 +11,7 @@ import frc.robot.telemetry.Telemetry;
 
 import java.util.ArrayList;
 
-import static frc.robot.Constants.LightingConstants.WORKSHOP_DIMMING_FACTOR;
+import static frc.robot.Constants.LightingConstants.*;
 
 public class LightingSubsystem extends RunnymedeSubsystemBase {
 
@@ -32,6 +32,17 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
         ledStrip.setData(ledBuffer);
 
         ledStrip.start();
+    }
+
+    public void setVisionPattern(LightingPattern pattern) {
+        VISPOSE_LEFT.setPattern(pattern);
+        VISPOSE_RIGHT.setPattern(pattern);
+    }
+
+    public void addSignalPattern(LightingPattern pattern) {
+        SIGNAL_LEFT.addPattern(pattern);
+        SIGNAL_CENTER.addPattern(pattern);
+        SIGNAL_RIGHT.addPattern(pattern);
     }
 
     /**
@@ -61,15 +72,22 @@ public class LightingSubsystem extends RunnymedeSubsystemBase {
     @Override
     public void periodic() {
         // set the lights in each region
-        for (LightstripRegion region : regions) {
+        eachRegion: for (LightstripRegion region : regions) {
 
-            LightingPattern      pattern = region.getPattern();
-            AddressableLEDBuffer buffer  = pattern.getBuffer();
-            for (int i = 0; i < buffer.getLength(); i++) {
-                ledBuffer.setLED(region.start + i, buffer.getLED(i));
+            Telemetry.light.regionStatus.put(region.name, region.getPattern().getClass().getSimpleName());
+
+            int regionIndex = region.start;
+            int regionEnd   = region.start + region.length;
+            while (true) {
+                AddressableLEDBuffer patternBuffer = region.getPattern().getBuffer();
+                for (int j = 0; j < patternBuffer.getLength(); j++) {
+                    ledBuffer.setLED(regionIndex++, patternBuffer.getLED(j));
+                    if (regionIndex == regionEnd) {
+                        continue eachRegion;
+                    }
+                }
             }
 
-            Telemetry.light.regionStatus.put(region.name, pattern.getClass().getSimpleName());
         }
 
         dimLightsInWorkshop();

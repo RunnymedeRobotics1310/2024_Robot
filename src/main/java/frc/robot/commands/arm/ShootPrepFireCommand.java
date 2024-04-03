@@ -1,7 +1,5 @@
 package frc.robot.commands.arm;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.operator.OperatorInput;
@@ -18,14 +16,14 @@ public class ShootPrepFireCommand extends ArmBaseCommand {
 
     private State             state               = State.START_SHOOTER;
     private LightingSubsystem lighting;
-    private OperatorInput operatorInput;
+    private OperatorInput     operatorInput;
 
     private double            startIntakePosition = 0;
 
     public ShootPrepFireCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting, OperatorInput operatorInput) {
 
         super(armSubsystem);
-        this.lighting = lighting;
+        this.lighting      = lighting;
         this.operatorInput = operatorInput;
     }
 
@@ -37,7 +35,7 @@ public class ShootPrepFireCommand extends ArmBaseCommand {
         startIntakePosition = armSubsystem.getIntakePosition();
 
         logCommandStart("Intake Position " + startIntakePosition);
-        lighting.addPattern(SIGNAL, Shooting.getInstance());
+        lighting.addSignalPattern(Shooting.getInstance());
     }
 
     @Override
@@ -61,7 +59,8 @@ public class ShootPrepFireCommand extends ArmBaseCommand {
             double elapsedTime = getStateElapsedTime();
 
             if (elapsedTime >= .5 && operatorInput.getRawOperatorController().getBButtonReleased()) {
-                setStateAndLog(State.START_FEEDER, "ShooterSpeed[" + armSubsystem.getBottomShooterEncoderSpeed() + "], Elapsed[" + elapsedTime + "]");
+                setStateAndLog(State.START_FEEDER,
+                    "ShooterSpeed[" + armSubsystem.getBottomShooterEncoderSpeed() + "], Elapsed[" + elapsedTime + "]");
             }
             break;
 

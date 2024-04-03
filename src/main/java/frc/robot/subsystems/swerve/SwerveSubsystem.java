@@ -1,7 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import static frc.robot.Constants.LightingConstants.VISPOSE1;
-import static frc.robot.Constants.LightingConstants.VISPOSE2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATION_ACCELERATION_RAD_PER_SEC2;
 import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_ACCELERATION_MPS2;
 import static frc.robot.RunnymedeUtils.format;
@@ -177,20 +175,16 @@ public abstract class SwerveSubsystem extends RunnymedeSubsystemBase {
 
         switch (confidence) {
         case HIGH:
-            lighting.setPattern(VISPOSE1, VisionConfidenceHigh.getInstance());
-            lighting.setPattern(VISPOSE2, VisionConfidenceHigh.getInstance());
+            lighting.setVisionPattern(VisionConfidenceHigh.getInstance());
             break;
         case MEDIUM:
-            lighting.setPattern(VISPOSE1, VisionConfidenceMedium.getInstance());
-            lighting.setPattern(VISPOSE2, VisionConfidenceMedium.getInstance());
+            lighting.setVisionPattern(VisionConfidenceMedium.getInstance());
             break;
         case LOW:
-            lighting.setPattern(VISPOSE1, VisionConfidenceLow.getInstance());
-            lighting.setPattern(VISPOSE2, VisionConfidenceLow.getInstance());
+            lighting.setVisionPattern(VisionConfidenceLow.getInstance());
             break;
         case NONE:
-            lighting.setPattern(VISPOSE1, VisionConfidenceNone.getInstance());
-            lighting.setPattern(VISPOSE2, VisionConfidenceNone.getInstance());
+            lighting.setVisionPattern(VisionConfidenceNone.getInstance());
             break;
         }
     }
