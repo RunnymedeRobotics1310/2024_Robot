@@ -1,6 +1,7 @@
 package frc.robot.commands.arm;
 
 import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.Constants.Swerve.Chassis.ROTATION_TOLERANCE;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.swervedrive.SwerveUtils;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
@@ -24,18 +26,21 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         MOVE_TO_UNLOCK, START_SHOOTER, START_FEEDER, FINISHED
     };
 
-    private SwerveSubsystem     swerveSubsystem;
-    private LightingSubsystem   lighting;
+    private SwerveSubsystem       swerveSubsystem;
+    private LightingSubsystem     lighting;
 
-    private State               state                = State.MOVE_TO_UNLOCK;
-    double                      intakeStartPosition  = 0;
-    private double              lastDistanceToTarget = -1310;
-    private boolean             tooClose             = false;
-    private long                shooterStartTime     = 0;
-    private long                shooterSpinUpTime    = 850;
-    private long                armMoveStartTime     = 0;
+    private State                 state                  = State.MOVE_TO_UNLOCK;
+    double                        intakeStartPosition    = 0;
+    private Pose2d                robotPose              = null;
+    private double                lastDistanceToTarget   = -1310;
+    private boolean               tooClose               = false;
+    private long                  shooterStartTimeNanos  = 0;
+    private long                  shooterSpinUpTimeNanos = 0;
+    private double                shooterSpeedRequired   = 0.0;
+    private long                  armMoveStartTimeNanos  = 0;
+    private Constants.ArmPosition shotArmPosition        = null;
 
-    private Constants.BotTarget botTarget;
+    private Constants.BotTarget   botTarget;
 
 
     public ShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem,
@@ -65,10 +70,13 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         logCommandStart();
 
+        this.robotPose = swerveSubsystem.getPose();
+
+        updateShooterConfig();
+
         // Use standard Shoot if we're close enough to the speaker
-        if (getDistanceToTarget() < 1.6) {
-            tooClose = true;
-            state    = State.START_SHOOTER;
+        if (tooClose) {
+            state = State.START_SHOOTER;
         }
         else if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, 2)) {
             state = State.MOVE_TO_UNLOCK;
@@ -80,58 +88,104 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         intakeStartPosition = armSubsystem.getIntakePosition();
     }
 
-    private double getDistanceToTarget() {
-        Pose2d botPose          = swerveSubsystem.getPose();
-        double distanceToTarget = botPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
-        lastDistanceToTarget = distanceToTarget;
-        return distanceToTarget;
+
+    private boolean updateShooterConfig() {
+        final boolean changed;
+        if (this.robotPose == null) {
+            this.robotPose = swerveSubsystem.getPose();
+            changed        = true;
+        }
+        else {
+            Pose2d poseNow = swerveSubsystem.getPose();
+            if (SwerveUtils.isCloseEnough(poseNow.getTranslation(), robotPose.getTranslation())
+                && SwerveUtils.isCloseEnough(poseNow.getRotation(), robotPose.getRotation(), ROTATION_TOLERANCE)) {
+                changed = false;
+            }
+            else {
+                // NOTEoriousPID moved!
+                this.robotPose = poseNow;
+                changed        = true;
+            }
+        }
+
+        if (changed) {
+            lastDistanceToTarget = robotPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
+            if (lastDistanceToTarget >= 3.9) {
+                this.shooterSpeedRequired   = 0.95;
+                this.shooterSpinUpTimeNanos = 1100 * 1000 * 1000;
+            }
+            else if (lastDistanceToTarget >= 3) {
+                this.shooterSpeedRequired   = 0.85;
+                this.shooterSpinUpTimeNanos = 850 * 1000 * 1000;
+            }
+            else {
+                this.shooterSpeedRequired   = 0.8;
+                this.shooterSpinUpTimeNanos = 850 * 1000 * 1000;
+            }
+
+            if (lastDistanceToTarget < 1.6) {
+                tooClose             = true;
+                // we're too close! shoot from compact
+                this.shotArmPosition = ArmConstants.COMPACT_ARM_POSITION;
+            }
+            else {
+                tooClose             = false;
+                // we're back a bit - shoot from a calculated angle
+                this.shotArmPosition = new Constants.ArmPosition(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle,
+                    SpeakerShooterPolynomialAngleCalc.calculateAimAngle(lastDistanceToTarget));
+            }
+        }
+
+        return changed;
     }
 
     private boolean driveArmToCalculatedAngle() {
-        // Drive to the arm position at the same time
-        double                linkAngle        = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
-        double                distanceToTarget = getDistanceToTarget();
-        double                aimAngle         = SpeakerShooterPolynomialAngleCalc.calculateAimAngle(distanceToTarget);
-        Constants.ArmPosition armPositionNew   = new Constants.ArmPosition(linkAngle, aimAngle);
-
-        if (armMoveStartTime == 0) {
-            armMoveStartTime = System.currentTimeMillis();
+        if (armMoveStartTimeNanos == 0) {
+            armMoveStartTimeNanos = System.nanoTime();
         }
-
-        return driveToArmPosition(armPositionNew, 2, 2);
+        boolean inPosition = driveToArmPosition(this.shotArmPosition, 2, 2);
+        if (tooClose && inPosition) {
+            // don't drive motors if we're in compact. This SHOULD already be in the subsystem
+            armSubsystem.setLinkPivotSpeed(0);
+            armSubsystem.setAimPivotSpeed(0);
+        }
+        return inPosition;
     }
 
-    private void setShoooterByDistance(double distance) {
-
-        if (distance >= 3.9) {
-            armSubsystem.setShooterSpeed(0.95);
-            shooterSpinUpTime = 1100;
+    private void startShooter() {
+        armSubsystem.setIntakeSpeed(0);
+        if (armSubsystem.getIntakeEncoderSpeed() < 0.01) {
+            armSubsystem.setShooterSpeed(this.shooterSpeedRequired);
+            if (shooterStartTimeNanos == 0) {
+                shooterStartTimeNanos = System.nanoTime();
+            }
         }
-        else if (distance >= 3) {
-            armSubsystem.setShooterSpeed(0.85);
-            shooterSpinUpTime = 850;
-        }
-        else {
-            armSubsystem.setShooterSpeed(0.8);
-            shooterSpinUpTime = 850;
-        }
-
-        if (shooterStartTime == 0) {
-            shooterStartTime = System.currentTimeMillis();
+        {
+            log("Cannot start shooter. Intake is still moving.");
         }
     }
 
     @Override
     public void execute() {
 
-        boolean atArmAngle = false;
+        boolean botMoved = updateShooterConfig();
+        if (botMoved) {
+            // if the bot moved, give the robot extra time to get into position
+            this.armMoveStartTimeNanos = 0;
+            this.shooterStartTimeNanos = 0;
+            // if we suddenly became too close, start the shooter.
+            if (tooClose) {
+                logStateTransition("START_SHOOTER", "Bot moved - now too close. Start shooter.");
+                state = State.START_SHOOTER;
+            }
+        }
 
         switch (state) {
 
         case MOVE_TO_UNLOCK:
 
             // Start the shooter
-            setShoooterByDistance(getDistanceToTarget());
+            startShooter();
 
             // Run the link motor back (up) for .15 seconds to unlock the arm
             armSubsystem.setLinkPivotSpeed(.3);
@@ -146,17 +200,16 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         case START_SHOOTER:
 
-            if (!tooClose) {
-                atArmAngle = driveArmToCalculatedAngle();
-            }
+            startShooter();
 
-            armSubsystem.setIntakeSpeed(0);
-            setShoooterByDistance(lastDistanceToTarget);
+            long now = System.nanoTime();
+            boolean atArmAngle = driveArmToCalculatedAngle();
+            boolean armTimeout = now > (armMoveStartTimeNanos + (2000 * 1000 * 1000));
+            boolean shooterReady = now > (shooterStartTimeNanos + shooterSpinUpTimeNanos);
+            boolean armReady = tooClose || atArmAngle || armTimeout;
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            if (((System.currentTimeMillis() - shooterStartTime) > shooterSpinUpTime)
-                && (tooClose || atArmAngle || System.currentTimeMillis() - armMoveStartTime > 2000)) {
-
+            if (shooterReady && armReady) {
                 StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
                 sb.append(" TopShooter ")
                     .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
@@ -173,9 +226,11 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         case START_FEEDER:
 
-            if (!tooClose) {
-                driveArmToCalculatedAngle();
-            }
+            // This is to KEEP the arm at the desired angle. If we are in this state
+            // the arm already got to the desired angle.
+            driveArmToCalculatedAngle();
+
+            // feed the note into the shooter
             armSubsystem.setIntakeSpeed(1);
 
             if (isStateTimeoutExceeded(.25)) {
