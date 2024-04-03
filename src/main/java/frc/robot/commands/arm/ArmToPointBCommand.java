@@ -18,8 +18,7 @@ public class ArmToPointBCommand extends ArmBaseCommand {
 
     @Override
     public boolean isFinished() {
-        return driveToArmPosition(ArmConstants.OVER_BUMPER_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
-            ArmConstants.DEFAULT_AIM_TOLERANCE_DEG);
+        return isAtArmPosition(ArmConstants.OVER_BUMPER_POSITION, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG);
     }
 
     @Override
