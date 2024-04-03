@@ -1,6 +1,5 @@
 package frc.robot.commands.arm;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -60,7 +59,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             botTarget = Constants.BotTarget.RED_SPEAKER;
         }
 
-        lighting.addPattern(SIGNAL, Shooting.getInstance());
+        lighting.addSignalPattern(Shooting.getInstance());
 
         logCommandStart();
 

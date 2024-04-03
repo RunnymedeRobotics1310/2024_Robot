@@ -6,8 +6,6 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Shooting;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
-
 // Shoot. That's it.
 public class ShootCommand extends ArmBaseCommand {
 
@@ -34,7 +32,7 @@ public class ShootCommand extends ArmBaseCommand {
         startIntakePosition = armSubsystem.getIntakePosition();
 
         logCommandStart("Intake Position " + startIntakePosition);
-        lighting.addPattern(SIGNAL, Shooting.getInstance());
+        lighting.addSignalPattern(Shooting.getInstance());
     }
 
     @Override
@@ -52,7 +50,8 @@ public class ShootCommand extends ArmBaseCommand {
 
             // Wait for the shooter to get up to speed
             if (isStateTimeoutExceeded(.5)) {
-                logStateTransition("Start Shooter -> Shoot", "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed());
+                logStateTransition("Start Shooter -> Shoot",
+                    "Shooter up to speed " + armSubsystem.getBottomShooterEncoderSpeed());
                 state = State.START_FEEDER;
             }
 

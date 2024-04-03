@@ -2,7 +2,8 @@ package frc.robot.subsystems.lighting.pattern;
 
 import edu.wpi.first.wpilibj.util.Color;
 
-import static frc.robot.Constants.LightingConstants.VISPOSE1;
+import static frc.robot.Constants.LightingConstants.SIGNAL_PATTERN_LENGTH;
+import static frc.robot.Constants.LightingConstants.VISION_PATTERN_LENGTH;
 
 /**
  * Light signal to display when robot vision pose measurements have a medium confidence.
@@ -22,7 +23,7 @@ public class VisionConfidenceMedium extends LightingPattern {
     }
 
     private VisionConfidenceMedium() {
-        super(VISPOSE1.length);
+        super(VISION_PATTERN_LENGTH);
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setLED(i, Color.kCyan);
         }

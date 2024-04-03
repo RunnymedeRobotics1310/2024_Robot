@@ -22,15 +22,6 @@ public class LightstripRegion {
     }
 
     public void addPattern(LightingPattern pattern) {
-
-        // If the pattern doesn't fit, log a warning and ignore it.
-        if (pattern.length != length) {
-            Telemetry.light.lightstripRegionWarning = String.format(
-                "Pattern %s has a length of %d but the region %s has a length of %d.  IGNORING PATTERN.",
-                pattern.getClass().getSimpleName(), pattern.length, name, length);
-            return;
-        }
-
         String key = pattern.getClass().getName();
         // reuse previous pattern if already there, to preserve state of an
         // active pattern

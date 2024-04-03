@@ -2,7 +2,7 @@ package frc.robot.subsystems.lighting.pattern;
 
 import edu.wpi.first.wpilibj.util.Color;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.Constants.LightingConstants.SIGNAL_PATTERN_LENGTH;
 
 /**
  * Light signal to display while the robot is climbing.
@@ -23,7 +23,7 @@ public class Climbing extends LightingPattern {
     }
 
     private Climbing() {
-        super(SIGNAL.length);
+        super(SIGNAL_PATTERN_LENGTH);
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setLED(i, Color.kGreen);
         }

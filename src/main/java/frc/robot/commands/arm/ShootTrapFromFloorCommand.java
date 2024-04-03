@@ -1,7 +1,5 @@
 package frc.robot.commands.arm;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -26,19 +24,20 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
     private double            startIntakePosition = 0;
 
     private OperatorInput     operatorInput;
-    private SwerveSubsystem     swerveSubsystem;
+    private SwerveSubsystem   swerveSubsystem;
 
-    NetworkTable table                       = NetworkTableInstance.getDefault().getTable("Testing");
-    NetworkTableEntry bottomMotorSpeed       = table.getEntry("bottomMotorSpeed");
-    NetworkTableEntry topMotorSpeed          = table.getEntry("topMotorSpeed");
+    NetworkTable              table               = NetworkTableInstance.getDefault().getTable("Testing");
+    NetworkTableEntry         bottomMotorSpeed    = table.getEntry("bottomMotorSpeed");
+    NetworkTableEntry         topMotorSpeed       = table.getEntry("topMotorSpeed");
 
 
-    public ShootTrapFromFloorCommand(SwerveSubsystem swerveSubsystem, ArmSubsystem armSubsystem, LightingSubsystem lighting, OperatorInput operatorInput) {
+    public ShootTrapFromFloorCommand(SwerveSubsystem swerveSubsystem, ArmSubsystem armSubsystem, LightingSubsystem lighting,
+        OperatorInput operatorInput) {
 
         super(armSubsystem);
         this.swerveSubsystem = swerveSubsystem;
-        this.lighting = lighting;
-        this.operatorInput = operatorInput;
+        this.lighting        = lighting;
+        this.operatorInput   = operatorInput;
     }
 
     @Override
@@ -49,7 +48,7 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
         startIntakePosition = armSubsystem.getIntakePosition();
 
         logCommandStart("Intake Position " + startIntakePosition);
-        lighting.addPattern(SIGNAL, Shooting.getInstance());
+        lighting.addSignalPattern(Shooting.getInstance());
     }
 
     @Override
@@ -69,12 +68,13 @@ public class ShootTrapFromFloorCommand extends ArmBaseCommand {
             if (isStateTimeoutExceeded(.75)) {
                 StringBuilder sb = new StringBuilder("Shooter up to speed.");
                 sb.append(" TopShooter ")
-                        .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
-                        .append(" BottomShooter ")
-                        .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
-                        .append(" BotPose " )
-                        .append(swerveSubsystem.getPose().getTranslation());
-                logStateTransition("Start Shooter -> Shoot", sb.toString());;
+                    .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
+                    .append(" BottomShooter ")
+                    .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
+                    .append(" BotPose ")
+                    .append(swerveSubsystem.getPose().getTranslation());
+                logStateTransition("Start Shooter -> Shoot", sb.toString());
+                ;
                 state = State.START_FEEDER;
             }
 

@@ -1,6 +1,5 @@
 package frc.robot.commands.operator;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
 import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
 import static frc.robot.Constants.UsefulPoses.START_AT_BLUE_SPEAKER;
@@ -217,7 +216,7 @@ public class OperatorInput {
 
         // Run when enabled
         new Trigger(RobotController::isSysActive)
-            .onTrue(new InstantCommand(() -> lighting.addPattern(SIGNAL, Enabled.getInstance())));
+            .onTrue(new InstantCommand(() -> lighting.addSignalPattern(Enabled.getInstance())));
 
 
 

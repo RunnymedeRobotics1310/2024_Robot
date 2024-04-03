@@ -1,7 +1,5 @@
 package frc.robot.commands.arm;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ArmConstants;
@@ -28,7 +26,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
     @Override
     public void initialize() {
 
-        lighting.addPattern(SIGNAL, Intaking.getInstance());
+        lighting.addSignalPattern(Intaking.getInstance());
         // If there is a note inside the robot, then do not start this command
         if (armSubsystem.isNoteDetected()) {
             log("Note detected in robot. StartIntakeCommand cancelled");

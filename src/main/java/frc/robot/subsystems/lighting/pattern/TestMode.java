@@ -2,7 +2,7 @@ package frc.robot.subsystems.lighting.pattern;
 
 import edu.wpi.first.wpilibj.util.Color;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.Constants.LightingConstants.SIGNAL_PATTERN_LENGTH;
 
 /**
  * Light signal to display while the robot is in test mode.
@@ -18,7 +18,7 @@ public class TestMode extends LightingPattern {
     }
 
     private TestMode() {
-        super(SIGNAL.length);
+        super(SIGNAL_PATTERN_LENGTH);
         for (int i = 0; i < buffer.getLength(); i++) {
             if (i % 2 == 0) {
                 buffer.setLED(i, Color.kRed);

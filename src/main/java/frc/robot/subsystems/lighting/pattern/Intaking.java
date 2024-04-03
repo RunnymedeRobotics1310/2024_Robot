@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 
 import static frc.robot.Constants.LightingConstants.NOTE_ORANGE;
-import static frc.robot.Constants.LightingConstants.SIGNAL;
+import static frc.robot.Constants.LightingConstants.SIGNAL_PATTERN_LENGTH;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 /**
@@ -35,8 +35,8 @@ public class Intaking extends LightingPattern {
     private final AddressableLEDBuffer offBuffer;
 
     private Intaking(Color on, Color off) {
-        super(SIGNAL.length);
-        offBuffer = new AddressableLEDBuffer(SIGNAL.length);
+        super(SIGNAL_PATTERN_LENGTH);
+        offBuffer = new AddressableLEDBuffer(SIGNAL_PATTERN_LENGTH);
         for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setLED(i, on);
             offBuffer.setLED(i, off);

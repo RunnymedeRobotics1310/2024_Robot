@@ -1,6 +1,5 @@
 package frc.robot.commands.swervedrive;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.Constants.Swerve.Chassis.*;
 import static frc.robot.Constants.UsefulHeadings.*;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
@@ -169,11 +168,11 @@ public class TeleopDriveCommand extends BaseDriveCommand {
 
         if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < MAX_DISTANCE) {
             lighting.removePattern(BonusShootingRange.class);
-            lighting.addPattern(SIGNAL, InShootingRange.getInstance());
+            lighting.addSignalPattern(InShootingRange.getInstance());
         }
         else if (lockOnSpeaker && Math.abs(distanceToFieldPosition(speaker)) < BONUS_DISTANCE) {
             lighting.removePattern(InShootingRange.class);
-            lighting.addPattern(SIGNAL, BonusShootingRange.getInstance());
+            lighting.addSignalPattern(BonusShootingRange.getInstance());
         }
         else {
             lighting.removePattern(InShootingRange.class);
