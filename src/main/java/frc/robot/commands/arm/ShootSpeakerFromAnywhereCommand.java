@@ -31,8 +31,9 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     double                      intakeStartPosition  = 0;
     private double              lastDistanceToTarget = -1310;
     private boolean             tooClose             = false;
-    private double              shooterStartTime     = 0;
+    private long                shooterStartTime     = 0;
     private long                shooterSpinUpTime    = 850;
+    private long                armMoveStartTime     = 0;
 
     private Constants.BotTarget botTarget;
 
@@ -93,6 +94,10 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         double                aimAngle         = SpeakerShooterPolynomialAngleCalc.calculateAimAngle(distanceToTarget);
         Constants.ArmPosition armPositionNew   = new Constants.ArmPosition(linkAngle, aimAngle);
 
+        if (armMoveStartTime == 0) {
+            armMoveStartTime = System.currentTimeMillis();
+        }
+
         return driveToArmPosition(armPositionNew, 2, 2);
     }
 
@@ -119,7 +124,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     @Override
     public void execute() {
 
-        final boolean atArmAngle;
+        boolean atArmAngle = false;
 
         switch (state) {
 
@@ -144,15 +149,14 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             if (!tooClose) {
                 atArmAngle = driveArmToCalculatedAngle();
             }
-            else {
-                atArmAngle = true;
-            }
 
             armSubsystem.setIntakeSpeed(0);
             setShoooterByDistance(lastDistanceToTarget);
 
             // Wait for the shooter to get up to speed and the arm to get into position
-            if (((System.currentTimeMillis() - shooterStartTime) > shooterSpinUpTime) && atArmAngle) {
+            if (((System.currentTimeMillis() - shooterStartTime) > shooterSpinUpTime)
+                && (tooClose || atArmAngle || System.currentTimeMillis() - armMoveStartTime > 2000)) {
+
                 StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
                 sb.append(" TopShooter ")
                     .append(String.format("%.2f", armSubsystem.getTopShooterEncoderSpeed()))
