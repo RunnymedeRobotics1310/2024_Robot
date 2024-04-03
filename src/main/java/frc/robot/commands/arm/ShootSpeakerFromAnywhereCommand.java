@@ -215,7 +215,12 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
                     .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
                     .append(" Link ").append(armSubsystem.getLinkAngle()).append("deg")
                     .append(" Aim ").append(armSubsystem.getAimAngle()).append("deg")
-                    .append(" DistanceToTarget ").append(lastDistanceToTarget);
+                    .append(" DistanceToTarget ").append(lastDistanceToTarget)
+                    .append(" tooClose ").append(tooClose)
+                    .append(" atArmAngle ").append(atArmAngle)
+                    .append(" now ").append(now / 1000000)
+                    .append(" armMoveStart ").append(armMoveStartTimeNanos / 1000000)
+                    .append(" shooterStart ").append(shooterStartTimeNanos / 1000000);
                 logStateTransition("Start Shooter -> Shoot", sb.toString());
                 state = State.START_FEEDER;
             }
