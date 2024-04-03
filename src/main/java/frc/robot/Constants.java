@@ -577,9 +577,8 @@ public final class Constants {
         // re-measured Mar 10, 2024 9:30am 2.4% arm (was 108, changed to 186; diff 78)
         public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(200, 108);
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(134, 167);
-
+        public static final ArmPosition INVERSE_TRAP_ARM_POSITION          = new ArmPosition(131, 248 - 48);
         public static final ArmPosition SOURCE_INTAKE_POSE                 = new ArmPosition(200, 35);
-
         public static final double      LINK_EXTENDED_THRESHOLD            = 150;
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
