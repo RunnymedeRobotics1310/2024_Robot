@@ -54,7 +54,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     public void initialize() {
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
-            log("No note detected in robot. AimSpeakerCommand cancelled");
+            log("No note detected in robot. AimSpeakerCommand cancelled.");
             state = State.FINISHED;
             return;
         }
@@ -68,7 +68,6 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         lighting.addPattern(SIGNAL, Shooting.getInstance());
 
-        logCommandStart();
 
         updateShooterConfig();
 
@@ -84,6 +83,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         }
 
         intakeStartPosition = armSubsystem.getIntakePosition();
+        logCommandStart("Initial state is " + state + ".");
     }
 
 
@@ -173,7 +173,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             this.shooterStartTimeNanos = 0;
             // if we suddenly became too close, start the shooter.
             if (tooClose) {
-                logStateTransition("START_SHOOTER", "Bot moved - now too close. Start shooter.");
+                logStateTransition("START_SHOOTER", "Bot moved and it is too close. We will just start the shooter.");
                 state = State.START_SHOOTER;
             }
         }
@@ -190,7 +190,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             armSubsystem.setAimPivotSpeed(0);
 
             if (isStateTimeoutExceeded(.2)) {
-                logStateTransition("Unlock -> Move To Speaker", "Arm Unlocked");
+                logStateTransition("Unlock -> Move To Speaker", "Arm Unlocked after state timeout.");
                 state = State.START_SHOOTER;
             }
 
@@ -215,7 +215,11 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
                     .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
                     .append(" Link ").append(armSubsystem.getLinkAngle()).append("deg")
                     .append(" Aim ").append(armSubsystem.getAimAngle()).append("deg")
-                    .append(" DistanceToTarget ").append(lastDistanceToTarget);
+                    .append(" DistanceToTarget ").append(lastDistanceToTarget)
+                    .append(" At arm angle: ").append(atArmAngle)
+                    .append(" Arm timeout exceeded: ").append(armTimeout)
+                    .append(" Arm is ready: ").append(armReady)
+                    .append(" Shooter is ready: ").append(shooterReady);
                 logStateTransition("Start Shooter -> Shoot", sb.toString());
                 state = State.START_FEEDER;
             }
