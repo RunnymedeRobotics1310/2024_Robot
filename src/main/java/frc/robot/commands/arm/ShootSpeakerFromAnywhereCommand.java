@@ -54,7 +54,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     public void initialize() {
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
-            log("No note detected in robot. AimSpeakerCommand cancelled.");
+            log("No note detected in robot. AimSpeakerCommand aborted.");
             state = State.FINISHED;
             return;
         }
@@ -83,7 +83,6 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
         }
 
         intakeStartPosition = armSubsystem.getIntakePosition();
-        logCommandStart("Initial state is " + state + ".");
     }
 
 
@@ -216,10 +215,11 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
                     .append(" Link ").append(armSubsystem.getLinkAngle()).append("deg")
                     .append(" Aim ").append(armSubsystem.getAimAngle()).append("deg")
                     .append(" DistanceToTarget ").append(lastDistanceToTarget)
-                    .append(" At arm angle: ").append(atArmAngle)
-                    .append(" Arm timeout exceeded: ").append(armTimeout)
-                    .append(" Arm is ready: ").append(armReady)
-                    .append(" Shooter is ready: ").append(shooterReady);
+                    .append(" tooClose ").append(tooClose)
+                    .append(" atArmAngle ").append(atArmAngle)
+                    .append(" now ").append(now / 1000000).append("ms")
+                    .append(" armMoveStart ").append(armMoveStartTimeNanos / 1000000).append("ms")
+                    .append(" shooterStart ").append(shooterStartTimeNanos / 1000000).append("ms");
                 logStateTransition("Start Shooter -> Shoot", sb.toString());
                 state = State.START_FEEDER;
             }
