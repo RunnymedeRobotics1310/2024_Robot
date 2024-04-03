@@ -70,8 +70,6 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         logCommandStart();
 
-        this.robotPose = swerveSubsystem.getPose();
-
         updateShooterConfig();
 
         // Use standard Shoot if we're close enough to the speaker
