@@ -34,12 +34,12 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
             .deadlineWith(new DriveToPositionCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
         addCommands(new DriveToPositionCommand(swerve, BLUE_BARNUM_SHOT, RED_BARNUM_SHOT));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
-            .alongWith(new CompactFromIntakeCommand(armSubsystem, false)
+            .alongWith(new ArmToPointBCommand(armSubsystem)
                 .alongWith(new ReverseNoteCommand(armSubsystem))));
         addCommands(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
 
         // valjean
-        Command arm   = new CompactCommand(armSubsystem)
+        Command arm   = new ArmToPointBCommand(armSubsystem)
             .andThen(new StartIntakeCommand(armSubsystem, lighting));
         Command drive = new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN)
             .andThen(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, RED_VALJEAN, 1.5));
@@ -47,7 +47,7 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
 
 
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
-            .alongWith(new CompactFromIntakeCommand(armSubsystem, false)
+            .alongWith(new ArmToPointBCommand(armSubsystem)
                 .alongWith(new ReverseNoteCommand(armSubsystem))));
         addCommands(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
         addCommands(new CompactCommand(armSubsystem));
