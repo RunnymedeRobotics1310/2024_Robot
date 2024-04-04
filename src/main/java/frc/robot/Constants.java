@@ -9,7 +9,12 @@ import static frc.robot.Constants.BotTarget.BLUE_NOTE_WOLVERINE;
 import static frc.robot.Constants.BotTarget.RED_NOTE_WOLVERINE;
 import static frc.robot.Constants.Swerve.Chassis.TRACK_WIDTH_METRES;
 import static frc.robot.Constants.Swerve.Chassis.WHEEL_BASE_METRES;
-import static frc.robot.Constants.UsefulHeadings.*;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_BLUE_CENTER;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_BLUE_LEFT;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_BLUE_RIGHT;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_CENTER;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_LEFT;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_RIGHT;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -468,14 +473,14 @@ public final class Constants {
 
     public static final class LightingConstants {
         public static final int        PWM_PORT                = 9;
-        public static final int        STRIP_LENGTH            = 32;
+        public static final int        STRIP_LENGTH            = 31;
         public static LightstripRegion SIGNAL_LEFT             = new LightstripRegion("Signal", 0, 4);
         public static LightstripRegion VISPOSE_LEFT            = new LightstripRegion("Vision1", 4, 3);
-        public static LightstripRegion SIGNAL_CENTER           = new LightstripRegion("Signal", 7, 18);
-        public static LightstripRegion VISPOSE_RIGHT           = new LightstripRegion("Vision2", 25, 3);
-        public static LightstripRegion SIGNAL_RIGHT            = new LightstripRegion("Signal", 28, 4);
+        public static LightstripRegion SIGNAL_CENTER           = new LightstripRegion("Signal", 7, 17);
+        public static LightstripRegion VISPOSE_RIGHT           = new LightstripRegion("Vision2", 24, 3);
+        public static LightstripRegion SIGNAL_RIGHT            = new LightstripRegion("Signal", 27, 4);
 
-        public static final int        SIGNAL_PATTERN_LENGTH   = 28;
+        public static final int        SIGNAL_PATTERN_LENGTH   = 27;
         public static final int        VISION_PATTERN_LENGTH   = 6;
 
         /**
@@ -630,14 +635,14 @@ public final class Constants {
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
          */
-        public static final double      MAX_AIM_HOLD                       = 0.03;                     // 0.03;
+        public static final double      MAX_AIM_HOLD                       = 0.03;                          // 0.03;
 
 
         /**
          * Amount of output required to hold the Link Pivot when the Link and Aim are parallel to
          * the ground
          */
-        public static final double      MAX_LINK_HOLD                      = 0.02;                     // 0.04;
+        public static final double      MAX_LINK_HOLD                      = 0.02;                          // 0.04;
     }
 
     public static final class ClimbConstants {
