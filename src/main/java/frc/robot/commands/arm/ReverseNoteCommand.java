@@ -1,13 +1,7 @@
 package frc.robot.commands.arm;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.LoggingCommand;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.subsystems.lighting.pattern.Shooting;
 
 // Shoot. That's it.
 public class ReverseNoteCommand extends LoggingCommand {
