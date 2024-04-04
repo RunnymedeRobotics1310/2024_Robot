@@ -23,7 +23,7 @@ public class TheSpeakerAuto extends BaseAutoCommand {
 
         // loaded
         if (noteCount > 0) {
-            addCommands(scoreSpeaker());
+            addCommands(scoreSpeaker(true));
             addCommands(compactCommand());
             lastNote = Note.Loaded;
         }
