@@ -148,38 +148,38 @@ public class BaseAutoCommand extends SequentialCommandGroup {
 
     protected Command goGetBarnum() {
         Command arm   = compactCommand().andThen(startIntakeCommand());
-        Command drive = faceBarnumCommand(Rotation2d.fromDegrees(15))                                                                    /*
-                                                                                                                                          * .andThen
-                                                                                                                                          * (
-                                                                                                                                          * approach
-                                                                                                                                          * (
-                                                                                                                                          * BLUE_BARNUM,
-                                                                                                                                          * RED_BARNUM,
-                                                                                                                                          * 0
-                                                                                                                                          * .
-                                                                                                                                          * 80
-                                                                                                                                          * )
-                                                                                                                                          * )
-                                                                                                                                          */
+        Command drive = faceBarnumCommand(Rotation2d.fromDegrees(15))                                                                                /*
+                                                                                                                                                      * .andThen
+                                                                                                                                                      * (
+                                                                                                                                                      * approach
+                                                                                                                                                      * (
+                                                                                                                                                      * BLUE_BARNUM,
+                                                                                                                                                      * RED_BARNUM,
+                                                                                                                                                      * 0
+                                                                                                                                                      * .
+                                                                                                                                                      * 80
+                                                                                                                                                      * )
+                                                                                                                                                      * )
+                                                                                                                                                      */
             .andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
     protected Command goGetValjean() {
         Command arm   = compactCommand().andThen(startIntakeCommand());
-        Command drive = faceValjeanCommand(Rotation2d.fromDegrees(15))                                                                      /*
-                                                                                                                                             * .andThen
-                                                                                                                                             * (
-                                                                                                                                             * approach
-                                                                                                                                             * (
-                                                                                                                                             * BLUE_VALJEAN,
-                                                                                                                                             * RED_VALJEAN,
-                                                                                                                                             * 0
-                                                                                                                                             * .
-                                                                                                                                             * 80
-                                                                                                                                             * )
-                                                                                                                                             * )
-                                                                                                                                             */
+        Command drive = faceValjeanCommand(Rotation2d.fromDegrees(15))                                                                                  /*
+                                                                                                                                                         * .andThen
+                                                                                                                                                         * (
+                                                                                                                                                         * approach
+                                                                                                                                                         * (
+                                                                                                                                                         * BLUE_VALJEAN,
+                                                                                                                                                         * RED_VALJEAN,
+                                                                                                                                                         * 0
+                                                                                                                                                         * .
+                                                                                                                                                         * 80
+                                                                                                                                                         * )
+                                                                                                                                                         * )
+                                                                                                                                                         */
             .andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
@@ -196,6 +196,22 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         Command arm   = wait(2.0).andThen(startIntakeCommand());
         Command drive = approach(CENTRE_NOTE_5, CENTRE_NOTE_5, 0.80).andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
+    }
+
+    protected Command goGetCentreNoteX(int noteNumber) {
+
+        Translation2d targetNote = switch (noteNumber) {
+        case 1 -> CENTRE_NOTE_1;
+        case 2 -> CENTRE_NOTE_2;
+        case 3 -> CENTRE_NOTE_3;
+        case 4 -> CENTRE_NOTE_4;
+        case 5 -> CENTRE_NOTE_5;
+        default -> CENTRE_NOTE_1;
+        };
+
+        return approach(targetNote, targetNote, 0.80)
+            .andThen(startIntakeCommand())
+            .andThen(driveToNoteCommand(2));
     }
 
     protected Command driveToAmp() {

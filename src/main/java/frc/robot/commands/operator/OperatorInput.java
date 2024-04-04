@@ -1,13 +1,9 @@
 package frc.robot.commands.operator;
 
-import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
-import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
-import static frc.robot.Constants.UsefulPoses.START_AT_BLUE_SPEAKER;
-import static frc.robot.Constants.UsefulPoses.START_AT_RED_SPEAKER;
+import static frc.robot.Constants.UsefulPoses.*;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.TimesliceRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,14 +14,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
 import frc.robot.commands.arm.*;
-import frc.robot.commands.auto.ExitZoneAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
-import frc.robot.commands.auto.Score2_5AmpAutoCommand;
-import frc.robot.commands.auto.TheSpeakerAuto;
-import frc.robot.commands.auto.ScoreLoadedBarnumValjean;
-import frc.robot.commands.auto.ScoreLoadedWolverineBarnumValjean;
-import frc.robot.commands.auto.TheDoubleDown;
+import frc.robot.commands.auto.*;
 import frc.robot.commands.climb.MaxClimbCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToScoreAmpCommand;
@@ -265,10 +254,10 @@ public class OperatorInput {
 //            .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
 
         new Trigger(() -> !this.isShift() && operatorController.getXButton())
-                .onTrue(new TrapGregCommand(arm, climb, lighting));
+            .onTrue(new TrapGregCommand(arm, climb, lighting));
 
         new Trigger(() -> this.isShift() && operatorController.getXButton())
-                .onTrue(new TrapGregShootCommand(arm, lighting));
+            .onTrue(new TrapGregShootCommand(arm, lighting));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())
@@ -336,6 +325,7 @@ public class OperatorInput {
         autoPatternChooser.addOption("Loaded + Barnum + Valjean (Speaker)",
             Constants.AutoConstants.AutoPattern.SCORE_LOADED_BARNUM_VALJEAN);
         autoPatternChooser.addOption("4 Speaker", Constants.AutoConstants.AutoPattern.SCORE_4_SPEAKER);
+        autoPatternChooser.addOption("Clear Centre", Constants.AutoConstants.AutoPattern.CLEAR_CENTRE);
 
 
 
@@ -375,6 +365,7 @@ public class OperatorInput {
         case SCORE_2_SPEAKER_VISION -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 2);
         case SCORE_3_SPEAKER -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 3);
         case SCORE_4_SPEAKER -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 4);
+        case CLEAR_CENTRE -> new ClearCentreAutoCommand(drive, arm, jackman, lighting, delay);
 
         // used in competition
         case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);

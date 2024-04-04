@@ -5,8 +5,7 @@
 package frc.robot;
 
 import static edu.wpi.first.math.util.Units.inchesToMeters;
-import static frc.robot.Constants.BotTarget.BLUE_NOTE_WOLVERINE;
-import static frc.robot.Constants.BotTarget.RED_NOTE_WOLVERINE;
+import static frc.robot.Constants.BotTarget.*;
 import static frc.robot.Constants.Swerve.Chassis.TRACK_WIDTH_METRES;
 import static frc.robot.Constants.Swerve.Chassis.WHEEL_BASE_METRES;
 import static frc.robot.Constants.UsefulHeadings.*;
@@ -347,6 +346,38 @@ public final class Constants {
         public static final Pose2d BLUE_2_2_20                               = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
         public static final Pose2d RED_2_2_20                                = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
 
+        public static final Pose2d IN_FRONT_OF_CENTER_1_BLUE                 = new Pose2d(
+            CENTRE_NOTE_1.getLocation().getX() - 1.1,
+            CENTRE_NOTE_1.getLocation().getY(), new Rotation2d());
+        public static final Pose2d IN_FRONT_OF_CENTER_1_RED                  = new Pose2d(
+            CENTRE_NOTE_1.getLocation().getX() + 1.1,
+            CENTRE_NOTE_1.getLocation().getY(), new Rotation2d());
+        public static final Pose2d IN_FRONT_OF_CENTER_2_BLUE                 = new Pose2d(
+            CENTRE_NOTE_2.getLocation().getX() - 1.1,
+            CENTRE_NOTE_1.getLocation().getY(), new Rotation2d());
+        public static final Pose2d IN_FRONT_OF_CENTER_2_RED                  = new Pose2d(
+            CENTRE_NOTE_2.getLocation().getX() + 1.1,
+            CENTRE_NOTE_1.getLocation().getY(), new Rotation2d());
+        public static final Pose2d IN_FRONT_OF_CENTER_3_BLUE                 = new Pose2d(
+            CENTRE_NOTE_3.getLocation().getX() - 1.1,
+            CENTRE_NOTE_3.getLocation().getY(), new Rotation2d());
+        public static final Pose2d IN_FRONT_OF_CENTER_3_RED                  = new Pose2d(
+            CENTRE_NOTE_1.getLocation().getX() + 1.1,
+            CENTRE_NOTE_1.getLocation().getY(), new Rotation2d());
+        public static final Pose2d IN_FRONT_OF_CENTER_4_BLUE                 = new Pose2d(
+            CENTRE_NOTE_1.getLocation().getX() - 1.1,
+            CENTRE_NOTE_1.getLocation().getY(), new Rotation2d());
+        public static final Pose2d IN_FRONT_OF_CENTER_4_RED                  = new Pose2d(
+            CENTRE_NOTE_4.getLocation().getX() + 1.1,
+            CENTRE_NOTE_4.getLocation().getY(), new Rotation2d());
+        public static final Pose2d IN_FRONT_OF_CENTER_5_BLUE                 = new Pose2d(
+            CENTRE_NOTE_5.getLocation().getX() - 1.1,
+            CENTRE_NOTE_5.getLocation().getY(), new Rotation2d());
+        public static final Pose2d IN_FRONT_OF_CENTER_5_RED                  = new Pose2d(
+            CENTRE_NOTE_5.getLocation().getX() + 1.1,
+            CENTRE_NOTE_5.getLocation().getY(), new Rotation2d());
+
+
         public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE                = new Pose2d(
             BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.1,
             BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
@@ -453,7 +484,7 @@ public final class Constants {
             DO_NOTHING,
             EXIT_ZONE, SCORE_2_5_AMP,
             SCORE_1_SPEAKER_STAY,
-            SCORE_1_SPEAKER, THE_DOUBLE_DOWN, SCORE_2_SPEAKER_VISION, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
+            SCORE_1_SPEAKER, THE_DOUBLE_DOWN, SCORE_2_SPEAKER_VISION, SCORE_3_SPEAKER, SCORE_4_SPEAKER, CLEAR_CENTRE,
             SCORE_LOADED_WOLVERINE, SCORE_LOADED_WOLVERINE_BARNUM, SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN,
             SCORE_LOADED_BARNUM_VALJEAN,
         }
@@ -630,14 +661,14 @@ public final class Constants {
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
          */
-        public static final double      MAX_AIM_HOLD                       = 0.03;                     // 0.03;
+        public static final double      MAX_AIM_HOLD                       = 0.03;                          // 0.03;
 
 
         /**
          * Amount of output required to hold the Link Pivot when the Link and Aim are parallel to
          * the ground
          */
-        public static final double      MAX_LINK_HOLD                      = 0.02;                     // 0.04;
+        public static final double      MAX_LINK_HOLD                      = 0.02;                          // 0.04;
     }
 
     public static final class ClimbConstants {
