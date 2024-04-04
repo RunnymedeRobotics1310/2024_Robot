@@ -25,14 +25,9 @@ public class BonusShootingRange extends LightingPattern {
 
 
     private BonusShootingRange() {
-        super(SIGNAL.length);
+        super(SIGNAL_PATTERN_LENGTH);
         for (int i = 0; i < buffer.getLength(); i++) {
-            if (i % 3 == 0) {
-                buffer.setLED(i, Color.kDarkViolet);
-            }
-            else {
-                buffer.setLED(i, NOTE_ORANGE);
-            }
+            buffer.setLED(i, Color.kCyan);
         }
     }
 }

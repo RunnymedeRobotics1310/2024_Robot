@@ -1,7 +1,5 @@
 package frc.robot.commands.swervedrive;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.ArmSubsystem;
@@ -37,7 +35,7 @@ public class DriveToNoteCommand extends BaseDriveCommand {
     @Override
     public void initialize() {
         super.initialize();
-        lighting.addPattern(SIGNAL, IntakeWithVision.getInstance());
+        lighting.addSignalPattern(IntakeWithVision.getInstance());
         noteLastSeenTime = System.currentTimeMillis();
     }
 

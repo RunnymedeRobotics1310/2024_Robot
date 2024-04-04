@@ -1,9 +1,9 @@
 package frc.robot.telemetry;
 
+import java.util.Arrays;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.vision.PoseConfidence;
-
-import java.util.Arrays;
 
 public class Hugh {
     Hugh() {
@@ -18,7 +18,7 @@ public class Hugh {
     public double[]       botpose        = null;
     public double         targetAvgDist  = -1310.0;
     public int            numTags        = -1310;
-    public String         aprilTagInfo   = null;
+    public String         aprilTagInfo   = "null";
     public boolean        poseUpdate     = false;
     public PoseConfidence poseConfidence = PoseConfidence.NONE;
     public double         poseSwerveDiff = -1310.0;

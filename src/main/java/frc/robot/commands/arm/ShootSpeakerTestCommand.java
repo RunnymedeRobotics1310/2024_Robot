@@ -1,6 +1,5 @@
 package frc.robot.commands.arm;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -38,7 +37,7 @@ public class ShootSpeakerTestCommand extends ArmBaseCommand {
     NetworkTableEntry           aimAngleNT          = table.getEntry("aimAngle");
 
     public ShootSpeakerTestCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem,
-                                     LightingSubsystem lighting) {
+        LightingSubsystem lighting) {
         super(armSubsystem);
         this.swerveSubsystem = swerveSubsystem;
         this.lighting        = lighting;
@@ -47,7 +46,7 @@ public class ShootSpeakerTestCommand extends ArmBaseCommand {
 
     @Override
     public void initialize() {
-        lighting.addPattern(SIGNAL, Shooting.getInstance());
+        lighting.addSignalPattern(Shooting.getInstance());
         // If there is no note detected, then why are we aiming?
         if (!armSubsystem.isNoteDetected()) {
             log("No note detected in robot. AimSpeakerCommand cancelled");
@@ -101,72 +100,72 @@ public class ShootSpeakerTestCommand extends ArmBaseCommand {
 
         switch (state) {
 
-            case MOVE_TO_UNLOCK:
+        case MOVE_TO_UNLOCK:
 
-                // Run the link motor back (up) for .15 seconds to unlock the arm
-                armSubsystem.setLinkPivotSpeed(.3);
-                armSubsystem.setAimPivotSpeed(0);
+            // Run the link motor back (up) for .15 seconds to unlock the arm
+            armSubsystem.setLinkPivotSpeed(.3);
+            armSubsystem.setAimPivotSpeed(0);
 
-                if (isStateTimeoutExceeded(.2)) {
-                    logStateTransition("Unlock -> Move To Speaker", "Arm Unlocked");
-                    state = State.START_SHOOTER;
-                }
+            if (isStateTimeoutExceeded(.2)) {
+                logStateTransition("Unlock -> Move To Speaker", "Arm Unlocked");
+                state = State.START_SHOOTER;
+            }
 
-                break;
+            break;
 
-            case START_SHOOTER:
+        case START_SHOOTER:
 
-                // Drive to the arm position at the same time
-                double linkAngle = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
+            // Drive to the arm position at the same time
+            double linkAngle = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
 
-                Pose2d botPose = swerveSubsystem.getPose();
-                double distanceToTarget = botPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
-                double aimAngle = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
-                Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
+            Pose2d botPose = swerveSubsystem.getPose();
+            double distanceToTarget = botPose.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
+            double aimAngle = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
+            Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
 
-                atArmAngle = this.driveToArmPosition(armPositionNew, 2, 2);
+            atArmAngle = this.driveToArmPosition(armPositionNew, 2, 2);
 
-                double shooterSpeed = 0.85;
+            double shooterSpeed = 0.85;
 
-                armSubsystem.setShooterSpeed(shooterSpeed);
+            armSubsystem.setShooterSpeed(shooterSpeed);
 
-                // Wait for the shooter to get up to speed and the arm to get into position
-                if (isStateTimeoutExceeded(shooterSpeed + 0.5) && atArmAngle) {
-                    StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
-                    sb.append(" TopShooter ")
-                            .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
-                            .append(" BottomShooter ")
-                            .append(" Link ").append(armSubsystem.getLinkAngle()).append("deg")
-                            .append(" Aim ").append(armSubsystem.getAimAngle()).append("deg")
-                            .append(" DistanceToTarget ").append(distanceToTarget);
-                    logStateTransition("Start Shooter -> Shoot", sb.toString());
-                    state = State.START_FEEDER;
-                }
+            // Wait for the shooter to get up to speed and the arm to get into position
+            if (isStateTimeoutExceeded(shooterSpeed + 0.5) && atArmAngle) {
+                StringBuilder sb = new StringBuilder("Shooter up to speed & arm in position.");
+                sb.append(" TopShooter ")
+                    .append(String.format("%.2f", armSubsystem.getBottomShooterEncoderSpeed()))
+                    .append(" BottomShooter ")
+                    .append(" Link ").append(armSubsystem.getLinkAngle()).append("deg")
+                    .append(" Aim ").append(armSubsystem.getAimAngle()).append("deg")
+                    .append(" DistanceToTarget ").append(distanceToTarget);
+                logStateTransition("Start Shooter -> Shoot", sb.toString());
+                state = State.START_FEEDER;
+            }
 
-                break;
+            break;
 
-            case START_FEEDER:
+        case START_FEEDER:
 
-                // Continue to drive to the arm position while shooting
-                double linkAngle2 = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
-                Pose2d botPose2 = swerveSubsystem.getPose();
-                double distanceToTarget2 = botPose2.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
-                double aimAngle2 = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
-                Constants.ArmPosition armPositionNew2 = new Constants.ArmPosition(linkAngle2, aimAngle2);
+            // Continue to drive to the arm position while shooting
+            double linkAngle2 = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
+            Pose2d botPose2 = swerveSubsystem.getPose();
+            double distanceToTarget2 = botPose2.getTranslation().getDistance(botTarget.getLocation().toTranslation2d());
+            double aimAngle2 = aimAngleNT.getDouble(ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.aimAngle);
+            Constants.ArmPosition armPositionNew2 = new Constants.ArmPosition(linkAngle2, aimAngle2);
 
-                atArmAngle = this.driveToArmPosition(armPositionNew2, 2, 2);
+            atArmAngle = this.driveToArmPosition(armPositionNew2, 2, 2);
 
-                armSubsystem.setIntakeSpeed(1);
+            armSubsystem.setIntakeSpeed(1);
 
-                if (isStateTimeoutExceeded(.5)) {
-                    logStateTransition("Shoot -> Finished", "Shot fired");
-                    state = State.FINISHED;
-                }
-                break;
+            if (isStateTimeoutExceeded(.5)) {
+                logStateTransition("Shoot -> Finished", "Shot fired");
+                state = State.FINISHED;
+            }
+            break;
 
-            case FINISHED:
+        case FINISHED:
 
-                break;
+            break;
 
         }
     }

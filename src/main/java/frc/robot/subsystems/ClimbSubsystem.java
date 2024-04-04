@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.ClimbConstants.*;
-import static frc.robot.Constants.LightingConstants.SIGNAL;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -94,7 +93,8 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
     }
 
     public boolean climbersReadyForTrapShot() {
-        return leftClimbMotor.getEncoder().getPosition() < CLIMB_READY_FOR_TRAP_SHOT && rightClimbMotor.getEncoder().getPosition() < CLIMB_READY_FOR_TRAP_SHOT;
+        return leftClimbMotor.getEncoder().getPosition() < CLIMB_READY_FOR_TRAP_SHOT
+            && rightClimbMotor.getEncoder().getPosition() < CLIMB_READY_FOR_TRAP_SHOT;
     }
 
     public boolean rightAllTheWayDown() {
@@ -192,7 +192,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
     private void setLightingPattern() {
         if (rightEncoderInitialized && leftEncoderInitialized) {
             if (Math.abs(leftClimbSpeed) > 0 || Math.abs(rightClimbSpeed) > 0) {
-                lighting.addPattern(SIGNAL, Climbing.getInstance());
+                lighting.addSignalPattern(Climbing.getInstance());
             }
             else {
                 lighting.removePattern(Climbing.class);

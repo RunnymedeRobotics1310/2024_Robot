@@ -1,6 +1,7 @@
 package frc.robot.subsystems.lighting.pattern;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
+
+import static frc.robot.Constants.LightingConstants.SIGNAL_PATTERN_LENGTH;
 
 /**
  * Light signal to display while the robot is actively shooting.
@@ -22,7 +23,7 @@ public class Shooting extends LightingPattern {
     }
 
     private Shooting() {
-        super(SIGNAL.length);
+        super(SIGNAL_PATTERN_LENGTH);
         // For every pixel
         for (var i = 0; i < buffer.getLength(); i++) {
             // Calculate the hue - hue is easier for rainbows because the color

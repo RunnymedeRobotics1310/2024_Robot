@@ -1,6 +1,5 @@
 package frc.robot.commands.operator;
 
-import static frc.robot.Constants.LightingConstants.SIGNAL;
 import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
 import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
 import static frc.robot.Constants.UsefulPoses.START_AT_BLUE_SPEAKER;
@@ -8,6 +7,7 @@ import static frc.robot.Constants.UsefulPoses.START_AT_RED_SPEAKER;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.TimesliceRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -217,7 +217,7 @@ public class OperatorInput {
 
         // Run when enabled
         new Trigger(RobotController::isSysActive)
-            .onTrue(new InstantCommand(() -> lighting.addPattern(SIGNAL, Enabled.getInstance())));
+            .onTrue(new InstantCommand(() -> lighting.addSignalPattern(Enabled.getInstance())));
 
 
 
@@ -261,8 +261,14 @@ public class OperatorInput {
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
         // Trap
+//        new Trigger(() -> this.isShift() && operatorController.getXButton())
+//            .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
+
+        new Trigger(() -> !this.isShift() && operatorController.getXButton())
+                .onTrue(new TrapGregCommand(arm, climb, lighting));
+
         new Trigger(() -> this.isShift() && operatorController.getXButton())
-            .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
+                .onTrue(new TrapGregShootCommand(arm, lighting));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())
