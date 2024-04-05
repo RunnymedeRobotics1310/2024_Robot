@@ -7,7 +7,6 @@ import static frc.robot.Constants.UsefulPoses.START_AT_RED_SPEAKER;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.TimesliceRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,15 +16,24 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.AimAmpCommand;
+import frc.robot.commands.arm.AimSourceCommand;
+import frc.robot.commands.arm.CompactFromIntakeCommand;
+import frc.robot.commands.arm.EjectNoteCommand;
+import frc.robot.commands.arm.InjectNoteCommand;
+import frc.robot.commands.arm.ShootPrepFireCommand;
+import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
+import frc.robot.commands.arm.ShootSpeakerTestCommand;
+import frc.robot.commands.arm.ShootTrapFromFloorCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
 import frc.robot.commands.auto.Score2_5AmpAutoCommand;
-import frc.robot.commands.auto.TheSpeakerAuto;
 import frc.robot.commands.auto.ScoreLoadedBarnumValjean;
 import frc.robot.commands.auto.ScoreLoadedWolverineBarnumValjean;
 import frc.robot.commands.auto.TheDoubleDown;
+import frc.robot.commands.auto.TheSpeakerAuto;
 import frc.robot.commands.climb.MaxClimbCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToScoreAmpCommand;
@@ -261,14 +269,14 @@ public class OperatorInput {
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
         // Trap
-//        new Trigger(() -> this.isShift() && operatorController.getXButton())
-//            .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
-
-        new Trigger(() -> !this.isShift() && operatorController.getXButton())
-                .onTrue(new TrapGregCommand(arm, climb, lighting));
-
         new Trigger(() -> this.isShift() && operatorController.getXButton())
-                .onTrue(new TrapGregShootCommand(arm, lighting));
+            .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
+
+        // new Trigger(() -> !this.isShift() && operatorController.getXButton())
+        // .onTrue(new TrapGregCommand(arm, climb, lighting));
+
+        // new Trigger(() -> this.isShift() && operatorController.getXButton())
+        // .onTrue(new TrapGregShootCommand(arm, lighting));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())
