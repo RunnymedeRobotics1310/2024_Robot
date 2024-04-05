@@ -90,6 +90,14 @@ public class YagslSubsystem extends SwerveSubsystem {
         );
     }
 
+    public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+        swerveDrive.drive(chassisSpeeds);
+    }
+
+    private ChassisSpeeds getRobotRelativeSpeeds() {
+        return swerveDrive.kinematics.toChassisSpeeds(swerveDrive.getStates());
+    }
+
     @Override
     public void setModuleStateForTestMode(Constants.Swerve.Module module, SwerveModuleState desiredState) {
         SwerveModule swerveModule = swerveDrive.getModuleMap().get(module.name);
