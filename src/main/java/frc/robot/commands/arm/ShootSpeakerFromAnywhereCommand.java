@@ -71,10 +71,12 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             state    = State.START_SHOOTER;
         }
         else if (isAtArmPosition(ArmConstants.COMPACT_ARM_POSITION, 2)) {
-            state = State.MOVE_TO_UNLOCK;
+            tooClose = false;
+            state    = State.MOVE_TO_UNLOCK;
         }
         else {
-            state = State.START_SHOOTER;
+            tooClose = false;
+            state    = State.START_SHOOTER;
         }
 
         intakeStartPosition = armSubsystem.getIntakePosition();
