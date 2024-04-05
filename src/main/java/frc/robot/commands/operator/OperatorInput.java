@@ -250,14 +250,14 @@ public class OperatorInput {
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
         // Trap
-//        new Trigger(() -> this.isShift() && operatorController.getXButton())
-//            .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
-
-        new Trigger(() -> !this.isShift() && operatorController.getXButton())
-            .onTrue(new TrapGregCommand(arm, climb, lighting));
-
         new Trigger(() -> this.isShift() && operatorController.getXButton())
-            .onTrue(new TrapGregShootCommand(arm, lighting));
+            .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
+
+        // new Trigger(() -> !this.isShift() && operatorController.getXButton())
+        // .onTrue(new TrapGregCommand(arm, climb, lighting));
+
+        // new Trigger(() -> this.isShift() && operatorController.getXButton())
+        // .onTrue(new TrapGregShootCommand(arm, lighting));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())
@@ -325,7 +325,6 @@ public class OperatorInput {
         autoPatternChooser.addOption("Loaded + Barnum + Valjean (Speaker)",
             Constants.AutoConstants.AutoPattern.SCORE_LOADED_BARNUM_VALJEAN);
         autoPatternChooser.addOption("4 Speaker", Constants.AutoConstants.AutoPattern.SCORE_4_SPEAKER);
-        autoPatternChooser.addOption("Clear Centre", Constants.AutoConstants.AutoPattern.CLEAR_CENTRE);
 
 
 
@@ -365,7 +364,6 @@ public class OperatorInput {
         case SCORE_2_SPEAKER_VISION -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 2);
         case SCORE_3_SPEAKER -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 3);
         case SCORE_4_SPEAKER -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 4);
-        case CLEAR_CENTRE -> new ClearCentreAutoCommand(drive, arm, jackman, lighting, delay);
 
         // used in competition
         case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);
