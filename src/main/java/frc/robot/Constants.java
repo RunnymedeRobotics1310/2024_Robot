@@ -587,6 +587,8 @@ public final class Constants {
         public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(134, 167);
         public static final ArmPosition INVERSE_TRAP_ARM_POSITION          = new ArmPosition(131, 248 - 48);
         public static final ArmPosition SOURCE_INTAKE_POSE                 = new ArmPosition(200, 35);
+        public static final ArmPosition LONG_SHOT_ARM_POSITION             = new ArmPosition(UNLOCK_POSITION.linkAngle, 25);
+
         public static final double      LINK_EXTENDED_THRESHOLD            = 150;
 
         // todo: fixme: indicate units in doc or constant name for all of these settings
@@ -635,14 +637,14 @@ public final class Constants {
         /**
          * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
          */
-        public static final double      MAX_AIM_HOLD                       = 0.03;                          // 0.03;
+        public static final double      MAX_AIM_HOLD                       = 0.03;                                          // 0.03;
 
 
         /**
          * Amount of output required to hold the Link Pivot when the Link and Aim are parallel to
          * the ground
          */
-        public static final double      MAX_LINK_HOLD                      = 0.02;                          // 0.04;
+        public static final double      MAX_LINK_HOLD                      = 0.02;                                          // 0.04;
     }
 
     public static final class ClimbConstants {

@@ -16,16 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.AimAmpCommand;
-import frc.robot.commands.arm.AimSourceCommand;
-import frc.robot.commands.arm.CompactFromIntakeCommand;
-import frc.robot.commands.arm.EjectNoteCommand;
-import frc.robot.commands.arm.InjectNoteCommand;
-import frc.robot.commands.arm.ShootPrepFireCommand;
-import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
-import frc.robot.commands.arm.ShootSpeakerTestCommand;
-import frc.robot.commands.arm.ShootTrapFromFloorCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
@@ -280,7 +271,7 @@ public class OperatorInput {
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())
-            .onTrue(new ShootSpeakerTestCommand(arm, drive, lighting));
+            .onTrue(new TheGoLongShot(arm, drive));
 
         // podium shot
         new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
