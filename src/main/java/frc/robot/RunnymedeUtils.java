@@ -6,8 +6,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
-import java.util.function.BooleanSupplier;
-
 public class RunnymedeUtils {
 
     /**
@@ -196,5 +194,9 @@ public class RunnymedeUtils {
         if (transform == null)
             return "";
         return format(transform.getTranslation()) + " @ " + format(transform.getRotation());
+    }
+
+    public static long relativeTimeMillis() {
+        return System.nanoTime() / 1000000;
     }
 }

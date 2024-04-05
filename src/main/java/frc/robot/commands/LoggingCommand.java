@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.RunnymedeUtils;
 
 /**
  * The Logging Command Base implements command helpers to aid with logging and command timeout
@@ -54,7 +51,7 @@ public abstract class LoggingCommand extends Command {
      * @return {@code true} if the timeout has been exceeded, {@code false} otherwise
      */
     public boolean isTimeoutExceeded(double timeout) {
-        if ((System.currentTimeMillis() - initializeTime) / 1000.0d > timeout) {
+        if ((RunnymedeUtils.relativeTimeMillis() - initializeTime) / 1000.0d > timeout) {
             return true;
         }
         return false;
@@ -74,7 +71,7 @@ public abstract class LoggingCommand extends Command {
      * @return {@code true} if the current state timeout has been exceeded, {@code false} otherwise
      */
     public boolean isStateTimeoutExceeded(double timeout) {
-        return (System.currentTimeMillis() - stateStartTime) / 1000.0d > timeout;
+        return (RunnymedeUtils.relativeTimeMillis() - stateStartTime) / 1000.0d > timeout;
     }
 
     /**
@@ -83,7 +80,7 @@ public abstract class LoggingCommand extends Command {
      * @return Number of seconds since the last state transition
      */
     public double getStateElapsedTime() {
-        return (System.currentTimeMillis() - stateStartTime) / 1000.0d;
+        return (RunnymedeUtils.relativeTimeMillis() - stateStartTime) / 1000.0d;
     }
 
     /**
@@ -112,8 +109,7 @@ public abstract class LoggingCommand extends Command {
         logCommandState("STARTING", commandParms, true);
 
         // Set the initialize time after logging of the start message.
-        initializeTime = System.currentTimeMillis();
-        stateStartTime = System.currentTimeMillis();
+        initializeTime = stateStartTime = RunnymedeUtils.relativeTimeMillis();
     }
 
     /**
@@ -182,7 +178,7 @@ public abstract class LoggingCommand extends Command {
      */
     public void logStateTransition(String newState, String transitionReason, boolean logSubsystems) {
         logCommandState(newState, transitionReason, logSubsystems);
-        stateStartTime = System.currentTimeMillis();
+        stateStartTime = RunnymedeUtils.relativeTimeMillis();
     }
 
     /**
@@ -224,7 +220,7 @@ public abstract class LoggingCommand extends Command {
             sb.append(" at ").append(START_TIMESTAMP_FMT.format(new Date()));
         }
         else {
-            sb.append(" at ").append(System.currentTimeMillis() - initializeTime).append("ms");
+            sb.append(" at ").append(RunnymedeUtils.relativeTimeMillis() - initializeTime).append("ms");
         }
 
         if (finishReason != null) {

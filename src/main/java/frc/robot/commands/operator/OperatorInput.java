@@ -1,9 +1,6 @@
 package frc.robot.commands.operator;
 
-import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
-import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
-import static frc.robot.Constants.UsefulPoses.START_AT_BLUE_SPEAKER;
-import static frc.robot.Constants.UsefulPoses.START_AT_RED_SPEAKER;
+import static frc.robot.Constants.UsefulPoses.*;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
@@ -16,24 +13,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.AimAmpCommand;
-import frc.robot.commands.arm.AimSourceCommand;
-import frc.robot.commands.arm.CompactFromIntakeCommand;
-import frc.robot.commands.arm.EjectNoteCommand;
-import frc.robot.commands.arm.InjectNoteCommand;
-import frc.robot.commands.arm.ShootPrepFireCommand;
-import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
-import frc.robot.commands.arm.ShootSpeakerTestCommand;
-import frc.robot.commands.arm.ShootTrapFromFloorCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.auto.ExitZoneAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
-import frc.robot.commands.auto.Score2_5AmpAutoCommand;
-import frc.robot.commands.auto.ScoreLoadedBarnumValjean;
-import frc.robot.commands.auto.ScoreLoadedWolverineBarnumValjean;
-import frc.robot.commands.auto.TheDoubleDown;
-import frc.robot.commands.auto.TheSpeakerAuto;
+import frc.robot.commands.arm.*;
+import frc.robot.commands.auto.*;
 import frc.robot.commands.climb.MaxClimbCommand;
 import frc.robot.commands.swervedrive.DriveToNoteCommand;
 import frc.robot.commands.swervedrive.DriveToScoreAmpCommand;
@@ -280,7 +261,7 @@ public class OperatorInput {
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())
-            .onTrue(new ShootSpeakerTestCommand(arm, drive, lighting));
+            .onTrue(new TestShootSpeakerFromAnywhereCommand(arm, drive, lighting));
 
         // podium shot
         new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
