@@ -28,17 +28,18 @@ public class TestShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
     private SwerveSubsystem     swerveSubsystem;
     private LightingSubsystem   lighting;
 
-    private State               state                = State.MOVE_TO_UNLOCK;
-    double                      intakeStartPosition  = 0;
-    private double              lastDistanceToTarget = -1310;
-    private boolean             tooClose             = false;
-    private long                shooterStartTime     = 0;
-    private long                shooterSpinUpTime    = 850;
+    private State               state                              = State.MOVE_TO_UNLOCK;
+    double                      intakeStartPosition                = 0;
+    private double              lastDistanceToTarget               = -1310;
+    private boolean             tooClose                           = false;
+    private long                shooterStartTime                   = 0;
+    private long                shooterStartTimeCurrrentTimeMillis = 0;
+    private long                shooterSpinUpTime                  = 850;
 
     private Constants.BotTarget botTarget;
 
-    NetworkTable                table                = NetworkTableInstance.getDefault().getTable("Testing");
-    NetworkTableEntry           shooterSpeedNT       = table.getEntry("shooterSpeed");
+    NetworkTable                table                              = NetworkTableInstance.getDefault().getTable("Testing");
+    NetworkTableEntry           shooterSpeedNT                     = table.getEntry("shooterSpeed");
 
 
     public TestShootSpeakerFromAnywhereCommand(ArmSubsystem armSubsystem, SwerveSubsystem swerveSubsystem,
@@ -99,7 +100,8 @@ public class TestShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 //        }
 
         if (shooterStartTime == 0) {
-            shooterStartTime = RunnymedeUtils.relativeTimeMillis();
+            shooterStartTime                   = RunnymedeUtils.relativeTimeMillis();
+            shooterStartTimeCurrrentTimeMillis = System.currentTimeMillis();
         }
     }
 
@@ -108,8 +110,12 @@ public class TestShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
         final boolean atArmAngle;
 
-        long          thisTime = RunnymedeUtils.relativeTimeMillis();
-        StringBuilder shootSb  = new StringBuilder("SHOOTSTAT ");
+        long          thisTime                  = RunnymedeUtils.relativeTimeMillis();
+        long          thisTimeCurrentTimeMillis = System.currentTimeMillis();
+        long          timeDiff                  = (thisTime - shooterStartTime)
+            - (thisTimeCurrentTimeMillis - shooterStartTimeCurrrentTimeMillis);
+
+        StringBuilder shootSb                   = new StringBuilder("SHOOTSTAT ");
         shootSb.append(" Power ")
             .append(shooterSpeedNT.getDouble(0.85))
             .append(" TopShooter ")
@@ -124,6 +130,8 @@ public class TestShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             .append(getStateElapsedTime() * 1000)
             .append(" ElaspedDelta ")
             .append((getStateElapsedTime() * 1000) - (thisTime - shooterStartTime))
+            .append(" CurrentTimeDelta ")
+            .append(timeDiff)
             .append(" Distance ")
             .append(getDistanceToTarget());
         System.out.println(shootSb);
