@@ -105,7 +105,7 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             armSubsystem.setShooterSpeed(0.95);
             shooterSpinUpTime = 1400;
         }
-        else if (distance >= 3) {
+        else if (distance >= 2.2) {
             armSubsystem.setShooterSpeed(0.85);
             shooterSpinUpTime = 1200;
         }
