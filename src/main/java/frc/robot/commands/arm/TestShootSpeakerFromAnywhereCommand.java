@@ -1,5 +1,7 @@
 package frc.robot.commands.arm;
 
+import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -56,6 +58,13 @@ public class TestShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             log("No note detected in robot. AimSpeakerCommand cancelled");
             state = State.FINISHED;
             return;
+        }
+
+        if (getRunnymedeAlliance() == DriverStation.Alliance.Blue) {
+            botTarget = Constants.BotTarget.BLUE_SPEAKER;
+        }
+        else {
+            botTarget = Constants.BotTarget.RED_SPEAKER;
         }
 
         lighting.addSignalPattern(Shooting.getInstance());
