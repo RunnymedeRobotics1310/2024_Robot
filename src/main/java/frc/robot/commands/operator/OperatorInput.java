@@ -387,7 +387,7 @@ public class OperatorInput {
         // used in competition
         case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);
         case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, lighting, delay);
-        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, lighting, delay);
+        case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, jackman, lighting, delay);
         case THE_DOUBLE_DOWN -> new TheDoubleDown(drive, arm, lighting, delay);
         case SCORE_LOADED_WOLVERINE -> new ScoreLoadedWolverineBarnumValjean(drive, arm, jackman, lighting, delay, 2);
         case SCORE_LOADED_WOLVERINE_BARNUM -> new ScoreLoadedWolverineBarnumValjean(drive, arm, jackman, lighting, delay, 3);
