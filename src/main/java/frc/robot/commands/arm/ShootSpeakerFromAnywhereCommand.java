@@ -91,10 +91,13 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
 
     private boolean driveArmToCalculatedAngle() {
         // Drive to the arm position at the same time
-        double                linkAngle        = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
-        double                distanceToTarget = getDistanceToTarget();
-        double                aimAngle         = SpeakerShooterPolynomialAngleCalc.calculateAimAngle(distanceToTarget);
-        Constants.ArmPosition armPositionNew   = new Constants.ArmPosition(linkAngle, aimAngle);
+        double linkAngle        = ArmConstants.SHOOT_SPEAKER_PODIUM_ARM_POSITION.linkAngle;
+        double distanceToTarget = getDistanceToTarget();
+        double aimAngle         = SpeakerShooterPolynomialAngleCalc.calculateAimAngle(distanceToTarget);
+        if (lastDistanceToTarget >= 2.89 && lastDistanceToTarget < 2.99) {
+            aimAngle += 1;
+        }
+        Constants.ArmPosition armPositionNew = new Constants.ArmPosition(linkAngle, aimAngle);
 
         return driveToArmPosition(armPositionNew, 2, 2);
     }
