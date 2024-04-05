@@ -60,6 +60,9 @@ public class TestShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             return;
         }
 
+        shooterStartTime                   = 0;
+        shooterStartTimeCurrrentTimeMillis = 0;
+
         if (getRunnymedeAlliance() == DriverStation.Alliance.Blue) {
             botTarget = Constants.BotTarget.BLUE_SPEAKER;
         }
