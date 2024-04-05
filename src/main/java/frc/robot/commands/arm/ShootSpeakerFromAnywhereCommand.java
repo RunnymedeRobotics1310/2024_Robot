@@ -59,6 +59,8 @@ public class ShootSpeakerFromAnywhereCommand extends ArmBaseCommand {
             botTarget = Constants.BotTarget.RED_SPEAKER;
         }
 
+        shooterStartTime = 0;
+
         lighting.addSignalPattern(Shooting.getInstance());
 
         logCommandStart();
