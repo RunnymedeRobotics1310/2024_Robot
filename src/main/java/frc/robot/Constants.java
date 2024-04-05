@@ -473,14 +473,14 @@ public final class Constants {
 
     public static final class LightingConstants {
         public static final int        PWM_PORT                = 9;
-        public static final int        STRIP_LENGTH            = 31;
+        public static final int        STRIP_LENGTH            = 32;
         public static LightstripRegion SIGNAL_LEFT             = new LightstripRegion("Signal", 0, 4);
         public static LightstripRegion VISPOSE_LEFT            = new LightstripRegion("Vision1", 4, 3);
-        public static LightstripRegion SIGNAL_CENTER           = new LightstripRegion("Signal", 7, 17);
-        public static LightstripRegion VISPOSE_RIGHT           = new LightstripRegion("Vision2", 24, 3);
-        public static LightstripRegion SIGNAL_RIGHT            = new LightstripRegion("Signal", 27, 4);
+        public static LightstripRegion SIGNAL_CENTER           = new LightstripRegion("Signal", 7, 18);
+        public static LightstripRegion VISPOSE_RIGHT           = new LightstripRegion("Vision2", 25, 3);
+        public static LightstripRegion SIGNAL_RIGHT            = new LightstripRegion("Signal", 28, 4);
 
-        public static final int        SIGNAL_PATTERN_LENGTH   = 27;
+        public static final int        SIGNAL_PATTERN_LENGTH   = 28;
         public static final int        VISION_PATTERN_LENGTH   = 6;
 
         /**
