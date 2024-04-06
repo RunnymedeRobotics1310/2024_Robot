@@ -55,7 +55,7 @@ public class TheSpeakerAuto extends BaseAutoCommand {
             addCommands(goGetNote5());
             break;
         case Barnum:
-            addCommands(goGetCenterNote());
+            addCommands(barnumExit());
             break;
         case Wolverine:
         case Loaded:

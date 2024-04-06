@@ -230,4 +230,10 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         return driveTo(PARK_AFTER_VALJEAN_AUTO_BLUE, PARK_AFTER_VALJEAN_AUTO_RED);
     }
 
+    protected Command barnumExit() {
+        return compactCommand()
+                .alongWith(approach(UNDER_STAGE_NEAR_BARNUM_BLUE, UNDER_STAGE_NEAR_BARNUM_RED, 0.30)
+                .andThen(driveTo(new Pose2d(UNDER_STAGE_BLUE, new Rotation2d()), new Pose2d(UNDER_STAGE_RED, new Rotation2d()))));
+    }
+
 }
