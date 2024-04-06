@@ -15,10 +15,11 @@ import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
-public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
+public class ScoreLoadedBarnumValjean extends BaseAutoCommand {
 
     public ScoreLoadedBarnumValjean(SwerveSubsystem swerve, ArmSubsystem armSubsystem,
         JackmanVisionSubsystem jackman, LightingSubsystem lighting, double delay) {
+        super(swerve, armSubsystem, jackman, lighting);
 
         // start
         addCommands(new LogMessageCommand("Starting Auto"));
@@ -52,6 +53,8 @@ public class ScoreLoadedBarnumValjean extends SequentialCommandGroup {
         addCommands(new ShootSpeakerFromAnywhereCommand(armSubsystem, swerve, lighting));
         addCommands(new CompactCommand(armSubsystem));
 
+        // Exit
+        addCommands(goGetNote5());
 
         // end
         addCommands(new LogMessageCommand("Auto Complete"));
