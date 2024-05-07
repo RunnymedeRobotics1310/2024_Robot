@@ -1,5 +1,13 @@
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.ArmConstants.COMPACT_AIM_SLOW_RANGE_DEG;
+import static frc.robot.Constants.ArmConstants.COMPACT_ARM_POSITION;
+import static frc.robot.Constants.ArmConstants.COMPACT_LINK_SLOW_RANGE_DEG;
+import static frc.robot.Constants.ArmConstants.DISABLE_ARM_SAFETY_MODE;
+import static frc.robot.Constants.ArmConstants.SAFE_AIM_SPEED;
+import static frc.robot.Constants.ArmConstants.SLOW_AIM_SPEED;
+import static frc.robot.Constants.ArmConstants.SLOW_LINK_SPEED;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
@@ -9,8 +17,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.telemetry.Telemetry;
-
-import static frc.robot.Constants.ArmConstants.*;
 
 
 public class ArmSubsystem extends RunnymedeSubsystemBase {
@@ -408,13 +414,15 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         if (linkClose && aimClose) {
             if (aimPivotSpeed < 0 && Math.abs(aimPivotSpeed) > SLOW_AIM_SPEED) {
                 aimPivotSpeed = -SAFE_AIM_SPEED;
-//                log(String.format("Compacting - aim safety mode link: %.2f aim: %.2f total: %.2f", linkAngle, aimAngle,
-//                    totalAngle));
+                // log(String.format("Compacting - aim safety mode link: %.2f aim: %.2f total:
+                // %.2f", linkAngle, aimAngle,
+                // totalAngle));
             }
             if (linkPivotSpeed < 0 && Math.abs(linkPivotSpeed) > SLOW_LINK_SPEED) {
                 linkPivotSpeed = -SLOW_LINK_SPEED;
-//                log(String.format("Compacting - link safety mode link: %.2f aim: %.2f total: %.2f", linkAngle, aimAngle,
-//                    totalAngle));
+                // log(String.format("Compacting - link safety mode link: %.2f aim: %.2f total:
+                // %.2f", linkAngle, aimAngle,
+                // totalAngle));
             }
         }
     }
@@ -423,19 +431,20 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         return shooterTopMotor.getEncoder().getPosition();
     }
 
-    private boolean trapReleased() {
+    public boolean trapReleased() {
         return trapRelease.get();
     }
 
     public void releaseTrap() {
         // TODO: fixme: write trap release code
+        trapRelease.set(true);
+        trapReleaseStartTime = System.currentTimeMillis();
 
         if (trapReleased()) {
             return;
         }
 
-        trapRelease.set(true);
-        trapReleaseStartTime = System.currentTimeMillis();
+
     }
 
 }

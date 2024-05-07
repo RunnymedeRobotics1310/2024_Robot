@@ -16,7 +16,17 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.AimAmpCommand;
+import frc.robot.commands.arm.AimSourceCommand;
+import frc.robot.commands.arm.CompactFromIntakeCommand;
+import frc.robot.commands.arm.EjectNoteCommand;
+import frc.robot.commands.arm.InjectNoteCommand;
+import frc.robot.commands.arm.ShootPrepFireCommand;
+import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.arm.TheGoLongShot;
+import frc.robot.commands.arm.TrapGregCommand;
+import frc.robot.commands.arm.TrapGregShootCommand;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
@@ -260,14 +270,17 @@ public class OperatorInput {
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
         // Trap
+        // new Trigger(() -> this.isShift() && operatorController.getXButton())
+        // .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
+
+        new Trigger(() -> !this.isShift() && operatorController.getXButton())
+            .onTrue(new TrapGregCommand(arm, climb, lighting));
+
         new Trigger(() -> this.isShift() && operatorController.getXButton())
-            .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
+            .onTrue(new TrapGregShootCommand(arm, lighting));
 
         // new Trigger(() -> !this.isShift() && operatorController.getXButton())
-        // .onTrue(new TrapGregCommand(arm, climb, lighting));
-
-        // new Trigger(() -> this.isShift() && operatorController.getXButton())
-        // .onTrue(new TrapGregShootCommand(arm, lighting));
+        // .onTrue(new TrapReleaseCommand(arm, lighting));
 
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())

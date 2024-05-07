@@ -4,10 +4,10 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 
 
-public class TrapGregShootCommand extends ArmBaseCommand {
+public class TrapReleaseCommand extends ArmBaseCommand {
     private final LightingSubsystem lightingSubsystem;
 
-    public TrapGregShootCommand(ArmSubsystem armSubsystem, LightingSubsystem lightingSubsystem) {
+    public TrapReleaseCommand(ArmSubsystem armSubsystem, LightingSubsystem lightingSubsystem) {
         super(armSubsystem);
         this.lightingSubsystem = lightingSubsystem;
         // each subsystem used by the command must be passed into the
@@ -23,10 +23,10 @@ public class TrapGregShootCommand extends ArmBaseCommand {
     @Override
     public void execute() {
         armSubsystem.releaseTrap();
-        if (armSubsystem.trapReleased()) {
-            armSubsystem.setShooterSpeed(-.5, -.5);
-        }
+        // if (armSubsystem.trapReleased()) {
+        // armSubsystem.setShooterSpeed(-.5, -.5);
     }
+
 
     @Override
     public boolean isFinished() {
