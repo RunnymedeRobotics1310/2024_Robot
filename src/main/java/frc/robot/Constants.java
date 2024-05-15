@@ -559,7 +559,7 @@ public final class Constants {
         /*
          * ARM PID CONTROLS
          */
-        public static final double      AIM_PID_P                          = 0.025;
+        public static final double      AIM_PID_P                          = 0.015;
         public static final double      LINK_PID_P                         = 0.025;
 
         /*
@@ -595,7 +595,7 @@ public final class Constants {
         public static final double      SLOW_AIM_SPEED                     = .2;
         public static final double      SAFE_AIM_SPEED                     = .1;
         public static final double      FAST_LINK_SPEED                    = .7;
-        public static final double      SLOW_LINK_SPEED                    = .2;
+        public static final double      SLOW_LINK_SPEED                    = .1;
 
         public static final double      SLOW_ARM_ZONE_DEG                  = 20.0;
         public static final double      AT_TARGET_DEG                      = 0.5;

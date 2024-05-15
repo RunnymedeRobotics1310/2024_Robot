@@ -436,7 +436,6 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     }
 
     public void releaseTrap() {
-        // TODO: fixme: write trap release code
         trapRelease.set(true);
         trapReleaseStartTime = System.currentTimeMillis();
 
