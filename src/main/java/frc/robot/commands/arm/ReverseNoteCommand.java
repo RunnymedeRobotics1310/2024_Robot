@@ -55,7 +55,7 @@ public class ReverseNoteCommand extends LoggingCommand {
             armSubsystem.setIntakeSpeed(-0.3);
 
             // Reverse the note for a number of rotations
-            if (Math.abs(armSubsystem.getIntakePosition() - intakeStartPosition) > 1.5) {
+            if (Math.abs(armSubsystem.getIntakePosition() - intakeStartPosition) > 2.5) {
                 armSubsystem.setIntakeSpeed(0);
                 armSubsystem.setShooterSpeed(0);
                 logStateTransition(State.FINISHED.name(), "Shooter Reversed");

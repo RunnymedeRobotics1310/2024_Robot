@@ -268,11 +268,11 @@ public class OperatorInput {
         // new Trigger(() -> this.isShift() && operatorController.getXButton())
         // .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
 
-        new Trigger(() -> !this.isShift() && operatorController.getXButton())
-            .onTrue(new TrapGregCommand(arm, climb, lighting));
-
-        new Trigger(() -> this.isShift() && operatorController.getXButton())
-            .onTrue(new TrapGregShootCommand(arm, lighting));
+//        new Trigger(() -> !this.isShift() && operatorController.getXButton())
+//            .onTrue(new TrapGregCommand(arm, climb, lighting));
+//
+//        new Trigger(() -> this.isShift() && operatorController.getXButton())
+//            .onTrue(new TrapGregShootCommand(arm, lighting));
 
         // new Trigger(() -> !this.isShift() && operatorController.getXButton())
         // .onTrue(new TrapReleaseCommand(arm, lighting));
@@ -282,8 +282,8 @@ public class OperatorInput {
             .onTrue(new TheGoLongShot(arm, drive));
 
         // podium shot
-        new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
-            .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, lighting));
+//        new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
+//            .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, lighting));
 
         // shoot FIRE
         // IF YOU CHANGE THE BUTTON THIS IS ON, MUST CHANGE THE BUTTON RELEASE
@@ -305,8 +305,8 @@ public class OperatorInput {
             .onTrue(new MaxClimbCommand(climb, drive));
 
         // aim amp
-        new Trigger(() -> operatorController.getPOV() == 270)
-            .onTrue(new AimAmpCommand(arm));
+//        new Trigger(() -> operatorController.getPOV() == 270)
+//            .onTrue(new AimAmpCommand(arm));
 
         // eject
         new Trigger(() -> !this.isShift() && operatorController.getPOV() == 90)
@@ -316,8 +316,8 @@ public class OperatorInput {
             .whileTrue(new InjectNoteCommand(arm));
 
         // aim source
-        new Trigger(() -> operatorController.getPOV() == 180)
-            .onTrue(new AimSourceCommand(arm));
+//        new Trigger(() -> operatorController.getPOV() == 180)
+//            .onTrue(new AimSourceCommand(arm));
 
     }
 
