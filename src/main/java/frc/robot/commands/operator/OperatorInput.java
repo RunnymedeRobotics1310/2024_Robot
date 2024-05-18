@@ -16,17 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.AimAmpCommand;
-import frc.robot.commands.arm.AimSourceCommand;
-import frc.robot.commands.arm.CompactFromIntakeCommand;
-import frc.robot.commands.arm.EjectNoteCommand;
-import frc.robot.commands.arm.InjectNoteCommand;
-import frc.robot.commands.arm.ShootPrepFireCommand;
-import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.arm.TheGoLongShot;
-import frc.robot.commands.arm.TrapGregCommand;
-import frc.robot.commands.arm.TrapGregShootCommand;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
@@ -124,7 +114,8 @@ public class OperatorInput {
     }
 
     public boolean isDriveFacingChain() {
-        return driverController.getAButton();
+//        return driverController.getAButton();
+        return false;
     }
 
     public boolean isCancel() {
@@ -242,6 +233,10 @@ public class OperatorInput {
         // start intake
         new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
             .onTrue(new StartIntakeCommand(arm, lighting));
+
+        // reverse note - temp for ontario science centre while sensor was broken
+        new Trigger(driverController::getAButton)
+            .onTrue(new ReverseNoteCommand(arm));
 
         // zero gyro
         new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
