@@ -18,6 +18,7 @@ public class ReverseNoteCommand extends LoggingCommand {
 
     public ReverseNoteCommand(ArmSubsystem armSubsystem) {
         this.armSubsystem = armSubsystem;
+        addRequirements(armSubsystem);
     }
 
     @Override
