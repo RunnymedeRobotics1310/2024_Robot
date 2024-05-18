@@ -84,11 +84,11 @@ public class DefaultArmCommand extends ArmBaseCommand {
     }
 
     private void setLinkMotorSpeed(double speed) {
-        // armSubsystem.setLinkPivotSpeed(speed);
+        armSubsystem.setLinkPivotSpeed(speed);
     }
 
     private void setAimMotorSpeed(double speed) {
-        // armSubsystem.setAimPivotSpeed(speed);
+        armSubsystem.setAimPivotSpeed(speed);
     }
 
 }

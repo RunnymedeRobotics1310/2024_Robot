@@ -261,9 +261,6 @@ public class OperatorInput {
         // OPERATOR CONTROLLER BINDINGS
         //
 
-        // cancel command (operator)
-        new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
-
         // Trap
         // new Trigger(() -> this.isShift() && operatorController.getXButton())
         // .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
