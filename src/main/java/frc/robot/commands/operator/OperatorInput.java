@@ -249,8 +249,8 @@ public class OperatorInput {
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
         // align amp
-        new Trigger(driverController::getBButton)
-            .onTrue(new DriveToScoreAmpCommand(drive));
+//        new Trigger(driverController::getBButton)
+//            .onTrue(new DriveToScoreAmpCommand(drive));
 
         // compact
         new Trigger(driverController::getXButton).onTrue(new CompactFromIntakeCommand(arm, true));
