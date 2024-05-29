@@ -278,6 +278,9 @@ public class OperatorInput {
          new Trigger(() -> !this.isShift() && operatorController.getXButton())
          .onTrue(new PrepTrapCommand(arm, climb));
 
+        new Trigger(() -> this.isShift() && operatorController.getXButton())
+                .onTrue(new ScoreTrapCommand(arm, climb));
+
         // rotate aim shoot
         new Trigger(() -> !this.isShift() && operatorController.getAButton())
             .onTrue(new TheGoLongShot(arm, drive));
