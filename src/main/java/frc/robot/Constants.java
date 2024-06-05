@@ -552,7 +552,9 @@ public final class Constants {
         // 73 degree offset on Mar 15.
         public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 16.2;
 
-        public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 1;
+        public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 5;                                             // changed
+                                                                                                                            // from
+                                                                                                                            // 1
 
         public static final int         TRAP_RELEASE_DIO_PORT              = 9;
 

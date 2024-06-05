@@ -166,7 +166,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     }
 
     public boolean isNoteDetected() {
-        return noteDetector.get();
+        return !noteDetector.get();
     }
 
     /**
