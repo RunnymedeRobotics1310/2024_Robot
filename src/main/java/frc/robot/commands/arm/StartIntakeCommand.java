@@ -127,6 +127,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
             // Start by extending the aim
             armSubsystem.setLinkPivotSpeed(0);
             armSubsystem.setAimPivotSpeed(0);
+            armSubsystem.setNoteDetectMode(true);
             armSubsystem.setIntakeSpeed(ArmConstants.INTAKE_INTAKE_SPEED);
 
             // Stop when the note is detected

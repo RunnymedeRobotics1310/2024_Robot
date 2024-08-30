@@ -43,6 +43,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     private boolean             safetyEnabled        = false;
     private long                safetyStartTime      = 0;
     private long                trapReleaseStartTime = 0;
+    private boolean             isNoteDetected       = true;
 
     public ArmSubsystem() {
 
@@ -166,8 +167,39 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
     }
 
     public boolean isNoteDetected() {
-        return !noteDetector.get();
+        // return !noteDetector.get();
+        return isNoteDetected;
     }
+
+    /**
+     * Set note detected manually because sensor is dead
+     * 
+     * @param detected
+     */
+    public void setNoteDetected(boolean detected) {
+        isNoteDetected = detected;
+    }
+
+    public void detectNote() {
+        if (noteDetectMode) {
+            isNoteDetected = Math.abs(getBottomShooterEncoderSpeed()) >= .1;
+        }
+    }
+
+    private boolean noteDetectMode = false;
+
+    public void setNoteDetectMode(boolean newMode) {
+        if (newMode) {
+            if (noteDetectMode) {
+                // entering note detect mode
+                isNoteDetected = false;
+            }
+            setShooterSpeed(0, 0); // todo: wait?
+            // set coast mode?
+        }
+        noteDetectMode = newMode;
+    }
+
 
     /**
      * Set the arm speeds FOR TEST MODE ONLY. Note this requires manual intervention.
