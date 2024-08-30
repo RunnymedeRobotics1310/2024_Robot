@@ -6,6 +6,7 @@ import static frc.robot.Constants.UsefulPoses.START_AT_BLUE_SPEAKER;
 import static frc.robot.Constants.UsefulPoses.START_AT_RED_SPEAKER;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -57,6 +58,7 @@ public class OperatorInput {
     private final SwerveSubsystem                                      drive;
     private final ArmSubsystem                                         arm;
     private final LightingSubsystem                                    lighting;
+    private final OperatorInput                                        operator;
     private final ClimbSubsystem                                       climb;
     private final JackmanVisionSubsystem                               jackman;
     private final XboxController                                       driverController;
@@ -209,6 +211,17 @@ public class OperatorInput {
 
     }
 
+
+    public void setRumbleDriver(Double power) {
+        driverController.setRumble(RumbleType.kLeftRumble, power);
+        driverController.setRumble(RumbleType.kRightRumble, power);
+    }
+
+    public void setRumbleoperator(Double power) {
+        operatorController.setRumble(RumbleType.kLeftRumble, power);
+        operatorController.setRumble(RumbleType.kRightRumble, power);
+    }
+
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
      * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
@@ -236,12 +249,12 @@ public class OperatorInput {
 
         // vision note pickup
         new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5)
-            .onTrue(new StartIntakeCommand(arm, lighting)
+            .onTrue(new StartIntakeCommand(arm, lighting, operator)
                 .deadlineWith(new DriveToNoteCommand(drive, lighting, arm, jackman, 2)));
 
         // start intake
         new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
-            .onTrue(new StartIntakeCommand(arm, lighting));
+            .onTrue(new StartIntakeCommand(arm, lighting, operator));
 
         // zero gyro
         new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
@@ -318,7 +331,7 @@ public class OperatorInput {
             .whileTrue(new EjectNoteCommand(arm));
 
         new Trigger(() -> this.isShift() && operatorController.getPOV() == 90)
-            .whileTrue(new InjectNoteCommand(arm));
+            .whileTrue(new InjectNoteCommand(arm, operator));
 
         // aim source
         new Trigger(() -> operatorController.getPOV() == 180)

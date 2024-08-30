@@ -20,29 +20,30 @@ import frc.robot.telemetry.Telemetry;
 
 
 public class ArmSubsystem extends RunnymedeSubsystemBase {
-    private final CANSparkMax   linkMotor            = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax   linkMotor                  = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   aimMotor             = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax   aimMotor                   = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   intakeMotor          = new CANSparkMax(ArmConstants.INTAKE_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax   intakeMotor                = new CANSparkMax(ArmConstants.INTAKE_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   shooterBottomMotor   = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
+    private final CANSparkMax   shooterBottomMotor         = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   shooterTopMotor      = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
+    private final CANSparkMax   shooterTopMotor            = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
         MotorType.kBrushless);
-    private final DigitalInput  linkLowerLimitSwitch = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
-    private final DigitalInput  noteDetector         = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
-    private final AnalogInput   linkAbsoluteEncoder  = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
-    private final AnalogInput   aimAbsoluteEncoder   = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
-    private final DigitalOutput trapRelease          = new DigitalOutput(ArmConstants.TRAP_RELEASE_DIO_PORT);
-    private double              linkPivotSpeed       = 0;
-    private double              aimPivotSpeed        = 0;
-    private double              intakeSpeed          = 0;
-    private double              topShooterSpeed      = 0;
-    private double              bottomShooterSpeed   = 0;
-    private boolean             safetyEnabled        = false;
-    private long                safetyStartTime      = 0;
-    private long                trapReleaseStartTime = 0;
+    private final DigitalInput  linkLowerLimitSwitch       = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
+    private final DigitalInput  noteDetector               = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);
+    private final AnalogInput   linkAbsoluteEncoder        = new AnalogInput(ArmConstants.LINK_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private final AnalogInput   aimAbsoluteEncoder         = new AnalogInput(ArmConstants.AIM_ABSOLUTE_ENCODER_ANALOG_PORT);
+    private final DigitalOutput trapRelease                = new DigitalOutput(ArmConstants.TRAP_RELEASE_DIO_PORT);
+    private double              linkPivotSpeed             = 0;
+    private double              aimPivotSpeed              = 0;
+    private double              intakeSpeed                = 0;
+    private double              topShooterSpeed            = 0;
+    private double              bottomShooterSpeed         = 0;
+    private boolean             safetyEnabled              = false;
+    private long                safetyStartTime            = 0;
+    private long                trapReleaseStartTime       = 0;
+    private boolean             lastKnownNoteDetectedState = false;
 
     public ArmSubsystem() {
 
@@ -169,6 +170,15 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         return !noteDetector.get();
     }
 
+    private boolean isNoteNew() {
+        boolean noteDetectedState = isNoteDetected();
+        boolean newNote           = noteDetectedState && !lastKnownNoteDetectedState;
+        lastKnownNoteDetectedState = noteDetectedState;
+        return newNote;
+    }
+
+
+
     /**
      * Set the arm speeds FOR TEST MODE ONLY. Note this requires manual intervention.
      */
@@ -245,6 +255,8 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
                 trapRelease.set(false);
             }
         }
+
+
 
         /*
          * Update the SmartDashboard
