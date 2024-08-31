@@ -338,13 +338,14 @@ public class OperatorInput {
         autoPatternChooser.addOption("1 Speaker Stay", Constants.AutoConstants.AutoPattern.SCORE_1_SPEAKER_STAY);
         autoPatternChooser.addOption("1 Speaker", Constants.AutoConstants.AutoPattern.SCORE_1_SPEAKER);
         autoPatternChooser.addOption("The Double Down", Constants.AutoConstants.AutoPattern.THE_DOUBLE_DOWN);
-        autoPatternChooser.addOption("Loaded + Wolverine (Speaker)", Constants.AutoConstants.AutoPattern.SCORE_LOADED_WOLVERINE);
+        // autoPatternChooser.addOption("Loaded + Wolverine (Speaker)",
+        // Constants.AutoConstants.AutoPattern.SCORE_LOADED_WOLVERINE);
         autoPatternChooser.addOption("2 Speaker Vision", Constants.AutoConstants.AutoPattern.SCORE_2_SPEAKER_VISION);
         autoPatternChooser.addOption("3 Speaker", Constants.AutoConstants.AutoPattern.SCORE_3_SPEAKER);
-        autoPatternChooser.addOption("Loaded + Wolverine + Barnum (Speaker)",
-            Constants.AutoConstants.AutoPattern.SCORE_LOADED_WOLVERINE_BARNUM);
-        autoPatternChooser.addOption("Loaded + Wolverine + Barnum + Valjean (Speaker)",
-            Constants.AutoConstants.AutoPattern.SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN);
+        // autoPatternChooser.addOption("Loaded + Wolverine + Barnum (Speaker)",
+        // Constants.AutoConstants.AutoPattern.SCORE_LOADED_WOLVERINE_BARNUM);
+        // autoPatternChooser.addOption("Loaded + Wolverine + Barnum + Valjean (Speaker)",
+        // Constants.AutoConstants.AutoPattern.SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN);
         autoPatternChooser.addOption("Loaded + Barnum + Valjean (Speaker)",
             Constants.AutoConstants.AutoPattern.SCORE_LOADED_BARNUM_VALJEAN);
         autoPatternChooser.addOption("4 Speaker", Constants.AutoConstants.AutoPattern.SCORE_4_SPEAKER);
@@ -382,22 +383,33 @@ public class OperatorInput {
         };
 
         return switch (autoPatternChooser.getSelected()) {
-        // not used
-        case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, jackman, lighting, delay);
-        case SCORE_2_SPEAKER_VISION -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 2);
-        case SCORE_3_SPEAKER -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 3);
-        case SCORE_4_SPEAKER -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 4);
 
-        // used in competition
+        // Ran successfully at CNE days 1-2
+        case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, jackman, lighting, delay);
+        // Ran successfully at CNE day 1
+        case SCORE_2_SPEAKER_VISION -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 2);
+        // Ran successfully at CNE day 1
+        case SCORE_3_SPEAKER -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 3);
+        // Not run at CNE
+        case SCORE_4_SPEAKER -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 4);
+        // Not run at CNE
         case EXIT_ZONE -> new ExitZoneAutoCommand(drive, delay);
+        // Ran successfully at CNE day 1
         case SCORE_1_SPEAKER_STAY -> new Score1SpeakerStayAutoCommand(drive, arm, lighting, delay);
+        // Not run at CNE
         case SCORE_1_SPEAKER -> new Score1SpeakerAutoCommand(drive, arm, jackman, lighting, delay);
+        // Not run at CNE
         case THE_DOUBLE_DOWN -> new TheDoubleDown(drive, arm, lighting, delay);
+        // Failed at CNE day 1
         case SCORE_LOADED_WOLVERINE -> new ScoreLoadedWolverineBarnumValjean(drive, arm, jackman, lighting, delay, 2);
+        // Not run at CNE
         case SCORE_LOADED_WOLVERINE_BARNUM -> new ScoreLoadedWolverineBarnumValjean(drive, arm, jackman, lighting, delay, 3);
+        // Not run at CNE
         case SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN ->
             new ScoreLoadedWolverineBarnumValjean(drive, arm, jackman, lighting, delay, 4);
+        // Not run at CNE TODO: test
         case SCORE_LOADED_BARNUM_VALJEAN -> new ScoreLoadedBarnumValjean(drive, arm, jackman, lighting, delay);
+        // it'll work
         default -> new InstantCommand();
         };
     }
