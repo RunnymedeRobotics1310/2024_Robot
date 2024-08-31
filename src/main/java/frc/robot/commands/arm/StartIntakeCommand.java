@@ -3,7 +3,6 @@ package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Intaking;
@@ -19,7 +18,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
     private State             state = State.MOVE_TO_UNLOCK;
     private LightingSubsystem lighting;
 
-    public StartIntakeCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting, OperatorInput operatorInput) {
+    public StartIntakeCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting) {
         super(armSubsystem);
         this.lighting = lighting;
     }

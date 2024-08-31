@@ -681,4 +681,10 @@ public final class Constants {
 
         public static final Rotation2d LEVEL_CLIMB_TOLERANCE         = Rotation2d.fromDegrees(3);
     }
+
+    public static final class ControllerConstants {
+        // FIXME Are these values accurate?
+        public static final double RUMBLE_MAX = 1;
+        public static final double RUMBLE_OFF = 0;
+    }
 }

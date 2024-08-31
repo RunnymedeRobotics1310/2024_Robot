@@ -170,7 +170,7 @@ public class ArmSubsystem extends RunnymedeSubsystemBase {
         return !noteDetector.get();
     }
 
-    private boolean isNoteNew() {
+    public boolean isNoteNew() {
         boolean noteDetectedState = isNoteDetected();
         boolean newNote           = noteDetectedState && !lastKnownNoteDetectedState;
         lastKnownNoteDetectedState = noteDetectedState;

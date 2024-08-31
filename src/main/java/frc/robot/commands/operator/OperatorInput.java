@@ -58,7 +58,6 @@ public class OperatorInput {
     private final SwerveSubsystem                                      drive;
     private final ArmSubsystem                                         arm;
     private final LightingSubsystem                                    lighting;
-    private final OperatorInput                                        operator;
     private final ClimbSubsystem                                       climb;
     private final JackmanVisionSubsystem                               jackman;
     private final XboxController                                       driverController;
@@ -249,12 +248,12 @@ public class OperatorInput {
 
         // vision note pickup
         new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5)
-            .onTrue(new StartIntakeCommand(arm, lighting, operator)
+            .onTrue(new StartIntakeCommand(arm, lighting)
                 .deadlineWith(new DriveToNoteCommand(drive, lighting, arm, jackman, 2)));
 
         // start intake
         new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
-            .onTrue(new StartIntakeCommand(arm, lighting, operator));
+            .onTrue(new StartIntakeCommand(arm, lighting));
 
         // zero gyro
         new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
@@ -331,7 +330,7 @@ public class OperatorInput {
             .whileTrue(new EjectNoteCommand(arm));
 
         new Trigger(() -> this.isShift() && operatorController.getPOV() == 90)
-            .whileTrue(new InjectNoteCommand(arm, operator));
+            .whileTrue(new InjectNoteCommand(arm));
 
         // aim source
         new Trigger(() -> operatorController.getPOV() == 180)
