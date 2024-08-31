@@ -384,7 +384,7 @@ public class OperatorInput {
 
         return switch (autoPatternChooser.getSelected()) {
 
-        // Ran successfully at CNE days 1-2
+        // Red successful, blue failed
         case SCORE_2_5_AMP -> new Score2_5AmpAutoCommand(drive, arm, jackman, lighting, delay);
         // Ran successfully at CNE day 1
         case SCORE_2_SPEAKER_VISION -> new TheSpeakerAuto(drive, arm, jackman, lighting, delay, 2);
