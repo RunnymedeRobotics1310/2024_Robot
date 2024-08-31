@@ -1,7 +1,27 @@
 package frc.robot.commands.auto;
 
-import static frc.robot.Constants.FieldConstants.*;
-import static frc.robot.Constants.UsefulPoses.*;
+import static frc.robot.Constants.FieldConstants.BLUE_BARNUM;
+import static frc.robot.Constants.FieldConstants.BLUE_VALJEAN;
+import static frc.robot.Constants.FieldConstants.BLUE_WOLVERINE;
+import static frc.robot.Constants.FieldConstants.CENTRE_NOTE_3;
+import static frc.robot.Constants.FieldConstants.CENTRE_NOTE_5;
+import static frc.robot.Constants.FieldConstants.RED_BARNUM;
+import static frc.robot.Constants.FieldConstants.RED_VALJEAN;
+import static frc.robot.Constants.FieldConstants.RED_WOLVERINE;
+import static frc.robot.Constants.FieldConstants.UNDER_STAGE_BLUE;
+import static frc.robot.Constants.FieldConstants.UNDER_STAGE_NEAR_BARNUM_BLUE;
+import static frc.robot.Constants.FieldConstants.UNDER_STAGE_NEAR_BARNUM_RED;
+import static frc.robot.Constants.FieldConstants.UNDER_STAGE_RED;
+import static frc.robot.Constants.UsefulPoses.AFTER_WOLVERINE_AUTO_BLUE;
+import static frc.robot.Constants.UsefulPoses.AFTER_WOLVERINE_AUTO_RED;
+import static frc.robot.Constants.UsefulPoses.IN_FRONT_OF_WOLVERINE_BLUE;
+import static frc.robot.Constants.UsefulPoses.IN_FRONT_OF_WOLVERINE_RED;
+import static frc.robot.Constants.UsefulPoses.PARK_AFTER_BARNUM_AUTO_BLUE;
+import static frc.robot.Constants.UsefulPoses.PARK_AFTER_BARNUM_AUTO_RED;
+import static frc.robot.Constants.UsefulPoses.PARK_AFTER_VALJEAN_AUTO_BLUE;
+import static frc.robot.Constants.UsefulPoses.PARK_AFTER_VALJEAN_AUTO_RED;
+import static frc.robot.Constants.UsefulPoses.PARK_AFTER_WOLVERINE_AUTO_BLUE;
+import static frc.robot.Constants.UsefulPoses.PARK_AFTER_WOLVERINE_AUTO_RED;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,8 +31,20 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.commands.arm.*;
-import frc.robot.commands.swervedrive.*;
+import frc.robot.commands.arm.AimAmpCommand;
+import frc.robot.commands.arm.CompactCommand;
+import frc.robot.commands.arm.CompactFromIntakeCommand;
+import frc.robot.commands.arm.ReverseNoteCommand;
+import frc.robot.commands.arm.ShootCommand;
+import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
+import frc.robot.commands.swervedrive.ApproachPositionCommand;
+import frc.robot.commands.swervedrive.DriveToNoteCommand;
+import frc.robot.commands.swervedrive.DriveToPositionCommand;
+import frc.robot.commands.swervedrive.DriveToScoreAmpCommand;
+import frc.robot.commands.swervedrive.RotateToLocationCommand;
+import frc.robot.commands.swervedrive.RotateToTargetCommand;
+import frc.robot.commands.swervedrive.SimpleDriveRobotOrientedCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -59,7 +91,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         if (Robot.isSimulation()) {
             return new WaitCommand(0.5);
         }
-        return new StartIntakeCommand(armSubsystem, lighting);
+        return new StartIntakeCommand(armSubsystem, lighting, null);
     }
 
     private Command reverseNoteCommand() {
@@ -138,48 +170,48 @@ public class BaseAutoCommand extends SequentialCommandGroup {
         Command arm   = wait(0.25).andThen(startIntakeCommand());
         // get away from speaker before rotating
         Command drive = driveTo(IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED)
-//            .andThen(faceWolverineCommand())
+            // .andThen(faceWolverineCommand())
             .andThen(approach(BLUE_WOLVERINE, RED_WOLVERINE, 0.8))
             .andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
-//        return arm;
+        // return arm;
     }
 
 
     protected Command goGetBarnum() {
         Command arm   = compactCommand().andThen(startIntakeCommand());
-        Command drive = faceBarnumCommand(Rotation2d.fromDegrees(15))                                                                    /*
-                                                                                                                                          * .andThen
-                                                                                                                                          * (
-                                                                                                                                          * approach
-                                                                                                                                          * (
-                                                                                                                                          * BLUE_BARNUM,
-                                                                                                                                          * RED_BARNUM,
-                                                                                                                                          * 0
-                                                                                                                                          * .
-                                                                                                                                          * 80
-                                                                                                                                          * )
-                                                                                                                                          * )
-                                                                                                                                          */
+        Command drive = faceBarnumCommand(Rotation2d.fromDegrees(15))                                                                             /*
+                                                                                                                                                   * .andThen
+                                                                                                                                                   * (
+                                                                                                                                                   * approach
+                                                                                                                                                   * (
+                                                                                                                                                   * BLUE_BARNUM,
+                                                                                                                                                   * RED_BARNUM,
+                                                                                                                                                   * 0
+                                                                                                                                                   * .
+                                                                                                                                                   * 80
+                                                                                                                                                   * )
+                                                                                                                                                   * )
+                                                                                                                                                   */
             .andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
 
     protected Command goGetValjean() {
         Command arm   = compactCommand().andThen(startIntakeCommand());
-        Command drive = faceValjeanCommand(Rotation2d.fromDegrees(15))                                                                      /*
-                                                                                                                                             * .andThen
-                                                                                                                                             * (
-                                                                                                                                             * approach
-                                                                                                                                             * (
-                                                                                                                                             * BLUE_VALJEAN,
-                                                                                                                                             * RED_VALJEAN,
-                                                                                                                                             * 0
-                                                                                                                                             * .
-                                                                                                                                             * 80
-                                                                                                                                             * )
-                                                                                                                                             * )
-                                                                                                                                             */
+        Command drive = faceValjeanCommand(Rotation2d.fromDegrees(15))                                                                               /*
+                                                                                                                                                      * .andThen
+                                                                                                                                                      * (
+                                                                                                                                                      * approach
+                                                                                                                                                      * (
+                                                                                                                                                      * BLUE_VALJEAN,
+                                                                                                                                                      * RED_VALJEAN,
+                                                                                                                                                      * 0
+                                                                                                                                                      * .
+                                                                                                                                                      * 80
+                                                                                                                                                      * )
+                                                                                                                                                      * )
+                                                                                                                                                      */
             .andThen(driveToNoteCommand(2));
         return arm.alongWith(drive);
     }
@@ -232,7 +264,7 @@ public class BaseAutoCommand extends SequentialCommandGroup {
 
     protected Command barnumExit() {
         return compactCommand()
-                .alongWith(approach(UNDER_STAGE_NEAR_BARNUM_BLUE, UNDER_STAGE_NEAR_BARNUM_RED, 0.30)
+            .alongWith(approach(UNDER_STAGE_NEAR_BARNUM_BLUE, UNDER_STAGE_NEAR_BARNUM_RED, 0.30)
                 .andThen(driveTo(new Pose2d(UNDER_STAGE_BLUE, new Rotation2d()), new Pose2d(UNDER_STAGE_RED, new Rotation2d()))));
     }
 

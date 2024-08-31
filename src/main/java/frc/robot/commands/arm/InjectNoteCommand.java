@@ -1,11 +1,12 @@
 package frc.robot.commands.arm;
 
 import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class InjectNoteCommand extends ArmBaseCommand {
 
-    public InjectNoteCommand(ArmSubsystem armSubsystem) {
+    public InjectNoteCommand(ArmSubsystem armSubsystem, OperatorInput operatorInput) {
         super(armSubsystem);
     }
 

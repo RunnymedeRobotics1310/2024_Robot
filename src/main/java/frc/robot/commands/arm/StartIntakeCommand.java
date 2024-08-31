@@ -3,6 +3,8 @@ package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.lighting.pattern.Intaking;
@@ -17,10 +19,12 @@ public class StartIntakeCommand extends ArmBaseCommand {
 
     private State             state = State.MOVE_TO_UNLOCK;
     private LightingSubsystem lighting;
+    private OperatorInput     operatorInput;
 
-    public StartIntakeCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting) {
+    public StartIntakeCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting, OperatorInput operatorInput) {
         super(armSubsystem);
-        this.lighting = lighting;
+        this.lighting      = lighting;
+        this.operatorInput = operatorInput;
     }
 
     @Override
@@ -147,6 +151,13 @@ public class StartIntakeCommand extends ArmBaseCommand {
     @Override
     public boolean isFinished() {
 
+        if (armSubsystem.isNoteNew()) {
+            if (DriverStation.isTeleopEnabled()) {
+                operatorInput.setRumbleDriver(ControllerConstants.RUMBLE_MAX);
+                operatorInput.setRumbleOperator(ControllerConstants.RUMBLE_MAX);
+            }
+        }
+
         // If the arm is in position, then this command ends
         if (state == State.FINISHED) {
             setFinishReason("At Intake Position - Note Detected");
@@ -157,6 +168,7 @@ public class StartIntakeCommand extends ArmBaseCommand {
             setFinishReason("Note Detected - BUT STATE DID NOT CHANGE");
             return true;
         }
+
 
         return false;
     }

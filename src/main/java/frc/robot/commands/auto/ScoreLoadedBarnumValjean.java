@@ -1,11 +1,20 @@
 package frc.robot.commands.auto;
 
-import static frc.robot.Constants.FieldConstants.*;
+import static frc.robot.Constants.FieldConstants.BLUE_BARNUM;
+import static frc.robot.Constants.FieldConstants.BLUE_BARNUM_SHOT;
+import static frc.robot.Constants.FieldConstants.BLUE_VALJEAN;
+import static frc.robot.Constants.FieldConstants.RED_BARNUM;
+import static frc.robot.Constants.FieldConstants.RED_BARNUM_SHOT;
+import static frc.robot.Constants.FieldConstants.RED_VALJEAN;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.CompactCommand;
+import frc.robot.commands.arm.CompactFromIntakeCommand;
+import frc.robot.commands.arm.ReverseNoteCommand;
+import frc.robot.commands.arm.ShootCommand;
+import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
+import frc.robot.commands.arm.StartIntakeCommand;
 import frc.robot.commands.swervedrive.DriveToPositionCommand;
 import frc.robot.commands.swervedrive.DriveToPositionFacingCommand;
 import frc.robot.commands.swervedrive.RotateToLocationCommand;
@@ -30,8 +39,8 @@ public class ScoreLoadedBarnumValjean extends BaseAutoCommand {
 
         // barnum
         addCommands(new WaitCommand(.8)
-            .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
-        addCommands(new StartIntakeCommand(armSubsystem, lighting)
+            .deadlineWith(new StartIntakeCommand(armSubsystem, lighting, null)));
+        addCommands(new StartIntakeCommand(armSubsystem, lighting, null)
             .deadlineWith(new DriveToPositionCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
         addCommands(new DriveToPositionCommand(swerve, BLUE_BARNUM_SHOT, RED_BARNUM_SHOT));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
@@ -41,7 +50,7 @@ public class ScoreLoadedBarnumValjean extends BaseAutoCommand {
 
         // valjean
         Command arm   = new CompactCommand(armSubsystem)
-            .andThen(new StartIntakeCommand(armSubsystem, lighting));
+            .andThen(new StartIntakeCommand(armSubsystem, lighting, null));
         Command drive = new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN)
             .andThen(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, RED_VALJEAN, 1.5));
         addCommands(arm.deadlineWith(drive));

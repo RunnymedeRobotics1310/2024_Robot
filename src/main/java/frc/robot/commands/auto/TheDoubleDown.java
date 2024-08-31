@@ -25,7 +25,7 @@ public class TheDoubleDown extends SequentialCommandGroup {
         addCommands(new ShootCommand(armSubsystem, lighting));
 
         // barnum
-        addCommands(new StartIntakeCommand(armSubsystem, lighting)
+        addCommands(new StartIntakeCommand(armSubsystem, lighting, null)
             .deadlineWith(new WaitCommand(2).andThen(new SimpleDriveRobotOrientedCommand(swerve, 1, 0, 0, 3))));
         addCommands(new CompactCommand(armSubsystem).alongWith(new ReverseNoteCommand(armSubsystem)));
         addCommands(new SimpleDriveRobotOrientedCommand(swerve, -1, 0, TEMP_DRIFT_COMPENSATION.getRadians(), 3));

@@ -1,54 +1,13 @@
 package frc.robot.commands.operator;
 
-import static frc.robot.Constants.UsefulPoses.SCORE_BLUE_AMP;
-import static frc.robot.Constants.UsefulPoses.SCORE_RED_AMP;
-import static frc.robot.Constants.UsefulPoses.START_AT_BLUE_SPEAKER;
-import static frc.robot.Constants.UsefulPoses.START_AT_RED_SPEAKER;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-import frc.robot.Robot;
-import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.AimAmpCommand;
-import frc.robot.commands.arm.AimSourceCommand;
-import frc.robot.commands.arm.CompactFromIntakeCommand;
-import frc.robot.commands.arm.EjectNoteCommand;
-import frc.robot.commands.arm.InjectNoteCommand;
-import frc.robot.commands.arm.ShootPrepFireCommand;
-import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.arm.TheGoLongShot;
-import frc.robot.commands.arm.TrapGregCommand;
-import frc.robot.commands.arm.TrapGregShootCommand;
-import frc.robot.commands.auto.ExitZoneAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerAutoCommand;
-import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
-import frc.robot.commands.auto.Score2_5AmpAutoCommand;
-import frc.robot.commands.auto.ScoreLoadedBarnumValjean;
-import frc.robot.commands.auto.ScoreLoadedWolverineBarnumValjean;
-import frc.robot.commands.auto.TheDoubleDown;
-import frc.robot.commands.auto.TheSpeakerAuto;
-import frc.robot.commands.climb.MaxClimbCommand;
-import frc.robot.commands.swervedrive.DriveToNoteCommand;
-import frc.robot.commands.swervedrive.DriveToScoreAmpCommand;
-import frc.robot.commands.swervedrive.ResetOdometryCommand;
-import frc.robot.commands.swervedrive.ZeroGyroCommand;
-import frc.robot.commands.test.SystemTestCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
-import frc.robot.subsystems.lighting.pattern.Enabled;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
-import frc.robot.telemetry.Telemetry;
 
 /**
  * The DriverController exposes all driver functions
@@ -65,6 +24,12 @@ public class OperatorInput {
 
     private final SendableChooser<Constants.AutoConstants.AutoPattern> autoPatternChooser = new SendableChooser<>();
     private final SendableChooser<Constants.AutoConstants.Delay>       delayChooser       = new SendableChooser<>();
+
+    private long                                                       rumbleStartDriver;
+    private long                                                       rumbleStartOperator;
+
+    private long                                                       rumbleMillisDriver;
+    private long                                                       rumbleMillisOperator;
 
     public enum Stick {
         LEFT, RIGHT
@@ -211,14 +176,22 @@ public class OperatorInput {
     }
 
 
-    public void setRumbleDriver(Double power) {
+    public void setRumbleDriver(Double power, long rumbleMillis) {
+        this.rumbleStartDriver = System.currentTimeMillis();
         driverController.setRumble(RumbleType.kLeftRumble, power);
         driverController.setRumble(RumbleType.kRightRumble, power);
+        
+
     }
 
-    public void setRumbleoperator(Double power) {
+    public void setRumbleOperator(Double power, long rumbleMillis) {
+        this.rumbleStartOperator = System.currentTimeMillis();
         operatorController.setRumble(RumbleType.kLeftRumble, power);
         operatorController.setRumble(RumbleType.kRightRumble, power);
+    }
+    
+    if(System.currentTimeMillis() - rumbleStartDriver >= rumbleMillis){
+
     }
 
     /**
@@ -248,12 +221,12 @@ public class OperatorInput {
 
         // vision note pickup
         new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5)
-            .onTrue(new StartIntakeCommand(arm, lighting)
+            .onTrue(new StartIntakeCommand(arm, lighting, this)
                 .deadlineWith(new DriveToNoteCommand(drive, lighting, arm, jackman, 2)));
 
         // start intake
         new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
-            .onTrue(new StartIntakeCommand(arm, lighting));
+            .onTrue(new StartIntakeCommand(arm, lighting, this));
 
         // zero gyro
         new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
@@ -330,7 +303,7 @@ public class OperatorInput {
             .whileTrue(new EjectNoteCommand(arm));
 
         new Trigger(() -> this.isShift() && operatorController.getPOV() == 90)
-            .whileTrue(new InjectNoteCommand(arm));
+            .whileTrue(new InjectNoteCommand(arm, this));
 
         // aim source
         new Trigger(() -> operatorController.getPOV() == 180)
