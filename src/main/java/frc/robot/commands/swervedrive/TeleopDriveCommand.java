@@ -1,7 +1,17 @@
 package frc.robot.commands.swervedrive;
 
-import static frc.robot.Constants.Swerve.Chassis.*;
-import static frc.robot.Constants.UsefulHeadings.*;
+import static frc.robot.Constants.Swerve.Chassis.GENERAL_SPEED_FACTOR;
+import static frc.robot.Constants.Swerve.Chassis.MAX_ANGULAR_VELOCITY_PCT_CHANGE_PER_CYCLE_FOR_TELEOP;
+import static frc.robot.Constants.Swerve.Chassis.MAX_ROTATIONAL_VELOCITY_PER_SEC;
+import static frc.robot.Constants.Swerve.Chassis.MAX_SPEED_FACTOR;
+import static frc.robot.Constants.Swerve.Chassis.MAX_TRANSLATION_SPEED_MPS;
+import static frc.robot.Constants.Swerve.Chassis.SLOW_SPEED_FACTOR;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_BLUE_CENTER;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_BLUE_LEFT;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_BLUE_RIGHT;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_CENTER;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_LEFT;
+import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_RIGHT;
 import static frc.robot.RunnymedeUtils.getRunnymedeAlliance;
 import static frc.robot.commands.operator.OperatorInput.Axis.X;
 import static frc.robot.commands.operator.OperatorInput.Axis.Y;
@@ -45,7 +55,8 @@ public class TeleopDriveCommand extends BaseDriveCommand {
     @Override
     public void initialize() {
         super.initialize();
-        headingSetpoint = swerve.getPose().getRotation();
+        headingSetpoint    = swerve.getPose().getRotation();
+        this.lockOnSpeaker = false;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
