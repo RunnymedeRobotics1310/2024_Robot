@@ -539,7 +539,11 @@ public final class Constants {
         public static final int         LINK_ABSOLUTE_ENCODER_ANALOG_PORT  = 3;
         // Encoder constants to convert from Volts to Deg
         public static final double      LINK_ABSOLUTE_ENCODER_DEG_PER_VOLT = 49.11;
-        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -65.5;
+        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -65.5 - 2;                                     // -2
+                                                                                                                            // added
+                                                                                                                            // CNE
+                                                                                                                            // day
+                                                                                                                            // 2
 
 
         public static final int         LINK_LOWER_LIMIT_SWITCH_DIO_PORT   = 0;
