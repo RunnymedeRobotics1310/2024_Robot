@@ -2,8 +2,9 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.ClimbConstants.*;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.ClimbConstants;
@@ -16,11 +17,11 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
     // Lights Subsystem
     private final LightingSubsystem lighting;
 
-    private final CANSparkMax       leftClimbMotor          = new CANSparkMax(
+    private final SparkMax       leftClimbMotor          = new SparkMax(
         ClimbConstants.LEFT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
 
-    private final CANSparkMax       rightClimbMotor         = new CANSparkMax(
+    private final SparkMax       rightClimbMotor         = new SparkMax(
         ClimbConstants.RIGHT_CLIMB_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
     private final DigitalInput      rightClimbLimitSwitch   = new DigitalInput(
@@ -169,7 +170,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
         if (!rightEncoderInitialized) {
             if (rightAllTheWayDown()) {
                 rightClimbMotor.getEncoder().setPosition(0);
-                rightClimbMotor.burnFlash();
+//                rightClimbMotor.burnFlash();
                 rightEncoderInitialized = true;
             }
             else {
@@ -180,7 +181,7 @@ public class ClimbSubsystem extends RunnymedeSubsystemBase {
         if (!leftEncoderInitialized) {
             if (leftAllTheWayDown()) {
                 leftClimbMotor.getEncoder().setPosition(0);
-                leftClimbMotor.burnFlash();
+//                leftClimbMotor.burnFlash();
                 leftEncoderInitialized = true;
             }
             else {
