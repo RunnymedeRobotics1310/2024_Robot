@@ -17,7 +17,6 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.lighting.LightingSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.subsystems.swerve.yagsl.YagslSubsystem;
 import frc.robot.subsystems.vision.JackmanVisionSubsystem;
 
 import static frc.robot.Constants.LightingConstants.*;
@@ -42,21 +41,20 @@ public class RobotContainer {
     private final ArmSubsystem           arm           = new ArmSubsystem();
     private final ClimbSubsystem         climb         = new ClimbSubsystem(lighting);
     private final File                   yagslConfig   = new File(Filesystem.getDeployDirectory(), "swerve/neo");
-    private final SwerveSubsystem        drive         = new YagslSubsystem(lighting, yagslConfig);
-//    private final SwerveSubsystem        drive   = new RunnymedeSwerveSubsystem(lighting);
+    private final SwerveSubsystem swerveDriveSubsystem = new SwerveSubsystem(Constants.Swerve.SUBSYSTEM_CONFIG);
 
     private final OperatorInput          operatorInput = new OperatorInput(
         OiConstants.DRIVER_CONTROLLER_PORT, OiConstants.OPERATOR_CONTROLLER_PORT,
-        drive, arm, climb, jackman, lighting);
+        swerveDriveSubsystem, arm, climb, jackman, lighting);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
 
-        drive.setDefaultCommand(new TeleopDriveCommand(drive, lighting, operatorInput));
+        swerveDriveSubsystem.setDefaultCommand(new TeleopDriveCommand(swerveDriveSubsystem, lighting, operatorInput));
         arm.setDefaultCommand(new DefaultArmCommand(operatorInput, arm));
-        climb.setDefaultCommand(new DefaultClimbCommand(operatorInput, climb, drive));
+        climb.setDefaultCommand(new DefaultClimbCommand(operatorInput, climb, swerveDriveSubsystem));
 
         operatorInput.configureTriggerBindings();
         operatorInput.initAutoSelectors();

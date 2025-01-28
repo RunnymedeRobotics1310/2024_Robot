@@ -7,8 +7,6 @@ package frc.robot;
 import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static frc.robot.Constants.BotTarget.BLUE_NOTE_WOLVERINE;
 import static frc.robot.Constants.BotTarget.RED_NOTE_WOLVERINE;
-import static frc.robot.Constants.Swerve.Chassis.TRACK_WIDTH_METRES;
-import static frc.robot.Constants.Swerve.Chassis.WHEEL_BASE_METRES;
 import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_BLUE_CENTER;
 import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_BLUE_LEFT;
 import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_BLUE_RIGHT;
@@ -16,12 +14,18 @@ import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_CENTER;
 import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_LEFT;
 import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_RIGHT;
 
+import ca.team1310.swerve.SwerveTelemetry;
+import ca.team1310.swerve.core.config.*;
+import ca.team1310.swerve.vision.VisionConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.lighting.LightstripRegion;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystemConfig;
+import frc.robot.subsystems.swerve.SwerveRotationConfig;
+import frc.robot.subsystems.swerve.SwerveTranslationConfig;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -49,6 +53,166 @@ public final class Constants {
          * Kill switch for the drive subsystem. Useful when testing other subsystems.
          */
         public static final boolean DISABLED = false;
+
+                /**
+         * Front to back from the middle of the wheels
+         */
+        public static final double WHEEL_BASE_METRES = inchesToMeters(24.75);
+        /**
+         * Side to side from the middle of the wheels
+         */
+        public static final double TRACK_WIDTH_METRES = inchesToMeters(22.75);
+
+        public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.051;
+
+        public static final SwerveTranslationConfig TRANSLATION_CONFIG = new SwerveTranslationConfig(
+            0.02,
+            1.0,
+            4.79,
+            4.79,
+            42.0,
+            1.2,
+            0,
+            0
+        );
+
+        public static final SwerveRotationConfig ROTATION_CONFIG = new SwerveRotationConfig(
+            /* min rot vel radPS */Rotation2d.fromDegrees(45).getRadians(),
+            /* max rot vel radPS */Rotation2d.fromRotations(1).getRadians(),
+            /* max rotation jump speed */Rotation2d.fromDegrees(205).getRadians(),
+            /* slow zone */Rotation2d.fromDegrees(35).getRadians(),
+            /* max rotation accel */Rotation2d.fromRotations(1310).getRadians(),
+            /* rotation tolerance */Rotation2d.fromDegrees(2).getRadians(),
+            0.4,
+            0,
+            0
+        );
+
+        private static final MotorConfig ANGLE_MOTOR_CONFIG = new MotorConfig(
+            MotorType.NEO_SPARK_MAX,
+            true,
+            20,
+            12,
+            0.25,
+            150.0 / 7/* SDS MK4i 150/7:1 */,
+            0.0125,
+            0,
+            0,
+            0,
+            0
+        );
+
+        private static final MotorConfig DRIVE_MOTOR_CONFIG = new MotorConfig(
+            MotorType.NEO_SPARK_FLEX,
+            true,
+            40,
+            12,
+            0.25,
+            6.75/* SDS MK4i L2 --> 6.75:1 */,
+            0.11,
+            0,
+            0,
+            0,
+            0
+        );
+
+        private static final EncoderConfig ANGLE_ENCODER_CONFIG = new EncoderConfig(false, 0.005, 5);
+
+        public static final ModuleConfig FRONT_LEFT = new ModuleConfig(
+            "frontleft",
+            TRACK_WIDTH_METRES / 2,
+            WHEEL_BASE_METRES / 2,
+            SDS_MK4I_WHEEL_RADIUS_M,
+            10,
+            DRIVE_MOTOR_CONFIG,
+            11,
+            ANGLE_MOTOR_CONFIG,
+            12,
+            222.9786,
+            ANGLE_ENCODER_CONFIG
+        );
+
+        public static final ModuleConfig FRONT_RIGHT = new ModuleConfig(
+            "frontright",
+            TRACK_WIDTH_METRES / 2,
+            -WHEEL_BASE_METRES / 2,
+            SDS_MK4I_WHEEL_RADIUS_M,
+            20,
+            DRIVE_MOTOR_CONFIG,
+            21,
+            ANGLE_MOTOR_CONFIG,
+            22,
+            12.12876,
+            ANGLE_ENCODER_CONFIG
+        );
+
+        public static final ModuleConfig BACK_LEFT = new ModuleConfig(
+            "backleft",
+            -TRACK_WIDTH_METRES / 2,
+            WHEEL_BASE_METRES / 2,
+            SDS_MK4I_WHEEL_RADIUS_M,
+            35,
+            DRIVE_MOTOR_CONFIG,
+            36,
+            ANGLE_MOTOR_CONFIG,
+            37,
+            334.24812,
+            ANGLE_ENCODER_CONFIG
+        );
+
+        public static final ModuleConfig BACK_RIGHT = new ModuleConfig(
+            "backright",
+            -TRACK_WIDTH_METRES / 2,
+            -WHEEL_BASE_METRES / 2,
+            SDS_MK4I_WHEEL_RADIUS_M,
+            30,
+            DRIVE_MOTOR_CONFIG,
+            31,
+            ANGLE_MOTOR_CONFIG,
+            32,
+            102.8322,
+            ANGLE_ENCODER_CONFIG
+        );
+
+        public static final SwerveTelemetry TELEMETRY = new SwerveTelemetry(4);
+
+        static {
+            TELEMETRY.enabled = true;
+        }
+
+        public static final CoreSwerveConfig CORE_SWERVE_CONFIG = new CoreSwerveConfig(
+            WHEEL_BASE_METRES,
+            TRACK_WIDTH_METRES,
+            SDS_MK4I_WHEEL_RADIUS_M,
+            Robot.kDefaultPeriod,
+            TRANSLATION_CONFIG.maxModuleSpeedMPS(),
+            TRANSLATION_CONFIG.maxSpeedMPS(),
+            ROTATION_CONFIG.maxRotVelocityRadPS(),
+            FRONT_LEFT,
+            FRONT_RIGHT,
+            BACK_LEFT,
+            BACK_RIGHT,
+            TELEMETRY
+        );
+
+        public static final VisionConfig VISION_CONFIG = new VisionConfig(
+            0,
+            0,
+            FieldConstants.FIELD_EXTENT_METRES_X,
+            FieldConstants.FIELD_EXTENT_METRES_Y,
+            0.7,
+            0.1,
+            .5,
+            "hugh"
+        );
+
+        public static final SwerveDriveSubsystemConfig SUBSYSTEM_CONFIG = new SwerveDriveSubsystemConfig(
+            true,
+            CORE_SWERVE_CONFIG,
+            VISION_CONFIG,
+            TRANSLATION_CONFIG,
+            ROTATION_CONFIG
+        );
 
         public static final class Chassis {
 
