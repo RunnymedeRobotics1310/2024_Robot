@@ -68,8 +68,8 @@ public final class Constants {
         public static final SwerveTranslationConfig TRANSLATION_CONFIG = new SwerveTranslationConfig(
             0.02,
             1.0,
-            4.79,
-            4.79,
+            20,
+            20,
             42.0,
             1.2,
             0,
