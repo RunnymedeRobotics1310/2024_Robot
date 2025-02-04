@@ -29,8 +29,8 @@ public class SwerveSubsystem extends SubsystemBase {
     private final PIDController velocityPIDController;
 
     public SwerveSubsystem(SwerveDriveSubsystemConfig config) {
-        this.drive = new FieldAwareSwerveDrive(config.coreConfig());
-        //        this.drive                  = new VisionAwareSwerveDrive(config.coreConfig(), config.visionConfig());
+        // this.drive = new FieldAwareSwerveDrive(config.coreConfig());
+        this.drive = new VisionAwareSwerveDrive(config.coreConfig(), config.visionConfig());
         this.config = config;
         this.telemetry = config.coreConfig().telemetry();
         this.maxTranslationSpeedMPS = config.coreConfig().maxAttainableTranslationSpeedMetresPerSecond();
