@@ -400,7 +400,8 @@ public abstract class ArmBaseCommand extends LoggingCommand {
         // Determine if the arm is within the requested range
         if (Math.abs(linkAngleError) <= linkTolerance
             && Math.abs(aimAngleError) <= aimTolerance) {
-
+            armSubsystem.setLinkPivotSpeed(0);
+            armSubsystem.setAimPivotSpeed(0);
             return true;
         }
 
