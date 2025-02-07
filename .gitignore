@@ -159,7 +159,7 @@ gradle-app.setting
 bin/
 
 # IntelliJ
-.idea/
+.idea/*
 .run
 
 # Fleet
