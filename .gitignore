@@ -159,7 +159,7 @@ gradle-app.setting
 bin/
 
 # IntelliJ
-# .idea folder has its own internal .gitignore so trust it for what to ignore.
+.idea/
 .run
 
 # Fleet
