@@ -30,9 +30,9 @@ public class ScoreLoadedBarnumValjean extends BaseAutoCommand {
 
         // barnum
         addCommands(new WaitCommand(.8)
-            .deadlineWith(new StartIntakeCommand(armSubsystem, lighting)));
+            .raceWith(new StartIntakeCommand(armSubsystem, lighting)));
         addCommands(new StartIntakeCommand(armSubsystem, lighting)
-            .deadlineWith(new DriveToPositionCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
+            .raceWith(new DriveToPositionCommand(swerve, BLUE_BARNUM, RED_BARNUM)));
         addCommands(new DriveToPositionCommand(swerve, BLUE_BARNUM_SHOT, RED_BARNUM_SHOT));
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
             .alongWith(new CompactFromIntakeCommand(armSubsystem, false)
@@ -44,7 +44,7 @@ public class ScoreLoadedBarnumValjean extends BaseAutoCommand {
             .andThen(new StartIntakeCommand(armSubsystem, lighting));
         Command drive = new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN)
             .andThen(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, RED_VALJEAN, 1.5));
-        addCommands(arm.deadlineWith(drive));
+        addCommands(arm.raceWith(drive));
 
 
         addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)

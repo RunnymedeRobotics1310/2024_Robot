@@ -16,7 +16,8 @@ import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_RIGHT;
 
 import ca.team1310.swerve.SwerveTelemetry;
 import ca.team1310.swerve.core.config.*;
-import ca.team1310.swerve.vision.VisionConfig;
+import ca.team1310.swerve.utils.Coordinates;
+import frc.robot.subsystems.vision.VisionConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.lighting.LightstripRegion;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystemConfig;
 import frc.robot.subsystems.swerve.SwerveRotationConfig;
 import frc.robot.subsystems.swerve.SwerveTranslationConfig;
+import frc.robot.subsystems.vision.VisionTelemetryLevel;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -77,10 +79,10 @@ public final class Constants {
         );
 
         public static final SwerveRotationConfig ROTATION_CONFIG = new SwerveRotationConfig(
-            /* min rot vel radPS */Rotation2d.fromDegrees(45).getRadians(),
+            /* min rot vel radPS */Rotation2d.fromDegrees(12).getRadians(),
             /* max rot vel radPS */Rotation2d.fromRotations(1).getRadians(),
-            /* max rotation jump speed */Rotation2d.fromDegrees(205).getRadians(),
-            /* slow zone */Rotation2d.fromDegrees(35).getRadians(),
+            /* max rotation jump speed */Rotation2d.fromDegrees(120).getRadians(),
+            /* slow zone */Rotation2d.fromDegrees(55).getRadians(),
             /* max rotation accel */Rotation2d.fromRotations(1310).getRadians(),
             /* rotation tolerance */Rotation2d.fromDegrees(2).getRadians(),
             0.4,
@@ -120,8 +122,7 @@ public final class Constants {
 
         public static final ModuleConfig FRONT_LEFT = new ModuleConfig(
             "frontleft",
-            TRACK_WIDTH_METRES / 2,
-            WHEEL_BASE_METRES / 2,
+            new Coordinates(TRACK_WIDTH_METRES / 2, WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
             10,
             DRIVE_MOTOR_CONFIG,
@@ -134,8 +135,7 @@ public final class Constants {
 
         public static final ModuleConfig FRONT_RIGHT = new ModuleConfig(
             "frontright",
-            TRACK_WIDTH_METRES / 2,
-            -WHEEL_BASE_METRES / 2,
+            new Coordinates(TRACK_WIDTH_METRES / 2, -WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
             20,
             DRIVE_MOTOR_CONFIG,
@@ -148,8 +148,7 @@ public final class Constants {
 
         public static final ModuleConfig BACK_LEFT = new ModuleConfig(
             "backleft",
-            -TRACK_WIDTH_METRES / 2,
-            WHEEL_BASE_METRES / 2,
+            new Coordinates(-TRACK_WIDTH_METRES / 2, WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
             35,
             DRIVE_MOTOR_CONFIG,
@@ -162,8 +161,7 @@ public final class Constants {
 
         public static final ModuleConfig BACK_RIGHT = new ModuleConfig(
             "backright",
-            -TRACK_WIDTH_METRES / 2,
-            -WHEEL_BASE_METRES / 2,
+            new Coordinates(-TRACK_WIDTH_METRES / 2, -WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
             30,
             DRIVE_MOTOR_CONFIG,
@@ -177,7 +175,7 @@ public final class Constants {
         public static final SwerveTelemetry TELEMETRY = new SwerveTelemetry(4);
 
         static {
-            TELEMETRY.enabled = true;
+            TELEMETRY.level = TelemetryLevel.VERBOSE;
         }
 
         public static final CoreSwerveConfig CORE_SWERVE_CONFIG = new CoreSwerveConfig(
@@ -192,19 +190,19 @@ public final class Constants {
             FRONT_RIGHT,
             BACK_LEFT,
             BACK_RIGHT,
-            TELEMETRY
+            TELEMETRY.level
         );
 
         public static final VisionConfig VISION_CONFIG = new VisionConfig(
             0,
             0,
-            FieldConstants.FIELD_EXTENT_METRES_X,
-            FieldConstants.FIELD_EXTENT_METRES_Y,
             0.7,
             0.1,
             .5,
-            "hugh"
+            true,
+            VisionTelemetryLevel.VERBOSE
         );
+
 
         public static final SwerveDriveSubsystemConfig SUBSYSTEM_CONFIG = new SwerveDriveSubsystemConfig(
             true,
@@ -247,7 +245,7 @@ public final class Constants {
             public static final Rotation2d ROTATION_SLOW_ZONE                                   = Rotation2d.fromDegrees(35);
             public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC                      = Rotation2d.fromDegrees(45);
             public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC                      = Rotation2d.fromDegrees(360);
-            public static final Rotation2d MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC                 = Rotation2d.fromDegrees(205);
+            public static final Rotation2d MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC                 = Rotation2d.fromDegrees(180);
             public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2               = Rotation2d.fromRotations(1310)
                 .getRadians();
             public static final Rotation2d ROTATION_DECELERATION_DISTANCE                       = Rotation2d.fromDegrees(5);
@@ -292,7 +290,7 @@ public final class Constants {
              * Standard drive speed factor. Regular teleop drive will use this factor of the max
              * translational speed.
              */
-            public static final double GENERAL_SPEED_FACTOR               = .6;
+            public static final double GENERAL_SPEED_FACTOR               = .4;
 
             /**
              * Maximum drive speed factor. When boosting, this factor will be multiplied against the
