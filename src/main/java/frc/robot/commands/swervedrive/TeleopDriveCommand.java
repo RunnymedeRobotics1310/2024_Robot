@@ -78,12 +78,12 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         // its y value, but that should convert into positive x movement on the field. The
         // Runnymede Controller inverts stick y-axis values, so "forward" on stick is positive.
         // Thus, positive y stick axis maps to positive x translation on the field.
-        final double        vX                           = oi.getDriverControllerAxis(LEFT, Y);
+        final double        vX                           = -oi.getDriverControllerAxis(LEFT, Y);
 
         // Left and right movement on the left stick (the stick's x-axis) maps to the y-axis on the
         // field. Left on the stick (negative x) maps to positive y on the field, and vice versa.
         // Thus, negative x stick axis maps to positive y translation on the field.
-        final double        vY                           = -oi.getDriverControllerAxis(LEFT, X);
+        final double        vY                           = oi.getDriverControllerAxis(LEFT, X);
 
         // Left and right on the right stick will change the direction the robot is facing - its
         // heading. Positive x values on the stick translate to clockwise motion, and vice versa.
@@ -123,7 +123,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
             modeForDebug  = "Steering";
             // Compute omega
             lockOnSpeaker = false;
-            double w = Math.pow(correctedCcwRotAngularVelPct, 3) * MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
+            double w = Math.pow(correctedCcwRotAngularVelPct, 3) * MAX_ROTATIONAL_VELOCITY_PER_SEC.getRadians()/2;
             omega           = Rotation2d.fromRadians(w);
             // Save previous heading for when we are finished steering.
             headingSetpoint = swerve.getPose().getRotation();
@@ -239,7 +239,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         magnitude = Math.pow(magnitude, 3);
 
         // convert from % to mps
-        magnitude = magnitude * boostFactor * MAX_TRANSLATION_SPEED_MPS;
+        magnitude = magnitude * boostFactor * MAX_TRANSLATION_SPEED_MPS * 4;
 
         // convert to vector
         return new Translation2d(magnitude, angle);

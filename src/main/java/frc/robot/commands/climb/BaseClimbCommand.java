@@ -39,7 +39,7 @@ abstract class BaseClimbCommand extends LoggingCommand {
         }
         else {
             // figure out how crooken we are
-            double rollRadians    = driveSubsystem.getGyroRotation3d().getZ();
+            double rollRadians    = driveSubsystem.getPose().getRotation().getRadians();
             double absRollRadians = Math.abs(rollRadians);
 
             if (absRollRadians > Constants.ClimbConstants.LEVEL_CLIMB_TOLERANCE.getRadians()) {

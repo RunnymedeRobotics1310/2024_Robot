@@ -8,8 +8,8 @@ import static frc.robot.Constants.ArmConstants.SAFE_AIM_SPEED;
 import static frc.robot.Constants.ArmConstants.SLOW_AIM_SPEED;
 import static frc.robot.Constants.ArmConstants.SLOW_LINK_SPEED;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -20,15 +20,15 @@ import frc.robot.telemetry.Telemetry;
 
 
 public class ArmSubsystem extends RunnymedeSubsystemBase {
-    private final CANSparkMax   linkMotor            = new CANSparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
+    private final SparkMax   linkMotor            = new SparkMax(ArmConstants.LINK_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   aimMotor             = new CANSparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS,
+    private final SparkMax   aimMotor             = new SparkMax(ArmConstants.AIM_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   intakeMotor          = new CANSparkMax(ArmConstants.INTAKE_MOTOR_CAN_ADDRESS,
+    private final SparkMax   intakeMotor          = new SparkMax(ArmConstants.INTAKE_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   shooterBottomMotor   = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
+    private final SparkMax   shooterBottomMotor   = new SparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS,
         MotorType.kBrushless);
-    private final CANSparkMax   shooterTopMotor      = new CANSparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
+    private final SparkMax   shooterTopMotor      = new SparkMax(ArmConstants.SHOOTER_MOTOR_CAN_ADDRESS + 1,
         MotorType.kBrushless);
     private final DigitalInput  linkLowerLimitSwitch = new DigitalInput(ArmConstants.LINK_LOWER_LIMIT_SWITCH_DIO_PORT);
     private final DigitalInput  noteDetector         = new DigitalInput(ArmConstants.INTAKE_NOTE_DETECTOR_DIO_PORT);

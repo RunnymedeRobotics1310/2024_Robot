@@ -2,10 +2,10 @@ package frc.robot.commands.swervedrive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.Constants;
+import frc.robot.Constants.Swerve.Chassis.VelocityPIDConfig;
 
-import static frc.robot.Constants.Swerve.Chassis.*;
-import static frc.robot.Constants.Swerve.Chassis.MIN_TRANSLATION_SPEED_MPS;
+import static frc.robot.Constants.Swerve.TRANSLATION_CONFIG;
+import static frc.robot.Constants.Swerve.ROTATION_CONFIG;
 
 public class SwerveUtils {
     private SwerveUtils() {
@@ -45,11 +45,11 @@ public class SwerveUtils {
     public static boolean isCloseEnough(Rotation2d currentHeading, Rotation2d desiredHeading, Rotation2d tolerance) {
 
         if (tolerance == null) {
-            tolerance = ROTATION_TOLERANCE;
+            tolerance = Rotation2d.fromRadians(ROTATION_CONFIG.toleranceRadians());
         }
-        else if (tolerance.getRadians() < ROTATION_TOLERANCE.getRadians()) {
+        else if (tolerance.getRadians() < ROTATION_CONFIG.toleranceRadians()) {
             // tolerance can't be below the minimum the robot can achieve
-            tolerance = ROTATION_TOLERANCE;
+            tolerance = Rotation2d.fromRadians(ROTATION_CONFIG.toleranceRadians());
         }
         Rotation2d delta = desiredHeading.minus(currentHeading);
 
@@ -64,7 +64,7 @@ public class SwerveUtils {
      */
     public static boolean isCloseEnough(Translation2d currentLocation, Translation2d desiredLocation) {
         Translation2d delta = desiredLocation.minus(currentLocation);
-        return Math.abs(delta.getNorm()) <= TRANSLATION_TOLERANCE_METRES;
+        return Math.abs(delta.getNorm()) <= TRANSLATION_CONFIG.toleranceMetres();
     }
 
     /**
@@ -82,17 +82,17 @@ public class SwerveUtils {
         double distanceMetres = translationToTravel.getNorm();
 
         // don't worry about tiny translations
-        if (distanceMetres < TRANSLATION_TOLERANCE_METRES) {
+        if (distanceMetres < TRANSLATION_CONFIG.toleranceMetres()) {
             return new Translation2d();
         }
 
         // safety code
-        if (maxSpeed > MAX_TRANSLATION_SPEED_MPS) {
-            maxSpeed = MAX_TRANSLATION_SPEED_MPS;
+        if (maxSpeed > TRANSLATION_CONFIG.maxSpeedMPS()) {
+            maxSpeed = TRANSLATION_CONFIG.maxSpeedMPS();
         }
 
         // ensure that we have enough room to decelerate
-        double decelDistance  = DECEL_FROM_MAX_TO_STOP_DIST_METRES;
+        double decelDistance  = 1.9;
         double decelDistRatio = distanceMetres / decelDistance;
         if (decelDistRatio < 1) {
             maxSpeed *= decelDistRatio;
@@ -111,10 +111,9 @@ public class SwerveUtils {
         }
 
         // Confirm speed is not too slow to move
-        if (speed < MIN_TRANSLATION_SPEED_MPS) {
-            speed = MIN_TRANSLATION_SPEED_MPS;
+        if (speed < TRANSLATION_CONFIG.minSpeedMPS()) {
+            speed = TRANSLATION_CONFIG.minSpeedMPS();
         }
-
 
         Rotation2d angle = translationToTravel.getAngle();
 
@@ -143,14 +142,14 @@ public class SwerveUtils {
         double       errSignum = Math.signum(errorRad);
 
         final double omegaRad;
-        if (absErrRad < ROTATION_TOLERANCE.getRadians()) {
+        if (absErrRad < ROTATION_CONFIG.toleranceRadians()) {
             omegaRad = 0;
         }
-        else if (absErrRad < ROTATION_SLOW_ZONE.getRadians()) {
-            omegaRad = errSignum * MIN_ROTATIONAL_VELOCITY_PER_SEC.getRadians();
+        else if (absErrRad < ROTATION_CONFIG.slowZoneRadians()) {
+            omegaRad = errSignum * ROTATION_CONFIG.minRotVelocityRadPS();
         }
         else {
-            omegaRad = errSignum * MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC.getRadians();
+            omegaRad = errSignum * ROTATION_CONFIG.maxJumpSpeedRadPS();
         }
 
         // log(String.format("omega: %.2f", omegaRad));

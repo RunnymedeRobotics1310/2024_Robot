@@ -33,7 +33,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
             addCommands(new DriveToPositionCommand(swerve, IN_FRONT_OF_WOLVERINE_BLUE, IN_FRONT_OF_WOLVERINE_RED));
             addCommands(
                 new StartIntakeCommand(armSubsystem, lighting)
-                    .deadlineWith(new DriveToPositionCommand(swerve, WOLVERINE_PICKUP_BLUE, WOLVERINE_PICKUP_RED, 1.5)));
+                    .raceWith(new DriveToPositionCommand(swerve, WOLVERINE_PICKUP_BLUE, WOLVERINE_PICKUP_RED, 1.5)));
             // todo: maybe remove this reverse code
             addCommands(new SimpleDriveRobotOrientedCommand(swerve, -1.0, 0, 0, 0.4));
             addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve));
@@ -47,7 +47,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
                 .andThen(new StartIntakeCommand(armSubsystem, lighting));
             Command drive = new RotateToLocationCommand(swerve, BLUE_BARNUM, RED_BARNUM)
                 .andThen(new DriveToPositionFacingCommand(swerve, BLUE_BARNUM, RED_BARNUM, 1.5));
-            addCommands(arm.deadlineWith(drive));
+            addCommands(arm.raceWith(drive));
 
             addCommands(new DriveToPositionCommand(swerve, BLUE_BARNUM_SHOT, RED_BARNUM_SHOT));
 
@@ -65,7 +65,7 @@ public class ScoreLoadedWolverineBarnumValjean extends SequentialCommandGroup {
                 .andThen(new StartIntakeCommand(armSubsystem, lighting));
             Command drive = new RotateToLocationCommand(swerve, BLUE_VALJEAN, RED_VALJEAN)
                 .andThen(new DriveToPositionFacingCommand(swerve, BLUE_VALJEAN, RED_VALJEAN, 1.5));
-            addCommands(arm.deadlineWith(drive));
+            addCommands(arm.raceWith(drive));
 
 
             addCommands(RotateToTargetCommand.createRotateToSpeakerCommand(swerve)
