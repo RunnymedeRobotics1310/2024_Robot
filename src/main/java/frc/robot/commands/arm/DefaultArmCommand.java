@@ -43,8 +43,8 @@ public class DefaultArmCommand extends ArmBaseCommand {
     @Override
     public void execute() {
 
-        double aimStick  = operatorInput.getOperatorControllerAxis(RIGHT, Y);
-        double linkStick = operatorInput.getOperatorControllerAxis(LEFT, Y);
+        double aimStick  = operatorInput.getDriverControllerAxis(RIGHT, Y);
+        double linkStick = operatorInput.getDriverControllerAxis(LEFT, Y);
 
         // Hold the arm position by default
         driveToArmPosition(linkAngle, aimAngle, ArmConstants.DEFAULT_LINK_TOLERANCE_DEG,
@@ -54,7 +54,7 @@ public class DefaultArmCommand extends ArmBaseCommand {
         // aimAngle += operatorInput.getAimAdjust();
         // linkAngle += operatorInput.getLinkAdjust();
 
-        if (!operatorInput.isShift() &&
+        if (operatorInput.isShift() &&
             (Math.abs(linkStick) > 0 || Math.abs(aimStick) > 0)) {
             aimAngle  = armSubsystem.getAimAngle();
             linkAngle = armSubsystem.getLinkAngle();

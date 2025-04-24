@@ -16,15 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.CancelCommand;
-import frc.robot.commands.arm.AimAmpCommand;
-import frc.robot.commands.arm.AimSourceCommand;
-import frc.robot.commands.arm.CompactFromIntakeCommand;
-import frc.robot.commands.arm.EjectNoteCommand;
-import frc.robot.commands.arm.InjectNoteCommand;
-import frc.robot.commands.arm.ShootPrepFireCommand;
-import frc.robot.commands.arm.ShootSpeakerFromAnywhereCommand;
-import frc.robot.commands.arm.StartIntakeCommand;
-import frc.robot.commands.arm.TheGoLongShot;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.auto.ExitZoneAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerAutoCommand;
 import frc.robot.commands.auto.Score1SpeakerStayAutoCommand;
@@ -106,23 +98,23 @@ public class OperatorInput {
     }
 
     public boolean isDriverLeftBumper() {
-        return driverController.getLeftBumper();
+        return driverController.getLeftBumperButton();
     }
 
     public boolean isDriverRightBumper() {
-        return driverController.getRightBumper();
+        return driverController.getRightBumperButton();
     }
 
     public boolean isOperatorLeftBumper() {
-        return operatorController.getLeftBumper();
+        return operatorController.getLeftBumperButton();
     }
 
     public boolean isDriveFacingSpeaker() {
-        return driverController.getYButton();
+        return false;
     }
 
     public boolean isDriveFacingChain() {
-        return driverController.getAButton();
+        return false;
     }
 
     public boolean isCancel() {
@@ -130,7 +122,7 @@ public class OperatorInput {
     }
 
     public boolean isShift() {
-        return operatorController.getRightBumper();
+        return driverController.getRightBumperButton();
     }
 
     /**
@@ -232,10 +224,9 @@ public class OperatorInput {
         // DRIVER CONTROLLER BINDINGS
         //
 
-        // vision note pickup
+        // human intake
         new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5)
-            .onTrue(new StartIntakeCommand(arm, lighting)
-                .deadlineWith(new DriveToNoteCommand(drive, lighting, arm, jackman, 2)));
+            .onTrue(new InstantCommand());// TODO: add human intake
 
         // start intake
         new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
@@ -251,12 +242,24 @@ public class OperatorInput {
         // cancel command (driver)
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
-        // align amp
-        new Trigger(driverController::getBButton)
-            .onTrue(new DriveToScoreAmpCommand(drive));
+
 
         // compact
         new Trigger(driverController::getXButton).onTrue(new CompactFromIntakeCommand(arm, true));
+
+        // aim amp
+        new Trigger(driverController::getAButton)
+                .onTrue(new AimAmpCommand(arm));
+
+        // shoot
+        new Trigger(driverController::getYButton)
+                .onTrue(new ShootCommand(arm, lighting));
+
+        // close shoot
+        new Trigger(driverController::getBButton)
+                .onTrue(new InstantCommand()); // TODO: shoot close command
+
+
 
 
 
@@ -267,60 +270,15 @@ public class OperatorInput {
         // cancel command (operator)
         new Trigger(this::isCancel).whileTrue(new CancelCommand(this, drive, arm, climb));
 
-        // Trap
-        // new Trigger(() -> this.isShift() && operatorController.getXButton())
-        // .onTrue(new ShootTrapFromFloorCommand(drive, arm, lighting, this));
 
-        // new Trigger(() -> !this.isShift() && operatorController.getXButton())
-        // .onTrue(new TrapGregCommand(arm, climb, lighting));
+        //TODO: do i need these? where do they go on driver controller?
+//        // eject
+//        new Trigger(() -> !this.isShift() && operatorController.getPOV() == 90)
+//            .whileTrue(new EjectNoteCommand(arm));
+//
+//        new Trigger(() -> this.isShift() && operatorController.getPOV() == 90)
+//            .whileTrue(new InjectNoteCommand(arm));
 
-        // new Trigger(() -> this.isShift() && operatorController.getXButton())
-        // .onTrue(new TrapGregShootCommand(arm, lighting));
-
-        // new Trigger(() -> !this.isShift() && operatorController.getXButton())
-        // .onTrue(new TrapReleaseCommand(arm, lighting));
-
-        // rotate aim shoot
-        new Trigger(() -> !this.isShift() && operatorController.getAButton())
-            .onTrue(new TheGoLongShot(arm, drive));
-
-        // podium shot
-        new Trigger(() -> !operatorController.getBackButton() && operatorController.getYButton())
-            .onTrue(new ShootSpeakerFromAnywhereCommand(arm, drive, lighting));
-
-        // shoot FIRE
-        // IF YOU CHANGE THE BUTTON THIS IS ON, MUST CHANGE THE BUTTON RELEASE
-        // IN ShootPrepFireCommand as well.
-        new Trigger(() -> !this.isShift() && operatorController.getBButton())
-            .onTrue(new ShootPrepFireCommand(arm, lighting, this));
-
-        // set pose at speaker
-        new Trigger(() -> this.isShift() && operatorController.getBButton())
-            .onTrue(new ResetOdometryCommand(
-                drive, START_AT_BLUE_SPEAKER, START_AT_RED_SPEAKER));
-
-        // set pose at amp
-        new Trigger(() -> this.isShift() && operatorController.getAButton())
-            .onTrue(new ResetOdometryCommand(drive, SCORE_BLUE_AMP, SCORE_RED_AMP));
-
-        // climbers up
-        new Trigger(() -> this.isShift() && operatorController.getPOV() == 0)
-            .onTrue(new MaxClimbCommand(climb, drive));
-
-        // aim amp
-        new Trigger(() -> operatorController.getPOV() == 270)
-            .onTrue(new AimAmpCommand(arm));
-
-        // eject
-        new Trigger(() -> !this.isShift() && operatorController.getPOV() == 90)
-            .whileTrue(new EjectNoteCommand(arm));
-
-        new Trigger(() -> this.isShift() && operatorController.getPOV() == 90)
-            .whileTrue(new InjectNoteCommand(arm));
-
-        // aim source
-        new Trigger(() -> operatorController.getPOV() == 180)
-            .onTrue(new AimSourceCommand(arm));
 
     }
 
