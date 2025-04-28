@@ -17,11 +17,19 @@ public class ShootCommand extends ArmBaseCommand {
     private LightingSubsystem lighting;
 
     private double            startIntakePosition = 0;
+    private double shooterSpeed = 0;
 
     public ShootCommand(ArmSubsystem armSubsystem, LightingSubsystem lighting) {
 
         super(armSubsystem);
         this.lighting = lighting;
+        this.shooterSpeed = 0.75;
+    }
+
+    public ShootCommand(double shooterSpeed, ArmSubsystem armSubsystem, LightingSubsystem lighting) {
+        super(armSubsystem);
+        this.lighting = lighting;
+        this.shooterSpeed = shooterSpeed;
     }
 
     @Override
@@ -46,7 +54,7 @@ public class ShootCommand extends ArmBaseCommand {
         case START_SHOOTER:
 
             armSubsystem.setIntakeSpeed(0);
-            armSubsystem.setShooterSpeed(.75);
+            armSubsystem.setShooterSpeed(this.shooterSpeed);
 
             // Wait for the shooter to get up to speed
             if (isStateTimeoutExceeded(.5)) {

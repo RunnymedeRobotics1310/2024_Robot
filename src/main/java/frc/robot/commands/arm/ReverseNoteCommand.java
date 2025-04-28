@@ -23,12 +23,13 @@ public class ReverseNoteCommand extends LoggingCommand {
     @Override
     public void initialize() {
 
-        if (!armSubsystem.isNoteDetected()) {
-            logCommandStart("No note detected in robot. ReverseNoteCommand cancelled");
-            state = State.FINISHED;
-            return;
-
-        }
+//        if (!armSubsystem.isNoteDetected()) {
+//            logCommandStart("No note detected in robot. ReverseNoteCommand cancelled");
+//            state = State.FINISHED;
+//            return;
+//
+//        }
+        state = State.ENSURE_INTAKE_STOPPED;
         logCommandStart("Intake Speed: " + armSubsystem.getIntakeEncoderSpeed());
     }
 

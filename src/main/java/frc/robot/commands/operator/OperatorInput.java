@@ -226,7 +226,7 @@ public class OperatorInput {
 
         // human intake
         new Trigger(() -> driverController.getLeftTriggerAxis() > 0.5)
-            .onTrue(new InstantCommand());// TODO: add human intake
+            .onTrue(new ReverseNoteCommand(arm));
 
         // start intake
         new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
@@ -257,7 +257,7 @@ public class OperatorInput {
 
         // close shoot
         new Trigger(driverController::getBButton)
-                .onTrue(new InstantCommand()); // TODO: shoot close command
+                .onTrue(new ShootCommand(0.4, arm, lighting));
 
 
 
