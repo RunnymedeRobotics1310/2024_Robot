@@ -89,12 +89,12 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         // heading. Positive x values on the stick translate to clockwise motion, and vice versa.
         // The coordinate system has positive motion as CCW.
         // Therefore, negative x stick value maps to positive rotation on the field.
-        final double        ccwRotAngularVelPct          = oi.isShift() ? 0 : -oi.getDriverControllerAxis(RIGHT, X);
+        final double        ccwRotAngularVelPct          = oi.isShift() ? 0 : -oi.getDriverControllerAxis(RIGHT, X) * 0.6;
 
         // User wants to jump directly to a specific heading. Computation is deferred because it is
         // complex
         // and may not be necessary. See below for details.
-        final int           rawDesiredHeadingDeg         = oi.getDriverPOV();
+        final int           rawDesiredHeadingDeg         = -1;
 
         final boolean       faceSpeaker                  = oi.isDriveFacingSpeaker();
         final Translation2d speaker                      = alliance == Alliance.Blue
@@ -106,9 +106,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         // Compute boost factor
         final boolean       isSlow                       = oi.isDriverLeftBumper();
         final boolean       isFast                       = oi.isDriverRightBumper();
-        final double        boostFactor                  = isSlow ? SLOW_SPEED_FACTOR
-            : (isFast ? MAX_SPEED_FACTOR : GENERAL_SPEED_FACTOR);
-
+        final double        boostFactor                  = SLOW_SPEED_FACTOR;
 
         Translation2d       velocity                     = calculateTeleopVelocity(vX, vY, boostFactor, invert);
 
@@ -119,7 +117,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         final String        modeForDebug;
 
         // User is steering!
-        if (correctedCcwRotAngularVelPct != 0) {
+        if (correctedCcwRotAngularVelPct != 0 || true) {
             modeForDebug  = "Steering";
             // Compute omega
             lockOnSpeaker = false;
