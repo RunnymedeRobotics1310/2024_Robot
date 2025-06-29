@@ -678,12 +678,12 @@ public final class Constants {
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the link motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_LINK                       = false;
+        public static final boolean     DISABLE_LINK                       = true;
         /**
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the aim motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_AIM                        = false;
+        public static final boolean     DISABLE_AIM                        = true;
         /**
          * Completely turn off arm safety code. This is actually dangerous - the
          * arm can flip up an hit people standing nearby. Set this to false
