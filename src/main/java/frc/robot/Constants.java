@@ -15,9 +15,13 @@ import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_LEFT;
 import static frc.robot.Constants.UsefulHeadings.FACING_CHAIN_RED_RIGHT;
 
 import ca.team1310.swerve.SwerveTelemetry;
-import ca.team1310.swerve.core.config.*;
+import ca.team1310.swerve.core.config.CoreSwerveConfig;
+import ca.team1310.swerve.core.config.EncoderConfig;
+import ca.team1310.swerve.core.config.ModuleConfig;
+import ca.team1310.swerve.core.config.MotorConfig;
+import ca.team1310.swerve.core.config.MotorType;
+import ca.team1310.swerve.core.config.TelemetryLevel;
 import ca.team1310.swerve.utils.Coordinates;
-import frc.robot.subsystems.vision.VisionConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,6 +31,7 @@ import frc.robot.subsystems.lighting.LightstripRegion;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystemConfig;
 import frc.robot.subsystems.swerve.SwerveRotationConfig;
 import frc.robot.subsystems.swerve.SwerveTranslationConfig;
+import frc.robot.subsystems.vision.VisionConfig;
 import frc.robot.subsystems.vision.VisionTelemetryLevel;
 
 /**
@@ -678,12 +683,12 @@ public final class Constants {
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the link motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_LINK                       = true;
+        public static final boolean     DISABLE_LINK                       = false;
         /**
          * Completely disable control over the link motor. Normally set to false,
          * but can be set to true when the aim motor is not functioning correctly.
          */
-        public static final boolean     DISABLE_AIM                        = true;
+        public static final boolean     DISABLE_AIM                        = false;
         /**
          * Completely turn off arm safety code. This is actually dangerous - the
          * arm can flip up an hit people standing nearby. Set this to false
