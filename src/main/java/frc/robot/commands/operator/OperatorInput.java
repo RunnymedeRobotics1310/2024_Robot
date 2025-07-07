@@ -246,7 +246,7 @@ public class OperatorInput {
 
         // shoot
         new Trigger(() -> driverController.getXButton() && isShift())
-                .onTrue(new ShootCommand(arm, lighting));
+                .onTrue(new ShootCommand(1, arm, lighting));
 
         // close shoot
         new Trigger(driverController::getYButton)
