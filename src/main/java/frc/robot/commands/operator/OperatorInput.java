@@ -221,9 +221,9 @@ public class OperatorInput {
         new Trigger(() -> (driverController.getLeftTriggerAxis() > 0.5/* || driverController.getRightTriggerAxis() > 0.5*/))
             .onTrue(new ReverseNoteCommand(arm));
 
-       // start intake
-       new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
-           .onTrue(new StartIntakeCommand(arm, lighting));
+        // start intake
+        new Trigger(() -> driverController.getRightTriggerAxis() > 0.5)
+            .onTrue(new StartIntakeCommand(arm, lighting));
 
         // zero gyro
         new Trigger(driverController::getBackButton).onTrue(new ZeroGyroCommand(drive));
@@ -246,7 +246,10 @@ public class OperatorInput {
 
         // shoot
         new Trigger(() -> driverController.getXButton() && isShift())
-                .onTrue(new ShootCommand(1, arm, lighting));
+            .onTrue(new ShootCommand(1, arm, lighting));
+
+        new Trigger(() -> driverController.getXButton() && !isShift())
+            .onTrue(new ShootCommand(0.2, arm, lighting));
 
         // close shoot
         new Trigger(driverController::getYButton)
@@ -258,7 +261,7 @@ public class OperatorInput {
 
         // Violet friendly shoot
         new Trigger(driverController::getAButton)
-                .onTrue(new ShootCommand(0.3, arm, lighting));
+            .onTrue(new ShootCommand(0.3, arm, lighting));
 
 
 
@@ -274,7 +277,7 @@ public class OperatorInput {
 //        // eject
 //        new Trigger(() -> !this.isShift() && operatorController.getPOV() == 90)
 //            .whileTrue(new EjectNoteCommand(arm));
-//
+        //
 //        new Trigger(() -> this.isShift() && operatorController.getPOV() == 90)
 //            .whileTrue(new InjectNoteCommand(arm));
 
