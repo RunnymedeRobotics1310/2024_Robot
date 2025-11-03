@@ -8,6 +8,7 @@ import static frc.robot.Constants.FieldConstants.FIELD_EXTENT_METRES_Y;
 import ca.team1310.swerve.RunnymedeSwerveDrive;
 import ca.team1310.swerve.SwerveTelemetry;
 import ca.team1310.swerve.gyro.GyroAwareSwerveDrive;
+import ca.team1310.swerve.odometry.FieldAwareSwerveDrive;
 import ca.team1310.swerve.utils.SwerveUtils;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -30,7 +31,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private final PIDController velocityPIDController;
 
     public SwerveSubsystem(SwerveDriveSubsystemConfig config) {
-        this.drive = new GyroAwareSwerveDrive(config.coreConfig());
+        this.drive = new GyroAwareSwerveDrive(config.coreConfig(), config.gyroConfig());
         this.config = config;
         this.maxTranslationSpeedMPS = config.coreConfig().maxAttainableTranslationSpeedMetresPerSecond();
         this.xLimiter = new SlewRateLimiter(this.config.translationConfig().maxAccelMPS2());

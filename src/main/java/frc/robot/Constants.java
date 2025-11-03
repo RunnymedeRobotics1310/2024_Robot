@@ -21,6 +21,7 @@ import ca.team1310.swerve.core.config.ModuleConfig;
 import ca.team1310.swerve.core.config.MotorConfig;
 import ca.team1310.swerve.core.config.MotorType;
 import ca.team1310.swerve.core.config.TelemetryLevel;
+import ca.team1310.swerve.gyro.config.GyroConfig;
 import ca.team1310.swerve.utils.Coordinates;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -72,6 +73,8 @@ public final class Constants {
 
         public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.051;
 
+        public static final GyroConfig GYRO_CONFIG = GyroConfig.pigeon2(8, true);
+
         public static final SwerveTranslationConfig TRANSLATION_CONFIG = new SwerveTranslationConfig(
             0.02,
             1.0,
@@ -90,7 +93,7 @@ public final class Constants {
             /* slow zone */Rotation2d.fromDegrees(55).getRadians(),
             /* max rotation accel */Rotation2d.fromRotations(1310).getRadians(),
             /* rotation tolerance */Rotation2d.fromDegrees(2).getRadians(),
-            0.4,
+            0.04,
             0,
             0
         );
@@ -102,7 +105,7 @@ public final class Constants {
             12,
             0.25,
             150.0 / 7/* SDS MK4i 150/7:1 */,
-            0.0125,
+            0.009,
             0,
             0,
             0,
@@ -116,10 +119,10 @@ public final class Constants {
             12,
             0.25,
             6.75/* SDS MK4i L2 --> 6.75:1 */,
-            0.11,
+            0.075,
             0,
             0,
-            0,
+            1 / TRANSLATION_CONFIG.maxModuleSpeedMPS(),
             0
         );
 
@@ -134,7 +137,7 @@ public final class Constants {
             11,
             ANGLE_MOTOR_CONFIG,
             12,
-            222.9786,
+            Rotation2d.fromRotations(0.619385).getDegrees(),
             ANGLE_ENCODER_CONFIG
         );
 
@@ -147,7 +150,7 @@ public final class Constants {
             21,
             ANGLE_MOTOR_CONFIG,
             22,
-            12.12876,
+            Rotation2d.fromRotations(0.033691).getDegrees(),
             ANGLE_ENCODER_CONFIG
         );
 
@@ -160,7 +163,7 @@ public final class Constants {
             36,
             ANGLE_MOTOR_CONFIG,
             37,
-            334.24812,
+            Rotation2d.fromRotations(0.928467).getDegrees(),
             ANGLE_ENCODER_CONFIG
         );
 
@@ -173,7 +176,7 @@ public final class Constants {
             31,
             ANGLE_MOTOR_CONFIG,
             32,
-            102.8322,
+            Rotation2d.fromRotations(0.285645).getDegrees(),
             ANGLE_ENCODER_CONFIG
         );
 
@@ -191,6 +194,9 @@ public final class Constants {
             TRANSLATION_CONFIG.maxModuleSpeedMPS(),
             TRANSLATION_CONFIG.maxSpeedMPS(),
             ROTATION_CONFIG.maxRotVelocityRadPS(),
+            0.55,
+            0.85,
+            0.65,
             FRONT_LEFT,
             FRONT_RIGHT,
             BACK_LEFT,
@@ -212,6 +218,7 @@ public final class Constants {
         public static final SwerveDriveSubsystemConfig SUBSYSTEM_CONFIG = new SwerveDriveSubsystemConfig(
             true,
             CORE_SWERVE_CONFIG,
+            GYRO_CONFIG,
             VISION_CONFIG,
             TRANSLATION_CONFIG,
             ROTATION_CONFIG
@@ -320,112 +327,9 @@ public final class Constants {
                 public static final double D = 0;
             }
         }
-
-        public static final class Motor {
-            public boolean            inverted;
-            public int                currentLimitAmps;
-            public double             nominalVoltage;
-            public double             rampRate;
-            public double             gearRatio;
-            public double             p;
-            public double             i;
-            public double             d;
-            public double             ff;
-            public double             iz;
-            public static final Motor DRIVE = new Motor();
-
-            static {
-                DRIVE.inverted         = true;
-                DRIVE.currentLimitAmps = 40;
-                DRIVE.nominalVoltage   = 12;
-                DRIVE.rampRate         = 0.25;
-                DRIVE.gearRatio        = 6.75; // SDS MK4i L2 --> 6.75:1
-                DRIVE.p                = 0.11; // 0.0020645;
-                DRIVE.i                = 0;
-                DRIVE.d                = 0;
-                DRIVE.ff               = 0;
-                DRIVE.iz               = 0;
-            }
-
-            public static final Motor ANGLE = new Motor();
-
-            static {
-                ANGLE.inverted         = true;
-                ANGLE.currentLimitAmps = 20;        // must not exceed 30 (fuse)
-                ANGLE.nominalVoltage   = 12;
-                ANGLE.rampRate         = 0.25;
-                ANGLE.gearRatio        = 150.0 / 7; // SDS MK4i 150/7:1
-                ANGLE.p                = 0.0125;    // 0.01
-                ANGLE.i                = 0;
-                ANGLE.d                = 0;
-                ANGLE.ff               = 0;
-                ANGLE.iz               = 0;
-            }
-        }
-
-        public static final class Module {
-            /**
-             * The name of the module is used in debugging, but it is also used to
-             * reference modules in the YAGSL config (if that implementation is used).
-             * Be sure to give this name the same name as the yagsl config file (e.g.
-             * src/main/deploy/swerve/neo/modules/backleft.json) --> "backleft"
-             */
-            public String              name;
-            public double              wheelRadiusMetres;
-            public Translation2d       locationMetres;
-            public int                 driveCANID;
-            public int                 angleCANID;
-            public int                 encoderCANID;
-            public double              encoderAbsoluteOffsetDegrees;
-            public static final Module BACK_LEFT = new Module();
-
-            static {
-                BACK_LEFT.name                         = "backleft";
-                BACK_LEFT.wheelRadiusMetres            = Chassis.SDS_MK4I_WHEEL_RADIUS_METRES;
-                BACK_LEFT.locationMetres               = new Translation2d(-TRACK_WIDTH_METRES / 2, WHEEL_BASE_METRES / 2);
-                BACK_LEFT.driveCANID                   = 35;
-                BACK_LEFT.angleCANID                   = 36;
-                BACK_LEFT.encoderCANID                 = 37;
-                BACK_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.928467).getDegrees();
-            }
-
-            public static final Module BACK_RIGHT = new Module();
-
-            static {
-                BACK_RIGHT.name                         = "backright";
-                BACK_RIGHT.wheelRadiusMetres            = Chassis.SDS_MK4I_WHEEL_RADIUS_METRES;
-                BACK_RIGHT.locationMetres               = new Translation2d(-TRACK_WIDTH_METRES / 2, -WHEEL_BASE_METRES / 2);
-                BACK_RIGHT.driveCANID                   = 30;
-                BACK_RIGHT.angleCANID                   = 31;
-                BACK_RIGHT.encoderCANID                 = 32;
-                BACK_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.285645).getDegrees();
-            }
-
-            public static final Module FRONT_LEFT = new Module();
-
-            static {
-                FRONT_LEFT.name                         = "frontleft";
-                FRONT_LEFT.wheelRadiusMetres            = Chassis.SDS_MK4I_WHEEL_RADIUS_METRES;
-                FRONT_LEFT.locationMetres               = new Translation2d(TRACK_WIDTH_METRES / 2, WHEEL_BASE_METRES / 2);
-                FRONT_LEFT.driveCANID                   = 10;
-                FRONT_LEFT.angleCANID                   = 11;
-                FRONT_LEFT.encoderCANID                 = 12;
-                FRONT_LEFT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.619385).getDegrees();
-            }
-
-            public static final Module FRONT_RIGHT = new Module();
-
-            static {
-                FRONT_RIGHT.name                         = "frontright";
-                FRONT_RIGHT.wheelRadiusMetres            = Chassis.SDS_MK4I_WHEEL_RADIUS_METRES;
-                FRONT_RIGHT.locationMetres               = new Translation2d(TRACK_WIDTH_METRES / 2, -WHEEL_BASE_METRES / 2);
-                FRONT_RIGHT.driveCANID                   = 20;
-                FRONT_RIGHT.angleCANID                   = 21;
-                FRONT_RIGHT.encoderCANID                 = 22;
-                FRONT_RIGHT.encoderAbsoluteOffsetDegrees = Rotation2d.fromRotations(0.033691).getDegrees();
-            }
-        }
     }
+
+
 
     public enum BotTarget {
 
