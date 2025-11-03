@@ -36,99 +36,83 @@ import frc.robot.subsystems.vision.VisionConfig;
 import frc.robot.subsystems.vision.VisionTelemetryLevel;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
+ * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
 
-    public static final class OiConstants {
+  public static final class OiConstants {
 
-        public static final int DRIVER_CONTROLLER_PORT   = 0;
-        public static final int OPERATOR_CONTROLLER_PORT = 1;
-    }
+    public static final int DRIVER_CONTROLLER_PORT = 0;
+    public static final int OPERATOR_CONTROLLER_PORT = 1;
+  }
 
-    public static final class Swerve {
+  public static final class Swerve {
 
-        /**
-         * Kill switch for the drive subsystem. Useful when testing other subsystems.
-         */
-        public static final boolean DISABLED = false;
+    /** Kill switch for the drive subsystem. Useful when testing other subsystems. */
+    public static final boolean DISABLED = false;
 
-                /**
-         * Front to back from the middle of the wheels
-         */
-        public static final double WHEEL_BASE_METRES = inchesToMeters(24.75);
-        /**
-         * Side to side from the middle of the wheels
-         */
-        public static final double TRACK_WIDTH_METRES = inchesToMeters(22.75);
+    /** Front to back from the middle of the wheels */
+    public static final double WHEEL_BASE_METRES = inchesToMeters(24.75);
 
-        public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.051;
+    /** Side to side from the middle of the wheels */
+    public static final double TRACK_WIDTH_METRES = inchesToMeters(22.75);
 
-        public static final GyroConfig GYRO_CONFIG = GyroConfig.pigeon2(8, true);
+    public static final double SDS_MK4I_WHEEL_RADIUS_M = 0.051;
 
-        public static final SwerveTranslationConfig TRANSLATION_CONFIG = new SwerveTranslationConfig(
-            0.02,
-            1.0,
-            20,
-            20,
-            42.0,
-            1.2,
-            0,
-            0
-        );
+    public static final GyroConfig GYRO_CONFIG = GyroConfig.navx();
 
-        public static final SwerveRotationConfig ROTATION_CONFIG = new SwerveRotationConfig(
-            /* min rot vel radPS */Rotation2d.fromDegrees(12).getRadians(),
-            /* max rot vel radPS */Rotation2d.fromRotations(1).getRadians(),
-            /* max rotation jump speed */Rotation2d.fromDegrees(120).getRadians(),
-            /* slow zone */Rotation2d.fromDegrees(55).getRadians(),
-            /* max rotation accel */Rotation2d.fromRotations(1310).getRadians(),
-            /* rotation tolerance */Rotation2d.fromDegrees(2).getRadians(),
+    public static final SwerveTranslationConfig TRANSLATION_CONFIG =
+        new SwerveTranslationConfig(0.02, 1.0, 20, 20, 42.0, 1.2, 0, 0);
+
+    public static final SwerveRotationConfig ROTATION_CONFIG =
+        new SwerveRotationConfig(
+            /* min rot vel radPS */ Rotation2d.fromDegrees(12).getRadians(),
+            /* max rot vel radPS */ Rotation2d.fromRotations(1).getRadians(),
+            /* max rotation jump speed */ Rotation2d.fromDegrees(120).getRadians(),
+            /* slow zone */ Rotation2d.fromDegrees(55).getRadians(),
+            /* max rotation accel */ Rotation2d.fromRotations(1310).getRadians(),
+            /* rotation tolerance */ Rotation2d.fromDegrees(2).getRadians(),
             0.04,
             0,
-            0
-        );
+            0);
 
-        private static final MotorConfig ANGLE_MOTOR_CONFIG = new MotorConfig(
+    private static final MotorConfig ANGLE_MOTOR_CONFIG =
+        new MotorConfig(
             MotorType.NEO_SPARK_MAX,
             true,
             20,
             12,
             0.25,
-            150.0 / 7/* SDS MK4i 150/7:1 */,
+            150.0 / 7 /* SDS MK4i 150/7:1 */,
             0.009,
             0,
             0,
             0,
-            0
-        );
+            0);
 
-        private static final MotorConfig DRIVE_MOTOR_CONFIG = new MotorConfig(
+    private static final MotorConfig DRIVE_MOTOR_CONFIG =
+        new MotorConfig(
             MotorType.NEO_SPARK_FLEX,
             true,
             40,
             12,
             0.25,
-            6.75/* SDS MK4i L2 --> 6.75:1 */,
+            6.75 /* SDS MK4i L2 --> 6.75:1 */,
             0.075,
             0,
             0,
             1 / TRANSLATION_CONFIG.maxModuleSpeedMPS(),
-            0
-        );
+            0);
 
-        private static final EncoderConfig ANGLE_ENCODER_CONFIG = new EncoderConfig(false, 0.005, 5);
+    private static final EncoderConfig ANGLE_ENCODER_CONFIG = new EncoderConfig(false, 0.005, 5);
 
-        public static final ModuleConfig FRONT_LEFT = new ModuleConfig(
+    public static final ModuleConfig FRONT_LEFT =
+        new ModuleConfig(
             "frontleft",
             new Coordinates(TRACK_WIDTH_METRES / 2, WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
@@ -138,10 +122,10 @@ public final class Constants {
             ANGLE_MOTOR_CONFIG,
             12,
             Rotation2d.fromRotations(0.619385).getDegrees(),
-            ANGLE_ENCODER_CONFIG
-        );
+            ANGLE_ENCODER_CONFIG);
 
-        public static final ModuleConfig FRONT_RIGHT = new ModuleConfig(
+    public static final ModuleConfig FRONT_RIGHT =
+        new ModuleConfig(
             "frontright",
             new Coordinates(TRACK_WIDTH_METRES / 2, -WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
@@ -151,10 +135,10 @@ public final class Constants {
             ANGLE_MOTOR_CONFIG,
             22,
             Rotation2d.fromRotations(0.033691).getDegrees(),
-            ANGLE_ENCODER_CONFIG
-        );
+            ANGLE_ENCODER_CONFIG);
 
-        public static final ModuleConfig BACK_LEFT = new ModuleConfig(
+    public static final ModuleConfig BACK_LEFT =
+        new ModuleConfig(
             "backleft",
             new Coordinates(-TRACK_WIDTH_METRES / 2, WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
@@ -164,10 +148,10 @@ public final class Constants {
             ANGLE_MOTOR_CONFIG,
             37,
             Rotation2d.fromRotations(0.928467).getDegrees(),
-            ANGLE_ENCODER_CONFIG
-        );
+            ANGLE_ENCODER_CONFIG);
 
-        public static final ModuleConfig BACK_RIGHT = new ModuleConfig(
+    public static final ModuleConfig BACK_RIGHT =
+        new ModuleConfig(
             "backright",
             new Coordinates(-TRACK_WIDTH_METRES / 2, -WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
@@ -176,17 +160,17 @@ public final class Constants {
             31,
             ANGLE_MOTOR_CONFIG,
             32,
-            Rotation2d.fromRotations(0.285645).getDegrees(),
-            ANGLE_ENCODER_CONFIG
-        );
+            Rotation2d.fromRotations(0.564941).getDegrees(),
+            ANGLE_ENCODER_CONFIG);
 
-        public static final SwerveTelemetry TELEMETRY = new SwerveTelemetry(4);
+    public static final SwerveTelemetry TELEMETRY = new SwerveTelemetry(4);
 
-        static {
-            TELEMETRY.level = TelemetryLevel.VERBOSE;
-        }
+    static {
+      TELEMETRY.level = TelemetryLevel.VERBOSE;
+    }
 
-        public static final CoreSwerveConfig CORE_SWERVE_CONFIG = new CoreSwerveConfig(
+    public static final CoreSwerveConfig CORE_SWERVE_CONFIG =
+        new CoreSwerveConfig(
             WHEEL_BASE_METRES,
             TRACK_WIDTH_METRES,
             SDS_MK4I_WHEEL_RADIUS_M,
@@ -201,555 +185,575 @@ public final class Constants {
             FRONT_RIGHT,
             BACK_LEFT,
             BACK_RIGHT,
-            TELEMETRY.level
-        );
+            TELEMETRY.level);
 
-        public static final VisionConfig VISION_CONFIG = new VisionConfig(
-            0,
-            0,
-            0.7,
-            0.1,
-            .5,
-            true,
-            VisionTelemetryLevel.VERBOSE
-        );
+    public static final VisionConfig VISION_CONFIG =
+        new VisionConfig(0, 0, 0.7, 0.1, .5, true, VisionTelemetryLevel.VERBOSE);
 
-
-        public static final SwerveDriveSubsystemConfig SUBSYSTEM_CONFIG = new SwerveDriveSubsystemConfig(
+    public static final SwerveDriveSubsystemConfig SUBSYSTEM_CONFIG =
+        new SwerveDriveSubsystemConfig(
             true,
             CORE_SWERVE_CONFIG,
             GYRO_CONFIG,
             VISION_CONFIG,
             TRANSLATION_CONFIG,
-            ROTATION_CONFIG
-        );
+            ROTATION_CONFIG);
 
-        public static final class Chassis {
+    public static final class Chassis {
 
-            /**
-             * Front to back from the middle of the wheels
-             */
-            public static final double WHEEL_BASE_METRES            = inchesToMeters(24.75);
-            /**
-             * Side to side from the middle of the wheels
-             */
-            public static final double TRACK_WIDTH_METRES           = inchesToMeters(22.75);
+      /** Front to back from the middle of the wheels */
+      public static final double WHEEL_BASE_METRES = inchesToMeters(24.75);
 
-            public static final double SDS_MK4I_WHEEL_RADIUS_METRES = 0.0051;
+      /** Side to side from the middle of the wheels */
+      public static final double TRACK_WIDTH_METRES = inchesToMeters(22.75);
 
-            /**
-             * Specify the maximum speed a module can physically reach in m/s.
-             * The SDS
-             * <a href="https://www.swervedrivespecialties.com/products/mk4i-swerve-module">MK4i</a>
-             * module with L2 gear ratio supports a maximum drive motor speed of 15.7ft/s (4.79m/s).
-             *
-             * Do not use this value in software to cap how fast the robot drives on the field.
-             * For that, use {@link #MAX_TRANSLATION_SPEED_MPS}.
-             */
-            public static final double MAX_MODULE_SPEED_MPS         = 4.79;
+      public static final double SDS_MK4I_WHEEL_RADIUS_METRES = 0.0051;
 
+      /**
+       * Specify the maximum speed a module can physically reach in m/s. The SDS <a
+       * href="https://www.swervedrivespecialties.com/products/mk4i-swerve-module">MK4i</a> module
+       * with L2 gear ratio supports a maximum drive motor speed of 15.7ft/s (4.79m/s).
+       *
+       * <p>Do not use this value in software to cap how fast the robot drives on the field. For
+       * that, use {@link #MAX_TRANSLATION_SPEED_MPS}.
+       */
+      public static final double MAX_MODULE_SPEED_MPS = 4.79;
 
-            /*
-             * ****************** Rotation Constants ******************
-             */
+      /*
+       * ****************** Rotation Constants ******************
+       */
 
-            // todo: this needs to be increased
-            public static final Rotation2d ROTATION_SLOW_ZONE                                   = Rotation2d.fromDegrees(35);
-            public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC                      = Rotation2d.fromDegrees(45);
-            public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC                      = Rotation2d.fromDegrees(360);
-            public static final Rotation2d MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC                 = Rotation2d.fromDegrees(180);
-            public static final double     MAX_ROTATION_ACCELERATION_RAD_PER_SEC2               = Rotation2d.fromRotations(1310)
-                .getRadians();
-            public static final Rotation2d ROTATION_DECELERATION_DISTANCE                       = Rotation2d.fromDegrees(5);
-            public static final Rotation2d ROTATION_TOLERANCE                                   = Rotation2d.fromDegrees(2);
-            public static final double     MAX_ANGULAR_VELOCITY_PCT_CHANGE_PER_CYCLE_FOR_TELEOP = 3;
+      // todo: this needs to be increased
+      public static final Rotation2d ROTATION_SLOW_ZONE = Rotation2d.fromDegrees(35);
+      public static final Rotation2d MIN_ROTATIONAL_VELOCITY_PER_SEC = Rotation2d.fromDegrees(45);
+      public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SEC = Rotation2d.fromDegrees(360);
+      public static final Rotation2d MAX_ROTATIONAL_JUMP_VELOCITY_PER_SEC =
+          Rotation2d.fromDegrees(180);
+      public static final double MAX_ROTATION_ACCELERATION_RAD_PER_SEC2 =
+          Rotation2d.fromRotations(1310).getRadians();
+      public static final Rotation2d ROTATION_DECELERATION_DISTANCE = Rotation2d.fromDegrees(5);
+      public static final Rotation2d ROTATION_TOLERANCE = Rotation2d.fromDegrees(2);
+      public static final double MAX_ANGULAR_VELOCITY_PCT_CHANGE_PER_CYCLE_FOR_TELEOP = 3;
 
-            public static final class HeadingPIDConfig {
-                // 0.4 is a little low but okay
-                public static final double P = 0.4;
-                public static final double I = 0;
-                public static final double D = 0;
-            }
+      public static final class HeadingPIDConfig {
+        // 0.4 is a little low but okay
+        public static final double P = 0.4;
+        public static final double I = 0;
+        public static final double D = 0;
+      }
 
+      /*
+       * ****************** Translation Constants ******************
+       */
 
-            /*
-             * ****************** Translation Constants ******************
-             */
+      /**
+       * Set how fast you want the robot to actually translate across the field. This is the "speed
+       * limit" of the robot.
+       *
+       * <p>Practically speaking 4.42 m/s is a good max, but consider 1-2 for development and 2-3
+       * for competitions.
+       */
+      public static final double MAX_TRANSLATION_SPEED_MPS = MAX_MODULE_SPEED_MPS * 1.00;
 
-            /**
-             * Set how fast you want the robot to actually translate across the field.
-             * This is the "speed limit" of the robot.
-             *
-             * Practically speaking 4.42 m/s is a good max, but
-             * consider 1-2 for development and 2-3 for competitions.
-             */
-            public static final double MAX_TRANSLATION_SPEED_MPS          = MAX_MODULE_SPEED_MPS * 1.00;
+      public static final double NOTE_PICKUP_TRANSLATION_SPEED_MPS = 2;
 
-            public static final double NOTE_PICKUP_TRANSLATION_SPEED_MPS  = 2;
+      /**
+       * The minimum speed that the robot will translate. This existss to ensure that the speed
+       * doesn't drop below a threshold where it is useful. Important: the robot needs to be able to
+       * stop instantly at this speed, so don't make it too high!
+       */
+      public static final double MIN_TRANSLATION_SPEED_MPS = 1.0;
 
-            /**
-             * The minimum speed that the robot will translate. This existss to ensure
-             * that the speed doesn't drop below a threshold where it is useful.
-             * Important: the robot needs to be able to stop instantly at this
-             * speed, so don't make it too high!
-             */
-            public static final double MIN_TRANSLATION_SPEED_MPS          = 1.0;
-            public static final double TRANSLATION_TOLERANCE_METRES       = 0.02;
-            public static final double DECEL_FROM_MAX_TO_STOP_DIST_METRES = 1.9;
-            public static final double MAX_TRANSLATION_ACCELERATION_MPS2  = 12;
+      public static final double TRANSLATION_TOLERANCE_METRES = 0.02;
+      public static final double DECEL_FROM_MAX_TO_STOP_DIST_METRES = 1.9;
+      public static final double MAX_TRANSLATION_ACCELERATION_MPS2 = 12;
 
-            /**
-             * Standard drive speed factor. Regular teleop drive will use this factor of the max
-             * translational speed.
-             */
-            public static final double GENERAL_SPEED_FACTOR               = .4;
+      /**
+       * Standard drive speed factor. Regular teleop drive will use this factor of the max
+       * translational speed.
+       */
+      public static final double GENERAL_SPEED_FACTOR = .4;
 
-            /**
-             * Maximum drive speed factor. When boosting, this factor will be multiplied against the
-             * max translational speed.
-             * todo: tune
-             */
-            public static final double MAX_SPEED_FACTOR                   = 1;
+      /**
+       * Maximum drive speed factor. When boosting, this factor will be multiplied against the max
+       * translational speed. todo: tune
+       */
+      public static final double MAX_SPEED_FACTOR = 1;
 
-            /**
-             * Slow mode drive speed factor. When running in slow mode, this factor will be
-             * multiplied against the max translational speed.
-             * todo: tune
-             */
-            public static final double SLOW_SPEED_FACTOR                  = .1;
+      /**
+       * Slow mode drive speed factor. When running in slow mode, this factor will be multiplied
+       * against the max translational speed. todo: tune
+       */
+      public static final double SLOW_SPEED_FACTOR = .1;
 
-            public static final class VelocityPIDConfig {
-                // public static final double P = 15;
-                // public static final double P = 1.5;
-                public static final double P = 1.2;
-                // .002 is too low but stable
-                public static final double I = 0;
-                public static final double D = 0;
-            }
-        }
+      public static final class VelocityPIDConfig {
+        // public static final double P = 15;
+        // public static final double P = 1.5;
+        public static final double P = 1.2;
+        // .002 is too low but stable
+        public static final double I = 0;
+        public static final double D = 0;
+      }
+    }
+  }
+
+  public enum BotTarget {
+
+    // Blue Field Targets
+    BLUE_AMP(new Translation3d(1.8415, 8.2042, 0.873252)),
+    BLUE_SOURCE(new Translation3d(15.632176, 0.564896, 0)),
+    BLUE_SPEAKER(new Translation3d(0.0381, 5.547868, 2.07)),
+    BLUE_STAGE(new Translation3d(4.86791, 4.105656, 1.6764)),
+
+    // Red Field Targets
+    RED_AMP(new Translation3d(14.700758, 8.2042, 0.873252)),
+    RED_SOURCE(new Translation3d(0.908812, 0.564769, 0)),
+    RED_SPEAKER(new Translation3d(16.579342, 5.547868, 2.07)),
+    RED_STAGE(new Translation3d(11.676634, 4.105656, 1.6764)),
+
+    // Blue Side Notes
+    BLUE_NOTE_WOLVERINE(
+        new Translation3d(
+            FieldConstants.BLUE_WOLVERINE.getX(), FieldConstants.BLUE_WOLVERINE.getY(), 0)),
+    BLUE_NOTE_BARNUM(
+        new Translation3d(FieldConstants.BLUE_BARNUM.getX(), FieldConstants.BLUE_BARNUM.getY(), 0)),
+    BLUE_NOTE_VALJEAN(
+        new Translation3d(
+            FieldConstants.BLUE_VALJEAN.getX(), FieldConstants.BLUE_VALJEAN.getY(), 0)),
+
+    // Red Side Notes
+    RED_NOTE_WOLVERINE(
+        new Translation3d(
+            FieldConstants.RED_WOLVERINE.getX(), FieldConstants.RED_WOLVERINE.getY(), 0)),
+    RED_NOTE_BARNUM(
+        new Translation3d(FieldConstants.RED_BARNUM.getX(), FieldConstants.RED_BARNUM.getY(), 0)),
+    RED_NOTE_VALJEAN(
+        new Translation3d(FieldConstants.RED_VALJEAN.getX(), FieldConstants.RED_VALJEAN.getY(), 0)),
+
+    // Centre Field Notes
+    CENTRE_NOTE_1(
+        new Translation3d(
+            FieldConstants.CENTRE_NOTE_1.getX(), FieldConstants.CENTRE_NOTE_1.getY(), 0)),
+    CENTRE_NOTE_2(
+        new Translation3d(
+            FieldConstants.CENTRE_NOTE_2.getX(), FieldConstants.CENTRE_NOTE_2.getY(), 0)),
+    CENTRE_NOTE_3(
+        new Translation3d(
+            FieldConstants.CENTRE_NOTE_3.getX(), FieldConstants.CENTRE_NOTE_3.getY(), 0)),
+    CENTRE_NOTE_4(
+        new Translation3d(
+            FieldConstants.CENTRE_NOTE_4.getX(), FieldConstants.CENTRE_NOTE_4.getY(), 0)),
+    CENTRE_NOTE_5(
+        new Translation3d(
+            FieldConstants.CENTRE_NOTE_5.getX(), FieldConstants.CENTRE_NOTE_5.getY(), 0)),
+
+    // When No Target is Set
+    NONE(new Translation3d(0, 0, 0)),
+
+    // No focus, but go to any tag visible
+    ALL(new Translation3d(0, 0, 0));
+
+    private final Translation3d location;
+
+    BotTarget(Translation3d location) {
+      this.location = location;
     }
 
-
-
-    public enum BotTarget {
-
-        // Blue Field Targets
-        BLUE_AMP(new Translation3d(1.8415, 8.2042, 0.873252)),
-        BLUE_SOURCE(new Translation3d(15.632176, 0.564896, 0)),
-        BLUE_SPEAKER(new Translation3d(0.0381, 5.547868, 2.07)),
-        BLUE_STAGE(new Translation3d(4.86791, 4.105656, 1.6764)),
-
-        // Red Field Targets
-        RED_AMP(new Translation3d(14.700758, 8.2042, 0.873252)),
-        RED_SOURCE(new Translation3d(0.908812, 0.564769, 0)),
-        RED_SPEAKER(new Translation3d(16.579342, 5.547868, 2.07)),
-        RED_STAGE(new Translation3d(11.676634, 4.105656, 1.6764)),
-
-        // Blue Side Notes
-        BLUE_NOTE_WOLVERINE(new Translation3d(FieldConstants.BLUE_WOLVERINE.getX(), FieldConstants.BLUE_WOLVERINE.getY(), 0)),
-        BLUE_NOTE_BARNUM(new Translation3d(FieldConstants.BLUE_BARNUM.getX(), FieldConstants.BLUE_BARNUM.getY(), 0)),
-        BLUE_NOTE_VALJEAN(new Translation3d(FieldConstants.BLUE_VALJEAN.getX(), FieldConstants.BLUE_VALJEAN.getY(), 0)),
-
-        // Red Side Notes
-        RED_NOTE_WOLVERINE(new Translation3d(FieldConstants.RED_WOLVERINE.getX(), FieldConstants.RED_WOLVERINE.getY(), 0)),
-        RED_NOTE_BARNUM(new Translation3d(FieldConstants.RED_BARNUM.getX(), FieldConstants.RED_BARNUM.getY(), 0)),
-        RED_NOTE_VALJEAN(new Translation3d(FieldConstants.RED_VALJEAN.getX(), FieldConstants.RED_VALJEAN.getY(), 0)),
-
-        // Centre Field Notes
-        CENTRE_NOTE_1(new Translation3d(FieldConstants.CENTRE_NOTE_1.getX(), FieldConstants.CENTRE_NOTE_1.getY(), 0)),
-        CENTRE_NOTE_2(new Translation3d(FieldConstants.CENTRE_NOTE_2.getX(), FieldConstants.CENTRE_NOTE_2.getY(), 0)),
-        CENTRE_NOTE_3(new Translation3d(FieldConstants.CENTRE_NOTE_3.getX(), FieldConstants.CENTRE_NOTE_3.getY(), 0)),
-        CENTRE_NOTE_4(new Translation3d(FieldConstants.CENTRE_NOTE_4.getX(), FieldConstants.CENTRE_NOTE_4.getY(), 0)),
-        CENTRE_NOTE_5(new Translation3d(FieldConstants.CENTRE_NOTE_5.getX(), FieldConstants.CENTRE_NOTE_5.getY(), 0)),
-
-        // When No Target is Set
-        NONE(new Translation3d(0, 0, 0)),
-
-        // No focus, but go to any tag visible
-        ALL(new Translation3d(0, 0, 0));
-
-
-        private final Translation3d location;
-
-        BotTarget(Translation3d location) {
-            this.location = location;
-        }
-
-        public Translation3d getLocation() {
-            return location;
-        }
-
-        @Override
-        public String toString() {
-            return "BotTarget: " + name() + " at " + location;
-        }
+    public Translation3d getLocation() {
+      return location;
     }
 
-    public static final class UsefulHeadings {
-        public static final Rotation2d FACING_CHAIN_RED_LEFT    = Rotation2d.fromDegrees(-60);
-        public static final Rotation2d FACING_CHAIN_RED_CENTER  = Rotation2d.fromDegrees(180);
-        public static final Rotation2d FACING_CHAIN_RED_RIGHT   = Rotation2d.fromDegrees(60);
-        public static final Rotation2d FACING_CHAIN_BLUE_LEFT   = Rotation2d.fromDegrees(-60);
-        public static final Rotation2d FACING_CHAIN_BLUE_CENTER = Rotation2d.fromDegrees(180);
-        public static final Rotation2d FACING_CHAIN_BLUE_RIGHT  = Rotation2d.fromDegrees(60);
+    @Override
+    public String toString() {
+      return "BotTarget: " + name() + " at " + location;
     }
+  }
 
-    public static final class UsefulPoses {
+  public static final class UsefulHeadings {
+    public static final Rotation2d FACING_CHAIN_RED_LEFT = Rotation2d.fromDegrees(-60);
+    public static final Rotation2d FACING_CHAIN_RED_CENTER = Rotation2d.fromDegrees(180);
+    public static final Rotation2d FACING_CHAIN_RED_RIGHT = Rotation2d.fromDegrees(60);
+    public static final Rotation2d FACING_CHAIN_BLUE_LEFT = Rotation2d.fromDegrees(-60);
+    public static final Rotation2d FACING_CHAIN_BLUE_CENTER = Rotation2d.fromDegrees(180);
+    public static final Rotation2d FACING_CHAIN_BLUE_RIGHT = Rotation2d.fromDegrees(60);
+  }
 
-        public static final Pose2d SCORE_BLUE_AMP                            = (new Pose2d(
-            BotTarget.BLUE_AMP.getLocation().getX(),
-            7.65,
-            Rotation2d.fromDegrees(270)));
-        public static final Pose2d SCORE_RED_AMP                             = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(),
-            7.65,
-            Rotation2d.fromDegrees(270)));
+  public static final class UsefulPoses {
 
-        public static final Pose2d PRE_SCORE_BLUE_AMP                        = (new Pose2d(
-            BotTarget.BLUE_AMP.getLocation().getX(),
-            6.9,
-            Rotation2d.fromDegrees(270)));
-        public static final Pose2d PRE_SCORE_RED_AMP                         = (new Pose2d(BotTarget.RED_AMP.getLocation().getX(),
-            6.9,
-            Rotation2d.fromDegrees(270)));
+    public static final Pose2d SCORE_BLUE_AMP =
+        (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.65, Rotation2d.fromDegrees(270)));
+    public static final Pose2d SCORE_RED_AMP =
+        (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.65, Rotation2d.fromDegrees(270)));
 
-        public static final Pose2d START_AT_BLUE_SPEAKER                     = new Pose2d(
-            Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(),
-            1.6, new Rotation2d());
-        public static final Pose2d START_AT_RED_SPEAKER                      = new Pose2d(
+    public static final Pose2d PRE_SCORE_BLUE_AMP =
+        (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 6.9, Rotation2d.fromDegrees(270)));
+    public static final Pose2d PRE_SCORE_RED_AMP =
+        (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 6.9, Rotation2d.fromDegrees(270)));
+
+    public static final Pose2d START_AT_BLUE_SPEAKER =
+        new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(), 1.6, new Rotation2d());
+    public static final Pose2d START_AT_RED_SPEAKER =
+        new Pose2d(
             Constants.BotTarget.RED_SPEAKER.getLocation().getX(),
-            FieldConstants.FIELD_EXTENT_METRES_Y - 1.6, new Rotation2d());
+            FieldConstants.FIELD_EXTENT_METRES_Y - 1.6,
+            new Rotation2d());
 
-        public static final Pose2d BLUE_2_2_20                               = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
-        public static final Pose2d RED_2_2_20                                = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
+    public static final Pose2d BLUE_2_2_20 = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
+    public static final Pose2d RED_2_2_20 = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
 
-        public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE                = new Pose2d(
+    public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE =
+        new Pose2d(
             BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.1,
-            BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
-        public static final Pose2d IN_FRONT_OF_WOLVERINE_RED                 = new Pose2d(
+            BLUE_NOTE_WOLVERINE.getLocation().getY(),
+            new Rotation2d());
+    public static final Pose2d IN_FRONT_OF_WOLVERINE_RED =
+        new Pose2d(
             RED_NOTE_WOLVERINE.getLocation().getX() + 1.1,
-            RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d().fromDegrees(180));
+            RED_NOTE_WOLVERINE.getLocation().getY(),
+            new Rotation2d().fromDegrees(180));
 
-        public static final Pose2d WOLVERINE_PICKUP_BLUE                     = new Pose2d(
+    public static final Pose2d WOLVERINE_PICKUP_BLUE =
+        new Pose2d(
             BLUE_NOTE_WOLVERINE.getLocation().getX() - .5,
-            BLUE_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
-        public static final Pose2d WOLVERINE_PICKUP_RED                      = new Pose2d(
+            BLUE_NOTE_WOLVERINE.getLocation().getY(),
+            new Rotation2d());
+    public static final Pose2d WOLVERINE_PICKUP_RED =
+        new Pose2d(
             RED_NOTE_WOLVERINE.getLocation().getX() + .5,
-            RED_NOTE_WOLVERINE.getLocation().getY(), new Rotation2d());
+            RED_NOTE_WOLVERINE.getLocation().getY(),
+            new Rotation2d());
 
-        public static final Pose2d PARK_AFTER_VALJEAN_AUTO_BLUE              = new Pose2d(7.5, 7.5, Rotation2d.fromDegrees(0));
-        public static final Pose2d PARK_AFTER_VALJEAN_AUTO_RED               = new Pose2d(9.5, 7.5, Rotation2d.fromDegrees(180));
+    public static final Pose2d PARK_AFTER_VALJEAN_AUTO_BLUE =
+        new Pose2d(7.5, 7.5, Rotation2d.fromDegrees(0));
+    public static final Pose2d PARK_AFTER_VALJEAN_AUTO_RED =
+        new Pose2d(9.5, 7.5, Rotation2d.fromDegrees(180));
 
-        public static final Pose2d PARK_AFTER_BARNUM_AUTO_BLUE               = new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
-        public static final Pose2d PARK_AFTER_BARNUM_AUTO_RED                = new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
+    public static final Pose2d PARK_AFTER_BARNUM_AUTO_BLUE =
+        new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
+    public static final Pose2d PARK_AFTER_BARNUM_AUTO_RED =
+        new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
 
-        public static final Pose2d AFTER_WOLVERINE_AUTO_BLUE                 = new Pose2d(2.7, 2.85, Rotation2d.fromDegrees(0));
-        public static final Pose2d AFTER_WOLVERINE_AUTO_RED                  = new Pose2d(14, 2.85, Rotation2d.fromDegrees(180));
-        public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_BLUE            = new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
-        public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_RED             = new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
+    public static final Pose2d AFTER_WOLVERINE_AUTO_BLUE =
+        new Pose2d(2.7, 2.85, Rotation2d.fromDegrees(0));
+    public static final Pose2d AFTER_WOLVERINE_AUTO_RED =
+        new Pose2d(14, 2.85, Rotation2d.fromDegrees(180));
+    public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_BLUE =
+        new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
+    public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_RED =
+        new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
 
-        // TODO: QUENTIN: CALCULATE LOCATIONS. ROTATIONS ARE FINE.
-        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_LEFT        = new Pose2d(0, 0, FACING_CHAIN_RED_LEFT);
-        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_CENTER      = new Pose2d(0, 0, FACING_CHAIN_RED_CENTER);
-        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_RIGHT       = new Pose2d(0, 0, FACING_CHAIN_RED_RIGHT);
-        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_LEFT       = new Pose2d(0, 0, FACING_CHAIN_BLUE_LEFT);
-        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_CENTER     = new Pose2d(0, 0, FACING_CHAIN_BLUE_CENTER);
-        public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_RIGHT      = new Pose2d(0, 0, FACING_CHAIN_BLUE_RIGHT);
+    // TODO: QUENTIN: CALCULATE LOCATIONS. ROTATIONS ARE FINE.
+    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_LEFT =
+        new Pose2d(0, 0, FACING_CHAIN_RED_LEFT);
+    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_CENTER =
+        new Pose2d(0, 0, FACING_CHAIN_RED_CENTER);
+    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_RIGHT =
+        new Pose2d(0, 0, FACING_CHAIN_RED_RIGHT);
+    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_LEFT =
+        new Pose2d(0, 0, FACING_CHAIN_BLUE_LEFT);
+    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_CENTER =
+        new Pose2d(0, 0, FACING_CHAIN_BLUE_CENTER);
+    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_RIGHT =
+        new Pose2d(0, 0, FACING_CHAIN_BLUE_RIGHT);
 
-        // NOTE: These are for the possible scenario in which we score the track backwards from the
-        // floor
-        // todo: update poses when we decide to use this.
-        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_LEFT    = new Pose2d(0, 0,
-            FACING_CHAIN_RED_LEFT.plus(Rotation2d.fromDegrees(180)));
-        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_CENTER  = new Pose2d(0, 0,
-            FACING_CHAIN_RED_CENTER.plus(Rotation2d.fromDegrees(180)));
-        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_RIGHT   = new Pose2d(0, 0,
-            FACING_CHAIN_RED_RIGHT.plus(Rotation2d.fromDegrees(180)));
-        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_LEFT   = new Pose2d(0, 0,
-            FACING_CHAIN_BLUE_LEFT.plus(Rotation2d.fromDegrees(180)));
-        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_CENTER = new Pose2d(0, 0,
-            FACING_CHAIN_BLUE_CENTER.plus(Rotation2d.fromDegrees(180)));
-        public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_RIGHT  = new Pose2d(0, 0,
-            FACING_CHAIN_BLUE_RIGHT.plus(Rotation2d.fromDegrees(180)));
+    // NOTE: These are for the possible scenario in which we score the track backwards from the
+    // floor
+    // todo: update poses when we decide to use this.
+    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_LEFT =
+        new Pose2d(0, 0, FACING_CHAIN_RED_LEFT.plus(Rotation2d.fromDegrees(180)));
+    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_CENTER =
+        new Pose2d(0, 0, FACING_CHAIN_RED_CENTER.plus(Rotation2d.fromDegrees(180)));
+    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_RIGHT =
+        new Pose2d(0, 0, FACING_CHAIN_RED_RIGHT.plus(Rotation2d.fromDegrees(180)));
+    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_LEFT =
+        new Pose2d(0, 0, FACING_CHAIN_BLUE_LEFT.plus(Rotation2d.fromDegrees(180)));
+    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_CENTER =
+        new Pose2d(0, 0, FACING_CHAIN_BLUE_CENTER.plus(Rotation2d.fromDegrees(180)));
+    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_RIGHT =
+        new Pose2d(0, 0, FACING_CHAIN_BLUE_RIGHT.plus(Rotation2d.fromDegrees(180)));
+  }
+
+  public static final class FieldConstants {
+
+    public static final double FIELD_EXTENT_METRES_Y = 8.211;
+    public static final double FIELD_EXTENT_METRES_X = 16.541;
+    public static final double WING_LENGTH_METRES = 5.87;
+
+    // Blue Side Notes
+    public static final Translation2d BLUE_WOLVERINE = new Translation2d(2.9, 4.11);
+    public static final Translation2d BLUE_BARNUM = new Translation2d(2.9, 5.5);
+    public static final Translation2d BLUE_BARNUM_SHOT = new Translation2d(3.0, 5.5);
+    public static final Translation2d IN_FRONT_OF_BLUE_BARNUM = new Translation2d(1.6, 5.5);
+    public static final Translation2d BLUE_VALJEAN = new Translation2d(2.9, 7);
+    public static final Translation2d IN_FRONT_OF_BLUE_VALJEAN = new Translation2d(1.5, 7);
+
+    // Red Side Notes
+    public static final Translation2d RED_WOLVERINE = new Translation2d(13.53, 4.11);
+    public static final Translation2d RED_BARNUM = new Translation2d(13.53, 5.5);
+    public static final Translation2d RED_BARNUM_SHOT = new Translation2d(13.43, 5.5);
+    public static final Translation2d IN_FRONT_OF_RED_BARNUM = new Translation2d(15, 5.5);
+    public static final Translation2d RED_VALJEAN = new Translation2d(13.53, 7);
+    public static final Translation2d IN_FRONT_OF_RED_VALJEAN = new Translation2d(15, 7);
+
+    // Centre Field Notes
+    public static final Translation2d CENTRE_NOTE_1 = new Translation2d(8.16, 0.75);
+    public static final Translation2d CENTRE_NOTE_2 = new Translation2d(8.16, 2.43);
+    public static final Translation2d CENTRE_NOTE_3 = new Translation2d(8.16, 4.11);
+    public static final Translation2d CENTRE_NOTE_4 = new Translation2d(8.16, 5.79);
+    public static final Translation2d CENTRE_NOTE_5 = new Translation2d(8.16, 7.47);
+
+    // under stage near barnum
+    public static final Translation2d UNDER_STAGE_NEAR_BARNUM_RED = new Translation2d(12.8, 5.0);
+    public static final Translation2d UNDER_STAGE_NEAR_BARNUM_BLUE = new Translation2d(3.7, 5.0);
+
+    public static final Translation2d UNDER_STAGE_RED = new Translation2d(11.7, 4.1);
+    public static final Translation2d UNDER_STAGE_BLUE = new Translation2d(4.9, 4.1);
+  }
+
+  public static final class VisionConstants {
+
+    // todo: correct this
+    public static Translation2d CAMERA_LOC_REL_TO_ROBOT_CENTER = new Translation2d(0, 30);
+
+    public static final double MAX_AMBIGUITY = .7;
+    public static final double HIGH_QUALITY_AMBIGUITY = .1;
+
+    public static final double MAX_VISPOSE_DELTA_DISTANCE = .5;
+  }
+
+  public static final class AutoConstants {
+
+    public enum AutoPattern {
+      DO_NOTHING,
+      EXIT_ZONE,
+      SCORE_2_5_AMP,
+      SCORE_1_SPEAKER_STAY,
+      SCORE_1_SPEAKER,
+      THE_DOUBLE_DOWN,
+      SCORE_2_SPEAKER_VISION,
+      SCORE_3_SPEAKER,
+      SCORE_4_SPEAKER,
+      SCORE_LOADED_WOLVERINE,
+      SCORE_LOADED_WOLVERINE_BARNUM,
+      SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN,
+      SCORE_LOADED_BARNUM_VALJEAN,
     }
 
-    public static final class FieldConstants {
+    public enum Delay {
+      NO_DELAY,
+      WAIT_0_5_SECOND,
+      WAIT_1_SECOND,
+      WAIT_1_5_SECONDS,
+      WAIT_2_SECONDS,
+      WAIT_2_5_SECONDS,
+      WAIT_3_SECONDS,
+      WAIT_5_SECONDS
+    }
+  }
 
-        public static final double        FIELD_EXTENT_METRES_Y        = 8.211;
-        public static final double        FIELD_EXTENT_METRES_X        = 16.541;
-        public static final double        WING_LENGTH_METRES           = 5.87;
+  public static final class LightingConstants {
+    public static final int PWM_PORT = 9;
+    public static final int STRIP_LENGTH = 32;
+    public static LightstripRegion SIGNAL_LEFT = new LightstripRegion("Signal", 0, 4);
+    public static LightstripRegion VISPOSE_LEFT = new LightstripRegion("Vision1", 4, 3);
+    public static LightstripRegion SIGNAL_CENTER = new LightstripRegion("Signal", 7, 18);
+    public static LightstripRegion VISPOSE_RIGHT = new LightstripRegion("Vision2", 25, 3);
+    public static LightstripRegion SIGNAL_RIGHT = new LightstripRegion("Signal", 28, 4);
 
-        // Blue Side Notes
-        public static final Translation2d BLUE_WOLVERINE               = new Translation2d(2.9, 4.11);
-        public static final Translation2d BLUE_BARNUM                  = new Translation2d(2.9, 5.5);
-        public static final Translation2d BLUE_BARNUM_SHOT             = new Translation2d(3.0, 5.5);
-        public static final Translation2d IN_FRONT_OF_BLUE_BARNUM      = new Translation2d(1.6, 5.5);
-        public static final Translation2d BLUE_VALJEAN                 = new Translation2d(2.9, 7);
-        public static final Translation2d IN_FRONT_OF_BLUE_VALJEAN     = new Translation2d(1.5, 7);
+    public static final int SIGNAL_PATTERN_LENGTH = 28;
+    public static final int VISION_PATTERN_LENGTH = 6;
 
-        // Red Side Notes
-        public static final Translation2d RED_WOLVERINE                = new Translation2d(13.53, 4.11);
-        public static final Translation2d RED_BARNUM                   = new Translation2d(13.53, 5.5);
-        public static final Translation2d RED_BARNUM_SHOT              = new Translation2d(13.43, 5.5);
-        public static final Translation2d IN_FRONT_OF_RED_BARNUM       = new Translation2d(15, 5.5);
-        public static final Translation2d RED_VALJEAN                  = new Translation2d(13.53, 7);
-        public static final Translation2d IN_FRONT_OF_RED_VALJEAN      = new Translation2d(15, 7);
+    /**
+     * The factor by which the brightness of the lights in the workshop should be reduced. The
+     * lighting subsystem checks to see if the FMS is attached. If not, this factor is applied.
+     *
+     * <p>To disable this feature, set the factor to 1.
+     */
+    public static final double WORKSHOP_DIMMING_FACTOR = 0.5;
 
-        // Centre Field Notes
-        public static final Translation2d CENTRE_NOTE_1                = new Translation2d(8.16, 0.75);
-        public static final Translation2d CENTRE_NOTE_2                = new Translation2d(8.16, 2.43);
-        public static final Translation2d CENTRE_NOTE_3                = new Translation2d(8.16, 4.11);
-        public static final Translation2d CENTRE_NOTE_4                = new Translation2d(8.16, 5.79);
-        public static final Translation2d CENTRE_NOTE_5                = new Translation2d(8.16, 7.47);
+    public static final Color NOTE_ORANGE = new Color(255, 20, 0);
+  }
 
-        // under stage near barnum
-        public static final Translation2d UNDER_STAGE_NEAR_BARNUM_RED  = new Translation2d(12.8, 5.0);
-        public static final Translation2d UNDER_STAGE_NEAR_BARNUM_BLUE = new Translation2d(3.7, 5.0);
+  public static class ArmPosition {
 
-        public static final Translation2d UNDER_STAGE_RED              = new Translation2d(11.7, 4.1);
-        public static final Translation2d UNDER_STAGE_BLUE             = new Translation2d(4.9, 4.1);
+    public final double linkAngle;
+    public final double aimAngle;
 
+    public ArmPosition(double linkDegrees, double aimDegrees) {
+      this.linkAngle = linkDegrees;
+      this.aimAngle = aimDegrees;
     }
 
-    public static final class VisionConstants {
-
-        // todo: correct this
-        public static Translation2d CAMERA_LOC_REL_TO_ROBOT_CENTER = new Translation2d(0, 30);
-
-        public static final double  MAX_AMBIGUITY                  = .7;
-        public static final double  HIGH_QUALITY_AMBIGUITY         = .1;
-
-        public static final double  MAX_VISPOSE_DELTA_DISTANCE     = .5;
-
+    public double getTotalAngle() {
+      return this.aimAngle + this.linkAngle;
     }
+  }
 
-    public static final class AutoConstants {
+  public static final class ArmConstants {
 
-        public enum AutoPattern {
-            DO_NOTHING,
-            EXIT_ZONE, SCORE_2_5_AMP,
-            SCORE_1_SPEAKER_STAY,
-            SCORE_1_SPEAKER, THE_DOUBLE_DOWN, SCORE_2_SPEAKER_VISION, SCORE_3_SPEAKER, SCORE_4_SPEAKER,
-            SCORE_LOADED_WOLVERINE, SCORE_LOADED_WOLVERINE_BARNUM, SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN,
-            SCORE_LOADED_BARNUM_VALJEAN,
-        }
+    /**
+     * Completely disable control over the link motor. Normally set to false, but can be set to true
+     * when the link motor is not functioning correctly.
+     */
+    public static final boolean DISABLE_LINK = false;
 
-        public enum Delay {
-            NO_DELAY, WAIT_0_5_SECOND,
-            WAIT_1_SECOND, WAIT_1_5_SECONDS,
-            WAIT_2_SECONDS, WAIT_2_5_SECONDS,
-            WAIT_3_SECONDS, WAIT_5_SECONDS
-        }
-    }
+    /**
+     * Completely disable control over the link motor. Normally set to false, but can be set to true
+     * when the aim motor is not functioning correctly.
+     */
+    public static final boolean DISABLE_AIM = false;
 
-    public static final class LightingConstants {
-        public static final int        PWM_PORT                = 9;
-        public static final int        STRIP_LENGTH            = 32;
-        public static LightstripRegion SIGNAL_LEFT             = new LightstripRegion("Signal", 0, 4);
-        public static LightstripRegion VISPOSE_LEFT            = new LightstripRegion("Vision1", 4, 3);
-        public static LightstripRegion SIGNAL_CENTER           = new LightstripRegion("Signal", 7, 18);
-        public static LightstripRegion VISPOSE_RIGHT           = new LightstripRegion("Vision2", 25, 3);
-        public static LightstripRegion SIGNAL_RIGHT            = new LightstripRegion("Signal", 28, 4);
+    /**
+     * Completely turn off arm safety code. This is actually dangerous - the arm can flip up an hit
+     * people standing nearby. Set this to false unless specifically trying to measure values inside
+     * the safety code and you really know what you are doing.
+     */
+    public static final boolean DISABLE_ARM_SAFETY_MODE = false;
 
-        public static final int        SIGNAL_PATTERN_LENGTH   = 28;
-        public static final int        VISION_PATTERN_LENGTH   = 6;
+    public static final int LINK_MOTOR_CAN_ADDRESS = 40;
+    public static final int AIM_MOTOR_CAN_ADDRESS = 41;
 
-        /**
-         * The factor by which the brightness of the lights in the workshop should be reduced.
-         * The lighting subsystem checks to see if the FMS is attached. If not, this factor
-         * is applied.
-         *
-         * To disable this feature, set the factor to 1.
-         */
-        public static final double     WORKSHOP_DIMMING_FACTOR = 0.5;
+    public static final int INTAKE_MOTOR_CAN_ADDRESS = 50;
+    public static final int SHOOTER_MOTOR_CAN_ADDRESS = 51;
 
-        public static final Color      NOTE_ORANGE             = new Color(255, 20, 0);
+    public static final int LINK_ABSOLUTE_ENCODER_ANALOG_PORT = 3;
+    // Encoder constants to convert from Volts to Deg
+    public static final double LINK_ABSOLUTE_ENCODER_DEG_PER_VOLT = 49.11;
+    public static final double LINK_ABSOLUTE_ENCODER_OFFSET_DEG = -65.5;
 
-    }
+    public static final int LINK_LOWER_LIMIT_SWITCH_DIO_PORT = 0;
 
-    public static class ArmPosition {
+    public static final int AIM_ABSOLUTE_ENCODER_ANALOG_PORT = 2;
+    // Encoder constants to convert from Volts to Deg
+    public static final double AIM_ABSOLUTE_ENCODER_DEG_PER_VOLT = 44.5;
+    // Increasing aim offset by 78 to account for a change that happened on Saturday Mar 9. New
+    // measurement added March 10th at 11:20am
+    // 73 degree offset on Mar 15.
+    public static final double AIM_ABSOLUTE_ENCODER_OFFSET_DEG = 16.2;
 
-        public final double linkAngle;
-        public final double aimAngle;
+    public static final int INTAKE_NOTE_DETECTOR_DIO_PORT = 5; // changed
+    // from
+    // 1
 
-        public ArmPosition(double linkDegrees, double aimDegrees) {
-            this.linkAngle = linkDegrees;
-            this.aimAngle  = aimDegrees;
-        }
+    public static final int TRAP_RELEASE_DIO_PORT = 9;
 
-        public double getTotalAngle() {
-            return this.aimAngle + this.linkAngle;
-        }
-    }
+    /*
+     * ARM PID CONTROLS
+     */
+    public static final double AIM_PID_P = 0.025;
+    public static final double LINK_PID_P = 0.025;
 
-    public static final class ArmConstants {
+    /*
+     * Key Arm Positions
+     */
+    // aim re-measured Mar 10, 2024 9:30am (was 35, set to 113) - diff - 78
+    public static final ArmPosition COMPACT_ARM_POSITION = new ArmPosition(185, 33);
+    public static final double COMPACT_LINK_SLOW_RANGE_DEG = 5;
+    public static final double COMPACT_AIM_SLOW_RANGE_DEG = 10;
+    public static final ArmPosition INTAKE_ARM_POSITION = new ArmPosition(116, 109);
 
-        /**
-         * Completely disable control over the link motor. Normally set to false,
-         * but can be set to true when the link motor is not functioning correctly.
-         */
-        public static final boolean     DISABLE_LINK                       = false;
-        /**
-         * Completely disable control over the link motor. Normally set to false,
-         * but can be set to true when the aim motor is not functioning correctly.
-         */
-        public static final boolean     DISABLE_AIM                        = false;
-        /**
-         * Completely turn off arm safety code. This is actually dangerous - the
-         * arm can flip up an hit people standing nearby. Set this to false
-         * unless specifically trying to measure values inside the safety code
-         * and you really know what you are doing.
-         */
-        public static final boolean     DISABLE_ARM_SAFETY_MODE            = false;
+    public static final ArmPosition OVER_INTAKE = new ArmPosition(134, 105);
+    public static final ArmPosition NOTE_INTAKE_CLEARANCE_POSITION = new ArmPosition(149, 144);
 
-        public static final int         LINK_MOTOR_CAN_ADDRESS             = 40;
-        public static final int         AIM_MOTOR_CAN_ADDRESS              = 41;
+    // Transition position - over bumper
+    public static final ArmPosition OVER_BUMPER_POSITION = new ArmPosition(146, 109);
+    // Transition position - above the lock position (arm not caught on stops)
+    public static final ArmPosition UNLOCK_POSITION = new ArmPosition(200, 35);
 
-        public static final int         INTAKE_MOTOR_CAN_ADDRESS           = 50;
-        public static final int         SHOOTER_MOTOR_CAN_ADDRESS          = 51;
+    public static final ArmPosition SHOOT_SPEAKER_PODIUM_ARM_POSITION = new ArmPosition(196, 42);
 
-        public static final int         LINK_ABSOLUTE_ENCODER_ANALOG_PORT  = 3;
-        // Encoder constants to convert from Volts to Deg
-        public static final double      LINK_ABSOLUTE_ENCODER_DEG_PER_VOLT = 49.11;
-        public static final double      LINK_ABSOLUTE_ENCODER_OFFSET_DEG   = -65.5;
+    // re-measured Mar 10, 2024 9:30am 2.4% arm (was 108, changed to 186; diff 78)
+    public static final ArmPosition SHOOT_AMP_ARM_POSITION = new ArmPosition(200, 108);
+    public static final ArmPosition TRAP_ARM_POSITION = new ArmPosition(134, 167);
+    public static final ArmPosition INVERSE_TRAP_ARM_POSITION = new ArmPosition(131, 248 - 48);
+    public static final ArmPosition SOURCE_INTAKE_POSE = new ArmPosition(200, 35);
+    public static final ArmPosition LONG_SHOT_ARM_POSITION =
+        new ArmPosition(UNLOCK_POSITION.linkAngle, 25);
 
+    public static final double LINK_EXTENDED_THRESHOLD = 150;
 
-        public static final int         LINK_LOWER_LIMIT_SWITCH_DIO_PORT   = 0;
+    // todo: fixme: indicate units in doc or constant name for all of these settings
+    public static final double FAST_AIM_SPEED = .7;
+    public static final double SLOW_AIM_SPEED = .2;
+    public static final double SAFE_AIM_SPEED = .1;
+    public static final double FAST_LINK_SPEED = .7;
+    public static final double SLOW_LINK_SPEED = .2;
 
-        public static final int         AIM_ABSOLUTE_ENCODER_ANALOG_PORT   = 2;
-        // Encoder constants to convert from Volts to Deg
-        public static final double      AIM_ABSOLUTE_ENCODER_DEG_PER_VOLT  = 44.5;
-        // Increasing aim offset by 78 to account for a change that happened on Saturday Mar 9. New
-        // measurement added March 10th at 11:20am
-        // 73 degree offset on Mar 15.
-        public static final double      AIM_ABSOLUTE_ENCODER_OFFSET_DEG    = 16.2;
+    public static final double SLOW_ARM_ZONE_DEG = 20.0;
+    public static final double AT_TARGET_DEG = 0.5;
+    public static final double DEFAULT_LINK_TOLERANCE_DEG = 3;
+    public static final double DEFAULT_AIM_TOLERANCE_DEG = 3;
 
-        public static final int         INTAKE_NOTE_DETECTOR_DIO_PORT      = 5;                                             // changed
-                                                                                                                            // from
-                                                                                                                            // 1
+    public static final double INTAKE_INTAKE_SPEED = .6;
+    public static final double INTAKE_REVERSE_SPEED = -.3;
 
-        public static final int         TRAP_RELEASE_DIO_PORT              = 9;
+    public static final double INTAKE_NOTE_REVERSAL_REVERSE_SPEED = -.075;
 
-        /*
-         * ARM PID CONTROLS
-         */
-        public static final double      AIM_PID_P                          = 0.025;
-        public static final double      LINK_PID_P                         = 0.025;
+    public static final double INTAKE_NOTE_REVERSAL_FORWARD_SPEED = .1;
+    public static final long INTAKE_SPINUP_WINDOW = 500;
 
-        /*
-         * Key Arm Positions
-         */
-        // aim re-measured Mar 10, 2024 9:30am (was 35, set to 113) - diff - 78
-        public static final ArmPosition COMPACT_ARM_POSITION               = new ArmPosition(185, 33);
-        public static final double      COMPACT_LINK_SLOW_RANGE_DEG        = 5;
-        public static final double      COMPACT_AIM_SLOW_RANGE_DEG         = 10;
-        public static final ArmPosition INTAKE_ARM_POSITION                = new ArmPosition(116, 109);
+    public static final double INTAKE_EJECT_INTAKE_SPEED = -1.0;
+    public static final double INTAKE_EJECT_SHOOTER_SPEED = -1.0;
 
-        public static final ArmPosition OVER_INTAKE                        = new ArmPosition(134, 105);
-        public static final ArmPosition NOTE_INTAKE_CLEARANCE_POSITION     = new ArmPosition(149, 144);
+    public static final double SHOOTER_SPEAKER_SPEED = 0.75;
+    public static final double SHOOTER_AMP_SPEED = 0.2;
+    public static final double INTAKE_TRAP_SPEED = -0.5;
 
-        // Transition position - over bumper
-        public static final ArmPosition OVER_BUMPER_POSITION               = new ArmPosition(146, 109);
-        // Transition position - above the lock position (arm not caught on stops)
-        public static final ArmPosition UNLOCK_POSITION                    = new ArmPosition(200, 35);
+    public static final double LINK_MAX_DEGREES = 215;
+    public static final double LINK_MIN_DEGREES = 116;
 
-        public static final ArmPosition SHOOT_SPEAKER_PODIUM_ARM_POSITION  = new ArmPosition(196, 42);
+    public static final double AIM_MAX_DEGREES = 240;
+    public static final double AIM_MIN_DEGREES = 25;
 
-        // re-measured Mar 10, 2024 9:30am 2.4% arm (was 108, changed to 186; diff 78)
-        public static final ArmPosition SHOOT_AMP_ARM_POSITION             = new ArmPosition(200, 108);
-        public static final ArmPosition TRAP_ARM_POSITION                  = new ArmPosition(134, 167);
-        public static final ArmPosition INVERSE_TRAP_ARM_POSITION          = new ArmPosition(131, 248 - 48);
-        public static final ArmPosition SOURCE_INTAKE_POSE                 = new ArmPosition(200, 35);
-        public static final ArmPosition LONG_SHOT_ARM_POSITION             = new ArmPosition(UNLOCK_POSITION.linkAngle, 25);
+    public static final double ARM_MIN_ANGLE_SUM = 180;
+    public static final double ARM_MAX_ANGLE_SUM = 320;
 
-        public static final double      LINK_EXTENDED_THRESHOLD            = 150;
+    public static final double AIM_X_SHOOTING = 0.254;
+    public static final double AIM_Y_SHOOTING = 0.61595;
 
-        // todo: fixme: indicate units in doc or constant name for all of these settings
-        public static final double      FAST_AIM_SPEED                     = .7;
-        public static final double      SLOW_AIM_SPEED                     = .2;
-        public static final double      SAFE_AIM_SPEED                     = .1;
-        public static final double      FAST_LINK_SPEED                    = .7;
-        public static final double      SLOW_LINK_SPEED                    = .2;
+    public static final double SHOOTER_AIM_DIFFERENCE = 47.9;
 
-        public static final double      SLOW_ARM_ZONE_DEG                  = 20.0;
-        public static final double      AT_TARGET_DEG                      = 0.5;
-        public static final double      DEFAULT_LINK_TOLERANCE_DEG         = 3;
-        public static final double      DEFAULT_AIM_TOLERANCE_DEG          = 3;
+    /** Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground */
+    public static final double MAX_AIM_HOLD = 0.03; // 0.03;
 
-        public static final double      INTAKE_INTAKE_SPEED                = .6;
-        public static final double      INTAKE_REVERSE_SPEED               = -.3;
+    /**
+     * Amount of output required to hold the Link Pivot when the Link and Aim are parallel to the
+     * ground
+     */
+    public static final double MAX_LINK_HOLD = 0.02; // 0.04;
+  }
 
-        public static final double      INTAKE_NOTE_REVERSAL_REVERSE_SPEED = -.075;
+  public static final class ClimbConstants {
 
-        public static final double      INTAKE_NOTE_REVERSAL_FORWARD_SPEED = .1;
-        public static final long        INTAKE_SPINUP_WINDOW               = 500;
+    public static final boolean DISABLED = true;
 
-        public static final double      INTAKE_EJECT_INTAKE_SPEED          = -1.0;
-        public static final double      INTAKE_EJECT_SHOOTER_SPEED         = -1.0;
+    public static final int RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 60;
+    public static final int LEFT_CLIMB_MOTOR_CAN_ADDRESS = 61;
 
+    public static final int CLIMB_READY_FOR_TRAP_SHOT = 7;
 
+    public static final double MAX_ROBOT_LIFT_SPEED = 1;
+    public static final double RAISE_CLIMBERS_SPEED = .75;
+    public static final double MIN_LOWER_CLIMBERS_SPEED = .75;
+    public static final double INITIALIZE_CLIMBERS_SPEED = 0.1;
 
-        public static final double      SHOOTER_SPEAKER_SPEED              = 0.75;
-        public static final double      SHOOTER_AMP_SPEED                  = 0.2;
-        public static final double      INTAKE_TRAP_SPEED                  = -0.5;
+    public static final double CLIMB_MAX = 120;
+    // encoder values
 
-        public static final double      LINK_MAX_DEGREES                   = 215;
-        public static final double      LINK_MIN_DEGREES                   = 116;
+    public static final double CLIMB_MIN = 3;
 
-        public static final double      AIM_MAX_DEGREES                    = 240;
-        public static final double      AIM_MIN_DEGREES                    = 25;
+    public static final int CLIMB_LIMIT_SWITCH_DIO_PORT_2 = 2;
+    public static final int CLIMB_LIMIT_SWITCH_DIO_PORT_3 = 3;
 
-        public static final double      ARM_MIN_ANGLE_SUM                  = 180;
-        public static final double      ARM_MAX_ANGLE_SUM                  = 320;
+    // Slow Zones
 
-        public static final double      AIM_X_SHOOTING                     = 0.254;
-        public static final double      AIM_Y_SHOOTING                     = 0.61595;
+    public static final double SLOW_SPEED = 0.15;
+    public static final int BOTTOM_SLOW_ZONE = 15;
 
-        public static final double      SHOOTER_AIM_DIFFERENCE             = 47.9;
+    public static final int TOP_SLOW_ZONE = 110;
 
-        /**
-         * Amount of output required to hold the Aim Pivot when the Aim is parallel to the ground
-         */
-        public static final double      MAX_AIM_HOLD                       = 0.03;                                          // 0.03;
+    public static final double METRES_PER_ENCODER_COUNT = 0.6 / 120;
 
-
-        /**
-         * Amount of output required to hold the Link Pivot when the Link and Aim are parallel to
-         * the ground
-         */
-        public static final double      MAX_LINK_HOLD                      = 0.02;                                          // 0.04;
-    }
-
-    public static final class ClimbConstants {
-
-        public static final boolean    DISABLED                      = true;
-
-        public static final int        RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 60;
-        public static final int        LEFT_CLIMB_MOTOR_CAN_ADDRESS  = 61;
-
-        public static final int        CLIMB_READY_FOR_TRAP_SHOT     = 7;
-
-        public static final double     MAX_ROBOT_LIFT_SPEED          = 1;
-        public static final double     RAISE_CLIMBERS_SPEED          = .75;
-        public static final double     MIN_LOWER_CLIMBERS_SPEED      = .75;
-        public static final double     INITIALIZE_CLIMBERS_SPEED     = 0.1;
-
-        public static final double     CLIMB_MAX                     = 120;
-        // encoder values
-
-        public static final double     CLIMB_MIN                     = 3;
-
-        public static final int        CLIMB_LIMIT_SWITCH_DIO_PORT_2 = 2;
-        public static final int        CLIMB_LIMIT_SWITCH_DIO_PORT_3 = 3;
-
-        // Slow Zones
-
-        public static final double     SLOW_SPEED                    = 0.15;
-        public static final int        BOTTOM_SLOW_ZONE              = 15;
-
-        public static final int        TOP_SLOW_ZONE                 = 110;
-
-        public static final double     METRES_PER_ENCODER_COUNT      = 0.6 / 120;
-
-        public static final Rotation2d LEVEL_CLIMB_TOLERANCE         = Rotation2d.fromDegrees(3);
-    }
+    public static final Rotation2d LEVEL_CLIMB_TOLERANCE = Rotation2d.fromDegrees(3);
+  }
 }
