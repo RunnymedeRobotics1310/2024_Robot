@@ -54,7 +54,7 @@ public class SwerveSubsystem extends SubsystemBase {
      * Core methods for controlling the drivebase
      */
 
-    private void driveSafely(ChassisSpeeds robotOrientedVelocity) {
+    private void driveSafely(ChassisSpeeds robotOrientedVelocity, boolean fieldOriented) {
         double x = robotOrientedVelocity.vxMetersPerSecond;
         double y = robotOrientedVelocity.vyMetersPerSecond;
         double w = -robotOrientedVelocity.omegaRadiansPerSecond;
@@ -71,7 +71,8 @@ public class SwerveSubsystem extends SubsystemBase {
         ChassisSpeeds safeVelocity = new ChassisSpeeds(x, y, w);
 
         if (this.config.enabled()) {
-            this.drive.drive(x, y, w);
+            if (fieldOriented) this.drive.driveFieldOriented(x, y, w);
+            else this.drive.driveRobotOriented(x, y, w);
         }
     }
 
@@ -88,7 +89,7 @@ public class SwerveSubsystem extends SubsystemBase {
      */
     public final void driveRobotOriented(ChassisSpeeds velocity) {
 
-        driveSafely(velocity);
+        driveSafely(velocity, false);
     }
 
     /**
@@ -121,7 +122,7 @@ public class SwerveSubsystem extends SubsystemBase {
         Rotation2d theta = Rotation2d.fromDegrees(drive.getYaw());
 
         ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, w, theta);
-        driveSafely(chassisSpeeds);
+        driveSafely(chassisSpeeds, true);
     }
 
     /**

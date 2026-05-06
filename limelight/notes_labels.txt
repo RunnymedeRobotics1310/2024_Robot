@@ -1,3 +1,0 @@
-note
-merge
-ignore

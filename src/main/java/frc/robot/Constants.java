@@ -93,7 +93,9 @@ public final class Constants {
             0,
             0,
             0,
-            0);
+            0,
+            0,
+          0);
 
     private static final MotorConfig DRIVE_MOTOR_CONFIG =
         new MotorConfig(
@@ -107,7 +109,9 @@ public final class Constants {
             0,
             0,
             1 / TRANSLATION_CONFIG.maxModuleSpeedMPS(),
-            0);
+            0,
+            0,
+          0);
 
     private static final EncoderConfig ANGLE_ENCODER_CONFIG = new EncoderConfig(false, 0.005, 5);
 
@@ -179,7 +183,7 @@ public final class Constants {
             TRANSLATION_CONFIG.maxSpeedMPS(),
             ROTATION_CONFIG.maxRotVelocityRadPS(),
             0.55,
-            0.85,
+            0.2,
             0.65,
             FRONT_LEFT,
             FRONT_RIGHT,
