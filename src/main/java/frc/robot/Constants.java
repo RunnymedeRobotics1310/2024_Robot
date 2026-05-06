@@ -129,7 +129,7 @@ public final class Constants {
             11,
             ANGLE_MOTOR_CONFIG,
             12,
-            222.9786,
+            Rotation2d.fromRotations(0.617676).getDegrees(),
             ANGLE_ENCODER_CONFIG
         );
 
@@ -137,12 +137,12 @@ public final class Constants {
             "frontright",
             new Coordinates(TRACK_WIDTH_METRES / 2, -WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
-            20,
+            15,
             DRIVE_MOTOR_CONFIG,
-            21,
+            16,
             ANGLE_MOTOR_CONFIG,
-            22,
-            12.12876,
+            17,
+            Rotation2d.fromRotations(0.030762).getDegrees(),
             ANGLE_ENCODER_CONFIG
         );
 
@@ -150,12 +150,12 @@ public final class Constants {
             "backleft",
             new Coordinates(-TRACK_WIDTH_METRES / 2, WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
-            35,
+            25,
             DRIVE_MOTOR_CONFIG,
-            36,
+            26,
             ANGLE_MOTOR_CONFIG,
-            37,
-            334.24812,
+            27,
+            Rotation2d.fromRotations(0.179199).getDegrees(),
             ANGLE_ENCODER_CONFIG
         );
 
@@ -163,12 +163,12 @@ public final class Constants {
             "backright",
             new Coordinates(-TRACK_WIDTH_METRES / 2, -WHEEL_BASE_METRES / 2),
             SDS_MK4I_WHEEL_RADIUS_M,
-            30,
+            20,
             DRIVE_MOTOR_CONFIG,
-            31,
+            21,
             ANGLE_MOTOR_CONFIG,
-            32,
-            102.8322,
+            22,
+            Rotation2d.fromRotations(0.316055).getDegrees(),
             ANGLE_ENCODER_CONFIG
         );
 

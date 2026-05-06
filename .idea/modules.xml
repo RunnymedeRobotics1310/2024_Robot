@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/2024_Robot.main.iml" filepath="$PROJECT_DIR$/.idea/modules/2024_Robot.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2024_Swerve.main.iml" filepath="$PROJECT_DIR$/.idea/modules/2024_Swerve.main.iml" />
     </modules>
   </component>
 </project>
