@@ -1,10 +1,7 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.commands.operator.OperatorInput;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 
@@ -17,7 +14,6 @@ public class CancelCommand extends LoggingCommand {
     private final SwerveSubsystem swerve;
     private final OperatorInput   operatorInput;
     private final ArmSubsystem    armSubsystem;
-    private final ClimbSubsystem  climbSubsystem;
 
     /**
      * Cancel the commands running on all subsystems.
@@ -25,17 +21,14 @@ public class CancelCommand extends LoggingCommand {
      * All subsystems must be passed to this command, and each subsystem should have a stop command
      * that safely stops the robot from moving.
      */
-    public CancelCommand(OperatorInput operatorInput, SwerveSubsystem swerve, ArmSubsystem armSubsystem,
-        ClimbSubsystem climbSubsystem) {
+    public CancelCommand(OperatorInput operatorInput, SwerveSubsystem swerve, ArmSubsystem armSubsystem) {
 
         this.swerve         = swerve;
         this.operatorInput  = operatorInput;
         this.armSubsystem   = armSubsystem;
-        this.climbSubsystem = climbSubsystem;
 
         addRequirements(swerve);
         addRequirements(armSubsystem);
-        addRequirements(climbSubsystem);
 
     }
 
@@ -88,6 +81,5 @@ public class CancelCommand extends LoggingCommand {
         // Stop all of the robot movement
         swerve.stop();
         armSubsystem.stop();
-        climbSubsystem.stop();
     }
 }

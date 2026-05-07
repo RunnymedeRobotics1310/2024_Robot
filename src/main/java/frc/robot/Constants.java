@@ -32,8 +32,6 @@ import frc.robot.subsystems.lighting.LightstripRegion;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystemConfig;
 import frc.robot.subsystems.swerve.SwerveRotationConfig;
 import frc.robot.subsystems.swerve.SwerveTranslationConfig;
-import frc.robot.subsystems.vision.VisionConfig;
-import frc.robot.subsystems.vision.VisionTelemetryLevel;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -48,7 +46,6 @@ public final class Constants {
   public static final class OiConstants {
 
     public static final int DRIVER_CONTROLLER_PORT = 0;
-    public static final int OPERATOR_CONTROLLER_PORT = 1;
   }
 
   public static final class Swerve {
@@ -95,7 +92,7 @@ public final class Constants {
             0,
             0,
             0,
-          0);
+            0);
 
     private static final MotorConfig DRIVE_MOTOR_CONFIG =
         new MotorConfig(
@@ -111,7 +108,7 @@ public final class Constants {
             1 / TRANSLATION_CONFIG.maxModuleSpeedMPS(),
             0,
             0,
-          0);
+            0);
 
     private static final EncoderConfig ANGLE_ENCODER_CONFIG = new EncoderConfig(false, 0.005, 5);
 
@@ -125,7 +122,7 @@ public final class Constants {
             11,
             ANGLE_MOTOR_CONFIG,
             12,
-            Rotation2d.fromRotations(0.619385).getDegrees(),
+            Rotation2d.fromRotations(.616699).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final ModuleConfig FRONT_RIGHT =
@@ -138,7 +135,7 @@ public final class Constants {
             16,
             ANGLE_MOTOR_CONFIG,
             17,
-            Rotation2d.fromRotations(0.033691).getDegrees(),
+            Rotation2d.fromRotations(.030518).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final ModuleConfig BACK_LEFT =
@@ -151,7 +148,7 @@ public final class Constants {
             26,
             ANGLE_MOTOR_CONFIG,
             27,
-            Rotation2d.fromRotations(0.928467).getDegrees(),
+            Rotation2d.fromRotations(.929443).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final ModuleConfig BACK_RIGHT =
@@ -164,7 +161,7 @@ public final class Constants {
             21,
             ANGLE_MOTOR_CONFIG,
             22,
-            Rotation2d.fromRotations(0.564941).getDegrees(),
+            Rotation2d.fromRotations(0.580322).getDegrees(),
             ANGLE_ENCODER_CONFIG);
 
     public static final SwerveTelemetry TELEMETRY = new SwerveTelemetry(4);
@@ -191,15 +188,11 @@ public final class Constants {
             BACK_RIGHT,
             TELEMETRY.level);
 
-    public static final VisionConfig VISION_CONFIG =
-        new VisionConfig(0, 0, 0.7, 0.1, .5, true, VisionTelemetryLevel.VERBOSE);
-
     public static final SwerveDriveSubsystemConfig SUBSYSTEM_CONFIG =
         new SwerveDriveSubsystemConfig(
             true,
             CORE_SWERVE_CONFIG,
             GYRO_CONFIG,
-            VISION_CONFIG,
             TRANSLATION_CONFIG,
             ROTATION_CONFIG);
 
@@ -382,101 +375,6 @@ public final class Constants {
     public static final Rotation2d FACING_CHAIN_BLUE_RIGHT = Rotation2d.fromDegrees(60);
   }
 
-  public static final class UsefulPoses {
-
-    public static final Pose2d SCORE_BLUE_AMP =
-        (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 7.65, Rotation2d.fromDegrees(270)));
-    public static final Pose2d SCORE_RED_AMP =
-        (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 7.65, Rotation2d.fromDegrees(270)));
-
-    public static final Pose2d PRE_SCORE_BLUE_AMP =
-        (new Pose2d(BotTarget.BLUE_AMP.getLocation().getX(), 6.9, Rotation2d.fromDegrees(270)));
-    public static final Pose2d PRE_SCORE_RED_AMP =
-        (new Pose2d(BotTarget.RED_AMP.getLocation().getX(), 6.9, Rotation2d.fromDegrees(270)));
-
-    public static final Pose2d START_AT_BLUE_SPEAKER =
-        new Pose2d(Constants.BotTarget.BLUE_SPEAKER.getLocation().getX(), 1.6, new Rotation2d());
-    public static final Pose2d START_AT_RED_SPEAKER =
-        new Pose2d(
-            Constants.BotTarget.RED_SPEAKER.getLocation().getX(),
-            FieldConstants.FIELD_EXTENT_METRES_Y - 1.6,
-            new Rotation2d());
-
-    public static final Pose2d BLUE_2_2_20 = new Pose2d(2, 2, Rotation2d.fromDegrees(20));
-    public static final Pose2d RED_2_2_20 = new Pose2d(14.54, 2, Rotation2d.fromDegrees(-20));
-
-    public static final Pose2d IN_FRONT_OF_WOLVERINE_BLUE =
-        new Pose2d(
-            BLUE_NOTE_WOLVERINE.getLocation().getX() - 1.1,
-            BLUE_NOTE_WOLVERINE.getLocation().getY(),
-            new Rotation2d());
-    public static final Pose2d IN_FRONT_OF_WOLVERINE_RED =
-        new Pose2d(
-            RED_NOTE_WOLVERINE.getLocation().getX() + 1.1,
-            RED_NOTE_WOLVERINE.getLocation().getY(),
-            new Rotation2d().fromDegrees(180));
-
-    public static final Pose2d WOLVERINE_PICKUP_BLUE =
-        new Pose2d(
-            BLUE_NOTE_WOLVERINE.getLocation().getX() - .5,
-            BLUE_NOTE_WOLVERINE.getLocation().getY(),
-            new Rotation2d());
-    public static final Pose2d WOLVERINE_PICKUP_RED =
-        new Pose2d(
-            RED_NOTE_WOLVERINE.getLocation().getX() + .5,
-            RED_NOTE_WOLVERINE.getLocation().getY(),
-            new Rotation2d());
-
-    public static final Pose2d PARK_AFTER_VALJEAN_AUTO_BLUE =
-        new Pose2d(7.5, 7.5, Rotation2d.fromDegrees(0));
-    public static final Pose2d PARK_AFTER_VALJEAN_AUTO_RED =
-        new Pose2d(9.5, 7.5, Rotation2d.fromDegrees(180));
-
-    public static final Pose2d PARK_AFTER_BARNUM_AUTO_BLUE =
-        new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
-    public static final Pose2d PARK_AFTER_BARNUM_AUTO_RED =
-        new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
-
-    public static final Pose2d AFTER_WOLVERINE_AUTO_BLUE =
-        new Pose2d(2.7, 2.85, Rotation2d.fromDegrees(0));
-    public static final Pose2d AFTER_WOLVERINE_AUTO_RED =
-        new Pose2d(14, 2.85, Rotation2d.fromDegrees(180));
-    public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_BLUE =
-        new Pose2d(5.1, 4.1, Rotation2d.fromDegrees(0));
-    public static final Pose2d PARK_AFTER_WOLVERINE_AUTO_RED =
-        new Pose2d(11.1, 7.5, Rotation2d.fromDegrees(180));
-
-    // TODO: QUENTIN: CALCULATE LOCATIONS. ROTATIONS ARE FINE.
-    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_LEFT =
-        new Pose2d(0, 0, FACING_CHAIN_RED_LEFT);
-    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_CENTER =
-        new Pose2d(0, 0, FACING_CHAIN_RED_CENTER);
-    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_RED_RIGHT =
-        new Pose2d(0, 0, FACING_CHAIN_RED_RIGHT);
-    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_LEFT =
-        new Pose2d(0, 0, FACING_CHAIN_BLUE_LEFT);
-    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_CENTER =
-        new Pose2d(0, 0, FACING_CHAIN_BLUE_CENTER);
-    public static final Pose2d SCORE_TRAP_FWD_FROM_FLOOR_BLUE_RIGHT =
-        new Pose2d(0, 0, FACING_CHAIN_BLUE_RIGHT);
-
-    // NOTE: These are for the possible scenario in which we score the track backwards from the
-    // floor
-    // todo: update poses when we decide to use this.
-    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_LEFT =
-        new Pose2d(0, 0, FACING_CHAIN_RED_LEFT.plus(Rotation2d.fromDegrees(180)));
-    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_CENTER =
-        new Pose2d(0, 0, FACING_CHAIN_RED_CENTER.plus(Rotation2d.fromDegrees(180)));
-    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_RED_RIGHT =
-        new Pose2d(0, 0, FACING_CHAIN_RED_RIGHT.plus(Rotation2d.fromDegrees(180)));
-    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_LEFT =
-        new Pose2d(0, 0, FACING_CHAIN_BLUE_LEFT.plus(Rotation2d.fromDegrees(180)));
-    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_CENTER =
-        new Pose2d(0, 0, FACING_CHAIN_BLUE_CENTER.plus(Rotation2d.fromDegrees(180)));
-    public static final Pose2d SCORE_TRAP_REVERSE_FROM_FLOOR_BLUE_RIGHT =
-        new Pose2d(0, 0, FACING_CHAIN_BLUE_RIGHT.plus(Rotation2d.fromDegrees(180)));
-  }
-
   public static final class FieldConstants {
 
     public static final double FIELD_EXTENT_METRES_Y = 8.211;
@@ -512,47 +410,6 @@ public final class Constants {
 
     public static final Translation2d UNDER_STAGE_RED = new Translation2d(11.7, 4.1);
     public static final Translation2d UNDER_STAGE_BLUE = new Translation2d(4.9, 4.1);
-  }
-
-  public static final class VisionConstants {
-
-    // todo: correct this
-    public static Translation2d CAMERA_LOC_REL_TO_ROBOT_CENTER = new Translation2d(0, 30);
-
-    public static final double MAX_AMBIGUITY = .7;
-    public static final double HIGH_QUALITY_AMBIGUITY = .1;
-
-    public static final double MAX_VISPOSE_DELTA_DISTANCE = .5;
-  }
-
-  public static final class AutoConstants {
-
-    public enum AutoPattern {
-      DO_NOTHING,
-      EXIT_ZONE,
-      SCORE_2_5_AMP,
-      SCORE_1_SPEAKER_STAY,
-      SCORE_1_SPEAKER,
-      THE_DOUBLE_DOWN,
-      SCORE_2_SPEAKER_VISION,
-      SCORE_3_SPEAKER,
-      SCORE_4_SPEAKER,
-      SCORE_LOADED_WOLVERINE,
-      SCORE_LOADED_WOLVERINE_BARNUM,
-      SCORE_LOADED_WOLVERINE_BARNUM_VALJEAN,
-      SCORE_LOADED_BARNUM_VALJEAN,
-    }
-
-    public enum Delay {
-      NO_DELAY,
-      WAIT_0_5_SECOND,
-      WAIT_1_SECOND,
-      WAIT_1_5_SECONDS,
-      WAIT_2_SECONDS,
-      WAIT_2_5_SECONDS,
-      WAIT_3_SECONDS,
-      WAIT_5_SECONDS
-    }
   }
 
   public static final class LightingConstants {
@@ -727,37 +584,4 @@ public final class Constants {
     public static final double MAX_LINK_HOLD = 0.02; // 0.04;
   }
 
-  public static final class ClimbConstants {
-
-    public static final boolean DISABLED = true;
-
-    public static final int RIGHT_CLIMB_MOTOR_CAN_ADDRESS = 60;
-    public static final int LEFT_CLIMB_MOTOR_CAN_ADDRESS = 61;
-
-    public static final int CLIMB_READY_FOR_TRAP_SHOT = 7;
-
-    public static final double MAX_ROBOT_LIFT_SPEED = 1;
-    public static final double RAISE_CLIMBERS_SPEED = .75;
-    public static final double MIN_LOWER_CLIMBERS_SPEED = .75;
-    public static final double INITIALIZE_CLIMBERS_SPEED = 0.1;
-
-    public static final double CLIMB_MAX = 120;
-    // encoder values
-
-    public static final double CLIMB_MIN = 3;
-
-    public static final int CLIMB_LIMIT_SWITCH_DIO_PORT_2 = 2;
-    public static final int CLIMB_LIMIT_SWITCH_DIO_PORT_3 = 3;
-
-    // Slow Zones
-
-    public static final double SLOW_SPEED = 0.15;
-    public static final int BOTTOM_SLOW_ZONE = 15;
-
-    public static final int TOP_SLOW_ZONE = 110;
-
-    public static final double METRES_PER_ENCODER_COUNT = 0.6 / 120;
-
-    public static final Rotation2d LEVEL_CLIMB_TOLERANCE = Rotation2d.fromDegrees(3);
-  }
 }

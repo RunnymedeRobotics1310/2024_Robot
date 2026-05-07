@@ -54,75 +54,42 @@ public class SwerveSubsystem extends SubsystemBase {
      * Core methods for controlling the drivebase
      */
 
-    private void driveSafely(ChassisSpeeds robotOrientedVelocity, boolean fieldOriented) {
-        double x = robotOrientedVelocity.vxMetersPerSecond;
-        double y = robotOrientedVelocity.vyMetersPerSecond;
-        double w = -robotOrientedVelocity.omegaRadiansPerSecond;
-
-        // Limit change in values. Note this may not scale
-        // evenly - one may reach desired speed before another.
-
+    private void driveSafely(double x, double y, double omega) {
         // Use driveFieldOriented to avoid this.
-
-        //        x = xLimiter.calculate(x);
-        //        y = yLimiter.calculate(y);
-        //        w = omegaLimiter.calculate(w);
-
-        ChassisSpeeds safeVelocity = new ChassisSpeeds(x, y, w);
+        x = xLimiter.calculate(x);
+        y = yLimiter.calculate(y);
+        omega = omegaLimiter.calculate(omega);
 
         if (this.config.enabled()) {
-            if (fieldOriented) this.drive.driveFieldOriented(x, y, w);
-            else this.drive.driveRobotOriented(x, y, w);
+            this.drive.driveFieldOriented(x, y, omega);
         }
     }
 
-    /**
-     * The primary method for controlling the drivebase. The provided {@link ChassisSpeeds}
-     * specifies the robot-relative chassis speeds of the robot.
-     * <p>
-     * This method is responsible for applying safety code to prevent the robot from attempting to
-     * exceed its physical limits both in terms of speed and acceleration.
-     *
-     * @param velocity The intended velocity of the robot chassis relative to itself.
-     * @see ChassisSpeeds for how to construct a ChassisSpeeds object including
-     * {@link ChassisSpeeds#fromFieldRelativeSpeeds(double, double, double, Rotation2d)}
-     */
-    public final void driveRobotOriented(ChassisSpeeds velocity) {
+    public final void driveRobotOriented(double x, double y, double omega) {
 
-        driveSafely(velocity, false);
+        driveSafely(x, y, omega);
     }
 
     /**
      * Stop all motors as fast as possible
      */
     public void stop() {
-        driveRobotOriented(new ChassisSpeeds(0, 0, 0));
+        driveRobotOriented(0, 0, 0);
     }
 
-    /**
-     * Convenience method for controlling the robot in field-oriented drive mode. Transforms the
-     * field-oriented inputs into the required robot-oriented {@link ChassisSpeeds} object that can
-     * be used by the robot.
-     *
-     * @param velocity the linear velocity of the robot in metres per second. Positive x is away
-     * from the alliance wall, and positive y is toward the left wall when looking through the
-     * driver station glass.
-     * @param omega the rotation rate of the heading of the robot. CCW positive.
-     */
-    public final void driveFieldOriented(Translation2d velocity, Rotation2d omega) {
+    public final void driveFieldOriented(double x, double y, double omega) {
 
-        driveFieldOrientedInternal(velocity, omega);
+        driveSafelyFieldOriented(x, y, omega);
     }
 
-    private void driveFieldOrientedInternal(Translation2d velocity, Rotation2d omega) {
+    private void driveSafelyFieldOriented(double x, double y, double omega) {
+        x = xLimiter.calculate(x);
+        y = yLimiter.calculate(y);
+        omega = omegaLimiter.calculate(omega);
 
-        double x = velocity.getX();
-        double y = velocity.getY();
-        double w = omega.getRadians();
-        Rotation2d theta = Rotation2d.fromDegrees(drive.getYaw());
-
-        ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, w, theta);
-        driveSafely(chassisSpeeds, true);
+        if (this.config.enabled()) {
+            this.drive.driveFieldOriented(x, y, omega);
+        }
     }
 
     /**
@@ -251,7 +218,7 @@ public class SwerveSubsystem extends SubsystemBase {
         Translation2d velocity = computeVelocity(delta.getTranslation(), maxSpeedMPS);
         Rotation2d omega = computeOmega(desiredPose.getRotation());
 
-        driveFieldOrientedInternal(velocity, omega);
+        driveFieldOriented(velocity.getX(), velocity.getY(), omega.getRadians());
     }
 
     /**

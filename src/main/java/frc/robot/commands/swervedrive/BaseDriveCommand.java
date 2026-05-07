@@ -60,7 +60,7 @@ public abstract class BaseDriveCommand extends LoggingCommand {
         Telemetry.drive.drive_to_pose_velocity = velocity;
         Telemetry.drive.drive_to_pose_omega    = omega;
 
-        swerve.driveFieldOriented(velocity, omega);
+        swerve.driveFieldOriented(velocity.getX(), velocity.getY(), omega.getRadians());
     }
 
     /**

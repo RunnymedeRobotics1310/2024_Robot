@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.utils.vision.VisionPositionInfo;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -96,7 +95,6 @@ public class Swerve {
 
     public ChassisSpeeds      swerve_robot_chassis_speeds = null;
     public Translation2d      swerve_velocity_field       = null;
-    public VisionPositionInfo swerve_vispose              = null;
     public Pose2d             swerve_pose                 = null;
 
 
@@ -159,8 +157,6 @@ public class Swerve {
             swerve_velocity_field == null ? ""
                 : String.format("%.1f (%.1f,%.1f) m/s %.1f deg/s",
                     swerve_velocity_field.getNorm(), swerve_velocity_field.getX(), swerve_velocity_field.getY(), omega));
-
-        SmartDashboard.putString(Telemetry.PREFIX + "Swerve/pose_vis", swerve_vispose == null ? "" : swerve_vispose.toString());
 
         SmartDashboard.putString(Telemetry.PREFIX + "Swerve/pose_odo", swerve_pose == null ? ""
             : String.format("(%.2f,%.2f) m %.1f deg", swerve_pose.getTranslation().getX(), swerve_pose.getTranslation().getY(),

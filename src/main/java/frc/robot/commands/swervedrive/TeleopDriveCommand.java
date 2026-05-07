@@ -199,7 +199,7 @@ public class TeleopDriveCommand extends BaseDriveCommand {
         Telemetry.drive.teleop_theta                = headingSetpoint;
         Telemetry.drive.teleop_omega                = omega;
 
-        swerve.driveFieldOriented(velocity, omega);
+        swerve.driveFieldOriented(velocity.getX(), velocity.getY(), -omega.getRadians());
     }
 
     // Called once the command ends or is interrupted.
